@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NicoTracker Cloud</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: #f4f4f9; margin: 0; padding: 20px; color: #333; }
+        .container { max-width: 600px; margin: 0 auto; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        h1 { text-align: center; color: #2c3e50; margin-bottom: 5px;}
+        
+        /* Login obrazovka */
+        #loginScreen { text-align: center; padding: 50px 20px; }
+        #appContent { display: none; } /* Skryté dokud se nepřihlásíš */
+
+        .user-info { text-align: center; margin-bottom: 20px; font-size: 0.9em; color: #7f8c8d; }
+        .btn-logout { background: none; border: none; color: #e74c3c; cursor: pointer; text-decoration: underline; }
+
+        /* Statistiky */
+        .stats { display: flex; justify-content: space-around; margin-bottom: 20px; background: #eef2f5; padding: 15px; border-radius: 8px; }
+        .stat-box { text-align: center; }
+        .stat-value { font-size: 24px; font-weight: bold; color: #3498db; }
+        .stat-label { font-size: 12px; color: #7f8c8d; }
+
+        /* Formulář */
+        .control-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        select, input { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 16px; box-sizing: border-box; }
+        
+        button.action-btn { width: 100%; padding: 15px; background-color: #2ecc71; color: white; border: none; border-radius: 8px; font-size: 18px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        button.google-btn { background-color: #4285F4; margin-top: 20px; }
+        
+        /* Historie */
+        .history { margin-top: 30px; }
+        .history-item { display: flex; justify-content: space-between; padding: 10px; border-bottom: 1px solid #eee; align-items: center; }
+        .history-time { color: #95a5a6; font-size: 0.8em; text-align: right;}
+        .delete-btn { color: #e74c3c; cursor: pointer; margin-left: 10px; font-weight: bold; border: none; background: none; font-size: 1.2em;}
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>💊 NicoTracker</h1>
+    
+    <!-- Přihlašovací obrazovka -->
+    <div id="loginScreen">
+        <p>Pro synchronizaci dat mezi zařízeními se prosím přihlas.</p>
+        <button class="action-btn google-btn" onclick="login()">Přihlásit se přes Google</button>
+    </div>
+
+    <!-- Hlavní obsah aplikace -->
+    <div id="appContent">
+        <div class="user-info">
+            Přihlášen jako: <span id="userEmail">...</span> 
+            <button class="btn-logout" onclick="logout()">(Odhlásit)</button>
+        </div>
+
+        <div class="stats">
+            <div class="stat-box">
+                <div class="stat-value" id="todayCount">0</div>
+                <div class="stat-label">Sáčků dnes</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-value" id="todayMg">0</div>
+                <div class="stat-label">mg Nikotinu</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-value" id="remainingLimit">10</div>
+                <div class="stat-label">Zbývá limit</div>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <label>Vyber sáček:</label>
+            <select id="pouchSelect"></select>
+        </div>
+
+        <details>
+            <summary style="cursor:pointer; color:#3498db; margin-bottom:10px;">Nebo zadej vlastní</summary>
+            <div class="control-group"><input type="text" id="customBrand" placeholder="Značka"></div>
+            <div class="control-group"><input type="number" id="customMg" placeholder="mg nikotinu"></div>
+        </details>
+
+        <button class="action-btn" onclick="addPouch()">Zaznamenat spotřebu</button>
+
+        <div class="history">
+            <h3>Historie (Cloud Sync ☁️)</h3>
+            <div id="historyList">Načítám data...</div>
+        </div>
+    </div>
+</div>
+
+<!-- FIREBASE SKRIPT -->
+<script type="module">
+    // Import Firebase funkcí
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+    import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+    import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+
+    // ============================================================
+    // TVOJE KONFIGURACE
+    // ============================================================
+    const firebaseConfig = {
+        apiKey: "AIzaSyBKMDwYeSjmgQLnpYciReSK2yJU0pG6KS8",
+        authDomain: "nicotinepouches-d9d1c.firebaseapp.com",
+        projectId: "nicotinepouches-d9d1c",
+        storageBucket: "nicotinepouches-d9d1c.firebasestorage.app",
+        messagingSenderId: "42131125480",
+        appId: "1:42131125480:web:8022461f0a790a5677855d",
+        measurementId: "G-0NE6V1LVKN"
+    };
+    // ============================================================
+
+    // Inicializace Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const auth = getAuth(app);
+    const provider = new GoogleAuthProvider();
+
+    let currentUser = null;
+    let unsubscribeListener = null; 
+    const dailyLimit = 10;
+
+    // ============================================================
+    // VELKÁ DATABÁZE SÁČKŮ (VELO + Ostatní populární)
+    // ============================================================
+    const pouchDatabase = [
+        // --- MINT / MENTHOL ---
+        { name: "Velo Mighty Peppermint MAX (Freeze Max)", mg: 17 },
+        { name: "Velo Mighty Peppermint Ultra (Freeze Ultra)", mg: 14 },
+        { name: "Velo Mighty Peppermint (Freeze X-Strong)", mg: 11 },
+        { name: "Velo Crispy Peppermint (Ice Cool)", mg: 10 },
+        { name: "Velo Crispy Peppermint Mini (Ice Cool Mini)", mg: 8 },
+        { name: "Velo Witty Spearmint (Mint)", mg: 8 },
+        { name: "Velo Spiffy Spearmint Mini (Easy Mint)", mg: 4 },
+        { name: "Velo Icy Berries (Winter Chill)", mg: 10 },
+        
+        // --- OVOCNÉ ---
+        { name: "Velo Breezy Mango (Tropic Breeze)", mg: 9 },
+        { name: "Velo Breezy Mango Mini (Tropic Breeze)", mg: 6 },
+        { name: "Velo Groovy Grape Strong (Royal Purple)", mg: 10 },
+        { name: "Velo Groovy Grape Mini (Royal Purple)", mg: 6 },
+        { name: "Velo Blushy Berry (Ruby Berry)", mg: 6 },
+        { name: "Velo Zesty Citrus (Urban Vibe)", mg: 10 },
+        { name: "Velo Lime Flame (Fresh Jalapeno)", mg: 10 },
+        { name: "Velo Arctic Grapefruit (Frosty Grapefruit)", mg: 10 },
+        
+        // --- EXTRÉMY A OSTATNÍ ZNAČKY ---
+        { name: "Siberia Red Slim (White Dry)", mg: 43 },
+        { name: "Siberia Blue Slim", mg: 24 },
+        { name: "Killa Cold Mint", mg: 13 },
+        { name: "Killa Blueberry", mg: 13 },
+        { name: "Pablo Ice Cold", mg: 24 },
+        { name: "Pablo Red", mg: 24 },
+        { name: "Kurwa Fatality", mg: 33 },
+        { name: "Kurwa Collection", mg: 20 },
+        { name: "ZYN Cool Mint Strong", mg: 9 },
+        { name: "ZYN Cool Mint Slim", mg: 11 },
+        { name: "DOPE Freeze", mg: 16 },
+        { name: "DOPE Ice Cool", mg: 16 }
+    ];
+
+    // Seřazení databáze podle abecedy pro lepší hledání
+    pouchDatabase.sort((a, b) => a.name.localeCompare(b.name));
+
+    // --- HLAVNÍ FUNKCE ---
+
+    window.login = () => {
+        signInWithPopup(auth, provider)
+            .then((result) => { console.log("Přihlášeno:", result.user.email); })
+            .catch((error) => { alert("Chyba přihlášení: " + error.message); });
+    };
+
+    window.logout = () => {
+        signOut(auth).then(() => {
+            console.log("Odhlášeno");
+            if (unsubscribeListener) unsubscribeListener();
+        });
+    };
+
+    onAuthStateChanged(auth, (user) => {
+        const loginScreen = document.getElementById('loginScreen');
+        const appContent = document.getElementById('appContent');
+        
+        if (user) {
+            currentUser = user;
+            loginScreen.style.display = 'none';
+            appContent.style.display = 'block';
+            document.getElementById('userEmail').innerText = user.email;
+            populateDropdown();
+            setupRealtimeListener(user.uid);
+        } else {
+            currentUser = null;
+            loginScreen.style.display = 'block';
+            appContent.style.display = 'none';
+            document.getElementById('historyList').innerHTML = '';
+        }
+    });
+
+    function setupRealtimeListener(userId) {
+        const q = query(collection(db, "users", userId, "history"), orderBy("timestamp", "desc"));
+
+        unsubscribeListener = onSnapshot(q, (snapshot) => {
+            const historyList = document.getElementById('historyList');
+            historyList.innerHTML = '';
+            
+            let todayCount = 0;
+            let todayMg = 0;
+            const todayString = new Date().toDateString();
+
+            snapshot.forEach((docSnap) => {
+                const data = docSnap.data();
+                if (!data.timestamp) return;
+
+                const date = data.timestamp.toDate();
+                const isToday = date.toDateString() === todayString;
+
+                if (isToday) {
+                    todayCount++;
+                    todayMg += data.nicotineStrength;
+                }
+
+                if (historyList.children.length < 20) {
+                    const div = document.createElement('div');
+                    div.className = 'history-item';
+                    div.innerHTML = `
+                        <div><strong>${data.brandName}</strong> <small>(${data.nicotineStrength} mg)</small></div>
+                        <div style="display:flex; align-items:center;">
+                            <div class="history-time">
+                                ${date.toLocaleDateString()} <br> ${date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+                            </div>
+                            <button class="delete-btn" onclick="deleteEntry('${docSnap.id}')">&times;</button>
+                        </div>
+                    `;
+                    historyList.appendChild(div);
+                }
+            });
+
+            document.getElementById('todayCount').innerText = todayCount;
+            document.getElementById('todayMg').innerText = todayMg;
+            document.getElementById('remainingLimit').innerText = Math.max(0, dailyLimit - todayCount);
+        });
+    }
+
+    window.addPouch = async () => {
+        if (!currentUser) return;
+
+        const customBrand = document.getElementById('customBrand').value;
+        const customMg = document.getElementById('customMg').value;
+        let brand, strength;
+
+        if (customBrand && customMg) {
+            brand = customBrand;
+            strength = parseInt(customMg);
+        } else {
+            const selected = JSON.parse(document.getElementById('pouchSelect').value);
+            brand = selected.name;
+            strength = selected.mg;
+        }
+
+        try {
+            await addDoc(collection(db, "users", currentUser.uid, "history"), {
+                brandName: brand,
+                nicotineStrength: strength,
+                timestamp: serverTimestamp()
+            });
+            
+            document.getElementById('customBrand').value = '';
+            document.getElementById('customMg').value = '';
+        } catch (e) {
+            console.error("Chyba při zápisu: ", e);
+            alert("Nepodařilo se uložit záznam. Zkontroluj pravidla databáze (Rules) ve Firebase.");
+        }
+    };
+
+    window.deleteEntry = async (docId) => {
+        if (confirm("Smazat tento záznam?")) {
+            await deleteDoc(doc(db, "users", currentUser.uid, "history", docId));
+        }
+    };
+
+    function populateDropdown() {
+        const select = document.getElementById('pouchSelect');
+        if (select.children.length > 0) return; 
+        pouchDatabase.forEach(pouch => {
+            const option = document.createElement('option');
+            option.value = JSON.stringify(pouch);
+            option.text = `${pouch.name} (${pouch.mg} mg)`;
+            select.appendChild(option);
+        });
+    }
+</script>
+
+</body>
+</html>

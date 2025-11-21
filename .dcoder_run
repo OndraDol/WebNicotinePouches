@@ -1,7 +1,0 @@
-# write commands to install modules/lib and run your project, one in each line.
-# kotlinc and java commands are available along with other basic linux commands.
-# command to compile the project
-kotlinc Main.kt -nowarn -include-runtime -d Main.jar
-
-# command to run, change name with jar file genrated from above command
-java -jar Main.jar
