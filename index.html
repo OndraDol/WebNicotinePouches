@@ -131,28 +131,27 @@
     // NOVÁ VELO DATABÁZE (jen poskytované položky, bez historických názvů)
     // ============================================================
     const pouchDatabase = [
-      { name: "Velo Simply Spearmint Mini", mg: 4, dots: null },
-      { name: "Velo Cherry Ice Mini", mg: 4, dots: null },
-      { name: "Velo Strawberry Ice Mini", mg: 6, dots: null },
-      { name: "Velo Icy Berries Mini", mg: 6, dots: null },
-      { name: "Velo Bright Spearmint Mini", mg: 6, dots: null },
+      { name: "Velo Simply Spearmint Mini", mg: 4.0, dots: 1 },
+      { name: "Velo Cherry Ice Mini", mg: 4.0, dots: 1 },
+      { name: "Velo Strawberry Ice Mini", mg: 6.0, dots: 2 },
+      { name: "Velo Icy Berries Mini", mg: 6.0, dots: 2 },
+      { name: "Velo Bright Spearmint Mini", mg: 6.0, dots: 2 },
 
-      { name: "Velo Strawberry Ice Slim", mg: 10.9, dots: null },
-      { name: "Velo Watermelon Ice Slim", mg: 8, dots: null },
-      { name: "Velo Tangy Lime Slim", mg: 10, dots: null },
-      { name: "Velo Tropical Mango Slim", mg: 10.9, dots: null },
-      { name: "Velo Groovy Grape Slim", mg: 10.9, dots: null },
-      { name: "Velo Orange Spark Slim", mg: 10.9, dots: null },
-      { name: "Velo Peppermint Storm Slim", mg: 10.9, dots: null },
-      { name: "Velo Freezing Peppermint Slim", mg: 10.9, dots: null },
-      { name: "Velo Crispy Peppermint Slim", mg: 10, dots: null },
-      { name: "Velo Eucalyptus Storm Slim", mg: 10.9, dots: null },
-      { name: "Velo Eucalyptus Storm Slim 5 Dots", mg: 14, dots: 5 },
-      { name: "Velo Cinnamon Flame Slim", mg: 10.9, dots: null },
-      { name: "Velo McLaren Papaya Slim", mg: 8.4, dots: null },
+      { name: "Velo Strawberry Ice Slim", mg: 10.9, dots: 4 },
+      { name: "Velo Watermelon Ice Slim", mg: 8.1, dots: 3 },
+      { name: "Velo Tangy Lime Slim", mg: 9.8, dots: 3 },
+      { name: "Velo Breezy Mango Slim", mg: 11.6, dots: 5 },
+      { name: "Velo Groovy Grape Slim", mg: 10.9, dots: 4 },
+      { name: "Velo Orange Spark Slim", mg: 10.9, dots: 4 },
+      { name: "Velo Peppermint Storm Slim", mg: 10.9, dots: 4 },
+      { name: "Velo Freezing Peppermint Slim", mg: 10.9, dots: 5 },
+      { name: "Velo Crispy Peppermint Slim", mg: 9.8, dots: 3 },
+      { name: "Velo Eucalyptus Storm Slim", mg: 14.0, dots: 5 },
+      { name: "Velo Cinnamon Flame Slim", mg: 10.9, dots: 4 },
+      { name: "Velo McLaren Papaya Slim", mg: 8.4, dots: 4 },
 
-      { name: "Velo Crispy Peppermint Zero Slim", mg: 0, dots: null },
-      { name: "Velo Tropic Breeze Zero Slim", mg: 0, dots: null }
+      { name: "Velo Crispy Peppermint Zero Slim", mg: 0, dots: 0 },
+      { name: "Velo Tropic Breeze Zero Slim", mg: 0, dots: 0 }
     ];
 
     // Seřadíme podle abecedy
@@ -295,8 +294,10 @@
     };
 
     function renderDots(dots) {
-        if (typeof dots === 'number' && dots > 0) {
-            return ' ' + '●'.repeat(dots);
+        if (typeof dots === 'number' && dots >= 0) {
+            const full = '●'.repeat(dots);
+            const empty = '○'.repeat(Math.max(0, 6 - dots));
+            return ` ${full}${empty} (${dots}/6)`;
         }
         return ' (kolečka? 🤔)';
     }
@@ -320,13 +321,18 @@
         if (dailyChart) dailyChart.destroy();
 
         dailyChart = new Chart(canvas, {
-            type: 'bar',
+            type: 'line',
             data: {
                 labels,
                 datasets: [{
                     label: 'mg nikotinu',
                     data: values,
-                    backgroundColor: '#3498db'
+                    borderColor: '#3498db',
+                    backgroundColor: 'rgba(52,152,219,0.15)',
+                    fill: true,
+                    tension: 0.25,
+                    pointRadius: 4,
+                    pointBackgroundColor: '#2980b9'
                 }]
             },
             options: {
