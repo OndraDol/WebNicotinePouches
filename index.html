@@ -36,7 +36,9 @@
         .history-item { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #eee; align-items: center; }
         .history-time { color: #95a5a6; font-size: 0.8em; text-align: right; margin-right: 10px;}
         .delete-btn { color: #e74c3c; cursor: pointer; font-weight: bold; border: none; background: #ffebee; border-radius: 4px; padding: 5px 10px;}
+        .chart-section { margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee; }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
 
@@ -88,6 +90,11 @@
             <h3>Historie (Dnes a posledních 20)</h3>
             <div id="historyList">Načítám data...</div>
         </div>
+
+        <div class="chart-section">
+            <h3>Konzumace nikotinu podle dní</h3>
+            <canvas id="dailyChart" height="200"></canvas>
+        </div>
     </div>
 </div>
 
@@ -116,38 +123,36 @@
     const provider = new GoogleAuthProvider();
 
     let currentUser = null;
-    let unsubscribeListener = null; 
+    let unsubscribeListener = null;
+    let dailyChart = null;
     const dailyLimit = 10;
 
     // ============================================================
-    // NOVÁ VELO DATABÁZE (z AI výzkumu)
+    // NOVÁ VELO DATABÁZE (jen poskytované položky, bez historických názvů)
     // ============================================================
     const pouchDatabase = [
-      { "name": "Velo Spiffy Spearmint (Easy Mint Mini)", "mg": 4 },
-      { "name": "Velo Witty Spearmint (Mint Slim)", "mg": 6 },
-      { "name": "Velo Crispy Peppermint Slim (Ice Cool)", "mg": 10 },
-      { "name": "Velo Crispy Peppermint Mini (Ice Cool Mini)", "mg": 8 },
-      { "name": "Velo Mighty Peppermint (Freeze X-Strong)", "mg": 10.9 },
-      { "name": "Velo Mighty Peppermint 14mg (Freeze ULTRA)", "mg": 14 },
-      { "name": "Velo Mighty Peppermint 17mg (Freeze MAX)", "mg": 17 },
-      { "name": "Velo Peppermint Storm (Cool Storm)", "mg": 10.9 },
-      { "name": "Velo Zingy Eucalyptus (Eucalyptus X-Strong)", "mg": 10.9 },
-      { "name": "Velo Zesty Elderflower (Elderflower Spritz)", "mg": 10 },
-      { "name": "Velo Twisted Pineapple (Caribbean Spirit)", "mg": 10 },
-      { "name": "Velo Blushy Berry (Ruby Berry)", "mg": 6 },
-      { "name": "Velo Groovy Grape (Royal Purple)", "mg": 10 },
-      { "name": "Velo Groovy Grape Mini (Royal Purple Mini)", "mg": 6 },
-      { "name": "Velo Lofty Liquorice (Liquorice Strong)", "mg": 10 },
-      { "name": "Velo Breezy Mango (Tropic Breeze)", "mg": 6 },
-      { "name": "Velo Tropical Mango 14mg", "mg": 14 },
-      { "name": "Velo Mango Flame", "mg": 10 },
-      { "name": "Velo Orange Spark", "mg": 10.9 },
-      { "name": "Velo Lime Flame (Fresh Jalapeno)", "mg": 8 },
-      { "name": "Velo Punchy Lime Mini", "mg": 4 },
-      { "name": "Velo Wintery Watermelon Mini (Iced Melon Mini)", "mg": 6 },
-      { "name": "Velo Blue Raspberry (Tangled Berry)", "mg": 8 },
-      { "name": "Velo Icy Berries", "mg": 8 },
-      { "name": "Velo Icy Cherry", "mg": 8 }
+      { name: "Velo Simply Spearmint Mini", mg: 4, dots: null },
+      { name: "Velo Cherry Ice Mini", mg: 4, dots: null },
+      { name: "Velo Strawberry Ice Mini", mg: 6, dots: null },
+      { name: "Velo Icy Berries Mini", mg: 6, dots: null },
+      { name: "Velo Bright Spearmint Mini", mg: 6, dots: null },
+
+      { name: "Velo Strawberry Ice Slim", mg: 10.9, dots: null },
+      { name: "Velo Watermelon Ice Slim", mg: 8, dots: null },
+      { name: "Velo Tangy Lime Slim", mg: 10, dots: null },
+      { name: "Velo Tropical Mango Slim", mg: 10.9, dots: null },
+      { name: "Velo Groovy Grape Slim", mg: 10.9, dots: null },
+      { name: "Velo Orange Spark Slim", mg: 10.9, dots: null },
+      { name: "Velo Peppermint Storm Slim", mg: 10.9, dots: null },
+      { name: "Velo Freezing Peppermint Slim", mg: 10.9, dots: null },
+      { name: "Velo Crispy Peppermint Slim", mg: 10, dots: null },
+      { name: "Velo Eucalyptus Storm Slim", mg: 10.9, dots: null },
+      { name: "Velo Eucalyptus Storm Slim 5 Dots", mg: 14, dots: 5 },
+      { name: "Velo Cinnamon Flame Slim", mg: 10.9, dots: null },
+      { name: "Velo McLaren Papaya Slim", mg: 8.4, dots: null },
+
+      { name: "Velo Crispy Peppermint Zero Slim", mg: 0, dots: null },
+      { name: "Velo Tropic Breeze Zero Slim", mg: 0, dots: null }
     ];
 
     // Seřadíme podle abecedy
@@ -195,6 +200,7 @@
             let todayCount = 0;
             let todayMg = 0.0; // Používáme float
             const todayString = new Date().toDateString();
+            const dailyTotals = new Map();
 
             snapshot.forEach((docSnap) => {
                 const data = docSnap.data();
@@ -203,10 +209,16 @@
                 const date = data.timestamp.toDate();
                 const isToday = date.toDateString() === todayString;
 
+                const mgStrength = Number(data.nicotineStrength);
+
                 if (isToday) {
                     todayCount++;
-                    todayMg += Number(data.nicotineStrength);
+                    todayMg += mgStrength;
                 }
+
+                const dayKey = formatDateKey(date);
+                const currentTotal = dailyTotals.get(dayKey) ?? 0;
+                dailyTotals.set(dayKey, currentTotal + mgStrength);
 
                 if (historyList.children.length < 20) {
                     const div = document.createElement('div');
@@ -232,6 +244,15 @@
             document.getElementById('todayCount').innerText = todayCount;
             document.getElementById('todayMg').innerText = todayMg.toFixed(1); // Zaokrouhlení na 1 desetinné místo
             document.getElementById('remainingLimit').innerText = Math.max(0, dailyLimit - todayCount);
+
+            const sortedDaily = Array.from(dailyTotals.entries())
+                .sort((a, b) => new Date(a[0]) - new Date(b[0]))
+                .map(([key, totalMg]) => ({
+                    label: formatDateLabel(key),
+                    total: Number(totalMg.toFixed(1))
+                }));
+
+            updateDailyChart(sortedDaily);
         });
     }
 
@@ -273,13 +294,63 @@
         }
     };
 
+    function renderDots(dots) {
+        if (typeof dots === 'number' && dots > 0) {
+            return ' ' + '●'.repeat(dots);
+        }
+        return ' (kolečka? 🤔)';
+    }
+
+    function formatDateKey(date) {
+        return date.toISOString().slice(0, 10);
+    }
+
+    function formatDateLabel(key) {
+        const [year, month, day] = key.split('-').map(Number);
+        return new Date(year, month - 1, day).toLocaleDateString('cs-CZ', { day: '2-digit', month: '2-digit' });
+    }
+
+    function updateDailyChart(dailyData) {
+        const canvas = document.getElementById('dailyChart');
+        if (!canvas || typeof Chart === 'undefined') return;
+
+        const labels = dailyData.map(item => item.label);
+        const values = dailyData.map(item => item.total);
+
+        if (dailyChart) dailyChart.destroy();
+
+        dailyChart = new Chart(canvas, {
+            type: 'bar',
+            data: {
+                labels,
+                datasets: [{
+                    label: 'mg nikotinu',
+                    data: values,
+                    backgroundColor: '#3498db'
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: { display: true, text: 'mg' }
+                    }
+                }
+            }
+        });
+    }
+
     function populateDropdown() {
         const select = document.getElementById('pouchSelect');
-        if (select.children.length > 0) return; 
+        if (select.children.length > 0) return;
         pouchDatabase.forEach(pouch => {
             const option = document.createElement('option');
             option.value = JSON.stringify(pouch);
-            option.text = `${pouch.name} (${pouch.mg} mg)`;
+            option.text = `${pouch.name}${renderDots(pouch.dots)} (${pouch.mg} mg)`;
             select.appendChild(option);
         });
     }
