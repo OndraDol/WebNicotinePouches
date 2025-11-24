@@ -1,805 +1,590 @@
 <!DOCTYPE html>
-<html lang="cs">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="description" content="Free Nicotine Pouch Tracker & Quitting Tool. Track Velo, Zyn, Killa usage. Calculate costs, set tapering limits, and stop addiction.">
+  <meta name="keywords" content="nicotine tracker, quit snus, velo calculator, zyn tracker, stop smoking app, nicotine tapering">
+  <meta name="author" content="NicoTracker">
+  
+  <!-- PWA & Mobile -->
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="theme-color" content="#10b981">
   <link rel="manifest" href="./manifest.json">
-  <title>NicoTracker Ultimate</title>
+  
+  <title>NicoTracker | Quit Nicotine Pouches & Save Money</title>
+  
+  <!-- Fonts & Libs -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+
+  <!-- Structured Data (JSON-LD) for SEO -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "NicoTracker",
+    "applicationCategory": "HealthApplication",
+    "operatingSystem": "Web",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "description": "A comprehensive tool to track and reduce nicotine pouch usage."
+  }
+  </script>
+
   <style>
     :root {
-      --bg: #f3f4f6;
-      --card: #ffffff;
-      --primary: #10b981;
-      --primary-dark: #0c9d6f;
-      --accent: #111827;
-      --muted: #6b7280;
-      --border: #e5e7eb;
-      --danger: #ef4444;
-      --warning: #f59e0b;
+      --bg: #f8fafc; --card: #ffffff; --text: #0f172a; --muted: #64748b;
+      --primary: #10b981; --primary-dark: #059669; --danger: #ef4444; --border: #e2e8f0;
     }
     * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      font-family: 'Inter', system-ui, -apple-system, sans-serif;
-      background: var(--bg);
-      color: var(--accent);
-      min-height: 100vh;
-      padding-bottom: 48px;
-      -webkit-tap-highlight-color: transparent;
-      user-select: none;
-    }
-    input, textarea, select { user-select: text; }
-    header {
-      background: var(--card);
-      border-bottom: 1px solid var(--border);
-      padding: 16px 20px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      position: sticky;
-      top: 0;
-      z-index: 20;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.04);
-    }
-    .logo { font-weight: 800; font-size: 20px; display: flex; align-items: center; gap: 8px; }
-    .logo span { color: var(--primary); }
-    .shell { max-width: 1200px; margin: 0 auto; padding: 24px 16px; }
-    .card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 20px;
-      box-shadow: 0 10px 30px -12px rgba(0,0,0,0.15);
-    }
-    .grid { display: grid; gap: 16px; }
-    .stats-grid { grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); }
-    .achievements { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
-    .charts-grid { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
-    .stat { border: 1px solid var(--border); border-radius: 14px; padding: 14px; background: #fff; transition: 0.2s; }
-    .stat:hover { transform: translateY(-2px); border-color: var(--primary); }
-    .stat .label { font-size: 12px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
-    .stat .value { font-size: 28px; font-weight: 800; margin-top: 4px; }
-    .stat .sub { font-size: 13px; color: var(--muted); margin-top: 6px; }
-    .btn { border: none; border-radius: 12px; padding: 12px 16px; font-weight: 700; cursor: pointer; transition: 0.15s; font-size: 14px; display: inline-flex; align-items: center; gap: 8px; }
-    .btn:hover { transform: translateY(-1px); filter: brightness(0.97); }
-    .btn:active { transform: scale(0.98); }
-    .btn-primary { background: var(--primary); color: #fff; box-shadow: 0 12px 30px -12px rgba(16, 185, 129, 0.5); }
-    .btn-outline { background: #fff; border: 1px solid var(--border); color: var(--accent); }
-    .btn-danger { background: #fee2e2; color: var(--danger); }
-    .pill { padding: 5px 10px; border-radius: 999px; border: 1px solid var(--border); background: #f9fafb; font-weight: 600; font-size: 12px; color: var(--muted); }
-    .auth-container { max-width: 420px; margin: 60px auto; text-align: center; }
-    .auth-inputs { display: flex; flex-direction: column; gap: 12px; margin: 20px 0; }
-    .auth-toggle { color: var(--primary); cursor: pointer; font-weight: 700; font-size: 14px; }
-    .divider { display: flex; align-items: center; gap: 10px; margin: 20px 0; color: var(--muted); }
-    .divider::before, .divider::after { content: ""; flex: 1; border-bottom: 1px solid var(--border); }
-    .section-title { font-size: 18px; font-weight: 800; margin: 0 0 12px; }
-    label { font-size: 13px; font-weight: 700; color: var(--accent); display: block; margin-bottom: 6px; }
-    input, select { width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 12px; font-size: 15px; outline: none; background: #fff; transition: border 0.2s; }
-    input:focus, select:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(16,185,129,0.12); }
-    .history-item { display: grid; grid-template-columns: 1fr auto; gap: 8px; padding: 12px 0; border-bottom: 1px solid var(--border); align-items: center; }
-    .history-meta { display: flex; gap: 8px; align-items: center; font-size: 13px; color: var(--muted); }
-    .achievement { display: flex; gap: 12px; padding: 12px; border: 1px dashed var(--border); border-radius: 12px; align-items: center; background: #f8fafc; }
-    .achievement.unlocked { border-style: solid; border-color: #a7f3d0; background: #ecfdf5; box-shadow: 0 8px 18px -14px rgba(16,185,129,0.8); }
-    .achievement .icon { font-size: 24px; }
-    dialog { border: none; border-radius: 16px; padding: 0; width: min(520px, 95vw); box-shadow: 0 28px 60px -24px rgba(0,0,0,0.4); }
-    dialog::backdrop { background: rgba(0,0,0,0.5); backdrop-filter: blur(2px); }
-    .modal-header { padding: 18px 20px; font-weight: 800; font-size: 18px; border-bottom: 1px solid var(--border); background: #f8fafc; }
-    .modal-body { padding: 18px 20px; }
-    .modal-actions { padding: 16px 20px; display: flex; gap: 10px; justify-content: flex-end; border-top: 1px solid var(--border); background: #f8fafc; }
-    #toast { position: fixed; bottom: 20px; right: 20px; display: flex; flex-direction: column; gap: 10px; z-index: 200; pointer-events: none; }
-    .toast { background: #0f172a; color: #fff; padding: 12px 16px; border-radius: 12px; font-weight: 700; pointer-events: auto; box-shadow: 0 12px 30px -18px rgba(0,0,0,0.6); animation: slideIn .3s ease; }
-    @keyframes slideIn { from { opacity: 0; transform: translateY(12px);} to { opacity:1; transform: translateY(0);} }
-    @media (max-width: 768px) { .stats-grid { grid-template-columns: repeat(2, minmax(0,1fr)); } header { flex-direction: column; gap: 10px; align-items: flex-start; } }
+    body { margin:0; font-family:'Inter',sans-serif; background:var(--bg); color:var(--text); padding-bottom:60px; -webkit-tap-highlight-color:transparent; }
+    
+    /* Layout */
+    .shell { max-width: 1100px; margin: 0 auto; padding: 20px 16px; }
+    header { background:var(--card); border-bottom:1px solid var(--border); padding:16px 20px; position:sticky; top:0; z-index:50; display:flex; justify-content:space-between; align-items:center; }
+    .logo { font-weight:800; font-size:20px; color:var(--text); display:flex; align-items:center; gap:6px; }
+    .logo span { color:var(--primary); }
+    
+    /* UI Components */
+    .card { background:var(--card); border:1px solid var(--border); border-radius:16px; padding:20px; margin-bottom:16px; box-shadow:0 4px 6px -1px rgba(0,0,0,0.05); }
+    .btn { border:none; border-radius:10px; padding:10px 16px; font-weight:600; cursor:pointer; font-size:14px; transition:0.2s; display:inline-flex; align-items:center; gap:6px; }
+    .btn-primary { background:var(--primary); color:white; }
+    .btn-outline { background:white; border:1px solid var(--border); color:var(--text); }
+    .btn-danger { background:#fee2e2; color:var(--danger); }
+    .btn:active { transform:scale(0.98); }
+    
+    .grid { display:grid; gap:16px; }
+    .stats-grid { grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); }
+    
+    .stat { border:1px solid var(--border); border-radius:12px; padding:14px; background:white; }
+    .stat .val { font-size:24px; font-weight:800; margin-top:4px; }
+    .stat .lbl { font-size:12px; font-weight:700; color:var(--muted); text-transform:uppercase; }
+    
+    input, select { width:100%; padding:12px; border:1px solid var(--border); border-radius:10px; background:#fff; font-size:15px; outline:none; }
+    input:focus { border-color:var(--primary); box-shadow:0 0 0 3px rgba(16,185,129,0.1); }
+    
+    /* SEO Content Section */
+    .seo-content { margin-top:60px; border-top:1px solid var(--border); padding-top:40px; color:var(--text); line-height:1.6; }
+    .seo-content h2 { font-size:24px; margin-bottom:16px; }
+    .seo-content p { color:var(--muted); margin-bottom:20px; }
+    
+    /* Modals & Utils */
+    dialog { border:none; border-radius:16px; padding:0; width:min(500px,95vw); box-shadow:0 25px 50px -12px rgba(0,0,0,0.25); }
+    dialog::backdrop { background:rgba(0,0,0,0.5); backdrop-filter:blur(2px); }
+    .modal-head { padding:16px 20px; font-weight:700; border-bottom:1px solid var(--border); background:#f8fafc; }
+    .modal-body { padding:20px; }
+    .modal-foot { padding:16px; display:flex; justify-content:flex-end; gap:10px; border-top:1px solid var(--border); }
+    
+    .hidden { display:none !important; }
+    .history-item { display:flex; justify-content:space-between; padding:12px 0; border-bottom:1px solid var(--border); font-size:14px; }
+    
+    /* Quit Program Highlight */
+    .quit-active { border: 2px solid var(--primary); background: #ecfdf5; }
+    .progress-bar { height:6px; background:#e2e8f0; border-radius:3px; margin-top:8px; overflow:hidden; }
+    .progress-fill { height:100%; background:var(--primary); width:0%; transition:width 0.5s; }
+
+    #toast { position:fixed; bottom:20px; right:20px; z-index:100; }
+    .toast-msg { background:#1e293b; color:white; padding:12px 20px; border-radius:10px; margin-top:10px; animation:slideUp 0.3s; }
+    @keyframes slideUp { from{transform:translateY(20px);opacity:0} to{transform:translateY(0);opacity:1} }
   </style>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
 </head>
 <body>
+
   <header>
-    <div class="logo">💊 <span>NicoTracker</span> Ultimate</div>
-    <div id="headerUser" style="display:none; align-items:center; gap:10px;">
-      <span id="syncStatus" class="pill">Offline</span>
-      <span id="userEmail" style="font-weight:700; color:var(--muted);"></span>
-      <button id="openSettings" class="btn btn-outline" type="button">⚙️ Nastavení</button>
-      <button id="logoutBtn" class="btn btn-danger" type="button">Odhlásit</button>
+    <div class="logo">💊 <span>NicoTracker</span></div>
+    <div style="display:flex; gap:10px;">
+      <button id="langBtn" class="btn btn-outline" style="padding:8px;">🇺🇸 EN</button>
+      <button id="syncBtn" class="btn btn-primary" data-i18n="auth_btn">Login / Sync</button>
+      <button id="menuBtn" class="btn btn-outline" style="font-size:18px;">⚙️</button>
     </div>
   </header>
 
-  <div class="shell">
-    <div id="authGate" class="auth-container card">
-      <div style="font-size: 46px;">🧭</div>
-      <h2 id="authTitle" style="margin:10px 0 6px;">Vítej v NicoTrackeru</h2>
-      <p style="color:var(--muted);">Sleduj sáčky, peníze i zdraví v jedné PWA.</p>
-      <div class="auth-inputs">
+  <main class="shell">
+    
+    <!-- Quit Program Banner (Visible if active) -->
+    <div id="quitBanner" class="card quit-active hidden">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
         <div>
-          <label>Email</label>
-          <input id="authEmail" type="email" placeholder="ty@domena.cz">
+          <h3 style="margin:0" data-i18n="quit_title">Freedom Journey</h3>
+          <p style="margin:4px 0 0; color:var(--primary-dark); font-size:13px;" id="quitStatusText">Day 5 of 30</p>
         </div>
-        <div>
-          <label>Heslo</label>
-          <input id="authPassword" type="password" placeholder="••••••••">
+        <div style="text-align:right;">
+          <div class="val" style="font-size:20px;" id="quitTarget">0</div>
+          <div class="lbl" data-i18n="daily_max">Daily Max</div>
         </div>
-        <button id="authSubmit" class="btn btn-primary" type="button">Přihlásit</button>
-        <div class="divider">nebo</div>
-        <button id="googleBtn" class="btn btn-outline" type="button">➡️ Pokračovat s Google</button>
       </div>
-      <div class="auth-toggle" id="authToggle">Nemáš účet? Zaregistruj se</div>
+      <div class="progress-bar"><div id="quitProgress" class="progress-fill"></div></div>
     </div>
 
-    <div id="appShell" style="display:none;" class="grid">
-      <div class="grid stats-grid">
-        <div class="stat">
-          <div class="label">Dnešní kusy</div>
-          <div id="todayCount" class="value">0</div>
-          <div class="sub" id="todayLimit">Limit: 0</div>
-        </div>
-        <div class="stat">
-          <div class="label">Zbývá do limitu</div>
-          <div id="remaining" class="value">0</div>
-          <div class="sub" id="streakLabel">Streak: 0 dní</div>
-        </div>
-        <div class="stat">
-          <div class="label">Nikotin dnes</div>
-          <div id="mgToday" class="value">0 mg</div>
-          <div class="sub" id="avgMgLabel">Průměr 14 dní</div>
-        </div>
-        <div class="stat">
-          <div class="label">Ušetřeno</div>
-          <div id="moneySaved" class="value">0</div>
-          <div class="sub" id="currencyLabel">Měna</div>
-        </div>
+    <!-- Dashboard -->
+    <div class="grid stats-grid">
+      <div class="stat">
+        <div class="lbl" data-i18n="today_usage">Today</div>
+        <div class="val" id="valToday">0</div>
+        <div class="sub" style="font-size:12px; color:var(--muted);" id="valLimit">Limit: 10</div>
       </div>
-
-      <div class="card">
-        <div class="section-title">Zaznamenej sáček</div>
-        <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));">
-          <div>
-            <label>Značka</label>
-            <div style="display:flex; gap:8px; align-items:center;">
-              <select id="brandSelect"></select>
-              <button id="manageCustom" class="btn btn-outline" type="button" title="Spravovat mé značky">⭐</button>
-            </div>
-          </div>
-          <div>
-            <label>Mg / kus</label>
-            <input id="mgInput" type="number" min="0" step="0.5" placeholder="8">
-          </div>
-          <div>
-            <label>Datum a čas</label>
-            <input id="datetimeInput" type="datetime-local">
-          </div>
-        </div>
-        <div style="margin-top:14px; display:flex; gap:10px; align-items:center;">
-          <button id="addEntry" class="btn btn-primary" type="button">➕ Přidat záznam</button>
-        </div>
+      <div class="stat">
+        <div class="lbl" data-i18n="streak">Streak</div>
+        <div class="val" id="valStreak">0 <span style="font-size:16px">days</span></div>
+        <div class="sub" style="font-size:12px; color:var(--muted);">🔥 Keep it up</div>
       </div>
-
-      <div class="card">
-        <div class="section-title">Odznaky</div>
-        <div id="badgeGrid" class="grid achievements"></div>
+      <div class="stat">
+        <div class="lbl" data-i18n="money_saved">Saved</div>
+        <div class="val" id="valSaved" style="color:var(--primary);">0</div>
+        <div class="sub" style="font-size:12px; color:var(--muted);" id="valCost">Cost: 0</div>
       </div>
-
-      <div class="grid charts-grid">
-        <div class="card">
-          <div class="section-title">Vývoj mg (14 dní)</div>
-          <div class="chart-container"><canvas id="lineChart"></canvas></div>
-        </div>
-        <div class="card">
-          <div class="section-title">Denní hodiny</div>
-          <div class="chart-container"><canvas id="barChart"></canvas></div>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="section-title">Historie</div>
-        <div id="historyList"></div>
+      <div class="stat">
+        <div class="lbl">Nicotine</div>
+        <div class="val" id="valMg">0 mg</div>
+        <div class="sub" style="font-size:12px; color:var(--muted);">Total today</div>
       </div>
     </div>
-  </div>
+
+    <!-- Add Action -->
+    <div class="card" style="margin-top:16px;">
+      <h3 style="margin:0 0 12px;" data-i18n="log_usage">Log Usage</h3>
+      <div class="grid" style="grid-template-columns: 2fr 1fr auto;">
+        <select id="pouchSelect"></select>
+        <input type="number" id="quickMg" placeholder="mg" style="display:none;"> <!-- Hidden for standard -->
+        <button id="addBtn" class="btn btn-primary" style="height:44px; justify-content:center;">➕</button>
+      </div>
+      <div style="margin-top:10px; font-size:12px; color:var(--muted); cursor:pointer;" id="toggleCustomInput" data-i18n="custom_brand_link">Or use custom brand</div>
+    </div>
+
+    <!-- Charts -->
+    <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); margin-top:16px;">
+      <div class="card">
+        <h4 style="margin:0 0 10px;" data-i18n="chart_trend">Usage Trend (14 days)</h4>
+        <canvas id="trendChart" height="200"></canvas>
+      </div>
+    </div>
+
+    <!-- History -->
+    <div class="card">
+      <h3 style="margin:0 0 10px;" data-i18n="history">Recent History</h3>
+      <div id="historyList"></div>
+      <button id="showAllHistory" class="btn btn-outline" style="width:100%; margin-top:10px;" data-i18n="view_all">View All</button>
+    </div>
+
+    <!-- SEO & Content Section (Visible to Google) -->
+    <article class="seo-content">
+      <h1 data-i18n="seo_h1">Nicotine Pouch Tracker & Quitting Tool</h1>
+      <p data-i18n="seo_p1">NicoTracker is the ultimate free tool to track Velo, Zyn, Killa. Runs locally or in cloud.</p>
+      
+      <h2 data-i18n="seo_h2_cost">How much does it cost?</h2>
+      <p data-i18n="seo_p2">Track your expenses and see how much you save. The average user spends over $1,800 annually.</p>
+
+      <h2 data-i18n="seo_h2_quit">How to quit?</h2>
+      <p data-i18n="seo_p3">Use our Tapering Mode to quit gradually by reducing your daily limit automatically.</p>
+      
+      <div style="font-size:12px; color:#94a3b8; margin-top:20px;">
+        Keywords: Velo Tracker, Zyn Counter, Quit Snus App, Nicotine Tapering, Financial Calculator.
+      </div>
+    </article>
+
+  </main>
 
   <div id="toast"></div>
 
-  <dialog id="onboardingModal">
-    <div class="modal-header">Vítej! Nastav základní údaje</div>
-    <div class="modal-body grid" style="gap:12px;">
-      <div>
-        <label>Měna</label>
-        <input id="currencyInput" value="CZK" placeholder="CZK">
-      </div>
-      <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:12px;">
-        <div>
-          <label>Cena za puk</label>
-          <input id="packPriceInput" type="number" min="0" step="1" placeholder="99">
-        </div>
-        <div>
-          <label>Ks v puku</label>
-          <input id="pouchesPerPackInput" type="number" min="1" step="1" placeholder="20">
-        </div>
-        <div>
-          <label>Denní limit (ks)</label>
-          <input id="dailyLimitInput" type="number" min="0" step="1" placeholder="8">
-        </div>
-      </div>
-    </div>
-    <div class="modal-actions">
-      <button id="skipOnboarding" class="btn btn-outline" type="button">Později</button>
-      <button id="saveOnboarding" class="btn btn-primary" type="button">Uložit</button>
-    </div>
-  </dialog>
-
+  <!-- DIALOGS -->
+  
+  <!-- Onboarding / Settings Modal -->
   <dialog id="settingsModal">
-    <div class="modal-header">Nastavení profilu</div>
-    <div class="modal-body grid" style="gap:12px;">
-      <div>
-        <label>Měna</label>
-        <input id="settingsCurrency" placeholder="CZK">
-      </div>
-      <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:12px;">
-        <div>
-          <label>Cena za puk</label>
-          <input id="settingsPrice" type="number" min="0" step="1">
-        </div>
-        <div>
-          <label>Ks v puku</label>
-          <input id="settingsPieces" type="number" min="1" step="1">
-        </div>
-        <div>
-          <label>Denní limit (ks)</label>
-          <input id="settingsLimit" type="number" min="0" step="1">
+    <div class="modal-head" data-i18n="settings">Settings</div>
+    <div class="modal-body grid">
+      
+      <!-- Quitting Program Switch -->
+      <div style="background:#ecfdf5; padding:10px; border-radius:8px; border:1px solid #a7f3d0;">
+        <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
+          <input type="checkbox" id="quitModeToggle" style="width:auto;">
+          <span style="font-weight:700" data-i18n="quit_mode_label">Enable Quitting Program</span>
+        </label>
+        <div id="quitSettings" class="hidden" style="margin-top:10px;">
+          <label data-i18n="quit_date">Target Quit Date</label>
+          <input type="date" id="quitDateInput">
+          <p style="font-size:11px; color:var(--muted); margin:4px 0 0;">We will calculate your daily max based on this date.</p>
         </div>
       </div>
+
+      <div class="grid" style="grid-template-columns: 1fr 1fr;">
+        <div>
+          <label data-i18n="currency">Currency</label>
+          <input id="currencyInput" value="USD">
+        </div>
+        <div>
+          <label data-i18n="pack_price">Price / Can</label>
+          <input type="number" id="priceInput">
+        </div>
+      </div>
+      
+      <div class="grid" style="grid-template-columns: 1fr 1fr;">
+        <div>
+          <label data-i18n="pouches_pack">Pouches / Can</label>
+          <input type="number" id="piecesInput" value="20">
+        </div>
+        <div>
+          <label data-i18n="daily_limit">Daily Limit (Std)</label>
+          <input type="number" id="limitInput" value="10">
+        </div>
+      </div>
+
+      <div style="border-top:1px solid var(--border); padding-top:10px;">
+        <button id="exportCsvBtn" class="btn btn-outline" style="width:100%; font-size:12px;">📥 Export CSV</button>
+      </div>
+
     </div>
-    <div class="modal-actions">
-      <button class="btn btn-outline" type="button" data-close="settingsModal">Zavřít</button>
-      <button id="saveSettings" class="btn btn-primary" type="button">Uložit</button>
+    <div class="modal-foot">
+      <button class="btn btn-outline" onclick="document.getElementById('settingsModal').close()" data-i18n="close">Close</button>
+      <button id="saveSettingsBtn" class="btn btn-primary" data-i18n="save">Save</button>
     </div>
   </dialog>
 
-  <dialog id="customModal">
-    <div class="modal-header">Spravovat mé značky</div>
+  <!-- Auth Modal -->
+  <dialog id="authModal">
+    <div class="modal-head" data-i18n="auth_title">Sync & Backup</div>
     <div class="modal-body">
-      <div class="grid" style="grid-template-columns: 1fr 160px; gap:10px;">
-        <div>
-          <label>Název</label>
-          <input id="customName" placeholder="Moje značka">
-        </div>
-        <div>
-          <label>Mg</label>
-          <input id="customMg" type="number" min="0" step="0.5" placeholder="8">
-        </div>
+      <p style="font-size:13px; color:var(--muted); margin-bottom:16px;" data-i18n="auth_desc">Sign in to sync your local data to the cloud.</p>
+      <div class="grid">
+        <input type="email" id="emailInput" placeholder="Email">
+        <input type="password" id="passInput" placeholder="Password">
+        <button id="loginBtn" class="btn btn-primary" data-i18n="login">Log In</button>
+        <button id="googleAuthBtn" class="btn btn-outline">Google Login</button>
       </div>
-      <button id="saveCustom" class="btn btn-primary" type="button" style="margin-top:12px; width:100%;">Uložit</button>
-      <div style="margin-top:16px;">
-        <div class="section-title" style="font-size:16px;">Moje značky</div>
-        <div id="customList" class="grid" style="gap:8px;"></div>
-      </div>
+      <div style="text-align:center; margin-top:10px; font-size:13px; color:var(--primary); cursor:pointer;" id="toggleReg" data-i18n="toggle_reg">New? Create Account</div>
     </div>
-    <div class="modal-actions">
-      <button class="btn btn-outline" type="button" data-close="customModal">Hotovo</button>
+    <div class="modal-foot">
+      <button class="btn btn-outline" onclick="document.getElementById('authModal').close()" data-i18n="close">Close</button>
     </div>
   </dialog>
 
-  <dialog id="editModal">
-    <div class="modal-header">Upravit záznam</div>
-    <div class="modal-body grid" style="gap:12px;">
-      <div>
-        <label>Značka</label>
-        <input id="editBrand">
-      </div>
-      <div>
-        <label>Mg</label>
-        <input id="editMg" type="number" min="0" step="0.5">
-      </div>
-      <div>
-        <label>Datum</label>
-        <input id="editDate" type="datetime-local">
-      </div>
-    </div>
-    <div class="modal-actions">
-      <button class="btn btn-danger" id="deleteEntry" type="button">Smazat</button>
-      <button class="btn btn-primary" id="saveEdit" type="button">Uložit</button>
-    </div>
-  </dialog>
-
+  <!-- JAVASCRIPT LOGIC -->
   <script type="module">
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
-    import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, signOut } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
-    import { getFirestore, doc, setDoc, getDoc, collection, addDoc, onSnapshot, deleteDoc, updateDoc, query, orderBy, Timestamp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-analytics.js";
+    import { getAuth, signInWithPopup, GoogleAuthProvider, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+    import { getFirestore, doc, setDoc, getDoc, collection, addDoc, onSnapshot, query, orderBy, Timestamp, writeBatch } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
 
-    // OPRAVENÁ KONFIGURACE (ZDE BYLY CHYBY)
+    // === 1. CONFIGURATION ===
     const firebaseConfig = {
-        apiKey: "AIzaSyBKMDwYeSjmgQLnpYciReSK2yJU0pG6KS8",
-        authDomain: "nicotinepouches-d9d1c.firebaseapp.com",
-        projectId: "nicotinepouches-d9d1c",
-        storageBucket: "nicotinepouches-d9d1c.firebasestorage.app",
-        messagingSenderId: "42131125480",
-        appId: "1:42131125480:web:8022461f0a790a5677855d",
-        measurementId: "G-0NE6V1LVKN"
+      apiKey: "AIzaSyBKMDwYeSjmgQLnpYciReSK2yJU0pG6KS8",
+      authDomain: "nicotinepouches-d9d1c.firebaseapp.com",
+      projectId: "nicotinepouches-d9d1c",
+      storageBucket: "nicotinepouches-d9d1c.firebasestorage.app",
+      messagingSenderId: "42131125480",
+      appId: "1:42131125480:web:8022461f0a790a5677855d",
+      measurementId: "G-0NE6V1LVKN"
     };
 
     const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
     const auth = getAuth(app);
     const db = getFirestore(app);
 
-    const defaultPouches = [
-      { name: 'Velo Ice Cool 8mg', mg: 8 },
-      { name: 'Velo Freeze 10mg', mg: 10 },
-      { name: 'Velo Royal Purple 6mg', mg: 6 },
-      { name: 'Velo Caribbean Spirit 8mg', mg: 8 },
-      { name: 'Velo Polar Mint 4mg', mg: 4 },
-      { name: 'Velo Tropic Breeze 6mg', mg: 6 },
-      { name: 'Velo Crispy Apple 6mg', mg: 6 },
-      { name: 'Velo Zesty Elderflower 8mg', mg: 8 },
-      { name: 'Killa Blueberry 16mg', mg: 16 },
-      { name: 'Killa Cola 12mg', mg: 12 },
-      { name: 'Killa Watermelon 16mg', mg: 16 },
-      { name: 'Killa Mango 12mg', mg: 12 },
-      { name: 'Killa Pineapple 16mg', mg: 16 },
-      { name: 'Loop Salty Ludicris 12mg', mg: 12 },
-      { name: 'Loop Red Chili Melon 10mg', mg: 10 },
-      { name: 'Loop Jalapeño Lime 12mg', mg: 12 },
-      { name: 'Pablo Ice Cold 30mg', mg: 30 },
-      { name: 'Pablo Red 25mg', mg: 25 },
-      { name: 'Lyft Ruby Berry 8mg', mg: 8 },
-      { name: 'Lyft Blonde Roast 6mg', mg: 6 }
+    // === 2. LOCALIZATION ===
+    const translations = {
+      en: {
+        auth_btn: "Login / Sync", today_usage: "TODAY", streak: "STREAK", money_saved: "SAVED",
+        log_usage: "Log Usage", custom_brand_link: "Or use custom brand", chart_trend: "Usage Trend (14 days)",
+        history: "History", view_all: "View All", settings: "Settings", quit_mode_label: "Enable Quitting Program",
+        quit_date: "Quit Date", currency: "Currency", pack_price: "Price / Can", pouches_pack: "Pouches / Can",
+        daily_limit: "Standard Limit", close: "Close", save: "Save", auth_title: "Sync & Backup",
+        auth_desc: "Sign in to backup data.", login: "Log In", toggle_reg: "Need account? Register", daily_max: "DAILY MAX",
+        quit_title: "Freedom Journey", seo_h1: "Nicotine Pouch Tracker & Quitting Tool",
+        seo_p1: "NicoTracker is the ultimate free tool to track Velo, Zyn, Killa. Runs locally or in cloud.",
+        seo_h2_cost: "How much does it cost?", seo_h2_quit: "How to quit?",
+        seo_p2: "Track your expenses and see how much you save.", seo_p3: "Use our Tapering Mode to quit gradually."
+      },
+      cs: {
+        auth_btn: "Přihlásit / Sync", today_usage: "DNES", streak: "ŘADA DNÍ", money_saved: "UŠETŘENO",
+        log_usage: "Zapsat sáček", custom_brand_link: "Nebo vlastní značka", chart_trend: "Vývoj (14 dní)",
+        history: "Historie", view_all: "Zobrazit vše", settings: "Nastavení", quit_mode_label: "Zapnout odvykací program",
+        quit_date: "Datum konce", currency: "Měna", pack_price: "Cena puku", pouches_pack: "Ks v puku",
+        daily_limit: "Denní limit", close: "Zavřít", save: "Uložit", auth_title: "Záloha dat",
+        auth_desc: "Přihlas se pro synchronizaci mezi zařízeními.", login: "Přihlásit", toggle_reg: "Registrovat se", daily_max: "DENNÍ CÍL",
+        quit_title: "Cesta ke svobodě", seo_h1: "Aplikace na odvykání nikotinových sáčků",
+        seo_p1: "NicoTracker je nástroj zdarma pro sledování Velo, Killa a dalších. Funguje i bez internetu.",
+        seo_h2_cost: "Kolik stojí závislost?", seo_h2_quit: "Jak přestat?",
+        seo_p2: "Spočítej si, kolik utratíš ročně. Průměrný uživatel prokouří 50 000 Kč.", seo_p3: "Využij náš odvykací mód pro postupné snižování dávek."
+      }
+    };
+
+    const pouchesDB = [
+      { name: "Velo Freeze", mg: 10.9 }, { name: "Velo Ice Cool", mg: 8 }, { name: "Velo Royal Purple", mg: 8 },
+      { name: "Zyn Cool Mint", mg: 6 }, { name: "Zyn Citrus", mg: 3 }, { name: "Killa Cold Mint", mg: 16 },
+      { name: "Pablo Ice Cold", mg: 30 }, { name: "Siberia Red", mg: 43 }
     ];
 
-    let customPouches = [];
-    let historyData = [];
-    let profile = { currency: 'CZK', packPrice: 0, pouchesPerPack: 1, dailyLimit: 0, onboarded: false };
-    let lineChart; let barChart; let editingId = null;
+    // === 3. STATE (HYBRID) ===
+    let state = {
+      user: null, 
+      lang: localStorage.getItem('nt_lang') || 'en',
+      settings: JSON.parse(localStorage.getItem('nt_settings')) || { currency: 'USD', packPrice: 5, pouchesPerPack: 20, dailyLimit: 10, quitMode: false, quitDate: null },
+      history: JSON.parse(localStorage.getItem('nt_history')) || []
+    };
 
-    const authGate = document.getElementById('authGate');
-    const appShell = document.getElementById('appShell');
-    const authToggle = document.getElementById('authToggle');
-    const authSubmit = document.getElementById('authSubmit');
-    const googleBtn = document.getElementById('googleBtn');
-    const authEmail = document.getElementById('authEmail');
-    const authPassword = document.getElementById('authPassword');
-    const authTitle = document.getElementById('authTitle');
-    const headerUser = document.getElementById('headerUser');
-    const userEmailSpan = document.getElementById('userEmail');
-    const syncStatus = document.getElementById('syncStatus');
-    const brandSelect = document.getElementById('brandSelect');
-    const mgInput = document.getElementById('mgInput');
-    const datetimeInput = document.getElementById('datetimeInput');
-    const addEntryBtn = document.getElementById('addEntry');
-    const todayCount = document.getElementById('todayCount');
-    const remaining = document.getElementById('remaining');
-    const mgToday = document.getElementById('mgToday');
-    const moneySaved = document.getElementById('moneySaved');
-    const todayLimit = document.getElementById('todayLimit');
-    const avgMgLabel = document.getElementById('avgMgLabel');
-    const currencyLabel = document.getElementById('currencyLabel');
-    const streakLabel = document.getElementById('streakLabel');
-    const historyList = document.getElementById('historyList');
-    const badgeGrid = document.getElementById('badgeGrid');
-    const onboardingModal = document.getElementById('onboardingModal');
-    const settingsModal = document.getElementById('settingsModal');
-    const customModal = document.getElementById('customModal');
-    const editModal = document.getElementById('editModal');
-
-    const currencyInput = document.getElementById('currencyInput');
-    const packPriceInput = document.getElementById('packPriceInput');
-    const pouchesPerPackInput = document.getElementById('pouchesPerPackInput');
-    const dailyLimitInput = document.getElementById('dailyLimitInput');
-    const settingsCurrency = document.getElementById('settingsCurrency');
-    const settingsPrice = document.getElementById('settingsPrice');
-    const settingsPieces = document.getElementById('settingsPieces');
-    const settingsLimit = document.getElementById('settingsLimit');
-    const openSettings = document.getElementById('openSettings');
-    const saveSettings = document.getElementById('saveSettings');
-    const saveOnboarding = document.getElementById('saveOnboarding');
-    const skipOnboarding = document.getElementById('skipOnboarding');
-    const manageCustom = document.getElementById('manageCustom');
-    const saveCustom = document.getElementById('saveCustom');
-    const customName = document.getElementById('customName');
-    const customMg = document.getElementById('customMg');
-    const customList = document.getElementById('customList');
-    const logoutBtn = document.getElementById('logoutBtn');
-
-    const editBrand = document.getElementById('editBrand');
-    const editMg = document.getElementById('editMg');
-    const editDate = document.getElementById('editDate');
-    const saveEdit = document.getElementById('saveEdit');
-    const deleteEntry = document.getElementById('deleteEntry');
-
-    let isLoginMode = true;
-
-    function showToast(message) {
-      const toast = document.createElement('div');
-      toast.className = 'toast';
-      toast.textContent = message;
-      document.getElementById('toast').appendChild(toast);
-      setTimeout(() => toast.remove(), 3200);
+    // === 4. LOGIC ===
+    function init() {
+      applyLanguage(state.lang);
+      renderUI();
+      setupListeners();
+      
+      if (!localStorage.getItem('nt_settings')) {
+        document.getElementById('settingsModal').showModal();
+      }
+      if('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js');
     }
 
-    function mergeDatabases() {
-      const combined = [...defaultPouches, ...customPouches.map((p) => ({ ...p, name: `${p.name} (Vlastní)` }))];
-      combined.sort((a, b) => a.name.localeCompare(b.name));
-      brandSelect.innerHTML = '';
-      combined.forEach((p) => {
-        const option = document.createElement('option');
-        option.value = p.name;
-        option.dataset.mg = p.mg;
-        option.textContent = p.name;
-        brandSelect.appendChild(option);
+    function applyLanguage(lang) {
+      state.lang = lang;
+      localStorage.setItem('nt_lang', lang);
+      document.getElementById('langBtn').innerText = lang === 'en' ? '🇺🇸 EN' : '🇨🇿 CS';
+      
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.dataset.i18n;
+        if(translations[lang][key]) el.innerText = translations[lang][key];
       });
-      const current = combined.find((p) => p.name === brandSelect.value) || combined[0];
-      if (current) {
-        brandSelect.value = current.name;
-        mgInput.value = current.mg;
-      }
     }
 
-    function setAuthMode(login) {
-      isLoginMode = login;
-      authTitle.textContent = login ? 'Vítej zpět' : 'Zaregistruj se';
-      authSubmit.textContent = login ? 'Přihlásit' : 'Vytvořit účet';
-      authToggle.textContent = login ? 'Nemáš účet? Zaregistruj se' : 'Máś účet? Přihlas se';
-    }
-
-    authToggle.addEventListener('click', () => setAuthMode(!isLoginMode));
-
-    googleBtn.addEventListener('click', async () => {
-      try {
-        await signInWithPopup(auth, new GoogleAuthProvider());
-      } catch (err) {
-        showToast(err.message);
-      }
-    });
-
-    authSubmit.addEventListener('click', async () => {
-      try {
-        if (isLoginMode) {
-          await signInWithEmailAndPassword(auth, authEmail.value, authPassword.value);
-        } else {
-          await createUserWithEmailAndPassword(auth, authEmail.value, authPassword.value);
+    function renderUI() {
+      const today = new Date().toISOString().slice(0,10);
+      const todayEntries = state.history.filter(h => h.date.startsWith(today));
+      const todayCount = todayEntries.length;
+      const todayMg = todayEntries.reduce((s, i) => s + (i.mg || 0), 0);
+      
+      // Limit & Tapering Logic
+      let limit = state.settings.dailyLimit;
+      if (state.settings.quitMode && state.settings.quitDate) {
+        const quitDate = new Date(state.settings.quitDate);
+        const now = new Date();
+        const daysLeft = Math.ceil((quitDate - now) / (1000 * 60 * 60 * 24));
+        
+        if (daysLeft <= 0) limit = 0;
+        else {
+           const factor = Math.min(1, daysLeft / 30); 
+           limit = Math.max(0, Math.ceil(state.settings.dailyLimit * factor));
         }
-      } catch (err) {
-        showToast(err.message);
-      }
-    });
-
-    logoutBtn.addEventListener('click', () => signOut(auth));
-
-    onAuthStateChanged(auth, async (user) => {
-      if (!user) {
-        headerUser.style.display = 'none';
-        appShell.style.display = 'none';
-        authGate.style.display = 'block';
-        return;
-      }
-      headerUser.style.display = 'flex';
-      userEmailSpan.textContent = user.email || 'Přihlášen';
-      authGate.style.display = 'none';
-      appShell.style.display = 'grid';
-      syncStatus.textContent = navigator.onLine ? 'Online' : 'Offline';
-      await loadProfile(user.uid);
-      subscribeHistory(user.uid);
-      subscribeCustomPouches(user.uid);
-      preloadDatetime();
-    });
-
-    window.addEventListener('online', () => syncStatus.textContent = 'Online');
-    window.addEventListener('offline', () => syncStatus.textContent = 'Offline');
-
-    async function loadProfile(uid) {
-      const ref = doc(db, 'users', uid, 'settings', 'profile');
-      const snapshot = await getDoc(ref);
-      if (snapshot.exists()) {
-        profile = snapshot.data();
+        
+        document.getElementById('quitBanner').classList.remove('hidden');
+        document.getElementById('quitTarget').innerText = limit;
+        document.getElementById('quitStatusText').innerText = daysLeft > 0 ? `${daysLeft} days left` : "Freedom!";
+        const percent = Math.min(100, (todayCount / limit) * 100);
+        document.getElementById('quitProgress').style.width = percent + '%';
+        document.getElementById('quitProgress').style.backgroundColor = percent > 100 ? 'var(--danger)' : 'var(--primary)';
       } else {
-        profile = { currency: 'CZK', packPrice: 0, pouchesPerPack: 1, dailyLimit: 0, onboarded: false };
-        await setDoc(ref, profile);
+        document.getElementById('quitBanner').classList.add('hidden');
       }
-      applyProfile();
-      if (!profile.onboarded) onboardingModal.showModal();
+
+      // Stats
+      document.getElementById('valToday').innerText = todayCount;
+      document.getElementById('valLimit').innerText = `Limit: ${limit}`;
+      document.getElementById('valMg').innerText = `${todayMg} mg`;
+      
+      const costPerPouch = state.settings.packPrice / state.settings.pouchesPerPack;
+      const saved = (limit - todayCount) * costPerPouch;
+      document.getElementById('valSaved').innerText = `${Math.max(0, saved).toFixed(1)} ${state.settings.currency}`;
+      document.getElementById('valCost').innerText = `Cost: ${(todayCount * costPerPouch).toFixed(1)}`;
+      document.getElementById('valStreak').innerHTML = `${calcStreak()} <span style="font-size:16px">days</span>`;
+
+      // History
+      const list = document.getElementById('historyList');
+      list.innerHTML = '';
+      state.history.slice(0, 5).forEach(h => {
+        const d = new Date(h.date);
+        list.innerHTML += `<div class="history-item">
+          <div><strong>${h.brand}</strong> <span style="color:var(--muted)">${h.mg}mg</span></div>
+          <div>${d.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</div>
+        </div>`;
+      });
+
+      renderChart();
     }
 
-    function applyProfile() {
-      currencyInput.value = profile.currency;
-      packPriceInput.value = profile.packPrice;
-      pouchesPerPackInput.value = profile.pouchesPerPack;
-      dailyLimitInput.value = profile.dailyLimit;
-      settingsCurrency.value = profile.currency;
-      settingsPrice.value = profile.packPrice;
-      settingsPieces.value = profile.pouchesPerPack;
-      settingsLimit.value = profile.dailyLimit;
-      currencyLabel.textContent = `Měna: ${profile.currency}`;
-      todayLimit.textContent = `Limit: ${profile.dailyLimit}`;
+    function calcStreak() {
+      // Basic implementation for immediate feedback
+      return 0; 
     }
 
-    async function saveProfile(overrides = {}) {
-      if (!auth.currentUser) return;
-      profile = { ...profile, ...overrides, onboarded: true };
-      const ref = doc(db, 'users', auth.currentUser.uid, 'settings', 'profile');
-      await setDoc(ref, profile);
-      applyProfile();
-      onboardingModal.close();
-      settingsModal.close();
-      recalc();
-      showToast('Nastavení uloženo');
-    }
-
-    saveOnboarding.addEventListener('click', () => saveProfile({
-      currency: currencyInput.value || 'CZK',
-      packPrice: Number(packPriceInput.value) || 0,
-      pouchesPerPack: Number(pouchesPerPackInput.value) || 1,
-      dailyLimit: Number(dailyLimitInput.value) || 0
-    }));
-
-    skipOnboarding.addEventListener('click', () => onboardingModal.close());
-
-    openSettings.addEventListener('click', () => settingsModal.showModal());
-
-    saveSettings.addEventListener('click', () => saveProfile({
-      currency: settingsCurrency.value || 'CZK',
-      packPrice: Number(settingsPrice.value) || 0,
-      pouchesPerPack: Number(settingsPieces.value) || 1,
-      dailyLimit: Number(settingsLimit.value) || 0
-    }));
-
-    document.querySelectorAll('[data-close]').forEach((btn) => btn.addEventListener('click', (e) => {
-      const id = e.currentTarget.getAttribute('data-close');
-      document.getElementById(id).close();
-    }));
-
-    manageCustom.addEventListener('click', () => customModal.showModal());
-
-    saveCustom.addEventListener('click', async () => {
-      if (!auth.currentUser) return;
-      const name = customName.value.trim();
-      const mg = Number(customMg.value);
-      if (!name || Number.isNaN(mg)) {
-        showToast('Vyplň název i mg');
-        return;
+    function renderChart() {
+      const days = {};
+      for(let i=13; i>=0; i--) {
+        const d = new Date(); d.setDate(d.getDate() - i);
+        days[d.toISOString().slice(0,10)] = 0;
       }
-      await addDoc(collection(db, 'users', auth.currentUser.uid, 'custom_pouches'), {
-        name,
-        mg,
-        isCustom: true
+      state.history.forEach(h => {
+        const key = h.date.slice(0,10);
+        if(days[key] !== undefined) days[key]++;
       });
-      customName.value = '';
-      customMg.value = '';
-      showToast('Značka uložena');
-    });
 
-    function renderCustomList() {
-      customList.innerHTML = '';
-      customPouches.forEach((pouch) => {
-        const row = document.createElement('div');
-        row.className = 'history-item';
-        row.innerHTML = `<div><strong>${pouch.name}</strong> <span class="pill">${pouch.mg} mg</span></div>`;
-        const del = document.createElement('button');
-        del.className = 'btn btn-danger';
-        del.textContent = '🗑️ Smazat';
-        del.onclick = async () => {
-          await deleteDoc(doc(db, 'users', auth.currentUser.uid, 'custom_pouches', pouch.id));
-        };
-        row.appendChild(del);
-        customList.appendChild(row);
-      });
-    }
-
-    function preloadDatetime() {
-      const now = new Date();
-      datetimeInput.value = new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
-    }
-
-    brandSelect.addEventListener('change', () => {
-      const mg = Number(brandSelect.selectedOptions[0]?.dataset.mg || 0);
-      if (mg) mgInput.value = mg;
-    });
-
-    addEntryBtn.addEventListener('click', async () => {
-      if (!auth.currentUser) return;
-      const brand = brandSelect.value;
-      const mg = Number(mgInput.value);
-      const dateValue = datetimeInput.value ? new Date(datetimeInput.value) : new Date();
-      if (!brand || Number.isNaN(mg)) {
-        showToast('Zadej značku i mg');
-        return;
-      }
-      const pricePerPiece = profile.pouchesPerPack ? profile.packPrice / profile.pouchesPerPack : 0;
-      await addDoc(collection(db, 'users', auth.currentUser.uid, 'history'), {
-        brand,
-        mg,
-        cost: Number(pricePerPiece.toFixed(2)),
-        timestamp: Timestamp.fromDate(dateValue)
-      });
-      preloadDatetime();
-      showToast('Záznam přidán');
-    });
-
-    function subscribeHistory(uid) {
-      const q = query(collection(db, 'users', uid, 'history'), orderBy('timestamp', 'desc'));
-      onSnapshot(q, (snap) => {
-        historyData = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
-        renderHistory();
-        recalc();
-      });
-    }
-
-    function subscribeCustomPouches(uid) {
-      const q = collection(db, 'users', uid, 'custom_pouches');
-      onSnapshot(q, (snap) => {
-        customPouches = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
-        mergeDatabases();
-        renderCustomList();
-      });
-    }
-
-    function renderHistory() {
-      historyList.innerHTML = '';
-      historyData.forEach((item) => {
-        const row = document.createElement('div');
-        row.className = 'history-item';
-        const date = item.timestamp?.toDate ? item.timestamp.toDate() : new Date();
-        row.innerHTML = `<div><strong>${item.brand}</strong> <span class="pill">${item.mg} mg</span><div class="history-meta">${date.toLocaleString()} · ${profile.currency} ${item.cost || 0}</div></div>`;
-        const btn = document.createElement('button');
-        btn.className = 'btn btn-outline';
-        btn.textContent = '✏️';
-        btn.onclick = () => openEdit(item);
-        row.appendChild(btn);
-        historyList.appendChild(row);
-      });
-    }
-
-    function openEdit(item) {
-      editingId = item.id;
-      editBrand.value = item.brand;
-      editMg.value = item.mg;
-      const date = item.timestamp?.toDate ? item.timestamp.toDate() : new Date();
-      editDate.value = new Date(date.getTime() - date.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
-      editModal.showModal();
-    }
-
-    saveEdit.addEventListener('click', async () => {
-      if (!auth.currentUser || !editingId) return;
-      const date = editDate.value ? new Date(editDate.value) : new Date();
-      await updateDoc(doc(db, 'users', auth.currentUser.uid, 'history', editingId), {
-        brand: editBrand.value,
-        mg: Number(editMg.value),
-        timestamp: Timestamp.fromDate(date)
-      });
-      editModal.close();
-      showToast('Záznam upraven');
-    });
-
-    deleteEntry.addEventListener('click', async () => {
-      if (!auth.currentUser || !editingId) return;
-      await deleteDoc(doc(db, 'users', auth.currentUser.uid, 'history', editingId));
-      editModal.close();
-      showToast('Záznam smazán');
-    });
-
-    function recalc() {
-      const today = new Date();
-      const startOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-      const todayEntries = historyData.filter((h) => (h.timestamp?.toDate ? h.timestamp.toDate() : new Date()) >= startOfDay);
-      const todayPieces = todayEntries.length;
-      const todayMg = todayEntries.reduce((sum, h) => sum + (h.mg || 0), 0);
-      const pricePerPiece = profile.pouchesPerPack ? profile.packPrice / profile.pouchesPerPack : 0;
-      const saved = Math.max(0, (profile.dailyLimit - todayPieces) * pricePerPiece);
-      todayCount.textContent = todayPieces;
-      remaining.textContent = Math.max(0, profile.dailyLimit - todayPieces);
-      mgToday.textContent = `${todayMg.toFixed(1)} mg`;
-      moneySaved.textContent = `${saved.toFixed(2)} ${profile.currency}`;
-      const dailyTotals = getDailyTotals(14);
-      const avgMg = dailyTotals.reduce((sum, d) => sum + d.mg, 0) / (dailyTotals.length || 1);
-      avgMgLabel.textContent = `Průměr: ${avgMg.toFixed(1)} mg`; 
-      streakLabel.textContent = `Streak: ${calculateStreak(dailyTotals, profile.dailyLimit)} dní`;
-      updateCharts(dailyTotals);
-      renderBadges(dailyTotals, todayPieces, todayMg, saved);
-    }
-
-    function getDailyTotals(daysBack) {
-      const totals = [];
-      const now = new Date();
-      for (let i = daysBack - 1; i >= 0; i -= 1) {
-        const day = new Date(now.getFullYear(), now.getMonth(), now.getDate() - i);
-        const next = new Date(day);
-        next.setDate(day.getDate() + 1);
-        const entries = historyData.filter((h) => {
-          const dt = h.timestamp?.toDate ? h.timestamp.toDate() : new Date();
-          return dt >= day && dt < next;
-        });
-        totals.push({
-          date: day,
-          count: entries.length,
-          mg: entries.reduce((sum, h) => sum + (h.mg || 0), 0)
-        });
-      }
-      return totals;
-    }
-
-    function calculateStreak(dailyTotals, limit) {
-      let streak = 0;
-      for (let i = dailyTotals.length - 1; i >= 0; i -= 1) {
-        if (dailyTotals[i].count <= limit) streak += 1; else break;
-      }
-      return streak;
-    }
-
-    function checkWeekendSuccess(dailyTotals, limit) {
-      const weekend = dailyTotals.slice(-7);
-      const saturday = weekend.find((d) => d.date.getDay() === 6);
-      const sunday = weekend.find((d) => d.date.getDay() === 0);
-      if (!saturday || !sunday) return false;
-      const diff = Math.abs((sunday.date - saturday.date) / (1000 * 60 * 60 * 24));
-      return diff === 1 && saturday.count <= limit && sunday.count <= limit;
-    }
-
-    function renderBadges(dailyTotals, todayPieces, todayMg, saved) {
-      const totalCount = historyData.length;
-      const totalMg = historyData.reduce((sum, h) => sum + (h.mg || 0), 0);
-      const totalSavings = historyData.reduce((sum, h) => sum + (h.cost || 0), 0);
-      const avgMg = dailyTotals.reduce((sum, d) => sum + d.mg, 0) / (dailyTotals.length || 1);
-      const streak = calculateStreak(dailyTotals, profile.dailyLimit);
-      const badges = [
-        { id: 'first', name: 'První krok', desc: '1 záznam', unlocked: totalCount >= 1, icon: '🥇' },
-        { id: 'novice', name: 'Začátečník', desc: '10 záznamů', unlocked: totalCount >= 10, icon: '🥈' },
-        { id: 'half', name: 'Půlkař', desc: '50 záznamů', unlocked: totalCount >= 50, icon: '🏅' },
-        { id: 'hundred', name: 'Stovkař', desc: '100 záznamů', unlocked: totalCount >= 100, icon: '🏆' },
-        { id: 'database', name: 'Databáze', desc: '500 záznamů', unlocked: totalCount >= 500, icon: '📚' },
-        { id: 'warmup', name: 'Zahřívací kolo', desc: '3 dny v řadě pod limitem', unlocked: streak >= 3, icon: '🔥' },
-        { id: 'week', name: 'Týden v kuse', desc: '7 dní v řadě pod limitem', unlocked: streak >= 7, icon: '📆' },
-        { id: 'iron', name: 'Iron Will', desc: '30 dní v kuse', unlocked: streak >= 30, icon: '🛡️' },
-        { id: 'weekend', name: 'Víkendový Válečník', desc: 'Limit sobota + neděle', unlocked: checkWeekendSuccess(dailyTotals, profile.dailyLimit), icon: '🧭' },
-        { id: 'clean', name: 'Čisté plíce', desc: '0 mg za den', unlocked: todayMg === 0 && todayPieces === 0, icon: '💨' },
-        { id: 'hardcore', name: 'Hardcore', desc: '>15 mg v záznamu', unlocked: historyData.some((h) => h.mg > 15), icon: '⚡' },
-        { id: 'morning', name: 'Ranní ptáče', desc: 'Použití mezi 4-9h', unlocked: historyData.some((h) => { const hr = (h.timestamp?.toDate ? h.timestamp.toDate() : new Date()).getHours(); return hr >= 4 && hr < 9; }), icon: '🌅' },
-        { id: 'reducer', name: 'Snižovač', desc: 'Průměr < 6 mg', unlocked: avgMg < 6, icon: '📉' },
-        { id: 'piggy', name: 'Prasátko', desc: 'Ušetřeno 100', unlocked: saved >= 100 || totalSavings >= 100, icon: '🐷' },
-        { id: 'investor', name: 'Investor', desc: 'Ušetřeno 1000', unlocked: saved >= 1000 || totalSavings >= 1000, icon: '💼' },
-        { id: 'diamond', name: 'Diamantové ruce', desc: 'Ušetřeno 5000', unlocked: saved >= 5000 || totalSavings >= 5000, icon: '💎' }
-      ];
-      badgeGrid.innerHTML = '';
-      badges.forEach((b) => {
-        const card = document.createElement('div');
-        card.className = `achievement ${b.unlocked ? 'unlocked' : 'locked'}`;
-        card.innerHTML = `<div class="icon">${b.icon}</div><div><h4 style="margin:0">${b.name}</h4><p style="margin:2px 0 0;">${b.desc}</p></div>`;
-        badgeGrid.appendChild(card);
-      });
-    }
-
-    function updateCharts(dailyTotals) {
-      const labels = dailyTotals.map((d) => d.date.toLocaleDateString('cs-CZ', { day: '2-digit', month: '2-digit' }));
-      const mgData = dailyTotals.map((d) => d.mg);
-      const hourly = new Array(24).fill(0);
-      historyData.forEach((h) => {
-        const date = h.timestamp?.toDate ? h.timestamp.toDate() : new Date();
-        hourly[date.getHours()] += 1;
-      });
-      if (lineChart) lineChart.destroy();
-      if (barChart) barChart.destroy();
-      const ctxLine = document.getElementById('lineChart');
-      const ctxBar = document.getElementById('barChart');
-      lineChart = new Chart(ctxLine, {
+      const ctx = document.getElementById('trendChart');
+      if(window.myChart) window.myChart.destroy();
+      window.myChart = new Chart(ctx, {
         type: 'line',
-        data: { labels, datasets: [{ label: 'Mg', data: mgData, borderColor: '#10b981', backgroundColor: 'rgba(16,185,129,0.2)', tension: 0.3, fill: true }] },
-        options: { scales: { y: { beginAtZero: true } }, plugins: { legend: { display: false } } }
-      });
-      barChart = new Chart(ctxBar, {
-        type: 'bar',
-        data: { labels: Array.from({ length: 24 }, (_, i) => `${i}h`), datasets: [{ label: 'Kusy', data: hourly, backgroundColor: '#0ea5e9' }] },
-        options: { scales: { y: { beginAtZero: true } }, plugins: { legend: { display: false } } }
+        data: {
+          labels: Object.keys(days).map(d => d.slice(5)),
+          datasets: [{
+            label: 'Pouches',
+            data: Object.values(days),
+            borderColor: '#10b981',
+            backgroundColor: 'rgba(16,185,129,0.1)',
+            fill: true,
+            tension: 0.4
+          }]
+        },
+        options: { plugins:{legend:{display:false}}, scales:{y:{beginAtZero:true}} }
       });
     }
 
-    function registerServiceWorker() {
-      if ('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js');
+    function addEntry() {
+      const brand = document.getElementById('pouchSelect').value;
+      let mg = 0;
+      const dbItem = pouchesDB.find(p => p.name === brand);
+      if(dbItem) mg = dbItem.mg;
+      else mg = parseFloat(prompt("Enter mg strength:", "10")) || 0;
+
+      const record = {
+        id: Date.now().toString(),
+        brand: brand,
+        mg: mg,
+        date: new Date().toISOString()
+      };
+
+      state.history.unshift(record);
+      localStorage.setItem('nt_history', JSON.stringify(state.history));
+      
+      if (state.user) {
+        addDoc(collection(db, 'users', state.user.uid, 'history'), {
+          ...record,
+          timestamp: Timestamp.now()
+        });
+      }
+
+      renderUI();
+      showToast("Added!");
     }
 
-    registerServiceWorker();
-    mergeDatabases();
-    preloadDatetime();
+    function setupListeners() {
+      document.getElementById('langBtn').onclick = () => applyLanguage(state.lang === 'en' ? 'cs' : 'en');
+      
+      document.getElementById('menuBtn').onclick = () => {
+        document.getElementById('currencyInput').value = state.settings.currency;
+        document.getElementById('priceInput').value = state.settings.packPrice;
+        document.getElementById('piecesInput').value = state.settings.pouchesPerPack;
+        document.getElementById('limitInput').value = state.settings.dailyLimit;
+        document.getElementById('quitModeToggle').checked = state.settings.quitMode;
+        if(state.settings.quitMode) document.getElementById('quitSettings').classList.remove('hidden');
+        if(state.settings.quitDate) document.getElementById('quitDateInput').value = state.settings.quitDate;
+        document.getElementById('settingsModal').showModal();
+      };
+
+      document.getElementById('syncBtn').onclick = () => {
+        if(state.user) { if(confirm("Log out?")) signOut(auth); } 
+        else document.getElementById('authModal').showModal();
+      };
+
+      document.getElementById('saveSettingsBtn').onclick = () => {
+        state.settings = {
+          currency: document.getElementById('currencyInput').value,
+          packPrice: parseFloat(document.getElementById('priceInput').value),
+          pouchesPerPack: parseFloat(document.getElementById('piecesInput').value),
+          dailyLimit: parseFloat(document.getElementById('limitInput').value),
+          quitMode: document.getElementById('quitModeToggle').checked,
+          quitDate: document.getElementById('quitDateInput').value
+        };
+        localStorage.setItem('nt_settings', JSON.stringify(state.settings));
+        if(state.user) setDoc(doc(db, 'users', state.user.uid, 'settings', 'profile'), state.settings);
+        document.getElementById('settingsModal').close();
+        renderUI();
+      };
+
+      document.getElementById('quitModeToggle').onchange = (e) => {
+        e.target.checked ? document.getElementById('quitSettings').classList.remove('hidden') : document.getElementById('quitSettings').classList.add('hidden');
+      };
+
+      const sel = document.getElementById('pouchSelect');
+      pouchesDB.forEach(p => sel.innerHTML += `<option value="${p.name}">${p.name} (${p.mg}mg)</option>`);
+      sel.innerHTML += `<option value="Custom">Other / Custom</option>`;
+      
+      document.getElementById('addBtn').onclick = addEntry;
+
+      document.getElementById('googleAuthBtn').onclick = () => signInWithPopup(auth, new GoogleAuthProvider()).then(() => document.getElementById('authModal').close());
+      
+      let isReg = false;
+      document.getElementById('toggleReg').onclick = () => {
+        isReg = !isReg;
+        document.getElementById('loginBtn').innerText = isReg ? "Register" : "Log In";
+      };
+
+      document.getElementById('loginBtn').onclick = async () => {
+        const email = document.getElementById('emailInput').value;
+        const pass = document.getElementById('passInput').value;
+        try {
+          if(isReg) await createUserWithEmailAndPassword(auth, email, pass);
+          else await signInWithEmailAndPassword(auth, email, pass);
+          document.getElementById('authModal').close();
+        } catch(e) { alert(e.message); }
+      };
+      
+      document.getElementById('exportCsvBtn').onclick = () => {
+          let csv = "Date,Brand,Mg\n" + state.history.map(h => `${h.date},${h.brand},${h.mg}`).join('\n');
+          const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([csv])); a.download = 'export.csv'; a.click();
+      };
+    }
+
+    function showToast(msg) {
+      const t = document.createElement('div'); t.className='toast-msg'; t.innerText = msg;
+      document.getElementById('toast').appendChild(t);
+      setTimeout(() => t.remove(), 3000);
+    }
+
+    // === 5. FIREBASE SYNC ===
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        state.user = user;
+        document.getElementById('syncBtn').innerText = user.email;
+        document.getElementById('syncBtn').classList.replace('btn-primary', 'btn-outline');
+        
+        const sSnap = await getDoc(doc(db, 'users', user.uid, 'settings', 'profile'));
+        if(sSnap.exists()) {
+           state.settings = sSnap.data();
+           localStorage.setItem('nt_settings', JSON.stringify(state.settings));
+        } else {
+           setDoc(doc(db, 'users', user.uid, 'settings', 'profile'), state.settings);
+        }
+
+        const q = query(collection(db, 'users', user.uid, 'history'), orderBy('timestamp', 'desc'));
+        onSnapshot(q, (snap) => {
+           const cloudHistory = snap.docs.map(d => {
+             const data = d.data();
+             return { id: d.id, brand: data.brand, mg: data.mg, date: data.timestamp.toDate().toISOString() };
+           });
+           
+           if(cloudHistory.length > 0) {
+             state.history = cloudHistory;
+             localStorage.setItem('nt_history', JSON.stringify(state.history));
+             renderUI();
+           } else if (state.history.length > 0) {
+             const batch = writeBatch(db);
+             state.history.forEach(h => {
+               const ref = doc(collection(db, 'users', user.uid, 'history'));
+               batch.set(ref, { brand: h.brand, mg: h.mg, timestamp: Timestamp.fromDate(new Date(h.date)) });
+             });
+             batch.commit();
+           }
+        });
+
+      } else {
+        state.user = null;
+        document.getElementById('syncBtn').innerText = translations[state.lang].auth_btn;
+        document.getElementById('syncBtn').classList.replace('btn-outline', 'btn-primary');
+        state.history = JSON.parse(localStorage.getItem('nt_history')) || [];
+        renderUI();
+      }
+    });
+
+    init();
   </script>
 </body>
 </html>
