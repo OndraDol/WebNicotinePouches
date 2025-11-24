@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <meta name="description" content="Free Nicotine Pouch Tracker & Quitting Tool. Track Velo, Zyn, Killa usage. Calculate costs, set tapering limits, and stop addiction.">
   <meta name="keywords" content="nicotine tracker, quit snus, velo calculator, zyn tracker, stop smoking app, nicotine tapering">
-  <meta name="author" content="NicoTracker">
   
   <!-- PWA & Mobile -->
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -21,7 +20,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
 
-  <!-- Structured Data (JSON-LD) for SEO -->
+  <!-- Structured Data (JSON-LD) -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -38,6 +37,7 @@
     :root {
       --bg: #f8fafc; --card: #ffffff; --text: #0f172a; --muted: #64748b;
       --primary: #10b981; --primary-dark: #059669; --danger: #ef4444; --border: #e2e8f0;
+      --gold: #f59e0b;
     }
     * { box-sizing: border-box; }
     body { margin:0; font-family:'Inter',sans-serif; background:var(--bg); color:var(--text); padding-bottom:60px; -webkit-tap-highlight-color:transparent; }
@@ -66,6 +66,18 @@
     input, select { width:100%; padding:12px; border:1px solid var(--border); border-radius:10px; background:#fff; font-size:15px; outline:none; }
     input:focus { border-color:var(--primary); box-shadow:0 0 0 3px rgba(16,185,129,0.1); }
     
+    /* Gamification Grid */
+    .achievements { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+    .achievement { 
+        padding: 12px; border: 1px solid var(--border); border-radius: 12px; display: flex; flex-direction: column; 
+        align-items: center; text-align: center; background: white; transition: all 0.3s; min-height: 110px; justify-content: center;
+    }
+    .achievement.locked { opacity: 0.5; filter: grayscale(1); background: #f1f5f9; border-style: dashed; }
+    .achievement.unlocked { background: #ecfdf5; border-color: #6ee7b7; box-shadow: 0 4px 6px -1px rgba(16,185,129,0.1); }
+    .achievement .icon { font-size: 32px; margin-bottom: 8px; }
+    .achievement h4 { margin:0; font-size:13px; font-weight:700; }
+    .achievement p { margin:4px 0 0; font-size:11px; color:var(--muted); line-height:1.2; }
+
     /* SEO Content Section */
     .seo-content { margin-top:60px; border-top:1px solid var(--border); padding-top:40px; color:var(--text); line-height:1.6; }
     .seo-content h2 { font-size:24px; margin-bottom:16px; }
@@ -154,6 +166,12 @@
       <div style="margin-top:10px; font-size:12px; color:var(--muted); cursor:pointer;" id="toggleCustomInput" data-i18n="custom_brand_link">Or use custom brand</div>
     </div>
 
+    <!-- Gamification Badges (NOVÉ) -->
+    <div class="card">
+        <h3 style="margin:0 0 12px;" data-i18n="achievements">Achievements</h3>
+        <div id="badgeGrid" class="achievements"></div>
+    </div>
+
     <!-- Charts -->
     <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); margin-top:16px;">
       <div class="card">
@@ -166,7 +184,6 @@
     <div class="card">
       <h3 style="margin:0 0 10px;" data-i18n="history">Recent History</h3>
       <div id="historyList"></div>
-      <button id="showAllHistory" class="btn btn-outline" style="width:100%; margin-top:10px;" data-i18n="view_all">View All</button>
     </div>
 
     <!-- SEO & Content Section (Visible to Google) -->
@@ -292,7 +309,7 @@
         quit_date: "Quit Date", currency: "Currency", pack_price: "Price / Can", pouches_pack: "Pouches / Can",
         daily_limit: "Standard Limit", close: "Close", save: "Save", auth_title: "Sync & Backup",
         auth_desc: "Sign in to backup data.", login: "Log In", toggle_reg: "Need account? Register", daily_max: "DAILY MAX",
-        quit_title: "Freedom Journey", seo_h1: "Nicotine Pouch Tracker & Quitting Tool",
+        quit_title: "Freedom Journey", seo_h1: "Nicotine Pouch Tracker & Quitting Tool", achievements: "Achievements",
         seo_p1: "NicoTracker is the ultimate free tool to track Velo, Zyn, Killa. Runs locally or in cloud.",
         seo_h2_cost: "How much does it cost?", seo_h2_quit: "How to quit?",
         seo_p2: "Track your expenses and see how much you save.", seo_p3: "Use our Tapering Mode to quit gradually."
@@ -304,7 +321,7 @@
         quit_date: "Datum konce", currency: "Měna", pack_price: "Cena puku", pouches_pack: "Ks v puku",
         daily_limit: "Denní limit", close: "Zavřít", save: "Uložit", auth_title: "Záloha dat",
         auth_desc: "Přihlas se pro synchronizaci mezi zařízeními.", login: "Přihlásit", toggle_reg: "Registrovat se", daily_max: "DENNÍ CÍL",
-        quit_title: "Cesta ke svobodě", seo_h1: "Aplikace na odvykání nikotinových sáčků",
+        quit_title: "Cesta ke svobodě", seo_h1: "Aplikace na odvykání nikotinových sáčků", achievements: "Úspěchy",
         seo_p1: "NicoTracker je nástroj zdarma pro sledování Velo, Killa a dalších. Funguje i bez internetu.",
         seo_h2_cost: "Kolik stojí závislost?", seo_h2_quit: "Jak přestat?",
         seo_p2: "Spočítej si, kolik utratíš ročně. Průměrný uživatel prokouří 50 000 Kč.", seo_p3: "Využij náš odvykací mód pro postupné snižování dávek."
@@ -346,6 +363,7 @@
         const key = el.dataset.i18n;
         if(translations[lang][key]) el.innerText = translations[lang][key];
       });
+      renderUI(); // Re-render badges with correct lang
     }
 
     function renderUI() {
@@ -386,7 +404,12 @@
       const saved = (limit - todayCount) * costPerPouch;
       document.getElementById('valSaved').innerText = `${Math.max(0, saved).toFixed(1)} ${state.settings.currency}`;
       document.getElementById('valCost').innerText = `Cost: ${(todayCount * costPerPouch).toFixed(1)}`;
-      document.getElementById('valStreak').innerHTML = `${calcStreak()} <span style="font-size:16px">days</span>`;
+      
+      const streak = calcStreak();
+      document.getElementById('valStreak').innerHTML = `${streak} <span style="font-size:16px">days</span>`;
+
+      // Render Badges
+      renderBadges(streak);
 
       // History
       const list = document.getElementById('historyList');
@@ -402,10 +425,90 @@
       renderChart();
     }
 
-    function calcStreak() {
-      // Basic implementation for immediate feedback
-      return 0; 
+    // --- GAMIFICATION LOGIC ---
+    function getDailyStats() {
+      const days = {};
+      state.history.forEach(h => {
+        const key = h.date.slice(0,10);
+        if(!days[key]) days[key] = { count: 0, mg: 0 };
+        days[key].count++;
+        days[key].mg += (h.mg || 0);
+      });
+      return days;
     }
+
+    function calcStreak() {
+      const daily = getDailyStats();
+      const limit = state.settings.dailyLimit;
+      let streak = 0;
+      let d = new Date();
+      // Check today first, if empty assume okay, if full check limit
+      for(let i=0; i<365; i++) {
+         const key = d.toISOString().slice(0,10);
+         const stat = daily[key];
+         if(i===0 && (!stat || stat.count <= limit)) { /* Today ok so far */ }
+         else if(stat && stat.count <= limit) streak++;
+         else if(i > 0 && !stat) streak++; // Assume 0 usage is good
+         else if(stat && stat.count > limit) break;
+         
+         d.setDate(d.getDate()-1);
+      }
+      return streak;
+    }
+
+    function checkWeekendSuccess() {
+      const daily = getDailyStats();
+      const limit = state.settings.dailyLimit;
+      const days = Object.keys(daily).sort();
+      for(let i=0; i<days.length-1; i++) {
+         const d1 = new Date(days[i]);
+         const d2 = new Date(days[i+1]);
+         if(d1.getDay() === 6 && d2.getDay() === 0) { // Sat & Sun
+             if(daily[days[i]].count <= limit && daily[days[i+1]].count <= limit) return true;
+         }
+      }
+      return false;
+    }
+
+    function renderBadges(streak) {
+        const total = state.history.length;
+        const totalSaved = parseFloat(document.getElementById('valSaved').innerText) || 0; // Approximate
+        const hasZero = state.history.some(h => h.mg === 0);
+        const hasHigh = state.history.some(h => h.mg > 15);
+        const isWeekend = checkWeekendSuccess();
+        
+        // Define Badges (EN/CS handling via ternary or keys)
+        const labels = state.lang === 'en' ? 
+          ['Beginner', 'Pro', 'Streak 3', 'Streak 7', 'Iron Will', 'Weekend Warrior', 'Clean Lungs', 'Hardcore', 'Saver', 'Investor'] :
+          ['Začátečník', 'Profík', 'Řada 3', 'Řada 7', 'Iron Will', 'Víkendový Válečník', 'Čisté plíce', 'Hardcore', 'Šetřílek', 'Investor'];
+          
+        const descs = state.lang === 'en' ?
+          ['10 entries', '100 entries', '3 days', '7 days', '30 days', 'Sat+Sun limit', '0mg pouch', '>15mg pouch', 'Saved 100', 'Saved 1000'] :
+          ['10 záznamů', '100 záznamů', '3 dny', '7 dní', '30 dní', 'So+Ne limit', '0mg sáček', '>15mg sáček', 'Ušetřeno 100', 'Ušetřeno 1000'];
+
+        const badges = [
+            { i:0, icon:'👶', u: total >= 10 },
+            { i:1, icon:'💯', u: total >= 100 },
+            { i:2, icon:'🔥', u: streak >= 3 },
+            { i:3, icon:'📆', u: streak >= 7 },
+            { i:4, icon:'🛡️', u: streak >= 30 },
+            { i:5, icon:'⚔️', u: isWeekend },
+            { i:6, icon:'🫁', u: hasZero },
+            { i:7, icon:'⚡', u: hasHigh },
+            { i:8, icon:'🐷', u: totalSaved >= 100 },
+            { i:9, icon:'💰', u: totalSaved >= 1000 },
+        ];
+
+        const grid = document.getElementById('badgeGrid');
+        grid.innerHTML = '';
+        badges.forEach(b => {
+            const el = document.createElement('div');
+            el.className = `achievement ${b.u ? 'unlocked' : 'locked'}`;
+            el.innerHTML = `<div class="icon">${b.icon}</div><div><h4>${labels[b.i]}</h4><p>${descs[b.i]}</p></div>`;
+            grid.appendChild(el);
+        });
+    }
+
 
     function renderChart() {
       const days = {};
