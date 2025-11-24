@@ -3,23 +3,22 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NicoTracker – Ultimate</title>
+  <title>NicoTracker – Osobní Deník</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #f5f7fb;
+      --bg: #f3f4f6;
       --card: #ffffff;
-      --primary: #2ecc71;
-      --primary-dark: #27ae60;
-      --accent: #3498db;
-      --text: #1f2a3d;
+      --primary: #10b981; /* Smaragdově zelená */
+      --primary-dark: #059669;
+      --accent: #3b82f6;
+      --text: #111827;
       --muted: #6b7280;
       --border: #e5e7eb;
       --danger: #ef4444;
-      --fb-color: #1877f2;
-      --google-color: #ea4335;
+      --warning: #f59e0b;
     }
     * { box-sizing: border-box; }
     body {
@@ -30,6 +29,8 @@
       min-height: 100vh;
       padding-bottom: 40px;
     }
+    
+    /* --- Layout --- */
     header {
       background: var(--card);
       border-bottom: 1px solid var(--border);
@@ -39,79 +40,88 @@
       justify-content: space-between;
       position: sticky;
       top: 0;
-      z-index: 20;
+      z-index: 50;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
     }
-    .logo { font-weight: 800; font-size: 20px; letter-spacing: -0.5px; display: flex; align-items: center; gap: 10px; }
+    .logo { font-weight: 800; font-size: 20px; letter-spacing: -0.5px; display: flex; align-items: center; gap: 8px; color: var(--text); }
     .logo span { color: var(--primary); }
-    .shell { max-width: 1200px; margin: 0 auto; padding: 20px; }
+    .shell { max-width: 1100px; margin: 0 auto; padding: 24px 16px; }
+    
+    .grid { display: grid; gap: 20px; }
+    .stats-grid { grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); }
+    
+    /* --- Cards & UI --- */
     .card {
       background: var(--card);
       border: 1px solid var(--border);
       border-radius: 16px;
-      padding: 20px;
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+      padding: 24px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);
     }
-    .flex-row { display: flex; gap: 16px; align-items: center; }
     .btn {
-      border: none; border-radius: 10px; padding: 12px 16px; font-weight: 600; cursor: pointer;
+      border: none; border-radius: 10px; padding: 12px 18px; font-weight: 600; cursor: pointer;
       transition: all 0.2s ease; font-size: 14px; display: inline-flex; align-items: center; justify-content: center; gap: 8px;
     }
     .btn:hover { transform: translateY(-1px); filter: brightness(95%); }
     .btn:active { transform: scale(0.98); }
-    .btn-primary { background: var(--primary); color: white; width: 100%; }
-    .btn-outline { background: transparent; color: var(--text); border: 1px solid var(--border); }
+    .btn-primary { background: var(--primary); color: white; width: 100%; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2); }
+    .btn-outline { background: white; color: var(--text); border: 1px solid var(--border); }
     .btn-danger { background: #fee2e2; color: var(--danger); }
     
-    /* Social Buttons */
-    .btn-google { background: white; color: #757575; border: 1px solid var(--border); width: 100%; }
-    .btn-fb { background: var(--fb-color); color: white; width: 100%; }
+    .btn-google { 
+      background: white; color: #4b5563; border: 1px solid var(--border); width: 100%; 
+      position: relative; margin-top: 12px;
+    }
 
-    /* Auth Forms */
-    .auth-container { max-width: 400px; margin: 40px auto; text-align: center; }
-    .auth-inputs { display: flex; flex-direction: column; gap: 12px; margin: 20px 0; }
-    .auth-toggle { color: var(--accent); cursor: pointer; font-size: 14px; text-decoration: underline; margin-top: 10px; display: block; }
-    .divider { display: flex; align-items: center; margin: 20px 0; color: var(--muted); font-size: 13px; }
+    /* --- Auth Screen --- */
+    .auth-container { max-width: 420px; margin: 60px auto; text-align: center; padding: 40px; }
+    .auth-inputs { display: flex; flex-direction: column; gap: 14px; margin: 24px 0; }
+    .auth-toggle { color: var(--accent); cursor: pointer; font-size: 14px; font-weight: 500; margin-top: 16px; display: inline-block; }
+    .auth-toggle:hover { text-decoration: underline; }
+    .divider { display: flex; align-items: center; margin: 24px 0; color: var(--muted); font-size: 13px; font-weight: 500; }
     .divider::before, .divider::after { content: ""; flex: 1; border-bottom: 1px solid var(--border); }
-    .divider::before { margin-right: 10px; } .divider::after { margin-left: 10px; }
+    .divider::before { margin-right: 14px; } .divider::after { margin-left: 14px; }
 
-    .grid { display: grid; gap: 20px; }
-    .stats-grid { grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); }
-    
+    /* --- Stats & Gamification --- */
     .stat {
       border: 1px solid var(--border); border-radius: 14px; padding: 16px;
-      background: white; transition: transform 0.2s;
+      background: white; transition: transform 0.2s; position: relative;
     }
-    .stat:hover { transform: translateY(-2px); }
-    .stat .label { color: var(--muted); font-size: 13px; font-weight: 600; text-transform: uppercase; }
-    .stat .value { font-weight: 800; font-size: 28px; margin-top: 8px; color: var(--text); }
-    .stat .sub { color: var(--muted); font-size: 13px; margin-top: 4px; }
-    
-    .section-title { font-size: 18px; font-weight: 700; margin: 0 0 16px; }
-    .input-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
-    label { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 6px; display: block; }
-    select, input { width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 10px; font-size: 15px; outline: none; background: #fff; }
+    .stat:hover { transform: translateY(-2px); border-color: var(--primary); }
+    .stat .label { color: var(--muted); font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+    .stat .value { font-weight: 800; font-size: 28px; margin-top: 6px; color: var(--text); }
+    .stat .sub { color: var(--muted); font-size: 13px; margin-top: 4px; display: flex; align-items: center; gap: 4px; }
 
-    .history-item { display: grid; grid-template-columns: 1fr auto; gap: 12px; padding: 14px 0; border-bottom: 1px solid var(--border); }
-    .pill { padding: 4px 8px; background: #eef2ff; color: var(--accent); border-radius: 6px; font-weight: 600; font-size: 12px; }
-    
-    .achievements { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 12px; }
-    .achievement { padding: 12px; border: 1px solid var(--border); border-radius: 12px; display: flex; gap: 12px; align-items: center; background: white; }
-    .achievement.locked { opacity: 0.6; filter: grayscale(1); border-style: dashed; }
-    .achievement.unlocked { background: #f0fdf4; border-color: #bbf7d0; }
+    .achievements { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; }
+    .achievement { padding: 12px; border: 1px solid var(--border); border-radius: 12px; display: flex; gap: 12px; align-items: center; background: white; transition: all 0.3s; }
+    .achievement.locked { opacity: 0.5; filter: grayscale(1); background: #f9fafb; border-style: dashed; }
+    .achievement.unlocked { background: #ecfdf5; border-color: #a7f3d0; box-shadow: 0 4px 6px -2px rgba(0,0,0,0.05); }
     .achievement .icon { font-size: 24px; }
+    .achievement h4 { margin: 0; font-size: 14px; font-weight: 700; }
+    .achievement p { margin: 2px 0 0; font-size: 12px; color: var(--muted); }
 
-    dialog { border: none; border-radius: 16px; padding: 0; width: min(500px, 95vw); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); }
-    dialog::backdrop { background: rgba(0,0,0,0.4); backdrop-filter: blur(2px); }
+    /* --- Inputs & Forms --- */
+    .section-title { font-size: 18px; font-weight: 700; margin: 0 0 16px; color: var(--text); }
+    .input-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; }
+    label { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 6px; display: block; }
+    select, input { width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 10px; font-size: 15px; outline: none; background: #fff; transition: border 0.2s; }
+    select:focus, input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); }
+
+    .history-item { display: grid; grid-template-columns: 1fr auto; gap: 12px; padding: 14px 0; border-bottom: 1px solid var(--border); align-items: center; }
+    .pill { padding: 4px 8px; background: #eff6ff; color: var(--accent); border-radius: 6px; font-weight: 600; font-size: 12px; border: 1px solid #dbeafe; }
+    
+    /* --- Utils --- */
+    .chart-container { position: relative; height: 280px; width: 100%; }
+    dialog { border: none; border-radius: 16px; padding: 0; width: min(480px, 95vw); box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); }
+    dialog::backdrop { background: rgba(0,0,0,0.5); backdrop-filter: blur(2px); }
     .modal-header { padding: 20px; font-weight: 700; font-size: 18px; border-bottom: 1px solid var(--border); background: #f9fafb; }
     .modal-body { padding: 24px; }
     .modal-actions { padding: 16px 24px; display: flex; gap: 10px; justify-content: flex-end; background: #f9fafb; border-top: 1px solid var(--border); }
 
     #toast { position: fixed; bottom: 24px; right: 24px; z-index: 100; display: flex; flex-direction: column; gap: 10px; pointer-events: none; }
-    .toast { background: #1f2a3d; color: white; padding: 12px 20px; border-radius: 10px; font-weight: 500; font-size: 14px; pointer-events: auto; animation: slideIn 0.3s ease; }
+    .toast { background: #1f2a3d; color: white; padding: 12px 20px; border-radius: 10px; font-weight: 500; font-size: 14px; pointer-events: auto; animation: slideIn 0.3s ease; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
     @keyframes slideIn { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 
-    .chart-container { position: relative; height: 250px; width: 100%; }
-    
     @media (max-width: 768px) {
       .stats-grid { grid-template-columns: 1fr 1fr; }
       header { flex-direction: column; gap: 10px; align-items: stretch; }
@@ -122,9 +132,9 @@
 </head>
 <body>
   <header>
-    <div class="logo">💊 <span>NicoTracker</span> Ultimate</div>
+    <div class="logo">💊 <span>NicoTracker</span></div>
     <div id="headerUser" style="display:none; align-items:center; gap:10px;">
-        <span id="userEmailDisplay" style="font-size:13px; font-weight:600;"></span>
+        <span id="userEmailDisplay" style="font-size:13px; font-weight:600; color:var(--muted);"></span>
     </div>
   </header>
 
@@ -132,92 +142,94 @@
     
     <!-- AUTH SCREEN -->
     <div id="authGate" class="auth-container card">
-      <h2 id="authTitle" style="margin-top:0;">Přihlášení</h2>
-      <p style="color:var(--muted); font-size:14px;">Synchronizuj data a získej kontrolu.</p>
+      <div style="font-size: 40px; margin-bottom: 10px;">👋</div>
+      <h2 id="authTitle" style="margin-top:0;">Vítej v NicoTrackeru</h2>
+      <p style="color:var(--muted); font-size:14px; margin-bottom: 30px;">
+        Tvůj osobní nástroj pro kontrolu závislosti a financí.
+      </p>
       
       <!-- Email/Pass Form -->
       <div class="auth-inputs">
         <input type="email" id="emailInput" placeholder="Váš email">
-        <input type="password" id="passInput" placeholder="Heslo">
+        <input type="password" id="passInput" placeholder="Heslo (min. 6 znaků)">
         <button class="btn btn-primary" id="emailActionBtn">Přihlásit se</button>
       </div>
       
-      <span class="auth-toggle" id="toggleAuthMode">Nemáš účet? Zaregistruj se</span>
+      <span class="auth-toggle" id="toggleAuthMode">Nemáš účet? Zaregistrovat se</span>
 
-      <div class="divider">nebo pokračuj přes</div>
+      <div class="divider">nebo</div>
 
-      <div style="display:flex; flex-direction:column; gap:10px;">
-        <button class="btn btn-google" id="googleBtn">
-            <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="18"> Google
-        </button>
-        <button class="btn btn-fb" id="fbBtn">
-            <svg width="18" height="18" fill="white" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg> Facebook
-        </button>
-      </div>
+      <button class="btn btn-google" id="googleBtn">
+        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="18" style="margin-right:8px;"> 
+        Pokračovat přes Google
+      </button>
     </div>
 
     <!-- MAIN APP CONTENT -->
     <div id="appContent" style="display:none;" class="grid">
       
-      <!-- User Controls -->
-      <section class="card" style="padding: 12px 20px;">
-        <div class="flex-row" style="justify-content: space-between; flex-wrap: wrap; gap: 10px;">
-          <div style="font-weight: 700; color: var(--primary-dark);">🟢 Online</div>
-          <div style="display:flex; gap:10px;">
-            <button class="btn btn-outline" id="settingsBtn">⚙️ Nastavení</button>
-            <button class="btn btn-outline" style="color: var(--danger); border-color: #fee2e2;" id="logoutBtn">Odhlásit</button>
-          </div>
+      <!-- Controls -->
+      <section class="card" style="padding: 12px 20px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+        <div style="font-size:14px; font-weight:600; color:var(--primary-dark); display:flex; align-items:center; gap:6px;">
+          <span style="display:block; width:8px; height:8px; background:var(--primary); border-radius:50%;"></span>
+          Synchronizováno
+        </div>
+        <div style="display:flex; gap:10px;">
+          <button class="btn btn-outline" id="settingsBtn">⚙️ Nastavení</button>
+          <button class="btn btn-outline" style="color: var(--danger); border-color: #fee2e2;" id="logoutBtn">Odhlásit</button>
         </div>
       </section>
 
       <!-- Dashboard Stats -->
       <section class="grid stats-grid">
         <div class="stat">
-          <div class="label">Aktuální Streak</div>
-          <div class="value" id="statStreak">0 dní</div>
+          <div class="label">Streak (Dny)</div>
+          <div class="value" id="statStreak">0</div>
           <div class="sub">pod limitem <span id="streakFire" style="opacity:0.2">🔥</span></div>
         </div>
         <div class="stat">
           <div class="label">Dnes</div>
-          <div class="value"><span id="statTodayCount">0</span> <span style="font-size:16px; color:var(--muted);">ks</span></div>
-          <div class="sub">Zbývá <strong id="statRemaining">0</strong> do limitu</div>
+          <div class="value"><span id="statTodayCount">0</span> <span style="font-size:16px; color:var(--muted); font-weight:500;">ks</span></div>
+          <div class="sub">Zbývá <strong id="statRemaining">0</strong> do cíle</div>
         </div>
         <div class="stat">
           <div class="label">Nikotin</div>
           <div class="value" id="statTodayMg">0 mg</div>
-          <div class="sub">Ø <span id="statAvgMg">0</span> mg/sáček</div>
+          <div class="sub">Ø <span id="statAvgMg">0</span> mg/ks</div>
         </div>
         <div class="stat">
-          <div class="label">Finance (Měsíc)</div>
-          <div class="value" id="statMonthCost">0 Kč</div>
-          <div class="sub" style="color:var(--primary-dark);">Ušetřeno: <span id="statSaved">0 Kč</span></div>
+          <div class="label">Ušetřeno (Měsíc)</div>
+          <div class="value" id="statSaved" style="color:var(--primary-dark);">0 Kč</div>
+          <div class="sub">Útrata: <span id="statMonthCost">0 Kč</span></div>
         </div>
       </section>
 
       <!-- Input Section -->
       <section class="card">
-        <div class="section-title">📝 Zaznamenat</div>
+        <div class="section-title">📝 Zaznamenat spotřebu</div>
         <div class="input-row">
           <div style="flex: 2;">
             <label>Co si dáváš?</label>
             <select id="pouchSelect"></select>
           </div>
           <div style="flex: 1;">
-            <label>Vlastní (mg)</label>
+            <label>Síla (mg) - volitelné</label>
             <input type="number" id="customMg" step="0.1" placeholder="mg">
           </div>
           <div style="flex: 1;">
-            <label>Čas</label>
+            <label>Kdy to bylo?</label>
             <input type="datetime-local" id="pouchTime">
           </div>
         </div>
+        
+        <!-- Toggle Custom Brand -->
         <div class="input-row" style="margin-top: 12px; display: none;" id="customBrandRow">
-             <input type="text" id="customBrand" placeholder="Název značky">
+             <input type="text" id="customBrand" placeholder="Název jiné značky">
         </div>
         
-        <div class="actions" style="margin-top: 16px;">
-          <button class="btn btn-primary" id="addPouchBtn">➕ Přidat záznam</button>
-          <button class="btn btn-outline" onclick="document.getElementById('customBrandRow').style.display = document.getElementById('customBrandRow').style.display === 'none' ? 'block' : 'none'">
+        <div class="actions" style="margin-top: 20px; display:flex; gap:10px; flex-wrap:wrap;">
+          <button class="btn btn-primary" id="addPouchBtn" style="flex:2;">✅ Přidat záznam</button>
+          <button class="btn btn-outline" style="flex:1;" onclick="document.getElementById('customBrandRow').style.display = document.getElementById('customBrandRow').style.display === 'none' ? 'block' : 'none'">
             Jiná značka
           </button>
         </div>
@@ -226,7 +238,7 @@
       <!-- Charts Area -->
       <section class="grid" style="grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));">
         <div class="card">
-          <div class="section-title">📊 Trend (mg nikotinu)</div>
+          <div class="section-title">📊 Vývoj nikotinu (mg)</div>
           <div class="chart-container"><canvas id="dailyChart"></canvas></div>
         </div>
         <div class="card">
@@ -237,13 +249,13 @@
 
       <!-- Gamification -->
       <section class="card">
-        <div class="section-title">🏆 Úspěchy</div>
+        <div class="section-title">🏆 Úspěchy a Odznaky</div>
         <div id="achievementsList" class="achievements"></div>
       </section>
 
       <!-- History -->
       <section class="card">
-        <div class="section-title">📅 Historie</div>
+        <div class="section-title">📅 Historie záznamů</div>
         <div id="historyList">Načítám data...</div>
       </section>
     </div>
@@ -253,15 +265,16 @@
 
   <!-- DIALOGS -->
   <dialog id="onboardingDialog">
-    <div class="modal-header">👋 Vítej! Nastavíme tracker</div>
+    <div class="modal-header">👋 Rychlé nastavení</div>
     <div class="modal-body">
+      <p style="color:var(--muted); margin-bottom:20px;">Nastav si ceny a limity, aby statistiky dávaly smysl.</p>
       <div class="input-row">
         <div><label>Měna</label><input id="onCurrency" value="CZK"></div>
-        <div><label>Cena puku</label><input id="onPackPrice" type="number" value="150"></div>
+        <div><label>Cena puku (Kč)</label><input id="onPackPrice" type="number" value="150"></div>
       </div>
       <div class="input-row" style="margin-top: 12px;">
         <div><label>Kusů v puku</label><input id="onPouches" type="number" value="20"></div>
-        <div><label>Denní cíl (ks)</label><input id="onDaily" type="number" value="10"></div>
+        <div><label>Denní limit (ks)</label><input id="onDaily" type="number" value="10"></div>
       </div>
     </div>
     <div class="modal-actions">
@@ -280,9 +293,12 @@
         <div><label>Kusů v puku</label><input id="setPouches" type="number"></div>
         <div><label>Denní limit</label><input id="setDaily" type="number"></div>
       </div>
-      <div style="margin-top: 24px; border-top: 1px solid var(--border); padding-top: 16px;">
-        <button class="btn btn-outline" id="exportBtn" style="width:100%">📥 Stáhnout data (CSV)</button>
-        <button class="btn btn-danger" id="deleteAccountBtn" style="width:100%; margin-top:10px;">🗑️ Smazat účet</button>
+      <div style="margin-top: 24px; border-top: 1px solid var(--border); padding-top: 20px;">
+        <h4 style="margin:0 0 10px 0; font-size:14px;">Data</h4>
+        <div style="display:flex; gap:10px;">
+            <button class="btn btn-outline" id="exportBtn" style="flex:1;">📥 Export CSV</button>
+            <button class="btn btn-danger" id="deleteAccountBtn" style="flex:1;">🗑️ Smazat účet</button>
+        </div>
       </div>
     </div>
     <div class="modal-actions">
@@ -312,9 +328,10 @@
   <script type="module">
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js';
     import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, deleteDoc, doc, getDoc, setDoc, updateDoc, Timestamp, getDocs } from 'https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js';
-    import { getAuth, signInWithPopup, GoogleAuthProvider, FacebookAuthProvider, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, deleteUser } from 'https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js';
+    import { getAuth, signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, deleteUser } from 'https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js';
 
-    // CONFIGURATION
+    // === FIREBASE CONFIG ===
+    // Ujisti se, že máš v Console povolený Email/Password provider!
     const firebaseConfig = {
       apiKey: "AIzaSyBKMDwYeSjmgQLnpYciReSK2yJU0pG6KS8",
       authDomain: "nicotinepouches-d9d1c.firebaseapp.com",
@@ -340,12 +357,11 @@
       { name: "Siberia Red", mg: 43.0 }, { name: "Velo Zero", mg: 0.0 }
     ].sort((a, b) => a.name.localeCompare(b.name));
 
-    // INIT
+    // === INIT ===
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
     const auth = getAuth(app);
     const googleProvider = new GoogleAuthProvider();
-    const facebookProvider = new FacebookAuthProvider();
 
     let currentUser = null;
     let userSettings = null;
@@ -354,12 +370,12 @@
     let charts = { daily: null, hourly: null };
     let isRegisterMode = false;
 
-    // --- AUTH LOGIC ---
+    // === AUTH HANDLERS ===
     function toggleAuthMode() {
         isRegisterMode = !isRegisterMode;
-        document.getElementById('authTitle').innerText = isRegisterMode ? 'Registrace' : 'Přihlášení';
+        document.getElementById('authTitle').innerText = isRegisterMode ? 'Vytvořit účet' : 'Vítej v NicoTrackeru';
         document.getElementById('emailActionBtn').innerText = isRegisterMode ? 'Zaregistrovat se' : 'Přihlásit se';
-        document.getElementById('toggleAuthMode').innerText = isRegisterMode ? 'Už mám účet? Přihlásit se' : 'Nemáš účet? Zaregistruj se';
+        document.getElementById('toggleAuthMode').innerText = isRegisterMode ? 'Už mám účet? Přihlásit se' : 'Nemáš účet? Zaregistrovat se';
     }
 
     async function handleEmailAuth() {
@@ -370,34 +386,33 @@
         try {
             if (isRegisterMode) {
                 await createUserWithEmailAndPassword(auth, email, pass);
-                showToast('Registrace úspěšná!');
+                showToast('Účet vytvořen!');
             } else {
                 await signInWithEmailAndPassword(auth, email, pass);
-                showToast('Vítejte zpět!');
+                showToast('Přihlášeno');
             }
         } catch (error) {
+            console.error(error);
             let msg = error.message;
             if(error.code === 'auth/email-already-in-use') msg = 'Email je již používán.';
-            if(error.code === 'auth/wrong-password') msg = 'Špatné heslo.';
-            if(error.code === 'auth/user-not-found') msg = 'Uživatel nenalezen.';
-            if(error.code === 'auth/weak-password') msg = 'Heslo je příliš slabé (min 6 znaků).';
+            if(error.code === 'auth/invalid-credential') msg = 'Špatný email nebo heslo.';
+            if(error.code === 'auth/weak-password') msg = 'Heslo je moc slabé (min 6 znaků).';
             showToast(msg, 'error');
         }
     }
 
-    // --- EVENT LISTENERS ---
+    // === STARTUP ===
     document.addEventListener('DOMContentLoaded', () => {
         populateDropdown();
         setDefaultDateTime();
         
-        // Auth Listeners
+        // Listeners
         document.getElementById('googleBtn').addEventListener('click', () => signInWithPopup(auth, googleProvider).catch(e => showToast(e.message, 'error')));
-        document.getElementById('fbBtn').addEventListener('click', () => signInWithPopup(auth, facebookProvider).catch(e => showToast("Chyba FB: Nezapomeň povolit Facebook v Firebase konzoli.", 'error')));
         document.getElementById('emailActionBtn').addEventListener('click', handleEmailAuth);
         document.getElementById('toggleAuthMode').addEventListener('click', toggleAuthMode);
         document.getElementById('logoutBtn').addEventListener('click', () => signOut(auth));
 
-        // Modals & Forms
+        // Settings & Onboarding Listeners
         document.getElementById('settingsBtn').addEventListener('click', () => {
              if(userSettings) hydrateSettingsForm('set', userSettings);
              document.getElementById('settingsDialog').showModal();
@@ -406,12 +421,14 @@
         document.getElementById('saveSettings').addEventListener('click', saveSettings);
         document.getElementById('saveOnboarding').addEventListener('click', saveOnboarding);
         
+        // Input Listeners
         document.getElementById('addPouchBtn').addEventListener('click', addPouch);
         document.getElementById('pouchSelect').addEventListener('change', () => {
              const opt = document.getElementById('pouchSelect').options[document.getElementById('pouchSelect').selectedIndex];
              if(opt && !document.getElementById('customMg').value) document.getElementById('customMg').placeholder = opt.dataset.mg;
         });
 
+        // Edit/Delete Listeners
         document.getElementById('cancelEdit').addEventListener('click', () => document.getElementById('editDialog').close());
         document.getElementById('saveEdit').addEventListener('click', submitEdit);
         document.getElementById('exportBtn').addEventListener('click', exportCsv);
@@ -428,7 +445,7 @@
                 authGate.style.display = 'none';
                 appContent.style.display = 'grid';
                 headerUser.style.display = 'flex';
-                document.getElementById('userEmailDisplay').innerText = user.email || "Uživatel";
+                document.getElementById('userEmailDisplay').innerText = user.email;
                 initUserData(user.uid);
             } else {
                 authGate.style.display = 'block';
@@ -439,7 +456,7 @@
         });
     });
 
-    // --- DATA & UI LOGIC (Zůstává stejná jako v V2) ---
+    // === LOGIC ===
     async function initUserData(uid) {
         const sSnap = await getDoc(doc(db, 'users', uid, 'settings', 'profile'));
         if (sSnap.exists()) {
@@ -480,6 +497,8 @@
             });
             showToast('✅ Zaznamenáno');
             setDefaultDateTime();
+            document.getElementById('customBrand').value = '';
+            document.getElementById('customMg').value = '';
         } catch (e) { showToast('Chyba ukládání', 'error'); }
     }
 
@@ -544,7 +563,7 @@
         document.getElementById('statSaved').innerText = Math.round(savedTotal) + ' ' + userSettings.currency;
 
         const streaks = calculateStreaks(daily);
-        document.getElementById('statStreak').innerText = streaks.current + ' dní';
+        document.getElementById('statStreak').innerText = streaks.current;
         document.getElementById('streakFire').style.opacity = streaks.current > 0 ? '1' : '0.2';
     }
 
@@ -557,6 +576,7 @@
             { name: 'Stovkař', desc: '100 záznamů', icon: '💯', condition: total >= 100 },
             { name: 'Rozjezd', desc: '3 dny pod limitem', icon: '🔥', condition: streaks.current >= 3 },
             { name: 'Týden v kuse', desc: '7 dní pod limitem', icon: '📆', condition: streaks.current >= 7 },
+            { name: 'Iron Will', desc: 'Měsíc pod limitem', icon: '🛡️', condition: streaks.current >= 30 },
             { name: 'Čisté plíce', desc: 'Zkusil jsi 0mg sáček', icon: '🫁', condition: historyData.some(x => x.mg === 0) },
             { name: 'Investor', desc: 'Ušetřeno přes 500', icon: '💰', condition: parseInt(document.getElementById('statSaved').innerText) > 500 }
         ];
@@ -566,7 +586,7 @@
         badges.forEach(b => {
             const el = document.createElement('div');
             el.className = `achievement ${b.condition ? 'unlocked' : 'locked'}`;
-            el.innerHTML = `<div class="icon">${b.icon}</div><div><h4>${b.name}</h4><p style="margin:0; font-size:12px; color:var(--muted)">${b.desc}</p></div>`;
+            el.innerHTML = `<div class="icon">${b.icon}</div><div><h4>${b.name}</h4><p>${b.desc}</p></div>`;
             container.appendChild(el);
         });
     }
@@ -581,7 +601,7 @@
             type: 'line',
             data: {
                 labels: sortedKeys.map(k => k.slice(5)),
-                datasets: [{ label: 'mg Nikotinu', data: sortedKeys.map(k => dailyData.get(k).mg), borderColor: '#3498db', backgroundColor: 'rgba(52, 152, 219, 0.1)', fill: true, tension: 0.4 }]
+                datasets: [{ label: 'mg Nikotinu', data: sortedKeys.map(k => dailyData.get(k).mg), borderColor: '#10b981', backgroundColor: 'rgba(16, 185, 129, 0.1)', fill: true, tension: 0.4 }]
             },
             options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
         });
@@ -595,7 +615,7 @@
             type: 'bar',
             data: {
                 labels: Array.from({length:24}, (_,i) => i),
-                datasets: [{ label: 'Ks', data: hourlyCounts, backgroundColor: hourlyCounts.map(v => v > 2 ? '#ef4444' : '#2ecc71'), borderRadius: 4 }]
+                datasets: [{ label: 'Ks', data: hourlyCounts, backgroundColor: hourlyCounts.map(v => v > 2 ? '#ef4444' : '#3b82f6'), borderRadius: 4 }]
             },
             options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
         });
@@ -621,33 +641,33 @@
     function showToast(msg, type='info') {
         const t = document.createElement('div');
         t.className = 'toast';
-        t.style.borderLeft = `4px solid ${type === 'error' ? '#ef4444' : '#2ecc71'}`;
+        t.style.borderLeft = `4px solid ${type === 'error' ? '#ef4444' : '#10b981'}`;
         t.innerText = msg;
         document.getElementById('toast').appendChild(t);
         setTimeout(() => t.remove(), 3000);
     }
     
-    // --- HELPERS (Boilerplate) ---
+    // --- HELPERS ---
     function renderHistory() {
         const list = document.getElementById('historyList');
         list.innerHTML = '';
-        if(historyData.length === 0) { list.innerHTML = '<div style="color:var(--muted);text-align:center;">Zatím žádná data.</div>'; return; }
+        if(historyData.length === 0) { list.innerHTML = '<div style="color:var(--muted);text-align:center; padding:20px;">Zatím žádná data.</div>'; return; }
         
         historyData.slice(0, 20).forEach(h => {
             const date = h.timestamp.toDate();
             const div = document.createElement('div');
             div.className = 'history-item';
             div.innerHTML = `
-                <div><div style="font-weight:600;">${h.brand} <span class="pill">${h.mg} mg</span></div>
-                <div style="font-size:12px; color:var(--muted)">${date.toLocaleString()} • ${Math.round(h.cost||0)} ${userSettings?.currency}</div></div>
-                <div><button class="btn btn-outline" style="padding:6px;" onclick="window.editItem('${h.id}')">✏️</button>
-                <button class="btn btn-outline" style="padding:6px; color:var(--danger);" onclick="window.deleteItem('${h.id}')">🗑️</button></div>
+                <div><div style="font-weight:600; font-size:15px;">${h.brand} <span class="pill">${h.mg} mg</span></div>
+                <div style="font-size:12px; color:var(--muted); margin-top:4px;">${date.toLocaleDateString()} ${date.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})} • ${Math.round(h.cost||0)} ${userSettings?.currency}</div></div>
+                <div style="display:flex; gap:6px;"><button class="btn btn-outline" style="padding:6px 10px;" onclick="window.editItem('${h.id}')">✏️</button>
+                <button class="btn btn-outline" style="padding:6px 10px; color:var(--danger); border-color:#fee2e2;" onclick="window.deleteItem('${h.id}')">🗑️</button></div>
             `;
             list.appendChild(div);
         });
     }
 
-    window.deleteItem = async (id) => { if(confirm('Smazat?')) await deleteDoc(doc(db, 'users', currentUser.uid, 'history', id)); };
+    window.deleteItem = async (id) => { if(confirm('Smazat záznam?')) await deleteDoc(doc(db, 'users', currentUser.uid, 'history', id)); };
     window.editItem = (id) => {
         const item = historyData.find(i => i.id === id);
         if(!item) return;
@@ -702,7 +722,7 @@
         const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([csv], {type:'text/csv'})); a.download = 'export.csv'; a.click();
     }
     async function deleteAccount() {
-        if(confirm('Opravdu SMAZAT vše?')) alert('Pro smazání se prosím znovu přihlašte (Security requirement). V produkci by zde byl redirect.');
+        if(confirm('Opravdu SMAZAT vše?')) alert('Pro úplné smazání se prosím znovu přihlašte (bezpečnostní pojistka).');
     }
   </script>
 </body>
