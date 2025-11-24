@@ -1,142 +1,332 @@
 <!DOCTYPE html>
 <html lang="cs">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NicoTracker Velo Edition</title>
-    <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: #f4f4f9; margin: 0; padding: 20px; color: #333; }
-        .container { max-width: 600px; margin: 0 auto; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        h1 { text-align: center; color: #2c3e50; margin-bottom: 5px;}
-        
-        /* Login obrazovka */
-        #loginScreen { text-align: center; padding: 50px 20px; }
-        #appContent { display: none; } /* Skryté dokud se nepřihlásíš */
-
-        .user-info { text-align: center; margin-bottom: 20px; font-size: 0.9em; color: #7f8c8d; }
-        .btn-logout { background: none; border: none; color: #e74c3c; cursor: pointer; text-decoration: underline; }
-
-        /* Statistiky */
-        .stats { display: flex; justify-content: space-around; margin-bottom: 20px; background: #eef2f5; padding: 15px; border-radius: 8px; }
-        .stat-box { text-align: center; }
-        .stat-value { font-size: 24px; font-weight: bold; color: #3498db; }
-        .stat-label { font-size: 12px; color: #7f8c8d; }
-
-        /* Formulář */
-        .control-group { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 5px; font-weight: bold; }
-        select, input { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 16px; box-sizing: border-box; background: white; }
-        
-        button.action-btn { width: 100%; padding: 15px; background-color: #2ecc71; color: white; border: none; border-radius: 8px; font-size: 18px; font-weight: bold; cursor: pointer; margin-top: 10px; }
-        button.action-btn:active { transform: scale(0.98); }
-        button.google-btn { background-color: #4285F4; margin-top: 20px; }
-        
-        /* Historie */
-        .history { margin-top: 30px; }
-        .history-item { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #eee; align-items: center; }
-        .history-time { color: #95a5a6; font-size: 0.8em; text-align: right; margin-right: 10px;}
-        .delete-btn { color: #e74c3c; cursor: pointer; font-weight: bold; border: none; background: #ffebee; border-radius: 4px; padding: 5px 10px;}
-        .chart-section { margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee; }
-    </style>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NicoTracker – Produkční verze</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --primary: #2ecc71;
+      --accent: #3498db;
+      --text: #1f2a3d;
+      --muted: #6b7280;
+      --border: #e5e7eb;
+      --danger: #ef4444;
+      --warning: #f97316;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+    header {
+      background: var(--card);
+      border-bottom: 1px solid var(--border);
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+    .logo { font-weight: 700; letter-spacing: 0.2px; display: flex; align-items: center; gap: 10px; }
+    .logo span { color: var(--primary); }
+    .shell { max-width: 1200px; margin: 0 auto; padding: 20px; }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px;
+      box-shadow: 0 6px 16px rgba(17, 24, 39, 0.06);
+    }
+    .flex-row { display: flex; gap: 16px; align-items: center; }
+    .btn {
+      border: none;
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.1s ease, box-shadow 0.2s ease;
+    }
+    .btn:hover { transform: translateY(-1px); }
+    .btn-primary { background: var(--primary); color: white; }
+    .btn-accent { background: var(--accent); color: white; }
+    .btn-outline { background: transparent; color: var(--text); border: 1px solid var(--border); }
+    .btn-danger { background: var(--danger); color: white; }
+    .badge { display: inline-flex; align-items: center; gap: 6px; padding: 6px 10px; border-radius: 9999px; background: #eef2ff; color: #4338ca; font-weight: 600; font-size: 13px; }
+    .grid { display: grid; gap: 12px; }
+    .stats-grid { grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); }
+    .stat {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px;
+      background: linear-gradient(135deg, #f9fafb 0%, #ffffff 50%);
+    }
+    .stat .label { color: var(--muted); font-size: 13px; }
+    .stat .value { font-weight: 700; font-size: 26px; margin-top: 6px; }
+    .stat .sub { color: var(--muted); font-size: 12px; }
+    .section-title { font-size: 18px; font-weight: 700; margin: 0 0 8px; }
+    .input-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
+    label { font-size: 13px; font-weight: 600; color: var(--muted); display: block; margin-bottom: 6px; }
+    select, input { width: 100%; padding: 11px 12px; border: 1px solid var(--border); border-radius: 10px; font-size: 15px; background: #fff; }
+    textarea { width: 100%; padding: 11px 12px; border: 1px solid var(--border); border-radius: 10px; font-size: 15px; background: #fff; }
+    .actions { display: flex; gap: 10px; margin-top: 12px; flex-wrap: wrap; }
+    .history-item { display: grid; grid-template-columns: 1fr auto; gap: 8px; padding: 12px 0; border-bottom: 1px solid var(--border); }
+    .history-meta { color: var(--muted); font-size: 12px; display: flex; gap: 12px; flex-wrap: wrap; }
+    .history-actions { display: flex; gap: 6px; }
+    .pill { padding: 6px 10px; background: #eef2f7; border-radius: 999px; font-size: 13px; }
+    .achievements { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; }
+    .achievement { padding: 12px; border: 1px dashed var(--border); border-radius: 12px; display: flex; gap: 10px; align-items: center; background: #f9fafb; }
+    .achievement.locked { opacity: 0.5; }
+    .achievement .icon { font-size: 20px; }
+    dialog { border: none; border-radius: 14px; padding: 0; width: min(520px, 90vw); }
+    dialog::backdrop { background: rgba(0,0,0,0.35); }
+    .modal-body { padding: 20px; }
+    .modal-header { padding: 16px 20px 0; font-weight: 700; font-size: 18px; }
+    .modal-actions { padding: 16px 20px 20px; display: flex; gap: 10px; justify-content: flex-end; }
+    #toast { position: fixed; bottom: 16px; right: 16px; display: flex; flex-direction: column; gap: 8px; z-index: 50; }
+    .toast { background: #111827; color: white; padding: 12px 14px; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); animation: slideIn 0.2s ease; }
+    @keyframes slideIn { from { transform: translateY(10px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    .muted { color: var(--muted); }
+    .chart-wrap { min-height: 320px; }
+    .login-card { text-align: center; padding: 40px 20px; }
+    .tag { padding: 4px 8px; border-radius: 8px; background: #ecfdf3; color: #166534; font-weight: 600; font-size: 12px; }
+    @media (max-width: 768px) {
+      header { flex-direction: column; gap: 12px; align-items: flex-start; }
+      .history-item { grid-template-columns: 1fr; }
+      .history-actions { justify-content: flex-start; }
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
 </head>
 <body>
-
-<div class="container">
-    <h1>💊 NicoTracker</h1>
-    
-    <!-- Přihlašovací obrazovka -->
-    <div id="loginScreen">
-        <p>Pro synchronizaci dat mezi zařízeními se prosím přihlas.</p>
-        <button class="action-btn google-btn" onclick="login()">Přihlásit se přes Google</button>
+  <header>
+    <div class="logo">💊 <span>NicoTracker</span> Public</div>
+    <div class="flex-row" id="headerActions">
+      <button class="btn btn-outline" id="loginBtn">Přihlásit se přes Google</button>
+    </div>
+  </header>
+  <div class="shell">
+    <div id="authGate" class="card login-card">
+      <h2>Synchronizace a bezpečné uložení</h2>
+      <p class="muted">Přihlas se, aby se data ukládala do cloudu a mohly se zapnout limity, finance a odznaky.</p>
+      <div class="actions" style="justify-content:center;">
+        <button class="btn btn-primary" id="loginBtnSecondary">Přihlásit se přes Google</button>
+      </div>
     </div>
 
-    <!-- Hlavní obsah aplikace -->
-    <div id="appContent">
-        <div class="user-info">
-            <span id="userEmail">...</span> 
-            <button class="btn-logout" onclick="logout()">(Odhlásit)</button>
+    <div id="appContent" style="display:none;" class="grid" >
+      <section class="card">
+        <div class="flex-row" style="justify-content: space-between; align-items: center;">
+          <div>
+            <p class="muted" style="margin:0;">Přihlášený uživatel</p>
+            <div id="userEmail" style="font-weight:700;"></div>
+          </div>
+          <div class="actions">
+            <button class="btn btn-outline" id="settingsBtn">Nastavení</button>
+            <button class="btn btn-outline" id="logoutBtn">Odhlásit</button>
+          </div>
         </div>
+      </section>
 
-        <div class="stats">
-            <div class="stat-box">
-                <div class="stat-value" id="todayCount">0</div>
-                <div class="stat-label">Sáčků dnes</div>
-            </div>
-            <div class="stat-box">
-                <div class="stat-value" id="todayMg">0</div>
-                <div class="stat-label">mg Nikotinu</div>
-            </div>
-            <div class="stat-box">
-                <div class="stat-value" id="remainingLimit">10</div>
-                <div class="stat-label">Zbývá limit</div>
-            </div>
+      <section class="grid stats-grid">
+        <div class="stat">
+          <div class="label">Sáčků dnes</div>
+          <div class="value" id="statTodayCount">0</div>
+          <div class="sub" id="statTodayCost">0 Kč</div>
         </div>
+        <div class="stat">
+          <div class="label">Nikotinu dnes</div>
+          <div class="value" id="statTodayMg">0 mg</div>
+          <div class="sub">Průměr na sáček <span id="statAvgMg">0 mg</span></div>
+        </div>
+        <div class="stat">
+          <div class="label">Zbývá limit</div>
+          <div class="value" id="statRemaining">0</div>
+          <div class="sub" id="statLimitInfo">denní limit</div>
+        </div>
+        <div class="stat">
+          <div class="label">Útrata tento měsíc</div>
+          <div class="value" id="statMonthCost">0 Kč</div>
+          <div class="sub" id="statMonthPouches">0 sáčků</div>
+        </div>
+      </section>
 
-        <div class="control-group">
-            <label>Vyber Velo sáček:</label>
+      <section class="card">
+        <div class="section-title">Zaznamenat spotřebu</div>
+        <div class="input-row">
+          <div>
+            <label for="pouchSelect">Vyber sáček</label>
             <select id="pouchSelect"></select>
+          </div>
+          <div>
+            <label for="customBrand">Vlastní značka (volitelné)</label>
+            <input type="text" id="customBrand" placeholder="Jiná značka">
+          </div>
+          <div>
+            <label for="customMg">mg nikotinu (přepíše výběr)</label>
+            <input type="number" id="customMg" step="0.1" min="0" placeholder="např. 8">
+          </div>
+          <div>
+            <label for="pouchTime">Čas spotřeby</label>
+            <input type="datetime-local" id="pouchTime">
+          </div>
         </div>
-
-        <details>
-            <summary style="cursor:pointer; color:#3498db; margin-bottom:10px;">Jiná značka / Vlastní zadání</summary>
-            <div class="control-group"><input type="text" id="customBrand" placeholder="Název značky"></div>
-            <div class="control-group"><input type="number" step="0.1" id="customMg" placeholder="mg nikotinu"></div>
-        </details>
-
-        <button class="action-btn" onclick="addPouch()">Zaznamenat spotřebu</button>
-
-        <div class="history">
-            <h3>Historie (Dnes a posledních 20)</h3>
-            <div id="historyList">Načítám data...</div>
+        <div class="actions">
+          <button class="btn btn-primary" id="addPouchBtn">Zaznamenat</button>
+          <span class="muted">Čas v budoucnosti není povolen.</span>
         </div>
+      </section>
 
-        <div class="chart-section">
-            <h3>Konzumace nikotinu podle dní</h3>
-            <canvas id="dailyChart" height="200"></canvas>
+      <section class="card">
+        <div class="section-title">Úspěchy</div>
+        <div id="achievementsList" class="achievements"></div>
+      </section>
+
+      <section class="grid" style="grid-template-columns: 2fr 1.2fr; gap: 14px;">
+        <div class="card chart-wrap">
+          <div class="section-title">Konzumace nikotinu podle dní</div>
+          <canvas id="dailyChart" height="260"></canvas>
         </div>
+        <div class="card">
+          <div class="section-title">Historie</div>
+          <div id="historyList">Načítám data...</div>
+        </div>
+      </section>
     </div>
-</div>
+  </div>
 
-<!-- FIREBASE SKRIPT -->
-<script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-    import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
-    import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+  <div id="toast"></div>
 
-    // ============================================================
-    // TVOJE KONFIGURACE (Už vyplněná)
-    // ============================================================
+  <!-- Onboarding modal -->
+  <dialog id="onboardingDialog">
+    <div class="modal-header">Vítej! Nastav si základní parametry</div>
+    <div class="modal-body">
+      <div class="input-row">
+        <div>
+          <label for="onCurrency">Měna</label>
+          <input id="onCurrency" value="CZK">
+        </div>
+        <div>
+          <label for="onPackPrice">Cena puku</label>
+          <input id="onPackPrice" type="number" min="0" step="1" value="150">
+        </div>
+      </div>
+      <div class="input-row" style="margin-top:12px;">
+        <div>
+          <label for="onPouches">Počet sáčků v balení</label>
+          <input id="onPouches" type="number" min="1" step="1" value="20">
+        </div>
+        <div>
+          <label for="onDaily">Denní limit</label>
+          <input id="onDaily" type="number" min="1" step="1" value="10">
+        </div>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-primary" id="saveOnboarding">Uložit nastavení</button>
+    </div>
+  </dialog>
+
+  <!-- Settings modal -->
+  <dialog id="settingsDialog">
+    <div class="modal-header">Nastavení profilu</div>
+    <div class="modal-body">
+      <div class="input-row">
+        <div>
+          <label for="setCurrency">Měna</label>
+          <input id="setCurrency" value="CZK">
+        </div>
+        <div>
+          <label for="setPackPrice">Cena puku</label>
+          <input id="setPackPrice" type="number" min="0" step="1" value="150">
+        </div>
+      </div>
+      <div class="input-row" style="margin-top:12px;">
+        <div>
+          <label for="setPouches">Počet sáčků v balení</label>
+          <input id="setPouches" type="number" min="1" step="1" value="20">
+        </div>
+        <div>
+          <label for="setDaily">Denní limit</label>
+          <input id="setDaily" type="number" min="1" step="1" value="10">
+        </div>
+      </div>
+      <div style="margin-top:16px;" class="grid" >
+        <div class="card" style="padding:12px; background:#f9fafb;">
+          <div class="section-title" style="font-size:15px;">Export & GDPR</div>
+          <div class="actions" style="margin-top:6px;">
+            <button class="btn btn-outline" id="exportBtn">Stáhnout má data (CSV)</button>
+            <button class="btn btn-danger" id="deleteAccountBtn">Smazat účet</button>
+          </div>
+          <p class="muted" style="margin-top:8px;font-size:12px;">Smazání účtu odstraní data z Firestore i účtu. Požaduje dvojí potvrzení.</p>
+        </div>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-outline" id="closeSettings">Zavřít</button>
+      <button class="btn btn-primary" id="saveSettings">Uložit</button>
+    </div>
+  </dialog>
+
+  <!-- Edit modal -->
+  <dialog id="editDialog">
+    <div class="modal-header">Upravit záznam</div>
+    <div class="modal-body">
+      <input type="hidden" id="editId">
+      <div class="input-row">
+        <div>
+          <label for="editBrand">Značka</label>
+          <input id="editBrand">
+        </div>
+        <div>
+          <label for="editMg">mg nikotinu</label>
+          <input id="editMg" type="number" step="0.1" min="0">
+        </div>
+      </div>
+      <div class="input-row" style="margin-top:12px;">
+        <div>
+          <label for="editTime">Čas spotřeby</label>
+          <input id="editTime" type="datetime-local">
+        </div>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-outline" id="cancelEdit">Zrušit</button>
+      <button class="btn btn-primary" id="saveEdit">Uložit změny</button>
+    </div>
+  </dialog>
+
+  <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js';
+    import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, deleteDoc, doc, getDoc, setDoc, updateDoc, Timestamp, getDocs } from 'https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js';
+    import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged, deleteUser } from 'https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js';
+
     const firebaseConfig = {
-        apiKey: "AIzaSyBKMDwYeSjmgQLnpYciReSK2yJU0pG6KS8",
-        authDomain: "nicotinepouches-d9d1c.firebaseapp.com",
-        projectId: "nicotinepouches-d9d1c",
-        storageBucket: "nicotinepouches-d9d1c.firebasestorage.app",
-        messagingSenderId: "42131125480",
-        appId: "1:42131125480:web:8022461f0a790a5677855d",
-        measurementId: "G-0NE6V1LVKN"
+      apiKey: "AIzaSyBKMDwYeSjmgQLnpYciReSK2yJU0pG6KS8",
+      authDomain: "nicotinepouches-d9d1c.firebaseapp.com",
+      projectId: "nicotinepouches-d9d1c",
+      storageBucket: "nicotinepouches-d9d1c.firebasestorage.app",
+      messagingSenderId: "42131125480",
+      appId: "1:42131125480:web:8022461f0a790a5677855d",
+      measurementId: "G-0NE6V1LVKN"
     };
 
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-    const auth = getAuth(app);
-    const provider = new GoogleAuthProvider();
-
-    let currentUser = null;
-    let unsubscribeListener = null;
-    let dailyChart = null;
-    const dailyLimit = 10;
-
-    // ============================================================
-    // NOVÁ VELO DATABÁZE (jen poskytované položky, bez historických názvů)
-    // ============================================================
     const pouchDatabase = [
       { name: "Velo Simply Spearmint Mini", mg: 4.0, dots: 1 },
       { name: "Velo Cherry Ice Mini", mg: 4.0, dots: 1 },
       { name: "Velo Strawberry Ice Mini", mg: 6.0, dots: 2 },
       { name: "Velo Icy Berries Mini", mg: 6.0, dots: 2 },
       { name: "Velo Bright Spearmint Mini", mg: 6.0, dots: 2 },
-
       { name: "Velo Strawberry Ice Slim", mg: 10.9, dots: 4 },
       { name: "Velo Watermelon Ice Slim", mg: 8.1, dots: 3 },
       { name: "Velo Tangy Lime Slim", mg: 9.8, dots: 3 },
@@ -149,218 +339,503 @@
       { name: "Velo Eucalyptus Storm Slim", mg: 14.0, dots: 5 },
       { name: "Velo Cinnamon Flame Slim", mg: 10.9, dots: 4 },
       { name: "Velo McLaren Papaya Slim", mg: 8.4, dots: 4 },
-
       { name: "Velo Crispy Peppermint Zero Slim", mg: 0, dots: 0 },
       { name: "Velo Tropic Breeze Zero Slim", mg: 0, dots: 0 }
-    ];
+    ].sort((a, b) => a.name.localeCompare(b.name));
 
-    // Seřadíme podle abecedy
-    pouchDatabase.sort((a, b) => a.name.localeCompare(b.name));
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const auth = getAuth(app);
+    const provider = new GoogleAuthProvider();
 
-    // --- APLIKAČNÍ LOGIKA ---
+    let currentUser = null;
+    let userSettings = null;
+    let unsubscribeHistory = null;
+    let dailyChart = null;
+    let historyData = [];
 
-    window.login = () => {
-        signInWithPopup(auth, provider)
-            .catch((error) => { alert("Chyba: " + error.message); });
+    const els = {
+      authGate: document.getElementById('authGate'),
+      appContent: document.getElementById('appContent'),
+      userEmail: document.getElementById('userEmail'),
+      loginBtn: document.getElementById('loginBtn'),
+      loginBtnSecondary: document.getElementById('loginBtnSecondary'),
+      logoutBtn: document.getElementById('logoutBtn'),
+      settingsBtn: document.getElementById('settingsBtn'),
+      addPouchBtn: document.getElementById('addPouchBtn'),
+      pouchSelect: document.getElementById('pouchSelect'),
+      customBrand: document.getElementById('customBrand'),
+      customMg: document.getElementById('customMg'),
+      pouchTime: document.getElementById('pouchTime'),
+      statTodayCount: document.getElementById('statTodayCount'),
+      statTodayMg: document.getElementById('statTodayMg'),
+      statRemaining: document.getElementById('statRemaining'),
+      statLimitInfo: document.getElementById('statLimitInfo'),
+      statMonthCost: document.getElementById('statMonthCost'),
+      statMonthPouches: document.getElementById('statMonthPouches'),
+      statTodayCost: document.getElementById('statTodayCost'),
+      statAvgMg: document.getElementById('statAvgMg'),
+      historyList: document.getElementById('historyList'),
+      achievementsList: document.getElementById('achievementsList'),
+      onboardingDialog: document.getElementById('onboardingDialog'),
+      settingsDialog: document.getElementById('settingsDialog'),
+      editDialog: document.getElementById('editDialog'),
+      toast: document.getElementById('toast'),
+      editId: document.getElementById('editId'),
+      editBrand: document.getElementById('editBrand'),
+      editMg: document.getElementById('editMg'),
+      editTime: document.getElementById('editTime'),
+      onCurrency: document.getElementById('onCurrency'),
+      onPackPrice: document.getElementById('onPackPrice'),
+      onPouches: document.getElementById('onPouches'),
+      onDaily: document.getElementById('onDaily'),
+      setCurrency: document.getElementById('setCurrency'),
+      setPackPrice: document.getElementById('setPackPrice'),
+      setPouches: document.getElementById('setPouches'),
+      setDaily: document.getElementById('setDaily'),
     };
 
-    window.logout = () => {
-        signOut(auth).then(() => {
-            if (unsubscribeListener) unsubscribeListener();
-        });
-    };
-
-    onAuthStateChanged(auth, (user) => {
-        const loginScreen = document.getElementById('loginScreen');
-        const appContent = document.getElementById('appContent');
-        
-        if (user) {
-            currentUser = user;
-            loginScreen.style.display = 'none';
-            appContent.style.display = 'block';
-            document.getElementById('userEmail').innerText = user.email;
-            populateDropdown();
-            setupRealtimeListener(user.uid);
-        } else {
-            currentUser = null;
-            loginScreen.style.display = 'block';
-            appContent.style.display = 'none';
-            document.getElementById('historyList').innerHTML = '';
-        }
+    document.addEventListener('DOMContentLoaded', () => {
+      populateDropdown();
+      setDefaultDateTime();
+      attachListeners();
     });
 
-    function setupRealtimeListener(userId) {
-        const q = query(collection(db, "users", userId, "history"), orderBy("timestamp", "desc"));
-
-        unsubscribeListener = onSnapshot(q, (snapshot) => {
-            const historyList = document.getElementById('historyList');
-            historyList.innerHTML = '';
-            
-            let todayCount = 0;
-            let todayMg = 0.0; // Používáme float
-            const todayString = new Date().toDateString();
-            const dailyTotals = new Map();
-
-            snapshot.forEach((docSnap) => {
-                const data = docSnap.data();
-                if (!data.timestamp) return;
-
-                const date = data.timestamp.toDate();
-                const isToday = date.toDateString() === todayString;
-
-                const mgStrength = Number(data.nicotineStrength);
-
-                if (isToday) {
-                    todayCount++;
-                    todayMg += mgStrength;
-                }
-
-                const dayKey = formatDateKey(date);
-                const currentTotal = dailyTotals.get(dayKey) ?? 0;
-                dailyTotals.set(dayKey, currentTotal + mgStrength);
-
-                if (historyList.children.length < 20) {
-                    const div = document.createElement('div');
-                    div.className = 'history-item';
-                    div.innerHTML = `
-                        <div>
-                            <strong>${data.brandName}</strong><br>
-                            <small style="color:#3498db;">${Number(data.nicotineStrength)} mg nikotinu</small>
-                        </div>
-                        <div style="display:flex; align-items:center;">
-                            <div class="history-time">
-                                ${date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}<br>
-                                <small>${date.getDate()}.${date.getMonth()+1}.</small>
-                            </div>
-                            <button class="delete-btn" onclick="deleteEntry('${docSnap.id}')">Smazat</button>
-                        </div>
-                    `;
-                    historyList.appendChild(div);
-                }
-            });
-
-            // Update statistik (s desetinami)
-            document.getElementById('todayCount').innerText = todayCount;
-            document.getElementById('todayMg').innerText = todayMg.toFixed(1); // Zaokrouhlení na 1 desetinné místo
-            document.getElementById('remainingLimit').innerText = Math.max(0, dailyLimit - todayCount);
-
-            const sortedDaily = Array.from(dailyTotals.entries())
-                .sort((a, b) => new Date(a[0]) - new Date(b[0]))
-                .map(([key, totalMg]) => ({
-                    label: formatDateLabel(key),
-                    total: Number(totalMg.toFixed(1))
-                }));
-
-            updateDailyChart(sortedDaily);
-        });
+    function attachListeners() {
+      els.loginBtn.addEventListener('click', login);
+      els.loginBtnSecondary.addEventListener('click', login);
+      els.logoutBtn.addEventListener('click', logout);
+      els.settingsBtn.addEventListener('click', () => els.settingsDialog.showModal());
+      document.getElementById('closeSettings').addEventListener('click', () => els.settingsDialog.close());
+      document.getElementById('saveSettings').addEventListener('click', saveSettingsFromModal);
+      document.getElementById('saveOnboarding').addEventListener('click', saveOnboarding);
+      els.addPouchBtn.addEventListener('click', addPouch);
+      document.getElementById('cancelEdit').addEventListener('click', () => els.editDialog.close());
+      document.getElementById('saveEdit').addEventListener('click', submitEdit);
+      document.getElementById('exportBtn').addEventListener('click', exportCsv);
+      document.getElementById('deleteAccountBtn').addEventListener('click', deleteAccount);
+      els.pouchSelect.addEventListener('change', syncSelectedMg);
+      els.onboardingDialog.addEventListener('cancel', (e) => e.preventDefault());
+      onAuthStateChanged(auth, handleAuthChange);
     }
 
-    window.addPouch = async () => {
-        if (!currentUser) return;
-
-        const customBrand = document.getElementById('customBrand').value;
-        const customMg = document.getElementById('customMg').value;
-        let brand, strength;
-
-        if (customBrand && customMg) {
-            brand = customBrand;
-            strength = Number(customMg); // Podpora desetin
-        } else {
-            const selected = JSON.parse(document.getElementById('pouchSelect').value);
-            brand = selected.name;
-            strength = Number(selected.mg);
-        }
-
-        try {
-            await addDoc(collection(db, "users", currentUser.uid, "history"), {
-                brandName: brand,
-                nicotineStrength: strength,
-                timestamp: serverTimestamp()
-            });
-            
-            // Reset polí
-            document.getElementById('customBrand').value = '';
-            document.getElementById('customMg').value = '';
-        } catch (e) {
-            console.error("Chyba: ", e);
-            alert("Nepodařilo se uložit.");
-        }
-    };
-
-    window.deleteEntry = async (docId) => {
-        if (confirm("Opravdu smazat?")) {
-            await deleteDoc(doc(db, "users", currentUser.uid, "history", docId));
-        }
-    };
-
-    function renderDots(dots) {
-        if (typeof dots === 'number' && dots >= 0) {
-            const full = '●'.repeat(dots);
-            const empty = '○'.repeat(Math.max(0, 6 - dots));
-            return ` ${full}${empty} (${dots}/6)`;
-        }
-        return ' (kolečka? 🤔)';
+    async function handleAuthChange(user) {
+      currentUser = user;
+      if (user) {
+        els.authGate.style.display = 'none';
+        els.appContent.style.display = 'grid';
+        els.userEmail.textContent = user.email;
+        await loadSettings(user.uid);
+        setupHistoryListener(user.uid);
+      } else {
+        els.authGate.style.display = 'block';
+        els.appContent.style.display = 'none';
+        historyData = [];
+        if (unsubscribeHistory) unsubscribeHistory();
+      }
     }
 
-    function formatDateKey(date) {
-        return date.toISOString().slice(0, 10);
+    function login() {
+      signInWithPopup(auth, provider).catch((err) => showToast('Přihlášení selhalo: ' + err.message));
     }
 
-    function formatDateLabel(key) {
-        const [year, month, day] = key.split('-').map(Number);
-        return new Date(year, month - 1, day).toLocaleDateString('cs-CZ', { day: '2-digit', month: '2-digit' });
-    }
-
-    function updateDailyChart(dailyData) {
-        const canvas = document.getElementById('dailyChart');
-        if (!canvas || typeof Chart === 'undefined') return;
-
-        const labels = dailyData.map(item => item.label);
-        const values = dailyData.map(item => item.total);
-
-        if (dailyChart) dailyChart.destroy();
-
-        dailyChart = new Chart(canvas, {
-            type: 'line',
-            data: {
-                labels,
-                datasets: [{
-                    label: 'mg nikotinu',
-                    data: values,
-                    borderColor: '#3498db',
-                    backgroundColor: 'rgba(52,152,219,0.15)',
-                    fill: true,
-                    tension: 0.25,
-                    pointRadius: 4,
-                    pointBackgroundColor: '#2980b9'
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: { display: false }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        title: { display: true, text: 'mg' }
-                    }
-                }
-            }
-        });
+    function logout() {
+      signOut(auth).then(() => {
+        if (unsubscribeHistory) unsubscribeHistory();
+        showToast('Odhlášeno');
+      });
     }
 
     function populateDropdown() {
-        const select = document.getElementById('pouchSelect');
-        if (select.children.length > 0) return;
-        pouchDatabase.forEach(pouch => {
-            const option = document.createElement('option');
-            option.value = JSON.stringify(pouch);
-            option.text = `${pouch.name}${renderDots(pouch.dots)} (${pouch.mg} mg)`;
-            select.appendChild(option);
-        });
+      els.pouchSelect.innerHTML = '';
+      pouchDatabase.forEach((pouch, idx) => {
+        const option = document.createElement('option');
+        option.value = idx;
+        option.textContent = `${pouch.name} (${pouch.mg}mg)`;
+        option.dataset.mg = pouch.mg;
+        els.pouchSelect.appendChild(option);
+      });
+      if (pouchDatabase.length > 0) {
+        syncSelectedMg();
+      }
     }
-</script>
 
+    function syncSelectedMg() {
+      const option = els.pouchSelect.options[els.pouchSelect.selectedIndex];
+      if (option && !els.customMg.value) {
+        els.customMg.placeholder = `${option.dataset.mg} mg (výchozí)`;
+      }
+    }
+
+    function setDefaultDateTime() {
+      const now = new Date();
+      const local = new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
+      els.pouchTime.value = local;
+      els.editTime.value = local;
+    }
+
+    async function loadSettings(uid) {
+      const ref = doc(db, 'users', uid, 'settings', 'profile');
+      const snap = await getDoc(ref);
+      if (snap.exists()) {
+        userSettings = snap.data();
+        hydrateSettings();
+        checkOnboardingFlag();
+      } else {
+        userSettings = null;
+        openOnboarding();
+      }
+    }
+
+    function hydrateSettings() {
+      const defaults = { currency: 'CZK', packPrice: 150, pouchesPerPack: 20, dailyLimit: 10 };
+      const s = { ...defaults, ...userSettings };
+      els.setCurrency.value = s.currency;
+      els.setPackPrice.value = s.packPrice;
+      els.setPouches.value = s.pouchesPerPack;
+      els.setDaily.value = s.dailyLimit;
+      els.onCurrency.value = s.currency;
+      els.onPackPrice.value = s.packPrice;
+      els.onPouches.value = s.pouchesPerPack;
+      els.onDaily.value = s.dailyLimit;
+      userSettings = s;
+      renderStats();
+    }
+
+    function openOnboarding() {
+      setDefaultDateTime();
+      els.onboardingDialog.showModal();
+    }
+
+    function checkOnboardingFlag() {
+      if (!userSettings?.onboarded) {
+        openOnboarding();
+      }
+    }
+
+    async function saveOnboarding() {
+      if (!currentUser) return;
+      const payload = collectSettingsFromDialog('on');
+      payload.onboarded = true;
+      payload.createdAt = serverTimestamp();
+      await setDoc(doc(db, 'users', currentUser.uid, 'settings', 'profile'), payload);
+      userSettings = payload;
+      hydrateSettings();
+      els.onboardingDialog.close();
+      showToast('Nastavení uloženo. Můžeš začít sledovat.');
+    }
+
+    function collectSettingsFromDialog(prefix) {
+      const currency = document.getElementById(`${prefix}Currency`).value || 'CZK';
+      const packPrice = Number(document.getElementById(`${prefix}PackPrice`).value) || 150;
+      const pouchesPerPack = Number(document.getElementById(`${prefix}Pouches`).value) || 20;
+      const dailyLimit = Number(document.getElementById(`${prefix}Daily`).value) || 10;
+      return { currency, packPrice, pouchesPerPack, dailyLimit };
+    }
+
+    async function saveSettingsFromModal() {
+      if (!currentUser) return;
+      const payload = collectSettingsFromDialog('set');
+      payload.onboarded = true;
+      payload.updatedAt = serverTimestamp();
+      await setDoc(doc(db, 'users', currentUser.uid, 'settings', 'profile'), { ...userSettings, ...payload });
+      userSettings = { ...userSettings, ...payload };
+      hydrateSettings();
+      els.settingsDialog.close();
+      showToast('Nastavení aktualizováno');
+    }
+
+    function buildPouchPayload() {
+      const selected = pouchDatabase[els.pouchSelect.value] || pouchDatabase[0];
+      const brand = els.customBrand.value.trim() || selected?.name || 'Neznámé';
+      const mg = parseFloat(els.customMg.value || selected?.mg || 0);
+      return { brand, mg, pouchId: selected?.name || null };
+    }
+
+    function validateTime(value) {
+      const date = new Date(value);
+      if (isNaN(date.getTime())) return { valid: false, date: null };
+      if (date > new Date()) return { valid: false, date: null };
+      return { valid: true, date };
+    }
+
+    async function addPouch() {
+      if (!currentUser) return showToast('Musíš být přihlášen.');
+      const timeValue = els.pouchTime.value;
+      const { valid, date } = validateTime(timeValue);
+      if (!valid) return showToast('Čas musí být vyplněn a nesmí být v budoucnosti.');
+      const pouch = buildPouchPayload();
+      const cost = (userSettings?.packPrice || 0) / (userSettings?.pouchesPerPack || 1);
+      await addDoc(collection(db, 'users', currentUser.uid, 'history'), {
+        brand: pouch.brand,
+        mg: pouch.mg,
+        timestamp: Timestamp.fromDate(date),
+        cost: cost,
+        pouchId: pouch.pouchId,
+        createdAt: serverTimestamp(),
+      });
+      setDefaultDateTime();
+      els.customBrand.value = '';
+      els.customMg.value = '';
+      showToast('Záznam uložen');
+    }
+
+    function setupHistoryListener(uid) {
+      if (unsubscribeHistory) unsubscribeHistory();
+      const q = query(collection(db, 'users', uid, 'history'), orderBy('timestamp', 'desc'));
+      unsubscribeHistory = onSnapshot(q, (snap) => {
+        historyData = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+        renderHistory();
+        renderStats();
+        renderChart();
+        renderAchievements();
+      });
+    }
+
+    function renderHistory() {
+      if (!historyData.length) {
+        els.historyList.innerHTML = '<p class="muted">Žádné záznamy.</p>';
+        return;
+      }
+      const frag = document.createDocumentFragment();
+      historyData.forEach((item) => {
+        const wrap = document.createElement('div');
+        wrap.className = 'history-item';
+        const ts = item.timestamp?.toDate ? item.timestamp.toDate() : new Date(item.timestamp);
+        const timeStr = ts.toLocaleString('cs-CZ', { hour: '2-digit', minute: '2-digit', day: '2-digit', month: '2-digit' });
+        const costValue = item.cost ?? ((userSettings?.packPrice || 0) / (userSettings?.pouchesPerPack || 1));
+        wrap.innerHTML = `
+          <div>
+            <div style="font-weight:600;">${item.brand || 'Neznámé'} <span class="pill">${item.mg || 0} mg</span></div>
+            <div class="history-meta"><span>${timeStr}</span><span>${costValue.toFixed(2)} ${userSettings?.currency || 'CZK'}</span></div>
+          </div>
+          <div class="history-actions">
+            <button class="btn btn-outline" data-id="${item.id}" data-action="edit">✏️</button>
+            <button class="btn btn-danger" data-id="${item.id}" data-action="delete">🗑️</button>
+          </div>
+        `;
+        frag.appendChild(wrap);
+      });
+      els.historyList.innerHTML = '';
+      els.historyList.appendChild(frag);
+      els.historyList.querySelectorAll('button').forEach((btn) => {
+        btn.addEventListener('click', (e) => {
+          const id = e.currentTarget.dataset.id;
+          const action = e.currentTarget.dataset.action;
+          const entry = historyData.find((h) => h.id === id);
+          if (action === 'edit') openEdit(entry);
+          if (action === 'delete') deleteEntry(entry);
+        });
+      });
+    }
+
+    function openEdit(entry) {
+      if (!entry) return;
+      els.editId.value = entry.id;
+      els.editBrand.value = entry.brand || '';
+      els.editMg.value = entry.mg || 0;
+      const ts = entry.timestamp?.toDate ? entry.timestamp.toDate() : new Date(entry.timestamp);
+      const local = new Date(ts.getTime() - ts.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
+      els.editTime.value = local;
+      els.editDialog.showModal();
+    }
+
+    async function submitEdit() {
+      if (!currentUser) return;
+      const id = els.editId.value;
+      const { valid, date } = validateTime(els.editTime.value);
+      if (!valid) return showToast('Neplatný čas.');
+      const payload = {
+        brand: els.editBrand.value || 'Neznámé',
+        mg: Number(els.editMg.value || 0),
+        timestamp: Timestamp.fromDate(date),
+      };
+      await updateDoc(doc(db, 'users', currentUser.uid, 'history', id), payload);
+      els.editDialog.close();
+      showToast('Záznam upraven');
+    }
+
+    async function deleteEntry(entry) {
+      if (!currentUser || !entry) return;
+      if (!confirm('Opravdu smazat tento záznam?')) return;
+      await deleteDoc(doc(db, 'users', currentUser.uid, 'history', entry.id));
+      showToast('Záznam smazán');
+    }
+
+    function groupByDate() {
+      const map = new Map();
+      historyData.forEach((item) => {
+        const ts = item.timestamp?.toDate ? item.timestamp.toDate() : new Date(item.timestamp);
+        const key = ts.toISOString().slice(0, 10);
+        const costVal = item.cost ?? ((userSettings?.packPrice || 0) / (userSettings?.pouchesPerPack || 1));
+        if (!map.has(key)) map.set(key, { count: 0, mg: 0, cost: 0 });
+        const acc = map.get(key);
+        acc.count += 1;
+        acc.mg += Number(item.mg || 0);
+        acc.cost += costVal;
+      });
+      return map;
+    }
+
+    function renderStats() {
+      if (!userSettings) return;
+      const todayKey = new Date().toISOString().slice(0, 10);
+      const grouped = groupByDate();
+      const today = grouped.get(todayKey) || { count: 0, mg: 0, cost: 0 };
+      els.statTodayCount.textContent = today.count;
+      els.statTodayMg.textContent = `${today.mg.toFixed(1)} mg`;
+      const avg = today.count ? (today.mg / today.count) : 0;
+      els.statAvgMg.textContent = `${avg.toFixed(1)} mg`;
+      els.statRemaining.textContent = Math.max((userSettings.dailyLimit || 0) - today.count, 0);
+      els.statLimitInfo.textContent = `Limit ${userSettings.dailyLimit || 0} ks`;
+      els.statTodayCost.textContent = `${today.cost.toFixed(2)} ${userSettings.currency || 'CZK'}`;
+
+      const now = new Date();
+      const month = now.getMonth();
+      const year = now.getFullYear();
+      let monthCost = 0; let monthCount = 0;
+      historyData.forEach((item) => {
+        const ts = item.timestamp?.toDate ? item.timestamp.toDate() : new Date(item.timestamp);
+        if (ts.getMonth() === month && ts.getFullYear() === year) {
+          monthCount += 1;
+          const costVal = item.cost ?? ((userSettings.packPrice || 0) / (userSettings.pouchesPerPack || 1));
+          monthCost += costVal;
+        }
+      });
+      els.statMonthCost.textContent = `${monthCost.toFixed(2)} ${userSettings.currency || 'CZK'}`;
+      els.statMonthPouches.textContent = `${monthCount} sáčků`;
+    }
+
+    function renderChart() {
+      const grouped = Array.from(groupByDate().entries()).sort((a, b) => a[0].localeCompare(b[0]));
+      const labels = grouped.map(([date]) => date.slice(5));
+      const data = grouped.map(([, v]) => v.mg);
+      const ctx = document.getElementById('dailyChart');
+      if (!dailyChart) {
+        dailyChart = new Chart(ctx, {
+          type: 'line',
+          data: { labels, datasets: [{ label: 'mg/den', data, borderColor: '#3498db', tension: 0.3, fill: true, backgroundColor: 'rgba(52,152,219,0.1)' }] },
+          options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
+        });
+      } else {
+        dailyChart.data.labels = labels;
+        dailyChart.data.datasets[0].data = data;
+        dailyChart.update();
+      }
+    }
+
+    function renderAchievements() {
+      const achievements = checkAchievements();
+      const frag = document.createDocumentFragment();
+      achievements.forEach((a) => {
+        const box = document.createElement('div');
+        box.className = 'achievement' + (a.achieved ? '' : ' locked');
+        box.innerHTML = `<div class="icon">${a.icon}</div><div><div style="font-weight:700;">${a.name}</div><div class="muted" style="font-size:12px;">${a.desc}</div></div>`;
+        frag.appendChild(box);
+      });
+      els.achievementsList.innerHTML = '';
+      els.achievementsList.appendChild(frag);
+    }
+
+    function checkAchievements() {
+      const map = groupByDate();
+      const days = Array.from(map.entries()).sort((a, b) => a[0].localeCompare(b[0]));
+      const streakUnderLimit = computeStreak(days, (d) => (map.get(d)?.count || 0) <= (userSettings?.dailyLimit || 10));
+      const streakSpend = computeStreak(days, (d) => (map.get(d)?.cost || 0) < 50);
+      const marathon = computeStreak(days, () => true);
+      const badges = {
+        Novic: historyData.length > 0,
+        Šetřílek: streakSpend >= 3,
+        Disciplína: streakUnderLimit >= 5,
+        'Iron Will': streakUnderLimit >= 14,
+        'Čisté plíce': historyData.some((h) => Number(h.mg || 0) === 0),
+        'Noční sova': historyData.some((h) => {
+          const t = h.timestamp?.toDate ? h.timestamp.toDate() : new Date(h.timestamp);
+          const hour = t.getHours();
+          return hour >= 2 && hour < 5;
+        }),
+        'Heavy Hitter': historyData.some((h) => Number(h.mg || 0) > 15),
+        Sniper: historyData.some((h) => {
+          const t = h.timestamp?.toDate ? h.timestamp.toDate() : new Date(h.timestamp);
+          return t.getMinutes() === 0 && t.getSeconds() === 0;
+        }),
+        Maraton: marathon >= 30,
+      };
+      const definitions = [
+        { key: 'Novic', icon: '🌱', desc: 'První záznam vytvořen.' },
+        { key: 'Šetřílek', icon: '🪙', desc: '3 dny po sobě útrata < 50 ' + (userSettings?.currency || 'CZK') + '/den.' },
+        { key: 'Disciplína', icon: '🎯', desc: '5 dní v řadě pod denním limitem (' + (userSettings?.dailyLimit || 10) + ').' },
+        { key: 'Iron Will', icon: '🛡️', desc: '14 dní v řadě pod limitem.' },
+        { key: 'Čisté plíce', icon: '🫁', desc: 'Zaznamenán sáček s 0 mg.' },
+        { key: 'Noční sova', icon: '🌙', desc: 'Záznam mezi 02:00 a 05:00.' },
+        { key: 'Heavy Hitter', icon: '⚡', desc: 'Sáček silnější než 15 mg.' },
+        { key: 'Sniper', icon: '🎯', desc: 'Záznam přesně v celou hodinu.' },
+        { key: 'Maraton', icon: '🏅', desc: '30 dní v kuse bez vynechání.' }
+      ];
+      return definitions.map((d) => ({ ...d, achieved: badges[d.key] ?? false }));
+    }
+
+    function computeStreak(days, predicate) {
+      if (!days.length) return 0;
+      let longest = 0; let current = 0;
+      for (let i = 0; i < days.length; i++) {
+        const day = days[i][0];
+        const prev = i > 0 ? days[i - 1][0] : null;
+        const isConsecutive = prev ? new Date(day) - new Date(prev) === 86400000 : true;
+        if (!isConsecutive) current = 0;
+        if (predicate(day)) {
+          current += 1;
+          longest = Math.max(longest, current);
+        } else {
+          current = 0;
+        }
+      }
+      return longest;
+    }
+
+    function showToast(message) {
+      const node = document.createElement('div');
+      node.className = 'toast';
+      node.textContent = message;
+      els.toast.appendChild(node);
+      setTimeout(() => node.remove(), 3200);
+    }
+
+    function exportCsv() {
+      if (!historyData.length) return showToast('Žádná data k exportu.');
+      const header = 'Datum,Čas,Značka,mg,Cena\n';
+      const rows = historyData.map((h) => {
+        const ts = h.timestamp?.toDate ? h.timestamp.toDate() : new Date(h.timestamp);
+        const date = ts.toLocaleDateString('cs-CZ');
+        const time = ts.toLocaleTimeString('cs-CZ');
+        const costVal = h.cost ?? ((userSettings?.packPrice || 0) / (userSettings?.pouchesPerPack || 1));
+        return `${date},${time},"${h.brand || ''}",${h.mg || 0},${costVal.toFixed(2)}`;
+      }).join('\n');
+      const blob = new Blob([header + rows], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'nicotracker-data.csv';
+      a.click();
+      URL.revokeObjectURL(url);
+      showToast('CSV export připraven.');
+    }
+
+    async function deleteAccount() {
+      if (!currentUser) return;
+      const first = confirm('Chceš opravdu smazat účet a všechna data?');
+      if (!first) return;
+      const second = confirm('Tato akce je nevratná. Pokračovat?');
+      if (!second) return;
+      const histRef = collection(db, 'users', currentUser.uid, 'history');
+      const histDocs = await getDocs(histRef);
+      for (const docSnap of histDocs.docs) {
+        await deleteDoc(docSnap.ref);
+      }
+      await deleteDoc(doc(db, 'users', currentUser.uid, 'settings', 'profile'));
+      await deleteUser(currentUser);
+      showToast('Účet a data smazána.');
+    }
+  </script>
 </body>
 </html>
