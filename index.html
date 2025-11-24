@@ -155,18 +155,19 @@
       </div>
     </div>
 
-    <!-- Add Action -->
+    <!-- Add Action (UPDATED V2) -->
     <div class="card" style="margin-top:16px;">
       <h3 style="margin:0 0 12px;" data-i18n="log_usage">Log Usage</h3>
-      <div class="grid" style="grid-template-columns: 2fr 1fr auto;">
+      <div class="grid" style="grid-template-columns: 1fr auto;">
         <select id="pouchSelect"></select>
-        <input type="number" id="quickMg" placeholder="mg" style="display:none;"> <!-- Hidden for standard -->
-        <button id="addBtn" class="btn btn-primary" style="height:44px; justify-content:center;">➕</button>
+        <button id="addBtn" class="btn btn-primary" style="height:44px; width:60px; justify-content:center; font-size:20px;">➕</button>
       </div>
-      <div style="margin-top:10px; font-size:12px; color:var(--muted); cursor:pointer;" id="toggleCustomInput" data-i18n="custom_brand_link">Or use custom brand</div>
+      <div style="margin-top:12px; text-align:right;">
+          <span style="font-size:12px; color:var(--primary); cursor:pointer; font-weight:600; text-decoration:underline;" id="openBrandsBtn" data-i18n="manage_custom_brands">Manage Custom Brands</span>
+      </div>
     </div>
 
-    <!-- Gamification Badges (NOVÉ) -->
+    <!-- Gamification Badges -->
     <div class="card">
         <h3 style="margin:0 0 12px;" data-i18n="achievements">Achievements</h3>
         <div id="badgeGrid" class="achievements"></div>
@@ -186,7 +187,7 @@
       <div id="historyList"></div>
     </div>
 
-    <!-- SEO & Content Section (Visible to Google) -->
+    <!-- SEO & Content Section -->
     <article class="seo-content">
       <h1 data-i18n="seo_h1">Nicotine Pouch Tracker & Quitting Tool</h1>
       <p data-i18n="seo_p1">NicoTracker is the ultimate free tool to track Velo, Zyn, Killa. Runs locally or in cloud.</p>
@@ -208,6 +209,31 @@
 
   <!-- DIALOGS -->
   
+  <!-- Manage Brands Modal (NEW) -->
+  <dialog id="brandsModal">
+    <div class="modal-head" data-i18n="manage_brands">Manage Brands</div>
+    <div class="modal-body">
+      <div class="grid" style="grid-template-columns: 2fr 1fr auto; margin-bottom:16px; align-items:end;">
+        <div>
+            <label style="font-size:11px; color:var(--muted);">Brand Name</label>
+            <input type="text" id="newBrandName" placeholder="e.g. Kurwa Fatality">
+        </div>
+        <div>
+            <label style="font-size:11px; color:var(--muted);">Mg</label>
+            <input type="number" id="newBrandMg" placeholder="mg" step="0.1">
+        </div>
+        <button id="addNewBrandBtn" class="btn btn-primary" style="height:44px;">➕</button>
+      </div>
+      <div style="border-top:1px solid var(--border); margin-bottom:10px;"></div>
+      <div id="customBrandsList" style="max-height: 250px; overflow-y: auto;">
+        <!-- Brands injected here -->
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-outline" onclick="document.getElementById('brandsModal').close()" data-i18n="close">Close</button>
+    </div>
+  </dialog>
+
   <!-- Onboarding / Settings Modal -->
   <dialog id="settingsModal">
     <div class="modal-head" data-i18n="settings">Settings</div>
@@ -280,9 +306,9 @@
   <!-- JAVASCRIPT LOGIC -->
   <script type="module">
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
-    import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-analytics.js";
+    import { getAnalytics, logEvent } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-analytics.js";
     import { getAuth, signInWithPopup, GoogleAuthProvider, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
-    import { getFirestore, doc, setDoc, getDoc, collection, addDoc, onSnapshot, query, orderBy, Timestamp, writeBatch } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+    import { getFirestore, doc, setDoc, getDoc, collection, addDoc, onSnapshot, query, orderBy, Timestamp, writeBatch, deleteDoc } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
 
     // === 1. CONFIGURATION ===
     const firebaseConfig = {
@@ -304,7 +330,7 @@
     const translations = {
       en: {
         auth_btn: "Login / Sync", today_usage: "TODAY", streak: "STREAK", money_saved: "SAVED",
-        log_usage: "Log Usage", custom_brand_link: "Or use custom brand", chart_trend: "Usage Trend (14 days)",
+        log_usage: "Log Usage", manage_custom_brands: "Manage Custom Brands", chart_trend: "Usage Trend (14 days)",
         history: "History", view_all: "View All", settings: "Settings", quit_mode_label: "Enable Quitting Program",
         quit_date: "Quit Date", currency: "Currency", pack_price: "Price / Can", pouches_pack: "Pouches / Can",
         daily_limit: "Standard Limit", close: "Close", save: "Save", auth_title: "Sync & Backup",
@@ -312,11 +338,12 @@
         quit_title: "Freedom Journey", seo_h1: "Nicotine Pouch Tracker & Quitting Tool", achievements: "Achievements",
         seo_p1: "NicoTracker is the ultimate free tool to track Velo, Zyn, Killa. Runs locally or in cloud.",
         seo_h2_cost: "How much does it cost?", seo_h2_quit: "How to quit?",
-        seo_p2: "Track your expenses and see how much you save.", seo_p3: "Use our Tapering Mode to quit gradually."
+        seo_p2: "Track your expenses and see how much you save.", seo_p3: "Use our Tapering Mode to quit gradually.",
+        manage_brands: "Manage Custom Brands"
       },
       cs: {
         auth_btn: "Přihlásit / Sync", today_usage: "DNES", streak: "ŘADA DNÍ", money_saved: "UŠETŘENO",
-        log_usage: "Zapsat sáček", custom_brand_link: "Nebo vlastní značka", chart_trend: "Vývoj (14 dní)",
+        log_usage: "Zapsat sáček", manage_custom_brands: "Spravovat vlastní značky", chart_trend: "Vývoj (14 dní)",
         history: "Historie", view_all: "Zobrazit vše", settings: "Nastavení", quit_mode_label: "Zapnout odvykací program",
         quit_date: "Datum konce", currency: "Měna", pack_price: "Cena puku", pouches_pack: "Ks v puku",
         daily_limit: "Denní limit", close: "Zavřít", save: "Uložit", auth_title: "Záloha dat",
@@ -324,7 +351,8 @@
         quit_title: "Cesta ke svobodě", seo_h1: "Aplikace na odvykání nikotinových sáčků", achievements: "Úspěchy",
         seo_p1: "NicoTracker je nástroj zdarma pro sledování Velo, Killa a dalších. Funguje i bez internetu.",
         seo_h2_cost: "Kolik stojí závislost?", seo_h2_quit: "Jak přestat?",
-        seo_p2: "Spočítej si, kolik utratíš ročně. Průměrný uživatel prokouří 50 000 Kč.", seo_p3: "Využij náš odvykací mód pro postupné snižování dávek."
+        seo_p2: "Spočítej si, kolik utratíš ročně.", seo_p3: "Využij náš odvykací mód pro postupné snižování dávek.",
+        manage_brands: "Správa vlastních značek"
       }
     };
 
@@ -339,7 +367,8 @@
       user: null, 
       lang: localStorage.getItem('nt_lang') || 'en',
       settings: JSON.parse(localStorage.getItem('nt_settings')) || { currency: 'USD', packPrice: 5, pouchesPerPack: 20, dailyLimit: 10, quitMode: false, quitDate: null },
-      history: JSON.parse(localStorage.getItem('nt_history')) || []
+      history: JSON.parse(localStorage.getItem('nt_history')) || [],
+      customPouches: JSON.parse(localStorage.getItem('nt_custom_pouches')) || []
     };
 
     // === 4. LOGIC ===
@@ -363,7 +392,7 @@
         const key = el.dataset.i18n;
         if(translations[lang][key]) el.innerText = translations[lang][key];
       });
-      renderUI(); // Re-render badges with correct lang
+      renderUI(); 
     }
 
     function renderUI() {
@@ -372,7 +401,18 @@
       const todayCount = todayEntries.length;
       const todayMg = todayEntries.reduce((s, i) => s + (i.mg || 0), 0);
       
-      // Limit & Tapering Logic
+      // Update Select Dropdown
+      const sel = document.getElementById('pouchSelect');
+      const currentVal = sel.value; 
+      sel.innerHTML = '';
+      const allPouches = [...pouchesDB, ...state.customPouches];
+      allPouches.sort((a,b) => a.name.localeCompare(b.name));
+      allPouches.forEach(p => {
+        sel.innerHTML += `<option value="${p.name}" data-mg="${p.mg}">${p.name} (${p.mg}mg)</option>`;
+      });
+      if(currentVal && allPouches.some(p => p.name === currentVal)) sel.value = currentVal;
+
+      // Limit & Tapering
       let limit = state.settings.dailyLimit;
       if (state.settings.quitMode && state.settings.quitDate) {
         const quitDate = new Date(state.settings.quitDate);
@@ -398,7 +438,7 @@
       // Stats
       document.getElementById('valToday').innerText = todayCount;
       document.getElementById('valLimit').innerText = `Limit: ${limit}`;
-      document.getElementById('valMg').innerText = `${todayMg} mg`;
+      document.getElementById('valMg').innerText = `${todayMg.toFixed(1)} mg`;
       
       const costPerPouch = state.settings.packPrice / state.settings.pouchesPerPack;
       const saved = (limit - todayCount) * costPerPouch;
@@ -408,7 +448,6 @@
       const streak = calcStreak();
       document.getElementById('valStreak').innerHTML = `${streak} <span style="font-size:16px">days</span>`;
 
-      // Render Badges
       renderBadges(streak);
 
       // History
@@ -423,6 +462,39 @@
       });
 
       renderChart();
+    }
+    
+    // --- BRAND MGMT ---
+    function renderBrandsModal() {
+        const list = document.getElementById('customBrandsList');
+        list.innerHTML = '';
+        if(state.customPouches.length === 0) {
+            list.innerHTML = '<p style="color:var(--muted); font-size:13px; text-align:center;">No custom brands.</p>';
+            return;
+        }
+        state.customPouches.forEach((p, index) => {
+            const div = document.createElement('div');
+            div.style.cssText = "display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid var(--border);";
+            div.innerHTML = `
+                <span style="font-size:14px;"><b>${p.name}</b> <span style="color:var(--muted); margin-left:4px;">${p.mg}mg</span></span>
+                <button class="btn btn-danger" style="padding:6px 12px; font-size:14px;" data-idx="${index}">🗑️</button>
+            `;
+            div.querySelector('button').onclick = async () => {
+                if(!confirm('Delete this brand?')) return;
+                const toRemove = state.customPouches[index];
+                
+                state.customPouches.splice(index, 1);
+                localStorage.setItem('nt_custom_pouches', JSON.stringify(state.customPouches));
+                
+                if(state.user && toRemove.id) {
+                    try { await deleteDoc(doc(db, 'users', state.user.uid, 'custom_pouches', toRemove.id)); } catch(e){}
+                }
+                logEvent(analytics, 'delete_brand');
+                renderBrandsModal();
+                renderUI();
+            };
+            list.appendChild(div);
+        });
     }
 
     // --- GAMIFICATION LOGIC ---
@@ -442,15 +514,13 @@
       const limit = state.settings.dailyLimit;
       let streak = 0;
       let d = new Date();
-      // Check today first, if empty assume okay, if full check limit
       for(let i=0; i<365; i++) {
          const key = d.toISOString().slice(0,10);
          const stat = daily[key];
          if(i===0 && (!stat || stat.count <= limit)) { /* Today ok so far */ }
          else if(stat && stat.count <= limit) streak++;
-         else if(i > 0 && !stat) streak++; // Assume 0 usage is good
+         else if(i > 0 && !stat) streak++; 
          else if(stat && stat.count > limit) break;
-         
          d.setDate(d.getDate()-1);
       }
       return streak;
@@ -472,12 +542,11 @@
 
     function renderBadges(streak) {
         const total = state.history.length;
-        const totalSaved = parseFloat(document.getElementById('valSaved').innerText) || 0; // Approximate
+        const totalSaved = parseFloat(document.getElementById('valSaved').innerText) || 0; 
         const hasZero = state.history.some(h => h.mg === 0);
         const hasHigh = state.history.some(h => h.mg > 15);
         const isWeekend = checkWeekendSuccess();
         
-        // Define Badges (EN/CS handling via ternary or keys)
         const labels = state.lang === 'en' ? 
           ['Beginner', 'Pro', 'Streak 3', 'Streak 7', 'Iron Will', 'Weekend Warrior', 'Clean Lungs', 'Hardcore', 'Saver', 'Investor'] :
           ['Začátečník', 'Profík', 'Řada 3', 'Řada 7', 'Iron Will', 'Víkendový Válečník', 'Čisté plíce', 'Hardcore', 'Šetřílek', 'Investor'];
@@ -541,11 +610,9 @@
     }
 
     function addEntry() {
-      const brand = document.getElementById('pouchSelect').value;
-      let mg = 0;
-      const dbItem = pouchesDB.find(p => p.name === brand);
-      if(dbItem) mg = dbItem.mg;
-      else mg = parseFloat(prompt("Enter mg strength:", "10")) || 0;
+      const sel = document.getElementById('pouchSelect');
+      const brand = sel.value;
+      const mg = parseFloat(sel.options[sel.selectedIndex].dataset.mg) || 0;
 
       const record = {
         id: Date.now().toString(),
@@ -564,6 +631,7 @@
         });
       }
 
+      logEvent(analytics, 'add_pouch', { brand, mg });
       renderUI();
       showToast("Added!");
     }
@@ -606,11 +674,36 @@
         e.target.checked ? document.getElementById('quitSettings').classList.remove('hidden') : document.getElementById('quitSettings').classList.add('hidden');
       };
 
-      const sel = document.getElementById('pouchSelect');
-      pouchesDB.forEach(p => sel.innerHTML += `<option value="${p.name}">${p.name} (${p.mg}mg)</option>`);
-      sel.innerHTML += `<option value="Custom">Other / Custom</option>`;
-      
       document.getElementById('addBtn').onclick = addEntry;
+
+      document.getElementById('openBrandsBtn').onclick = () => {
+          renderBrandsModal();
+          document.getElementById('brandsModal').showModal();
+      };
+
+      document.getElementById('addNewBrandBtn').onclick = async () => {
+          const name = document.getElementById('newBrandName').value.trim();
+          const mg = parseFloat(document.getElementById('newBrandMg').value);
+          if(!name || isNaN(mg)) { alert('Please fill name and mg.'); return; }
+          
+          const newPouch = { name, mg, id: Date.now().toString() };
+          
+          state.customPouches.push(newPouch);
+          localStorage.setItem('nt_custom_pouches', JSON.stringify(state.customPouches));
+          
+          if(state.user) {
+              await setDoc(doc(db, 'users', state.user.uid, 'custom_pouches', newPouch.id), {
+                  name, mg, createdAt: Timestamp.now()
+              });
+          }
+          logEvent(analytics, 'create_brand', { name });
+          
+          document.getElementById('newBrandName').value = '';
+          document.getElementById('newBrandMg').value = '';
+          renderBrandsModal();
+          renderUI();
+          showToast("Brand Created!");
+      };
 
       document.getElementById('googleAuthBtn').onclick = () => signInWithPopup(auth, new GoogleAuthProvider()).then(() => document.getElementById('authModal').close());
       
@@ -649,6 +742,7 @@
         document.getElementById('syncBtn').innerText = user.email;
         document.getElementById('syncBtn').classList.replace('btn-primary', 'btn-outline');
         
+        // Sync Settings
         const sSnap = await getDoc(doc(db, 'users', user.uid, 'settings', 'profile'));
         if(sSnap.exists()) {
            state.settings = sSnap.data();
@@ -657,6 +751,25 @@
            setDoc(doc(db, 'users', user.uid, 'settings', 'profile'), state.settings);
         }
 
+        // Sync Custom Pouches
+        onSnapshot(query(collection(db, 'users', user.uid, 'custom_pouches')), (snap) => {
+            const cloudPouches = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+            if(cloudPouches.length > 0) {
+                state.customPouches = cloudPouches;
+                localStorage.setItem('nt_custom_pouches', JSON.stringify(state.customPouches));
+                renderUI();
+            } else if (state.customPouches.length > 0) {
+                 const batch = writeBatch(db);
+                 state.customPouches.forEach(p => {
+                    const pid = p.id || Date.now().toString();
+                    const ref = doc(db, 'users', user.uid, 'custom_pouches', pid);
+                    batch.set(ref, { name: p.name, mg: p.mg, createdAt: Timestamp.now() });
+                 });
+                 batch.commit();
+            }
+        });
+
+        // Sync History
         const q = query(collection(db, 'users', user.uid, 'history'), orderBy('timestamp', 'desc'));
         onSnapshot(q, (snap) => {
            const cloudHistory = snap.docs.map(d => {
@@ -683,6 +796,7 @@
         document.getElementById('syncBtn').innerText = translations[state.lang].auth_btn;
         document.getElementById('syncBtn').classList.replace('btn-outline', 'btn-primary');
         state.history = JSON.parse(localStorage.getItem('nt_history')) || [];
+        state.customPouches = JSON.parse(localStorage.getItem('nt_custom_pouches')) || [];
         renderUI();
       }
     });
