@@ -357,9 +357,412 @@
     };
 
     const pouchesDB = [
-      { name: "Velo Freeze", mg: 10.9 }, { name: "Velo Ice Cool", mg: 8 }, { name: "Velo Royal Purple", mg: 8 },
-      { name: "Zyn Cool Mint", mg: 6 }, { name: "Zyn Citrus", mg: 3 }, { name: "Killa Cold Mint", mg: 16 },
-      { name: "Pablo Ice Cold", mg: 30 }, { name: "Siberia Red", mg: 43 }
+      {
+        brand: "77 Pouches",
+        items: [
+          { name: "77 Black Currant Ice", mg: 10.4, dots: 2 },
+          { name: "77 Blueberry", mg: 10.4, dots: 2 },
+          { name: "77 Cola & Cherry", mg: 10.4, dots: 2 },
+          { name: "77 Cola & Vanilla", mg: 10.4, dots: 2 },
+          { name: "77 Forest Fruit Light", mg: 5.2, dots: 1 }
+        ]
+      },
+      {
+        brand: "ACE",
+        items: [
+          { name: "Ace Cool Mint", mg: 6.0, dots: 1 },
+          { name: "Ace Eucalyptus", mg: 6.0, dots: 1 },
+          { name: "Ace Extreme Cool", mg: 11.2, dots: 3 },
+          { name: "Ace Green Lemon", mg: 6.0, dots: 1 },
+          { name: "Ace X EXTEND Cool Mint", mg: 10.0, dots: 3 }
+        ]
+      },
+      {
+        brand: "AROMA KING",
+        items: [
+          { name: "Aroma King Full Kick Candy Tobacco", mg: 10.0, dots: 2 },
+          { name: "Aroma King Full Kick Double Mint", mg: 10.0, dots: 2 },
+          { name: "Aroma King Soft Kick Candy Tobacco", mg: 5.0, dots: 1 },
+          { name: "Aroma King Soft Kick Double Mint", mg: 5.0, dots: 1 }
+        ]
+      },
+      {
+        brand: "CANDYS",
+        items: [
+          { name: "Candys Fresh Strong", mg: 16.0, dots: 4 },
+          { name: "Candys Sweet Bubblegum", mg: 8.0, dots: 2 },
+          { name: "Candys Sweet Strawberry", mg: 8.0, dots: 2 }
+        ]
+      },
+      {
+        brand: "CLEW",
+        items: [
+          { name: "Clew Mango Mint", mg: 10.0, dots: 2 },
+          { name: "Clew Watermelon Ice", mg: 10.0, dots: 2 }
+        ]
+      },
+      {
+        brand: "CUBA",
+        items: [
+          { name: "Cuba Blueberry Strong", mg: 20.0, dots: 4 },
+          { name: "Cuba Cherry Strong", mg: 20.0, dots: 4 },
+          { name: "Cuba Cola Strong", mg: 20.0, dots: 4 },
+          { name: "Cuba Forest Berries Strong", mg: 20.0, dots: 4 },
+          { name: "Cuba Ninja Strawberry", mg: 20.0, dots: 4 }
+        ]
+      },
+      {
+        brand: "DENSSI",
+        items: [
+          { name: "DENSSI Cold Mint", mg: 10.0, dots: 2 },
+          { name: "DENSSI Spearmint", mg: 10.0, dots: 2 },
+          { name: "DENSSI Strawberry Freeze", mg: 10.0, dots: 2 }
+        ]
+      },
+      {
+        brand: "DOPE",
+        items: [
+          { name: "Dope Freeze Strong Edition", mg: 16.0, dots: 4 },
+          { name: "Dope Ice Cool Xtra Strong", mg: 16.0, dots: 4 },
+          { name: "Dope Mango", mg: 16.0, dots: 4 }
+        ]
+      },
+      {
+        brand: "FEDRS",
+        items: [
+          { name: "Fedrs Ice Cool Cinnamon Roll", mg: 20.0, dots: 4 },
+          { name: "Fedrs Ice Cool Irish Coffee", mg: 20.0, dots: 4 }
+        ]
+      },
+      {
+        brand: "Firefly",
+        items: [
+          { name: "Firefly Mango Ice", mg: 10.0, dots: 2 },
+          { name: "Firefly Mint X-Strong", mg: 15.0, dots: 4 }
+        ]
+      },
+      {
+        brand: "Fix",
+        items: [
+          { name: "Fix Blueberry", mg: 8.0, dots: 2 },
+          { name: "Fix Forest Fruit", mg: 11.5, dots: 3 },
+          { name: "Fix Lime", mg: 5.6, dots: 1 },
+          { name: "Fix Pomegranate", mg: 7.0, dots: 2 },
+          { name: "Fix Sweet Mint Lemon", mg: 8.0, dots: 2 }
+        ]
+      },
+      {
+        brand: "FUMI",
+        items: [
+          { name: "Fumi Fieri Mango", mg: 11.0, dots: 3 },
+          { name: "Fumi Freezy Mint", mg: 16.0, dots: 4 },
+          { name: "Fumi Minty Blueberry", mg: 8.0, dots: 2 },
+          { name: "Fumi Prickly Pear", mg: 11.0, dots: 3 },
+          { name: "Fumi Tangy Apple", mg: 11.0, dots: 3 },
+          { name: "Fumi Tangy Strawberry", mg: 11.0, dots: 3 },
+          { name: "Fumi Zingy Ginger", mg: 11.0, dots: 3 }
+        ]
+      },
+      {
+        brand: "FUZION",
+        items: [
+          { name: "Fuzion Berry Strong", mg: 18.0, dots: 4 },
+          { name: "Fuzion Max Extreme", mg: 30.0, dots: 5 },
+          { name: "Fuzion Orange Energy", mg: 16.0, dots: 3 }
+        ]
+      },
+      {
+        brand: "GARANT",
+        items: [
+          { name: "Garant Extreme Mint", mg: 16.0, dots: 4 },
+          { name: "Garant Strong Plus", mg: 20.0, dots: 4 },
+          { name: "Garant White Strong", mg: 15.0, dots: 4 }
+        ]
+      },
+      {
+        brand: "GOAT",
+        items: [
+          { name: "Goat Blueberry #12", mg: 8.4, dots: 2 },
+          { name: "Goat Frosted Strong", mg: 11.5, dots: 3 },
+          { name: "Goat White", mg: 5.6, dots: 2 }
+        ]
+      },
+      {
+        brand: "GRITT",
+        items: [
+          { name: "Gritt Crisp Ice Extra Strong", mg: 11.0, dots: 3 },
+          { name: "Gritt Frost Bite", mg: 11.2, dots: 3 },
+          { name: "Gritt Kiwi Green Apple", mg: 12.0, dots: 3 }
+        ]
+      },
+      {
+        brand: "Grant",
+        items: [
+          { name: "Grant Dragon Fruit", mg: 12.0, dots: 3 },
+          { name: "Grant Extreme Edition", mg: 24.0, dots: 5 },
+          { name: "Grant ICE Peach", mg: 20.0, dots: 4 },
+          { name: "Grant Licorice", mg: 9.6, dots: 2 },
+          { name: "Grant Mango Lime Extreme Edition", mg: 24.0, dots: 5 },
+          { name: "Grant Mint Slim", mg: 10.9, dots: 3 },
+          { name: "Grant Wild Berries", mg: 12.0, dots: 3 }
+        ]
+      },
+      {
+        brand: "Greatest",
+        items: [
+          { name: "Greatest Berry Punch", mg: 8.0, dots: 2 },
+          { name: "Greatest Cold Dry", mg: 8.0, dots: 2 }
+        ]
+      },
+      {
+        brand: "ICEBERG",
+        items: [
+          { name: "Iceberg Arasaka", mg: 12.0, dots: 3 },
+          { name: "Iceberg Danger Strong", mg: 25.0, dots: 5 },
+          { name: "Iceberg Dragon Fruit", mg: 25.0, dots: 5 },
+          { name: "Iceberg Extreme", mg: 20.0, dots: 4 },
+          { name: "Iceberg Grape", mg: 25.0, dots: 5 },
+          { name: "Iceberg Mango Banana", mg: 25.0, dots: 5 },
+          { name: "Iceberg Medium", mg: 12.0, dots: 3 },
+          { name: "Iceberg Watermelon Lime", mg: 25.0, dots: 5 }
+        ]
+      },
+      {
+        brand: "KICK",
+        items: [
+          { name: "Kick Strong Mint", mg: 8.0, dots: 2 }
+        ]
+      },
+      {
+        brand: "KILLA",
+        items: [
+          { name: "Killa 13", mg: 12.8, dots: 2 },
+          { name: "Killa Blueberry", mg: 12.8, dots: 2 },
+          { name: "Killa Cold Mint", mg: 12.8, dots: 2 },
+          { name: "Killa Cold X Mint", mg: 18.0, dots: 3 },
+          { name: "Killa Cola", mg: 12.8, dots: 2 },
+          { name: "Killa Mini Cold Mint", mg: 8.0, dots: 1 },
+          { name: "Killa Spearmint", mg: 12.8, dots: 2 },
+          { name: "Killa Watermelon", mg: 13.2, dots: 2 }
+        ]
+      },
+      {
+        brand: "KLINT",
+        items: [
+          { name: "Klint Arctic Mint X-Strong", mg: 12.0, dots: 4 },
+          { name: "Klint Fresh Mint Strong", mg: 10.0, dots: 3 },
+          { name: "Klint Freeze Mint", mg: 10.0, dots: 3 },
+          { name: "Klint Liquorice", mg: 5.6, dots: 1 },
+          { name: "Klint Polar Mint", mg: 8.0, dots: 2 },
+          { name: "Klint Rosé", mg: 5.0, dots: 1 }
+        ]
+      },
+      {
+        brand: "KURWA",
+        items: [
+          { name: "Kurwa Cocopilada", mg: 12.0, dots: 2 },
+          { name: "Kurwa Collection Blackcurrant Purple Grape Hard", mg: 25.0, dots: 5 },
+          { name: "Kurwa Collection Just Berries Forest Berries", mg: 12.0, dots: 2 },
+          { name: "Kurwa Mango Juicy", mg: 12.0, dots: 2 }
+        ]
+      },
+      {
+        brand: "LIV",
+        items: [
+          { name: "Liv X-Strong Mint", mg: 14.0, dots: 4 }
+        ]
+      },
+      {
+        brand: "Loop",
+        items: [
+          { name: "Loop Licorice Fusion Extra Strong", mg: 11.0, dots: 3 }
+        ]
+      },
+      {
+        brand: "LYFT",
+        items: [
+          { name: "LYFT Berry Frost", mg: 8.0, dots: 2 },
+          { name: "LYFT Mint Slim", mg: 10.0, dots: 3 },
+          { name: "LYFT Tropical Slim", mg: 6.0, dots: 2 }
+        ]
+      },
+      {
+        brand: "NICO",
+        items: [
+          { name: "Nico Citrus Crush", mg: 8.0, dots: 2 },
+          { name: "Nico Ice Rock", mg: 8.0, dots: 2 }
+        ]
+      },
+      {
+        brand: "NOIS",
+        items: [
+          { name: "Nois Black Edition (slabší)", mg: 4.0, dots: 1 },
+          { name: "Nois Cool Strong", mg: 17.5, dots: 4 },
+          { name: "Nois White Edition (silnější)", mg: 10.0, dots: 3 }
+        ]
+      },
+      {
+        brand: "NOX",
+        items: [
+          { name: "NOX Cool Mint", mg: 16.0, dots: 4 },
+          { name: "NOX Tropical", mg: 16.0, dots: 4 }
+        ]
+      },
+      {
+        brand: "ON!",
+        items: [
+          { name: "ON! Citrus 3 mg", mg: 3.0, dots: 1 },
+          { name: "ON! Citrus 6 mg", mg: 6.0, dots: 2 },
+          { name: "ON! Coffee 6 mg", mg: 6.0, dots: 2 },
+          { name: "ON! Licorice 6 mg", mg: 6.0, dots: 2 },
+          { name: "ON! Mint 3 mg", mg: 3.0, dots: 1 },
+          { name: "ON! Mint 6 mg", mg: 6.0, dots: 2 }
+        ]
+      },
+      {
+        brand: "PABLO",
+        items: [
+          { name: "Pablo Gold Edition Frosted Mint", mg: 25.0, dots: 5 },
+          { name: "Pablo Ice Cold", mg: 12.0, dots: 3 },
+          { name: "Pablo Mini Ice Cold", mg: 8.3, dots: 2 },
+          { name: "Pablo X-Ice Cold", mg: 25.0, dots: 5 },
+          { name: "Pablo X-Mint", mg: 16.0, dots: 4 }
+        ]
+      },
+      {
+        brand: "PUFF & POUCH",
+        items: [
+          { name: "Puff & Pouch Mint Blast", mg: 6.0, dots: 1 },
+          { name: "Puff & Pouch Red Energy", mg: 8.0, dots: 2 }
+        ]
+      },
+      {
+        brand: "R4VE kofeinové",
+        items: [
+          { name: "R4VE Energy Bubble Gun (100 mg kofeinu)", mg: 0, dots: 0 },
+          { name: "R4VE Energy Mango Django (160 mg kofeinu)", mg: 0, dots: 0 },
+          { name: "R4VE Energy Minty Berry (160 mg kofeinu)", mg: 0, dots: 0 },
+          { name: "R4VE Energy Skiddler (80 mg kofeinu)", mg: 0, dots: 0 }
+        ]
+      },
+      {
+        brand: "R4VE nikotinové",
+        items: [
+          { name: "R4VE Bubble Gun", mg: 10.0, dots: 2 },
+          { name: "R4VE Melon Strong", mg: 10.0, dots: 3 },
+          { name: "R4VE Red Berries", mg: 8.0, dots: 2 }
+        ]
+      },
+      {
+        brand: "SIBEIRA",
+        items: [
+          { name: "Sibeira Mint", mg: 6.0, dots: 2 },
+          { name: "Sibeira Spearmint Strong", mg: 9.6, dots: 3 }
+        ]
+      },
+      {
+        brand: "Siberia",
+        items: [
+          { name: "Siberia -80°C White Dry", mg: 34.0, dots: 5 },
+          { name: "Siberia White Dry Regular", mg: 33.0, dots: 5 }
+        ]
+      },
+      {
+        brand: "SNATCH",
+        items: [
+          { name: "Snatch Arctic Mint X-Strong", mg: 16.0, dots: 3 },
+          { name: "Snatch Citrus Strong Edition", mg: 16.0, dots: 3 },
+          { name: "Snatch Forest Fruits", mg: 16.0, dots: 3 },
+          { name: "Snatch Frozen Ultra Strong", mg: 30.0, dots: 5 }
+        ]
+      },
+      {
+        brand: "SYX",
+        items: [
+          { name: "SYX Blueberry", mg: 8.0, dots: 2 },
+          { name: "SYX Low", mg: 2.8, dots: 1 },
+          { name: "SYX Medium", mg: 5.6, dots: 2 },
+          { name: "SYX Royal Wintergreen Strong", mg: 11.5, dots: 3 }
+        ]
+      },
+      {
+        brand: "Velo",
+        items: [
+          { name: "Velo Breezy Mango Slim", mg: 11.6, dots: 5 },
+          { name: "Velo Bright Spearmint Mini", mg: 6.0, dots: 2 },
+          { name: "Velo Cherry Ice Mini", mg: 4.0, dots: 1 },
+          { name: "Velo Cinnamon Flame Slim", mg: 10.9, dots: 4 },
+          { name: "Velo Crispy Peppermint Slim", mg: 9.8, dots: 3 },
+          { name: "Velo Crispy Peppermint Zero Slim", mg: 0, dots: 0 },
+          { name: "Velo Eucalyptus Storm Slim", mg: 14.0, dots: 5 },
+          { name: "Velo Freezing Peppermint Slim", mg: 10.9, dots: 5 },
+          { name: "Velo Groovy Grape Slim", mg: 10.9, dots: 4 },
+          { name: "Velo Icy Berries Mini", mg: 6.0, dots: 2 },
+          { name: "Velo McLaren Papaya Slim", mg: 8.4, dots: 4 },
+          { name: "Velo Orange Spark Slim", mg: 10.9, dots: 4 },
+          { name: "Velo Peppermint Storm Slim", mg: 10.9, dots: 4 },
+          { name: "Velo Simply Spearmint Mini", mg: 4.0, dots: 1 },
+          { name: "Velo Strawberry Ice Mini", mg: 6.0, dots: 2 },
+          { name: "Velo Strawberry Ice Slim", mg: 10.9, dots: 4 },
+          { name: "Velo Tangy Lime Slim", mg: 9.8, dots: 3 },
+          { name: "Velo Tropic Breeze Zero Slim", mg: 0, dots: 0 },
+          { name: "Velo Watermelon Ice Slim", mg: 8.1, dots: 3 }
+        ]
+      },
+      {
+        brand: "VIDAR",
+        items: [
+          { name: "Vidar Mint Strong", mg: 14.0, dots: 4 }
+        ]
+      },
+      {
+        brand: "VOLT",
+        items: [
+          { name: "VOLT Cool Crisp", mg: 12.0, dots: 3 },
+          { name: "VOLT Dark Frost", mg: 16.0, dots: 4 },
+          { name: "VOLT Frosted Apple", mg: 10.0, dots: 2 }
+        ]
+      },
+      {
+        brand: "WHITE FOX",
+        items: [
+          { name: "White Fox Double Mint", mg: 12.0, dots: 3 },
+          { name: "White Fox Full Charge", mg: 22.5, dots: 5 },
+          { name: "White Fox Peppered Mint", mg: 12.0, dots: 3 },
+          { name: "White Fox Slim Original", mg: 12.0, dots: 3 }
+        ]
+      },
+      {
+        brand: "XQS",
+        items: [
+          { name: "XQS Black Cherry", mg: 8.0, dots: 2 },
+          { name: "XQS Blueberry Mint", mg: 8.0, dots: 2 },
+          { name: "XQS Cool Ice", mg: 9.6, dots: 3 },
+          { name: "XQS Tropical Strong", mg: 9.6, dots: 3 }
+        ]
+      },
+      {
+        brand: "ZAFARI",
+        items: [
+          { name: "Zafari Desert Mint", mg: 8.0, dots: 2 },
+          { name: "Zafari Lemongrass Ginger", mg: 8.0, dots: 2 }
+        ]
+      },
+      {
+        brand: "ZYN",
+        items: [
+          { name: "ZYN Black Cherry Mini", mg: 3.0, dots: 1 },
+          { name: "ZYN Black Cherry Mini Extra", mg: 6.0, dots: 2 },
+          { name: "ZYN Blackcurrant Frost Slim", mg: 11.0, dots: 4 },
+          { name: "ZYN Chili Guava Slim", mg: 11.0, dots: 4 },
+          { name: "ZYN Cool Mint Mini", mg: 3.0, dots: 1 },
+          { name: "ZYN Cool Mint Mini Extra", mg: 6.0, dots: 2 },
+          { name: "ZYN Cool Mint Slim", mg: 9.0, dots: 3 },
+          { name: "ZYN Menthol Ice Slim", mg: 11.0, dots: 4 },
+          { name: "ZYN Spearmint Mini", mg: 1.5, dots: 1 },
+          { name: "ZYN Spearmint Mini Extra", mg: 6.0, dots: 2 }
+        ]
+      }
     ];
 
     // === 3. STATE (HYBRID) ===
@@ -403,14 +806,34 @@
       
       // Update Select Dropdown
       const sel = document.getElementById('pouchSelect');
-      const currentVal = sel.value; 
+      const currentVal = sel.value;
       sel.innerHTML = '';
-      const allPouches = [...pouchesDB, ...state.customPouches];
-      allPouches.sort((a,b) => a.name.localeCompare(b.name));
-      allPouches.forEach(p => {
-        sel.innerHTML += `<option value="${p.name}" data-mg="${p.mg}">${p.name} (${p.mg}mg)</option>`;
+
+      const groupedPouches = [...pouchesDB.map(g => ({ ...g, items: [...g.items] }))];
+      if (state.customPouches.length) {
+        groupedPouches.push({ brand: 'Custom', items: [...state.customPouches] });
+      }
+
+      groupedPouches.sort((a, b) => a.brand.localeCompare(b.brand));
+      groupedPouches.forEach(group => {
+        const optgroup = document.createElement('optgroup');
+        optgroup.label = group.brand;
+
+        group.items
+          .slice()
+          .sort((a, b) => a.name.localeCompare(b.name))
+          .forEach(p => {
+            const opt = document.createElement('option');
+            opt.value = p.name;
+            opt.dataset.mg = p.mg;
+            opt.textContent = `${p.name} (${p.mg}mg)`;
+            optgroup.appendChild(opt);
+          });
+
+        sel.appendChild(optgroup);
       });
-      if(currentVal && allPouches.some(p => p.name === currentVal)) sel.value = currentVal;
+
+      if(currentVal && Array.from(sel.options).some(o => o.value === currentVal)) sel.value = currentVal;
 
       // Limit & Tapering
       let limit = state.settings.dailyLimit;
