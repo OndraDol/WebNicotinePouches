@@ -7,7 +7,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="theme-color" content="#10b981">
   <link rel="manifest" href="./manifest.json">
-  <title>NicoTracker – Osobní Deník</title>
+  <title>NicoTracker Ultimate</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -15,10 +15,9 @@
     :root {
       --bg: #f3f4f6;
       --card: #ffffff;
-      --primary: #10b981; /* Smaragdově zelená */
-      --primary-dark: #059669;
-      --accent: #3b82f6;
-      --text: #111827;
+      --primary: #10b981;
+      --primary-dark: #0c9d6f;
+      --accent: #111827;
       --muted: #6b7280;
       --border: #e5e7eb;
       --danger: #ef4444;
@@ -29,719 +28,776 @@
       margin: 0;
       font-family: 'Inter', system-ui, -apple-system, sans-serif;
       background: var(--bg);
-      color: var(--text);
+      color: var(--accent);
       min-height: 100vh;
-      padding-bottom: 40px;
+      padding-bottom: 48px;
       -webkit-tap-highlight-color: transparent;
       user-select: none;
     }
-
-    input, textarea, select {
-      user-select: text;
-    }
-    
-    /* --- Layout --- */
+    input, textarea, select { user-select: text; }
     header {
       background: var(--card);
       border-bottom: 1px solid var(--border);
-      padding: 16px 24px;
+      padding: 16px 20px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       position: sticky;
       top: 0;
-      z-index: 50;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      z-index: 20;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.04);
     }
-    .logo { font-weight: 800; font-size: 20px; letter-spacing: -0.5px; display: flex; align-items: center; gap: 8px; color: var(--text); }
+    .logo { font-weight: 800; font-size: 20px; display: flex; align-items: center; gap: 8px; }
     .logo span { color: var(--primary); }
-    .shell { max-width: 1100px; margin: 0 auto; padding: 24px 16px; }
-    
-    .grid { display: grid; gap: 20px; }
-    .stats-grid { grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); }
-    
-    /* --- Cards & UI --- */
+    .shell { max-width: 1200px; margin: 0 auto; padding: 24px 16px; }
     .card {
       background: var(--card);
       border: 1px solid var(--border);
       border-radius: 16px;
-      padding: 24px;
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);
+      padding: 20px;
+      box-shadow: 0 10px 30px -12px rgba(0,0,0,0.15);
     }
-    .btn {
-      border: none; border-radius: 10px; padding: 12px 18px; font-weight: 600; cursor: pointer;
-      transition: all 0.2s ease; font-size: 14px; display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-    }
-    .btn:hover { transform: translateY(-1px); filter: brightness(95%); }
-    .btn:active { transform: scale(0.98); }
-    .btn-primary { background: var(--primary); color: white; width: 100%; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2); }
-    .btn-outline { background: white; color: var(--text); border: 1px solid var(--border); }
-    .btn-danger { background: #fee2e2; color: var(--danger); }
-    
-    .btn-google { 
-      background: white; color: #4b5563; border: 1px solid var(--border); width: 100%; 
-      position: relative; margin-top: 12px;
-    }
-
-    /* --- Auth Screen --- */
-    .auth-container { max-width: 420px; margin: 60px auto; text-align: center; padding: 40px; }
-    .auth-inputs { display: flex; flex-direction: column; gap: 14px; margin: 24px 0; }
-    .auth-toggle { color: var(--accent); cursor: pointer; font-size: 14px; font-weight: 500; margin-top: 16px; display: inline-block; }
-    .auth-toggle:hover { text-decoration: underline; }
-    .divider { display: flex; align-items: center; margin: 24px 0; color: var(--muted); font-size: 13px; font-weight: 500; }
-    .divider::before, .divider::after { content: ""; flex: 1; border-bottom: 1px solid var(--border); }
-    .divider::before { margin-right: 14px; } .divider::after { margin-left: 14px; }
-
-    /* --- Stats & Gamification --- */
-    .stat {
-      border: 1px solid var(--border); border-radius: 14px; padding: 16px;
-      background: white; transition: transform 0.2s; position: relative;
-    }
+    .grid { display: grid; gap: 16px; }
+    .stats-grid { grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); }
+    .achievements { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+    .charts-grid { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+    .stat { border: 1px solid var(--border); border-radius: 14px; padding: 14px; background: #fff; transition: 0.2s; }
     .stat:hover { transform: translateY(-2px); border-color: var(--primary); }
-    .stat .label { color: var(--muted); font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
-    .stat .value { font-weight: 800; font-size: 28px; margin-top: 6px; color: var(--text); }
-    .stat .sub { color: var(--muted); font-size: 13px; margin-top: 4px; display: flex; align-items: center; gap: 4px; }
-
-    .achievements { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; }
-    .achievement { padding: 12px; border: 1px solid var(--border); border-radius: 12px; display: flex; gap: 12px; align-items: center; background: white; transition: all 0.3s; }
-    .achievement.locked { opacity: 0.5; filter: grayscale(1); background: #f9fafb; border-style: dashed; }
-    .achievement.unlocked { background: #ecfdf5; border-color: #a7f3d0; box-shadow: 0 4px 6px -2px rgba(0,0,0,0.05); }
+    .stat .label { font-size: 12px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
+    .stat .value { font-size: 28px; font-weight: 800; margin-top: 4px; }
+    .stat .sub { font-size: 13px; color: var(--muted); margin-top: 6px; }
+    .btn { border: none; border-radius: 12px; padding: 12px 16px; font-weight: 700; cursor: pointer; transition: 0.15s; font-size: 14px; display: inline-flex; align-items: center; gap: 8px; }
+    .btn:hover { transform: translateY(-1px); filter: brightness(0.97); }
+    .btn:active { transform: scale(0.98); }
+    .btn-primary { background: var(--primary); color: #fff; box-shadow: 0 12px 30px -12px rgba(16, 185, 129, 0.5); }
+    .btn-outline { background: #fff; border: 1px solid var(--border); color: var(--accent); }
+    .btn-danger { background: #fee2e2; color: var(--danger); }
+    .pill { padding: 5px 10px; border-radius: 999px; border: 1px solid var(--border); background: #f9fafb; font-weight: 600; font-size: 12px; color: var(--muted); }
+    .auth-container { max-width: 420px; margin: 60px auto; text-align: center; }
+    .auth-inputs { display: flex; flex-direction: column; gap: 12px; margin: 20px 0; }
+    .auth-toggle { color: var(--primary); cursor: pointer; font-weight: 700; font-size: 14px; }
+    .divider { display: flex; align-items: center; gap: 10px; margin: 20px 0; color: var(--muted); }
+    .divider::before, .divider::after { content: ""; flex: 1; border-bottom: 1px solid var(--border); }
+    .section-title { font-size: 18px; font-weight: 800; margin: 0 0 12px; }
+    label { font-size: 13px; font-weight: 700; color: var(--accent); display: block; margin-bottom: 6px; }
+    input, select { width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 12px; font-size: 15px; outline: none; background: #fff; transition: border 0.2s; }
+    input:focus, select:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(16,185,129,0.12); }
+    .history-item { display: grid; grid-template-columns: 1fr auto; gap: 8px; padding: 12px 0; border-bottom: 1px solid var(--border); align-items: center; }
+    .history-meta { display: flex; gap: 8px; align-items: center; font-size: 13px; color: var(--muted); }
+    .achievement { display: flex; gap: 12px; padding: 12px; border: 1px dashed var(--border); border-radius: 12px; align-items: center; background: #f8fafc; }
+    .achievement.unlocked { border-style: solid; border-color: #a7f3d0; background: #ecfdf5; box-shadow: 0 8px 18px -14px rgba(16,185,129,0.8); }
     .achievement .icon { font-size: 24px; }
-    .achievement h4 { margin: 0; font-size: 14px; font-weight: 700; }
-    .achievement p { margin: 2px 0 0; font-size: 12px; color: var(--muted); }
-
-    /* --- Inputs & Forms --- */
-    .section-title { font-size: 18px; font-weight: 700; margin: 0 0 16px; color: var(--text); }
-    .input-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; }
-    label { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 6px; display: block; }
-    select, input { width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 10px; font-size: 15px; outline: none; background: #fff; transition: border 0.2s; }
-    select:focus, input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); }
-
-    .history-item { display: grid; grid-template-columns: 1fr auto; gap: 12px; padding: 14px 0; border-bottom: 1px solid var(--border); align-items: center; }
-    .pill { padding: 4px 8px; background: #eff6ff; color: var(--accent); border-radius: 6px; font-weight: 600; font-size: 12px; border: 1px solid #dbeafe; }
-    
-    /* --- Utils --- */
-    .chart-container { position: relative; height: 280px; width: 100%; }
-    dialog { border: none; border-radius: 16px; padding: 0; width: min(480px, 95vw); box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); }
+    dialog { border: none; border-radius: 16px; padding: 0; width: min(520px, 95vw); box-shadow: 0 28px 60px -24px rgba(0,0,0,0.4); }
     dialog::backdrop { background: rgba(0,0,0,0.5); backdrop-filter: blur(2px); }
-    .modal-header { padding: 20px; font-weight: 700; font-size: 18px; border-bottom: 1px solid var(--border); background: #f9fafb; }
-    .modal-body { padding: 24px; }
-    .modal-actions { padding: 16px 24px; display: flex; gap: 10px; justify-content: flex-end; background: #f9fafb; border-top: 1px solid var(--border); }
-
-    #toast { position: fixed; bottom: 24px; right: 24px; z-index: 100; display: flex; flex-direction: column; gap: 10px; pointer-events: none; }
-    .toast { background: #1f2a3d; color: white; padding: 12px 20px; border-radius: 10px; font-weight: 500; font-size: 14px; pointer-events: auto; animation: slideIn 0.3s ease; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
-    @keyframes slideIn { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-
-    @media (max-width: 768px) {
-      .stats-grid { grid-template-columns: 1fr 1fr; }
-      header { flex-direction: column; gap: 10px; align-items: stretch; }
-      .logo { justify-content: center; }
-    }
+    .modal-header { padding: 18px 20px; font-weight: 800; font-size: 18px; border-bottom: 1px solid var(--border); background: #f8fafc; }
+    .modal-body { padding: 18px 20px; }
+    .modal-actions { padding: 16px 20px; display: flex; gap: 10px; justify-content: flex-end; border-top: 1px solid var(--border); background: #f8fafc; }
+    #toast { position: fixed; bottom: 20px; right: 20px; display: flex; flex-direction: column; gap: 10px; z-index: 200; pointer-events: none; }
+    .toast { background: #0f172a; color: #fff; padding: 12px 16px; border-radius: 12px; font-weight: 700; pointer-events: auto; box-shadow: 0 12px 30px -18px rgba(0,0,0,0.6); animation: slideIn .3s ease; }
+    @keyframes slideIn { from { opacity: 0; transform: translateY(12px);} to { opacity:1; transform: translateY(0);} }
+    @media (max-width: 768px) { .stats-grid { grid-template-columns: repeat(2, minmax(0,1fr)); } header { flex-direction: column; gap: 10px; align-items: flex-start; } }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
 </head>
 <body>
   <header>
-    <div class="logo">💊 <span>NicoTracker</span></div>
+    <div class="logo">💊 <span>NicoTracker</span> Ultimate</div>
     <div id="headerUser" style="display:none; align-items:center; gap:10px;">
-        <span id="userEmailDisplay" style="font-size:13px; font-weight:600; color:var(--muted);"></span>
+      <span id="syncStatus" class="pill">Offline</span>
+      <span id="userEmail" style="font-weight:700; color:var(--muted);"></span>
+      <button id="openSettings" class="btn btn-outline" type="button">⚙️ Nastavení</button>
+      <button id="logoutBtn" class="btn btn-danger" type="button">Odhlásit</button>
     </div>
   </header>
 
   <div class="shell">
-    
-    <!-- AUTH SCREEN -->
     <div id="authGate" class="auth-container card">
-      <div style="font-size: 40px; margin-bottom: 10px;">👋</div>
-      <h2 id="authTitle" style="margin-top:0;">Vítej v NicoTrackeru</h2>
-      <p style="color:var(--muted); font-size:14px; margin-bottom: 30px;">
-        Tvůj osobní nástroj pro kontrolu závislosti a financí.
-      </p>
-      
-      <!-- Email/Pass Form -->
+      <div style="font-size: 46px;">🧭</div>
+      <h2 id="authTitle" style="margin:10px 0 6px;">Vítej v NicoTrackeru</h2>
+      <p style="color:var(--muted);">Sleduj sáčky, peníze i zdraví v jedné PWA.</p>
       <div class="auth-inputs">
-        <input type="email" id="emailInput" placeholder="Váš email">
-        <input type="password" id="passInput" placeholder="Heslo (min. 6 znaků)">
-        <button class="btn btn-primary" id="emailActionBtn">Přihlásit se</button>
+        <div>
+          <label>Email</label>
+          <input id="authEmail" type="email" placeholder="ty@domena.cz">
+        </div>
+        <div>
+          <label>Heslo</label>
+          <input id="authPassword" type="password" placeholder="••••••••">
+        </div>
+        <button id="authSubmit" class="btn btn-primary" type="button">Přihlásit</button>
+        <div class="divider">nebo</div>
+        <button id="googleBtn" class="btn btn-outline" type="button">➡️ Pokračovat s Google</button>
       </div>
-      
-      <span class="auth-toggle" id="toggleAuthMode">Nemáš účet? Zaregistrovat se</span>
-
-      <div class="divider">nebo</div>
-
-      <button class="btn btn-google" id="googleBtn">
-        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="18" style="margin-right:8px;"> 
-        Pokračovat přes Google
-      </button>
+      <div class="auth-toggle" id="authToggle">Nemáš účet? Zaregistruj se</div>
     </div>
 
-    <!-- MAIN APP CONTENT -->
-    <div id="appContent" style="display:none;" class="grid">
-      
-      <!-- Controls -->
-      <section class="card" style="padding: 12px 20px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
-        <div style="font-size:14px; font-weight:600; color:var(--primary-dark); display:flex; align-items:center; gap:6px;">
-          <span style="display:block; width:8px; height:8px; background:var(--primary); border-radius:50%;"></span>
-          Synchronizováno
+    <div id="appShell" style="display:none;" class="grid">
+      <div class="grid stats-grid">
+        <div class="stat">
+          <div class="label">Dnešní kusy</div>
+          <div id="todayCount" class="value">0</div>
+          <div class="sub" id="todayLimit">Limit: 0</div>
         </div>
-        <div style="display:flex; gap:10px;">
-          <button class="btn btn-outline" id="settingsBtn">⚙️ Nastavení</button>
-          <button class="btn btn-outline" style="color: var(--danger); border-color: #fee2e2;" id="logoutBtn">Odhlásit</button>
+        <div class="stat">
+          <div class="label">Zbývá do limitu</div>
+          <div id="remaining" class="value">0</div>
+          <div class="sub" id="streakLabel">Streak: 0 dní</div>
         </div>
-      </section>
+        <div class="stat">
+          <div class="label">Nikotin dnes</div>
+          <div id="mgToday" class="value">0 mg</div>
+          <div class="sub" id="avgMgLabel">Průměr 14 dní</div>
+        </div>
+        <div class="stat">
+          <div class="label">Ušetřeno</div>
+          <div id="moneySaved" class="value">0</div>
+          <div class="sub" id="currencyLabel">Měna</div>
+        </div>
+      </div>
 
-      <!-- Dashboard Stats -->
-      <section class="grid stats-grid">
-        <div class="stat">
-          <div class="label">Streak (Dny)</div>
-          <div class="value" id="statStreak">0</div>
-          <div class="sub">pod limitem <span id="streakFire" style="opacity:0.2">🔥</span></div>
-        </div>
-        <div class="stat">
-          <div class="label">Dnes</div>
-          <div class="value"><span id="statTodayCount">0</span> <span style="font-size:16px; color:var(--muted); font-weight:500;">ks</span></div>
-          <div class="sub">Zbývá <strong id="statRemaining">0</strong> do cíle</div>
-        </div>
-        <div class="stat">
-          <div class="label">Nikotin</div>
-          <div class="value" id="statTodayMg">0 mg</div>
-          <div class="sub">Ø <span id="statAvgMg">0</span> mg/ks</div>
-        </div>
-        <div class="stat">
-          <div class="label">Ušetřeno (Měsíc)</div>
-          <div class="value" id="statSaved" style="color:var(--primary-dark);">0 Kč</div>
-          <div class="sub">Útrata: <span id="statMonthCost">0 Kč</span></div>
-        </div>
-      </section>
-
-      <!-- Input Section -->
-      <section class="card">
-        <div class="section-title">📝 Zaznamenat spotřebu</div>
-        <div class="input-row">
-          <div style="flex: 2;">
-            <label>Co si dáváš?</label>
-            <select id="pouchSelect"></select>
+      <div class="card">
+        <div class="section-title">Zaznamenej sáček</div>
+        <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));">
+          <div>
+            <label>Značka</label>
+            <div style="display:flex; gap:8px; align-items:center;">
+              <select id="brandSelect"></select>
+              <button id="manageCustom" class="btn btn-outline" type="button" title="Spravovat mé značky">⭐</button>
+            </div>
           </div>
-          <div style="flex: 1;">
-            <label>Síla (mg) - volitelné</label>
-            <input type="number" id="customMg" step="0.1" placeholder="mg">
+          <div>
+            <label>Mg / kus</label>
+            <input id="mgInput" type="number" min="0" step="0.5" placeholder="8">
           </div>
-          <div style="flex: 1;">
-            <label>Kdy to bylo?</label>
-            <input type="datetime-local" id="pouchTime">
+          <div>
+            <label>Datum a čas</label>
+            <input id="datetimeInput" type="datetime-local">
           </div>
         </div>
-        
-        <!-- Toggle Custom Brand -->
-        <div class="input-row" style="margin-top: 12px; display: none;" id="customBrandRow">
-             <input type="text" id="customBrand" placeholder="Název jiné značky">
+        <div style="margin-top:14px; display:flex; gap:10px; align-items:center;">
+          <button id="addEntry" class="btn btn-primary" type="button">➕ Přidat záznam</button>
         </div>
-        
-        <div class="actions" style="margin-top: 20px; display:flex; gap:10px; flex-wrap:wrap;">
-          <button class="btn btn-primary" id="addPouchBtn" style="flex:2;">✅ Přidat záznam</button>
-          <button class="btn btn-outline" style="flex:1;" onclick="document.getElementById('customBrandRow').style.display = document.getElementById('customBrandRow').style.display === 'none' ? 'block' : 'none'">
-            Jiná značka
-          </button>
-        </div>
-      </section>
+      </div>
 
-      <!-- Charts Area -->
-      <section class="grid" style="grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));">
+      <div class="card">
+        <div class="section-title">Odznaky</div>
+        <div id="badgeGrid" class="grid achievements"></div>
+      </div>
+
+      <div class="grid charts-grid">
         <div class="card">
-          <div class="section-title">📊 Vývoj nikotinu (mg)</div>
-          <div class="chart-container"><canvas id="dailyChart"></canvas></div>
+          <div class="section-title">Vývoj mg (14 dní)</div>
+          <div class="chart-container"><canvas id="lineChart"></canvas></div>
         </div>
         <div class="card">
-          <div class="section-title">🕒 Kdy nejčastěji?</div>
-          <div class="chart-container"><canvas id="hourlyChart"></canvas></div>
+          <div class="section-title">Denní hodiny</div>
+          <div class="chart-container"><canvas id="barChart"></canvas></div>
         </div>
-      </section>
+      </div>
 
-      <!-- Gamification -->
-      <section class="card">
-        <div class="section-title">🏆 Úspěchy a Odznaky</div>
-        <div id="achievementsList" class="achievements"></div>
-      </section>
-
-      <!-- History -->
-      <section class="card">
-        <div class="section-title">📅 Historie záznamů</div>
-        <div id="historyList">Načítám data...</div>
-      </section>
+      <div class="card">
+        <div class="section-title">Historie</div>
+        <div id="historyList"></div>
+      </div>
     </div>
   </div>
 
   <div id="toast"></div>
 
-  <!-- DIALOGS -->
-  <dialog id="onboardingDialog">
-    <div class="modal-header">👋 Rychlé nastavení</div>
-    <div class="modal-body">
-      <p style="color:var(--muted); margin-bottom:20px;">Nastav si ceny a limity, aby statistiky dávaly smysl.</p>
-      <div class="input-row">
-        <div><label>Měna</label><input id="onCurrency" value="CZK"></div>
-        <div><label>Cena puku (Kč)</label><input id="onPackPrice" type="number" value="150"></div>
+  <dialog id="onboardingModal">
+    <div class="modal-header">Vítej! Nastav základní údaje</div>
+    <div class="modal-body grid" style="gap:12px;">
+      <div>
+        <label>Měna</label>
+        <input id="currencyInput" value="CZK" placeholder="CZK">
       </div>
-      <div class="input-row" style="margin-top: 12px;">
-        <div><label>Kusů v puku</label><input id="onPouches" type="number" value="20"></div>
-        <div><label>Denní limit (ks)</label><input id="onDaily" type="number" value="10"></div>
-      </div>
-    </div>
-    <div class="modal-actions">
-      <button class="btn btn-primary" id="saveOnboarding">Uložit a začít</button>
-    </div>
-  </dialog>
-
-  <dialog id="settingsDialog">
-    <div class="modal-header">Nastavení profilu</div>
-    <div class="modal-body">
-      <div class="input-row">
-        <div><label>Měna</label><input id="setCurrency"></div>
-        <div><label>Cena puku</label><input id="setPackPrice" type="number"></div>
-      </div>
-      <div class="input-row" style="margin-top: 12px;">
-        <div><label>Kusů v puku</label><input id="setPouches" type="number"></div>
-        <div><label>Denní limit</label><input id="setDaily" type="number"></div>
-      </div>
-      <div style="margin-top: 24px; border-top: 1px solid var(--border); padding-top: 20px;">
-        <h4 style="margin:0 0 10px 0; font-size:14px;">Data</h4>
-        <div style="display:flex; gap:10px;">
-            <button class="btn btn-outline" id="exportBtn" style="flex:1;">📥 Export CSV</button>
-            <button class="btn btn-danger" id="deleteAccountBtn" style="flex:1;">🗑️ Smazat účet</button>
+      <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:12px;">
+        <div>
+          <label>Cena za puk</label>
+          <input id="packPriceInput" type="number" min="0" step="1" placeholder="99">
+        </div>
+        <div>
+          <label>Ks v puku</label>
+          <input id="pouchesPerPackInput" type="number" min="1" step="1" placeholder="20">
+        </div>
+        <div>
+          <label>Denní limit (ks)</label>
+          <input id="dailyLimitInput" type="number" min="0" step="1" placeholder="8">
         </div>
       </div>
     </div>
     <div class="modal-actions">
-      <button class="btn btn-outline" id="closeSettings">Zavřít</button>
-      <button class="btn btn-primary" id="saveSettings">Uložit změny</button>
+      <button id="skipOnboarding" class="btn btn-outline" type="button">Později</button>
+      <button id="saveOnboarding" class="btn btn-primary" type="button">Uložit</button>
     </div>
   </dialog>
 
-  <dialog id="editDialog">
-    <div class="modal-header">Upravit záznam</div>
-    <div class="modal-body">
-      <input type="hidden" id="editId">
-      <div class="input-row">
-        <div><label>Značka</label><input id="editBrand"></div>
-        <div><label>Síla (mg)</label><input id="editMg" type="number" step="0.1"></div>
+  <dialog id="settingsModal">
+    <div class="modal-header">Nastavení profilu</div>
+    <div class="modal-body grid" style="gap:12px;">
+      <div>
+        <label>Měna</label>
+        <input id="settingsCurrency" placeholder="CZK">
       </div>
-      <div class="input-row" style="margin-top: 12px;">
-        <div><label>Čas spotřeby</label><input id="editTime" type="datetime-local"></div>
+      <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:12px;">
+        <div>
+          <label>Cena za puk</label>
+          <input id="settingsPrice" type="number" min="0" step="1">
+        </div>
+        <div>
+          <label>Ks v puku</label>
+          <input id="settingsPieces" type="number" min="1" step="1">
+        </div>
+        <div>
+          <label>Denní limit (ks)</label>
+          <input id="settingsLimit" type="number" min="0" step="1">
+        </div>
       </div>
     </div>
     <div class="modal-actions">
-      <button class="btn btn-outline" id="cancelEdit">Zrušit</button>
-      <button class="btn btn-primary" id="saveEdit">Uložit</button>
+      <button class="btn btn-outline" type="button" data-close="settingsModal">Zavřít</button>
+      <button id="saveSettings" class="btn btn-primary" type="button">Uložit</button>
+    </div>
+  </dialog>
+
+  <dialog id="customModal">
+    <div class="modal-header">Spravovat mé značky</div>
+    <div class="modal-body">
+      <div class="grid" style="grid-template-columns: 1fr 160px; gap:10px;">
+        <div>
+          <label>Název</label>
+          <input id="customName" placeholder="Moje značka">
+        </div>
+        <div>
+          <label>Mg</label>
+          <input id="customMg" type="number" min="0" step="0.5" placeholder="8">
+        </div>
+      </div>
+      <button id="saveCustom" class="btn btn-primary" type="button" style="margin-top:12px; width:100%;">Uložit</button>
+      <div style="margin-top:16px;">
+        <div class="section-title" style="font-size:16px;">Moje značky</div>
+        <div id="customList" class="grid" style="gap:8px;"></div>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-outline" type="button" data-close="customModal">Hotovo</button>
+    </div>
+  </dialog>
+
+  <dialog id="editModal">
+    <div class="modal-header">Upravit záznam</div>
+    <div class="modal-body grid" style="gap:12px;">
+      <div>
+        <label>Značka</label>
+        <input id="editBrand">
+      </div>
+      <div>
+        <label>Mg</label>
+        <input id="editMg" type="number" min="0" step="0.5">
+      </div>
+      <div>
+        <label>Datum</label>
+        <input id="editDate" type="datetime-local">
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-danger" id="deleteEntry" type="button">Smazat</button>
+      <button class="btn btn-primary" id="saveEdit" type="button">Uložit</button>
     </div>
   </dialog>
 
   <script type="module">
-    import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js';
-    import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, deleteDoc, doc, getDoc, setDoc, updateDoc, Timestamp, getDocs } from 'https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js';
-    import { getAuth, signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, deleteUser } from 'https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js';
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+    import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, signOut } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+    import { getFirestore, doc, setDoc, getDoc, collection, addDoc, onSnapshot, deleteDoc, updateDoc, query, orderBy, Timestamp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
 
-    // === FIREBASE CONFIG ===
-    // Ujisti se, že máš v Console povolený Email/Password provider!
     const firebaseConfig = {
-      apiKey: "AIzaSyBKMDwYeSjmgQLnpYciReSK2yJU0pG6KS8",
-      authDomain: "nicotinepouches-d9d1c.firebaseapp.com",
-      projectId: "nicotinepouches-d9d1c",
-      storageBucket: "nicotinepouches-d9d1c.firebasestorage.app",
-      messagingSenderId: "42131125480",
-      appId: "1:42131125480:web:8022461f0a790a5677855d",
-      measurementId: "G-0NE6V1LVKN"
+      apiKey: 'YOUR_API_KEY',
+      authDomain: 'YOUR_AUTH_DOMAIN',
+      projectId: 'YOUR_PROJECT_ID',
+      storageBucket: 'YOUR_STORAGE_BUCKET',
+      messagingSenderId: 'YOUR_SENDER_ID',
+      appId: 'YOUR_APP_ID'
     };
 
-    const pouchDatabase = [
-      { name: "Velo Simply Spearmint Mini", mg: 4.0 }, { name: "Velo Cherry Ice Mini", mg: 4.0 },
-      { name: "Velo Strawberry Ice Mini", mg: 6.0 }, { name: "Velo Icy Berries Mini", mg: 6.0 },
-      { name: "Velo Bright Spearmint Mini", mg: 6.0 }, { name: "Velo Watermelon Ice Slim", mg: 8.1 },
-      { name: "Velo McLaren Papaya Slim", mg: 8.4 }, { name: "Velo Tangy Lime Slim", mg: 9.8 },
-      { name: "Velo Crispy Peppermint Slim", mg: 9.8 }, { name: "Velo Strawberry Ice Slim", mg: 10.9 },
-      { name: "Velo Groovy Grape Slim", mg: 10.9 }, { name: "Velo Orange Spark Slim", mg: 10.9 },
-      { name: "Velo Peppermint Storm Slim", mg: 10.9 }, { name: "Velo Cinnamon Flame Slim", mg: 10.9 },
-      { name: "Velo Breezy Mango Slim", mg: 11.6 }, { name: "Velo Eucalyptus Storm Slim", mg: 14.0 },
-      { name: "Velo Freezing Peppermint Slim", mg: 10.9 }, 
-      { name: "Killa Cold Mint", mg: 12.8 }, { name: "Killa Blueberry", mg: 12.8 },
-      { name: "Pablo Ice Cold", mg: 25.0 }, { name: "Kurwa Fatality", mg: 32.8 },
-      { name: "Siberia Red", mg: 43.0 }, { name: "Velo Zero", mg: 0.0 }
-    ].sort((a, b) => a.name.localeCompare(b.name));
-
-    // === INIT ===
     const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
     const auth = getAuth(app);
-    const googleProvider = new GoogleAuthProvider();
+    const db = getFirestore(app);
 
-    let currentUser = null;
-    let userSettings = null;
+    const defaultPouches = [
+      { name: 'Velo Ice Cool 8mg', mg: 8 },
+      { name: 'Velo Freeze 10mg', mg: 10 },
+      { name: 'Velo Royal Purple 6mg', mg: 6 },
+      { name: 'Velo Caribbean Spirit 8mg', mg: 8 },
+      { name: 'Velo Polar Mint 4mg', mg: 4 },
+      { name: 'Velo Tropic Breeze 6mg', mg: 6 },
+      { name: 'Velo Crispy Apple 6mg', mg: 6 },
+      { name: 'Velo Zesty Elderflower 8mg', mg: 8 },
+      { name: 'Killa Blueberry 16mg', mg: 16 },
+      { name: 'Killa Cola 12mg', mg: 12 },
+      { name: 'Killa Watermelon 16mg', mg: 16 },
+      { name: 'Killa Mango 12mg', mg: 12 },
+      { name: 'Killa Pineapple 16mg', mg: 16 },
+      { name: 'Loop Salty Ludicris 12mg', mg: 12 },
+      { name: 'Loop Red Chili Melon 10mg', mg: 10 },
+      { name: 'Loop Jalapeño Lime 12mg', mg: 12 },
+      { name: 'Pablo Ice Cold 30mg', mg: 30 },
+      { name: 'Pablo Red 25mg', mg: 25 },
+      { name: 'Lyft Ruby Berry 8mg', mg: 8 },
+      { name: 'Lyft Blonde Roast 6mg', mg: 6 }
+    ];
+
+    let customPouches = [];
     let historyData = [];
-    let unsubscribeHistory = null;
-    let charts = { daily: null, hourly: null };
-    let isRegisterMode = false;
+    let profile = { currency: 'CZK', packPrice: 0, pouchesPerPack: 1, dailyLimit: 0, onboarded: false };
+    let lineChart; let barChart; let editingId = null;
 
-    // === AUTH HANDLERS ===
-    function toggleAuthMode() {
-        isRegisterMode = !isRegisterMode;
-        document.getElementById('authTitle').innerText = isRegisterMode ? 'Vytvořit účet' : 'Vítej v NicoTrackeru';
-        document.getElementById('emailActionBtn').innerText = isRegisterMode ? 'Zaregistrovat se' : 'Přihlásit se';
-        document.getElementById('toggleAuthMode').innerText = isRegisterMode ? 'Už mám účet? Přihlásit se' : 'Nemáš účet? Zaregistrovat se';
+    const authGate = document.getElementById('authGate');
+    const appShell = document.getElementById('appShell');
+    const authToggle = document.getElementById('authToggle');
+    const authSubmit = document.getElementById('authSubmit');
+    const googleBtn = document.getElementById('googleBtn');
+    const authEmail = document.getElementById('authEmail');
+    const authPassword = document.getElementById('authPassword');
+    const authTitle = document.getElementById('authTitle');
+    const headerUser = document.getElementById('headerUser');
+    const userEmailSpan = document.getElementById('userEmail');
+    const syncStatus = document.getElementById('syncStatus');
+    const brandSelect = document.getElementById('brandSelect');
+    const mgInput = document.getElementById('mgInput');
+    const datetimeInput = document.getElementById('datetimeInput');
+    const addEntryBtn = document.getElementById('addEntry');
+    const todayCount = document.getElementById('todayCount');
+    const remaining = document.getElementById('remaining');
+    const mgToday = document.getElementById('mgToday');
+    const moneySaved = document.getElementById('moneySaved');
+    const todayLimit = document.getElementById('todayLimit');
+    const avgMgLabel = document.getElementById('avgMgLabel');
+    const currencyLabel = document.getElementById('currencyLabel');
+    const streakLabel = document.getElementById('streakLabel');
+    const historyList = document.getElementById('historyList');
+    const badgeGrid = document.getElementById('badgeGrid');
+    const onboardingModal = document.getElementById('onboardingModal');
+    const settingsModal = document.getElementById('settingsModal');
+    const customModal = document.getElementById('customModal');
+    const editModal = document.getElementById('editModal');
+
+    const currencyInput = document.getElementById('currencyInput');
+    const packPriceInput = document.getElementById('packPriceInput');
+    const pouchesPerPackInput = document.getElementById('pouchesPerPackInput');
+    const dailyLimitInput = document.getElementById('dailyLimitInput');
+    const settingsCurrency = document.getElementById('settingsCurrency');
+    const settingsPrice = document.getElementById('settingsPrice');
+    const settingsPieces = document.getElementById('settingsPieces');
+    const settingsLimit = document.getElementById('settingsLimit');
+    const openSettings = document.getElementById('openSettings');
+    const saveSettings = document.getElementById('saveSettings');
+    const saveOnboarding = document.getElementById('saveOnboarding');
+    const skipOnboarding = document.getElementById('skipOnboarding');
+    const manageCustom = document.getElementById('manageCustom');
+    const saveCustom = document.getElementById('saveCustom');
+    const customName = document.getElementById('customName');
+    const customMg = document.getElementById('customMg');
+    const customList = document.getElementById('customList');
+    const logoutBtn = document.getElementById('logoutBtn');
+
+    const editBrand = document.getElementById('editBrand');
+    const editMg = document.getElementById('editMg');
+    const editDate = document.getElementById('editDate');
+    const saveEdit = document.getElementById('saveEdit');
+    const deleteEntry = document.getElementById('deleteEntry');
+
+    let isLoginMode = true;
+
+    function showToast(message) {
+      const toast = document.createElement('div');
+      toast.className = 'toast';
+      toast.textContent = message;
+      document.getElementById('toast').appendChild(toast);
+      setTimeout(() => toast.remove(), 3200);
     }
 
-    async function handleEmailAuth() {
-        const email = document.getElementById('emailInput').value;
-        const pass = document.getElementById('passInput').value;
-        if(!email || !pass) return showToast('Vyplňte email i heslo', 'error');
-
-        try {
-            if (isRegisterMode) {
-                await createUserWithEmailAndPassword(auth, email, pass);
-                showToast('Účet vytvořen!');
-            } else {
-                await signInWithEmailAndPassword(auth, email, pass);
-                showToast('Přihlášeno');
-            }
-        } catch (error) {
-            console.error(error);
-            let msg = error.message;
-            if(error.code === 'auth/email-already-in-use') msg = 'Email je již používán.';
-            if(error.code === 'auth/invalid-credential') msg = 'Špatný email nebo heslo.';
-            if(error.code === 'auth/weak-password') msg = 'Heslo je moc slabé (min 6 znaků).';
-            showToast(msg, 'error');
-        }
+    function mergeDatabases() {
+      const combined = [...defaultPouches, ...customPouches.map((p) => ({ ...p, name: `${p.name} (Vlastní)` }))];
+      combined.sort((a, b) => a.name.localeCompare(b.name));
+      brandSelect.innerHTML = '';
+      combined.forEach((p) => {
+        const option = document.createElement('option');
+        option.value = p.name;
+        option.dataset.mg = p.mg;
+        option.textContent = p.name;
+        brandSelect.appendChild(option);
+      });
+      const current = combined.find((p) => p.name === brandSelect.value) || combined[0];
+      if (current) {
+        brandSelect.value = current.name;
+        mgInput.value = current.mg;
+      }
     }
 
-    // === STARTUP ===
-    document.addEventListener('DOMContentLoaded', () => {
-        populateDropdown();
-        setDefaultDateTime();
-        
-        // Listeners
-        document.getElementById('googleBtn').addEventListener('click', () => signInWithPopup(auth, googleProvider).catch(e => showToast(e.message, 'error')));
-        document.getElementById('emailActionBtn').addEventListener('click', handleEmailAuth);
-        document.getElementById('toggleAuthMode').addEventListener('click', toggleAuthMode);
-        document.getElementById('logoutBtn').addEventListener('click', () => signOut(auth));
+    function setAuthMode(login) {
+      isLoginMode = login;
+      authTitle.textContent = login ? 'Vítej zpět' : 'Zaregistruj se';
+      authSubmit.textContent = login ? 'Přihlásit' : 'Vytvořit účet';
+      authToggle.textContent = login ? 'Nemáš účet? Zaregistruj se' : 'Máś účet? Přihlas se';
+    }
 
-        // Settings & Onboarding Listeners
-        document.getElementById('settingsBtn').addEventListener('click', () => {
-             if(userSettings) hydrateSettingsForm('set', userSettings);
-             document.getElementById('settingsDialog').showModal();
-        });
-        document.getElementById('closeSettings').addEventListener('click', () => document.getElementById('settingsDialog').close());
-        document.getElementById('saveSettings').addEventListener('click', saveSettings);
-        document.getElementById('saveOnboarding').addEventListener('click', saveOnboarding);
-        
-        // Input Listeners
-        document.getElementById('addPouchBtn').addEventListener('click', addPouch);
-        document.getElementById('pouchSelect').addEventListener('change', () => {
-             const opt = document.getElementById('pouchSelect').options[document.getElementById('pouchSelect').selectedIndex];
-             if(opt && !document.getElementById('customMg').value) document.getElementById('customMg').placeholder = opt.dataset.mg;
-        });
+    authToggle.addEventListener('click', () => setAuthMode(!isLoginMode));
 
-        // Edit/Delete Listeners
-        document.getElementById('cancelEdit').addEventListener('click', () => document.getElementById('editDialog').close());
-        document.getElementById('saveEdit').addEventListener('click', submitEdit);
-        document.getElementById('exportBtn').addEventListener('click', exportCsv);
-        document.getElementById('deleteAccountBtn').addEventListener('click', deleteAccount);
-
-        // Auth State Monitor
-        onAuthStateChanged(auth, user => {
-            currentUser = user;
-            const authGate = document.getElementById('authGate');
-            const appContent = document.getElementById('appContent');
-            const headerUser = document.getElementById('headerUser');
-            
-            if (user) {
-                authGate.style.display = 'none';
-                appContent.style.display = 'grid';
-                headerUser.style.display = 'flex';
-                document.getElementById('userEmailDisplay').innerText = user.email;
-                initUserData(user.uid);
-            } else {
-                authGate.style.display = 'block';
-                appContent.style.display = 'none';
-                headerUser.style.display = 'none';
-                if(unsubscribeHistory) unsubscribeHistory();
-            }
-        });
+    googleBtn.addEventListener('click', async () => {
+      try {
+        await signInWithPopup(auth, new GoogleAuthProvider());
+      } catch (err) {
+        showToast(err.message);
+      }
     });
 
-    // === LOGIC ===
-    async function initUserData(uid) {
-        const sSnap = await getDoc(doc(db, 'users', uid, 'settings', 'profile'));
-        if (sSnap.exists()) {
-            userSettings = sSnap.data();
-            if (!userSettings.onboarded) document.getElementById('onboardingDialog').showModal();
+    authSubmit.addEventListener('click', async () => {
+      try {
+        if (isLoginMode) {
+          await signInWithEmailAndPassword(auth, authEmail.value, authPassword.value);
         } else {
-            document.getElementById('onboardingDialog').showModal();
+          await createUserWithEmailAndPassword(auth, authEmail.value, authPassword.value);
         }
-        const q = query(collection(db, 'users', uid, 'history'), orderBy('timestamp', 'desc'));
-        unsubscribeHistory = onSnapshot(q, (snap) => {
-            historyData = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-            updateUI();
-        });
+      } catch (err) {
+        showToast(err.message);
+      }
+    });
+
+    logoutBtn.addEventListener('click', () => signOut(auth));
+
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        headerUser.style.display = 'none';
+        appShell.style.display = 'none';
+        authGate.style.display = 'block';
+        return;
+      }
+      headerUser.style.display = 'flex';
+      userEmailSpan.textContent = user.email || 'Přihlášen';
+      authGate.style.display = 'none';
+      appShell.style.display = 'grid';
+      syncStatus.textContent = navigator.onLine ? 'Online' : 'Offline';
+      await loadProfile(user.uid);
+      subscribeHistory(user.uid);
+      subscribeCustomPouches(user.uid);
+      preloadDatetime();
+    });
+
+    window.addEventListener('online', () => syncStatus.textContent = 'Online');
+    window.addEventListener('offline', () => syncStatus.textContent = 'Offline');
+
+    async function loadProfile(uid) {
+      const ref = doc(db, 'users', uid, 'settings', 'profile');
+      const snapshot = await getDoc(ref);
+      if (snapshot.exists()) {
+        profile = snapshot.data();
+      } else {
+        profile = { currency: 'CZK', packPrice: 0, pouchesPerPack: 1, dailyLimit: 0, onboarded: false };
+        await setDoc(ref, profile);
+      }
+      applyProfile();
+      if (!profile.onboarded) onboardingModal.showModal();
     }
 
-    function updateUI() {
-        renderHistory();
-        renderStats();
-        renderCharts();
-        renderBadges();
+    function applyProfile() {
+      currencyInput.value = profile.currency;
+      packPriceInput.value = profile.packPrice;
+      pouchesPerPackInput.value = profile.pouchesPerPack;
+      dailyLimitInput.value = profile.dailyLimit;
+      settingsCurrency.value = profile.currency;
+      settingsPrice.value = profile.packPrice;
+      settingsPieces.value = profile.pouchesPerPack;
+      settingsLimit.value = profile.dailyLimit;
+      currencyLabel.textContent = `Měna: ${profile.currency}`;
+      todayLimit.textContent = `Limit: ${profile.dailyLimit}`;
     }
 
-    async function addPouch() {
-        if (!currentUser) return;
-        const dateVal = document.getElementById('pouchTime').value;
-        const date = dateVal ? new Date(dateVal) : new Date();
-        if (date > new Date()) return showToast('Čas nesmí být v budoucnosti!', 'error');
-
-        const selectedIdx = document.getElementById('pouchSelect').value;
-        const dbPouch = pouchDatabase[selectedIdx];
-        const brand = document.getElementById('customBrand').value || dbPouch?.name || 'Neznámé';
-        const mg = document.getElementById('customMg').value ? parseFloat(document.getElementById('customMg').value) : (dbPouch?.mg || 0);
-        const price = (userSettings?.packPrice || 150) / (userSettings?.pouchesPerPack || 20);
-
-        try {
-            await addDoc(collection(db, 'users', currentUser.uid, 'history'), {
-                brand, mg, cost: price, timestamp: Timestamp.fromDate(date), createdAt: serverTimestamp()
-            });
-            showToast('✅ Zaznamenáno');
-            setDefaultDateTime();
-            document.getElementById('customBrand').value = '';
-            document.getElementById('customMg').value = '';
-        } catch (e) { showToast('Chyba ukládání', 'error'); }
+    async function saveProfile(overrides = {}) {
+      if (!auth.currentUser) return;
+      profile = { ...profile, ...overrides, onboarded: true };
+      const ref = doc(db, 'users', auth.currentUser.uid, 'settings', 'profile');
+      await setDoc(ref, profile);
+      applyProfile();
+      onboardingModal.close();
+      settingsModal.close();
+      recalc();
+      showToast('Nastavení uloženo');
     }
 
-    function getDailyStats() {
-        const stats = new Map();
-        historyData.forEach(item => {
-            const d = item.timestamp?.toDate ? item.timestamp.toDate() : new Date(item.timestamp);
-            const k = d.toISOString().slice(0, 10);
-            if (!stats.has(k)) stats.set(k, { count: 0, mg: 0, cost: 0 });
-            const s = stats.get(k); s.count++; s.mg += (item.mg || 0); s.cost += (item.cost || 0);
-        });
-        return stats;
-    }
+    saveOnboarding.addEventListener('click', () => saveProfile({
+      currency: currencyInput.value || 'CZK',
+      packPrice: Number(packPriceInput.value) || 0,
+      pouchesPerPack: Number(pouchesPerPackInput.value) || 1,
+      dailyLimit: Number(dailyLimitInput.value) || 0
+    }));
 
-    function calculateStreaks(dailyStats) {
-        const limit = userSettings?.dailyLimit || 10;
-        let currentStreak = 0;
-        let checkDate = new Date();
-        const todayStr = checkDate.toISOString().slice(0, 10);
-        
-        for (let i = 0; i < 365; i++) {
-            const dStr = checkDate.toISOString().slice(0, 10);
-            const data = dailyStats.get(dStr);
-            if (dStr === todayStr && !data) { /* skip today if empty */ } 
-            else if (data && data.count > limit) { break; } 
-            else { currentStreak++; }
-            checkDate.setDate(checkDate.getDate() - 1);
-        }
-        if (dailyStats.get(todayStr)?.count > limit) currentStreak = 0;
-        return { current: currentStreak };
-    }
+    skipOnboarding.addEventListener('click', () => onboardingModal.close());
 
-    function renderStats() {
-        if (!userSettings) return;
-        const daily = getDailyStats();
-        const today = daily.get(new Date().toISOString().slice(0, 10)) || { count: 0, mg: 0, cost: 0 };
-        
-        document.getElementById('statTodayCount').innerText = today.count;
-        document.getElementById('statTodayMg').innerText = today.mg.toFixed(1) + ' mg';
-        
-        const rem = (userSettings.dailyLimit || 10) - today.count;
-        document.getElementById('statRemaining').innerText = rem;
-        document.getElementById('statRemaining').style.color = rem < 0 ? 'var(--danger)' : 'var(--text)';
-        
-        const avg = today.count ? (today.mg / today.count) : 0;
-        document.getElementById('statAvgMg').innerText = avg.toFixed(1);
+    openSettings.addEventListener('click', () => settingsModal.showModal());
 
-        const now = new Date();
-        let monthCost = 0, savedTotal = 0;
-        const costPerOne = (userSettings.packPrice / userSettings.pouchesPerPack);
-        
-        historyData.forEach(h => {
-             const d = h.timestamp.toDate();
-             if(d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear()) monthCost += (h.cost || 0);
-        });
-        daily.forEach((stat) => {
-            const diff = (userSettings.dailyLimit) - stat.count;
-            if (diff > 0) savedTotal += (diff * costPerOne);
-        });
+    saveSettings.addEventListener('click', () => saveProfile({
+      currency: settingsCurrency.value || 'CZK',
+      packPrice: Number(settingsPrice.value) || 0,
+      pouchesPerPack: Number(settingsPieces.value) || 1,
+      dailyLimit: Number(settingsLimit.value) || 0
+    }));
 
-        document.getElementById('statMonthCost').innerText = Math.round(monthCost) + ' ' + userSettings.currency;
-        document.getElementById('statSaved').innerText = Math.round(savedTotal) + ' ' + userSettings.currency;
+    document.querySelectorAll('[data-close]').forEach((btn) => btn.addEventListener('click', (e) => {
+      const id = e.currentTarget.getAttribute('data-close');
+      document.getElementById(id).close();
+    }));
 
-        const streaks = calculateStreaks(daily);
-        document.getElementById('statStreak').innerText = streaks.current;
-        document.getElementById('streakFire').style.opacity = streaks.current > 0 ? '1' : '0.2';
-    }
+    manageCustom.addEventListener('click', () => customModal.showModal());
 
-    function renderBadges() {
-        const stats = getDailyStats();
-        const total = historyData.length;
-        const streaks = calculateStreaks(stats);
-        const badges = [
-            { name: 'Začátečník', desc: 'Prvních 10 záznamů', icon: '👶', condition: total >= 10 },
-            { name: 'Stovkař', desc: '100 záznamů', icon: '💯', condition: total >= 100 },
-            { name: 'Rozjezd', desc: '3 dny pod limitem', icon: '🔥', condition: streaks.current >= 3 },
-            { name: 'Týden v kuse', desc: '7 dní pod limitem', icon: '📆', condition: streaks.current >= 7 },
-            { name: 'Iron Will', desc: 'Měsíc pod limitem', icon: '🛡️', condition: streaks.current >= 30 },
-            { name: 'Čisté plíce', desc: 'Zkusil jsi 0mg sáček', icon: '🫁', condition: historyData.some(x => x.mg === 0) },
-            { name: 'Investor', desc: 'Ušetřeno přes 500', icon: '💰', condition: parseInt(document.getElementById('statSaved').innerText) > 500 }
-        ];
+    saveCustom.addEventListener('click', async () => {
+      if (!auth.currentUser) return;
+      const name = customName.value.trim();
+      const mg = Number(customMg.value);
+      if (!name || Number.isNaN(mg)) {
+        showToast('Vyplň název i mg');
+        return;
+      }
+      await addDoc(collection(db, 'users', auth.currentUser.uid, 'custom_pouches'), {
+        name,
+        mg,
+        isCustom: true
+      });
+      customName.value = '';
+      customMg.value = '';
+      showToast('Značka uložena');
+    });
 
-        const container = document.getElementById('achievementsList');
-        container.innerHTML = '';
-        badges.forEach(b => {
-            const el = document.createElement('div');
-            el.className = `achievement ${b.condition ? 'unlocked' : 'locked'}`;
-            el.innerHTML = `<div class="icon">${b.icon}</div><div><h4>${b.name}</h4><p>${b.desc}</p></div>`;
-            container.appendChild(el);
-        });
-    }
-
-    function renderCharts() {
-        const dailyData = getDailyStats();
-        const sortedKeys = Array.from(dailyData.keys()).sort().slice(-14);
-        
-        const ctxDaily = document.getElementById('dailyChart');
-        if (charts.daily) charts.daily.destroy();
-        charts.daily = new Chart(ctxDaily, {
-            type: 'line',
-            data: {
-                labels: sortedKeys.map(k => k.slice(5)),
-                datasets: [{ label: 'mg Nikotinu', data: sortedKeys.map(k => dailyData.get(k).mg), borderColor: '#10b981', backgroundColor: 'rgba(16, 185, 129, 0.1)', fill: true, tension: 0.4 }]
-            },
-            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
-        });
-
-        const hourlyCounts = new Array(24).fill(0);
-        historyData.forEach(h => { hourlyCounts[h.timestamp.toDate().getHours()]++; });
-
-        const ctxHourly = document.getElementById('hourlyChart');
-        if (charts.hourly) charts.hourly.destroy();
-        charts.hourly = new Chart(ctxHourly, {
-            type: 'bar',
-            data: {
-                labels: Array.from({length:24}, (_,i) => i),
-                datasets: [{ label: 'Ks', data: hourlyCounts, backgroundColor: hourlyCounts.map(v => v > 2 ? '#ef4444' : '#3b82f6'), borderRadius: 4 }]
-            },
-            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
-        });
-    }
-
-    function populateDropdown() {
-        const sel = document.getElementById('pouchSelect');
-        sel.innerHTML = '';
-        pouchDatabase.forEach((p, i) => {
-            const op = document.createElement('option');
-            op.value = i; op.text = `${p.name} (${p.mg}mg)`; op.dataset.mg = p.mg;
-            sel.add(op);
-        });
-    }
-
-    function setDefaultDateTime() {
-        const now = new Date();
-        const local = new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
-        document.getElementById('pouchTime').value = local;
-        if(document.getElementById('editTime')) document.getElementById('editTime').value = local;
-    }
-
-    function showToast(msg, type='info') {
-        const t = document.createElement('div');
-        t.className = 'toast';
-        t.style.borderLeft = `4px solid ${type === 'error' ? '#ef4444' : '#10b981'}`;
-        t.innerText = msg;
-        document.getElementById('toast').appendChild(t);
-        setTimeout(() => t.remove(), 3000);
-    }
-    
-    // --- HELPERS ---
-    function renderHistory() {
-        const list = document.getElementById('historyList');
-        list.innerHTML = '';
-        if(historyData.length === 0) { list.innerHTML = '<div style="color:var(--muted);text-align:center; padding:20px;">Zatím žádná data.</div>'; return; }
-        
-        historyData.slice(0, 20).forEach(h => {
-            const date = h.timestamp.toDate();
-            const div = document.createElement('div');
-            div.className = 'history-item';
-            div.innerHTML = `
-                <div><div style="font-weight:600; font-size:15px;">${h.brand} <span class="pill">${h.mg} mg</span></div>
-                <div style="font-size:12px; color:var(--muted); margin-top:4px;">${date.toLocaleDateString()} ${date.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})} • ${Math.round(h.cost||0)} ${userSettings?.currency}</div></div>
-                <div style="display:flex; gap:6px;"><button class="btn btn-outline" style="padding:6px 10px;" onclick="window.editItem('${h.id}')">✏️</button>
-                <button class="btn btn-outline" style="padding:6px 10px; color:var(--danger); border-color:#fee2e2;" onclick="window.deleteItem('${h.id}')">🗑️</button></div>
-            `;
-            list.appendChild(div);
-        });
-    }
-
-    window.deleteItem = async (id) => { if(confirm('Smazat záznam?')) await deleteDoc(doc(db, 'users', currentUser.uid, 'history', id)); };
-    window.editItem = (id) => {
-        const item = historyData.find(i => i.id === id);
-        if(!item) return;
-        document.getElementById('editId').value = id; document.getElementById('editBrand').value = item.brand;
-        document.getElementById('editMg').value = item.mg; document.getElementById('editDialog').showModal();
-    };
-
-    async function submitEdit() {
-        const id = document.getElementById('editId').value;
-        const brand = document.getElementById('editBrand').value;
-        const mg = parseFloat(document.getElementById('editMg').value);
-        const dateVal = document.getElementById('editTime').value;
-        if (!dateVal) return;
-        await updateDoc(doc(db, 'users', currentUser.uid, 'history', id), { brand, mg, timestamp: Timestamp.fromDate(new Date(dateVal)) });
-        document.getElementById('editDialog').close();
-    }
-
-    async function saveSettings() {
-        const s = collectSettings('set');
-        await setDoc(doc(db, 'users', currentUser.uid, 'settings', 'profile'), { ...userSettings, ...s, updatedAt: serverTimestamp() });
-        userSettings = { ...userSettings, ...s };
-        document.getElementById('settingsDialog').close();
-        updateUI();
-    }
-    
-    async function saveOnboarding() {
-        const s = collectSettings('on');
-        await setDoc(doc(db, 'users', currentUser.uid, 'settings', 'profile'), { ...s, onboarded: true, createdAt: serverTimestamp() });
-        userSettings = s;
-        document.getElementById('onboardingDialog').close();
-    }
-
-    function collectSettings(p) {
-        return {
-            currency: document.getElementById(p+'Currency').value,
-            packPrice: parseFloat(document.getElementById(p+'PackPrice').value),
-            pouchesPerPack: parseFloat(document.getElementById(p+'Pouches').value),
-            dailyLimit: parseFloat(document.getElementById(p+'Daily').value)
+    function renderCustomList() {
+      customList.innerHTML = '';
+      customPouches.forEach((pouch) => {
+        const row = document.createElement('div');
+        row.className = 'history-item';
+        row.innerHTML = `<div><strong>${pouch.name}</strong> <span class="pill">${pouch.mg} mg</span></div>`;
+        const del = document.createElement('button');
+        del.className = 'btn btn-danger';
+        del.textContent = '🗑️ Smazat';
+        del.onclick = async () => {
+          await deleteDoc(doc(db, 'users', auth.currentUser.uid, 'custom_pouches', pouch.id));
         };
-    }
-    function hydrateSettingsForm(p, d) {
-        document.getElementById(p+'Currency').value = d.currency;
-        document.getElementById(p+'PackPrice').value = d.packPrice;
-        document.getElementById(p+'Pouches').value = d.pouchesPerPack;
-        document.getElementById(p+'Daily').value = d.dailyLimit;
-    }
-    function exportCsv() {
-        let csv = "Datum,Cas,Znacka,Mg,Cena\n";
-        historyData.forEach(h => {
-            const d = h.timestamp.toDate(); csv += `${d.toLocaleDateString()},${d.toLocaleTimeString()},${h.brand},${h.mg},${h.cost}\n`;
-        });
-        const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([csv], {type:'text/csv'})); a.download = 'export.csv'; a.click();
-    }
-    async function deleteAccount() {
-        if(confirm('Opravdu SMAZAT vše?')) alert('Pro úplné smazání se prosím znovu přihlašte (bezpečnostní pojistka).');
-    }
-  </script>
-
-  <script>
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js').catch((err) => console.error('SW registration failed', err));
+        row.appendChild(del);
+        customList.appendChild(row);
       });
     }
+
+    function preloadDatetime() {
+      const now = new Date();
+      datetimeInput.value = new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
+    }
+
+    brandSelect.addEventListener('change', () => {
+      const mg = Number(brandSelect.selectedOptions[0]?.dataset.mg || 0);
+      if (mg) mgInput.value = mg;
+    });
+
+    addEntryBtn.addEventListener('click', async () => {
+      if (!auth.currentUser) return;
+      const brand = brandSelect.value;
+      const mg = Number(mgInput.value);
+      const dateValue = datetimeInput.value ? new Date(datetimeInput.value) : new Date();
+      if (!brand || Number.isNaN(mg)) {
+        showToast('Zadej značku i mg');
+        return;
+      }
+      const pricePerPiece = profile.pouchesPerPack ? profile.packPrice / profile.pouchesPerPack : 0;
+      await addDoc(collection(db, 'users', auth.currentUser.uid, 'history'), {
+        brand,
+        mg,
+        cost: Number(pricePerPiece.toFixed(2)),
+        timestamp: Timestamp.fromDate(dateValue)
+      });
+      preloadDatetime();
+      showToast('Záznam přidán');
+    });
+
+    function subscribeHistory(uid) {
+      const q = query(collection(db, 'users', uid, 'history'), orderBy('timestamp', 'desc'));
+      onSnapshot(q, (snap) => {
+        historyData = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+        renderHistory();
+        recalc();
+      });
+    }
+
+    function subscribeCustomPouches(uid) {
+      const q = collection(db, 'users', uid, 'custom_pouches');
+      onSnapshot(q, (snap) => {
+        customPouches = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+        mergeDatabases();
+        renderCustomList();
+      });
+    }
+
+    function renderHistory() {
+      historyList.innerHTML = '';
+      historyData.forEach((item) => {
+        const row = document.createElement('div');
+        row.className = 'history-item';
+        const date = item.timestamp?.toDate ? item.timestamp.toDate() : new Date();
+        row.innerHTML = `<div><strong>${item.brand}</strong> <span class="pill">${item.mg} mg</span><div class="history-meta">${date.toLocaleString()} · ${profile.currency} ${item.cost || 0}</div></div>`;
+        const btn = document.createElement('button');
+        btn.className = 'btn btn-outline';
+        btn.textContent = '✏️';
+        btn.onclick = () => openEdit(item);
+        row.appendChild(btn);
+        historyList.appendChild(row);
+      });
+    }
+
+    function openEdit(item) {
+      editingId = item.id;
+      editBrand.value = item.brand;
+      editMg.value = item.mg;
+      const date = item.timestamp?.toDate ? item.timestamp.toDate() : new Date();
+      editDate.value = new Date(date.getTime() - date.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
+      editModal.showModal();
+    }
+
+    saveEdit.addEventListener('click', async () => {
+      if (!auth.currentUser || !editingId) return;
+      const date = editDate.value ? new Date(editDate.value) : new Date();
+      await updateDoc(doc(db, 'users', auth.currentUser.uid, 'history', editingId), {
+        brand: editBrand.value,
+        mg: Number(editMg.value),
+        timestamp: Timestamp.fromDate(date)
+      });
+      editModal.close();
+      showToast('Záznam upraven');
+    });
+
+    deleteEntry.addEventListener('click', async () => {
+      if (!auth.currentUser || !editingId) return;
+      await deleteDoc(doc(db, 'users', auth.currentUser.uid, 'history', editingId));
+      editModal.close();
+      showToast('Záznam smazán');
+    });
+
+    function recalc() {
+      const today = new Date();
+      const startOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+      const todayEntries = historyData.filter((h) => (h.timestamp?.toDate ? h.timestamp.toDate() : new Date()) >= startOfDay);
+      const todayPieces = todayEntries.length;
+      const todayMg = todayEntries.reduce((sum, h) => sum + (h.mg || 0), 0);
+      const pricePerPiece = profile.pouchesPerPack ? profile.packPrice / profile.pouchesPerPack : 0;
+      const saved = Math.max(0, (profile.dailyLimit - todayPieces) * pricePerPiece);
+      todayCount.textContent = todayPieces;
+      remaining.textContent = Math.max(0, profile.dailyLimit - todayPieces);
+      mgToday.textContent = `${todayMg.toFixed(1)} mg`;
+      moneySaved.textContent = `${saved.toFixed(2)} ${profile.currency}`;
+      const dailyTotals = getDailyTotals(14);
+      const avgMg = dailyTotals.reduce((sum, d) => sum + d.mg, 0) / (dailyTotals.length || 1);
+      avgMgLabel.textContent = `Průměr: ${avgMg.toFixed(1)} mg`; 
+      streakLabel.textContent = `Streak: ${calculateStreak(dailyTotals, profile.dailyLimit)} dní`;
+      updateCharts(dailyTotals);
+      renderBadges(dailyTotals, todayPieces, todayMg, saved);
+    }
+
+    function getDailyTotals(daysBack) {
+      const totals = [];
+      const now = new Date();
+      for (let i = daysBack - 1; i >= 0; i -= 1) {
+        const day = new Date(now.getFullYear(), now.getMonth(), now.getDate() - i);
+        const next = new Date(day);
+        next.setDate(day.getDate() + 1);
+        const entries = historyData.filter((h) => {
+          const dt = h.timestamp?.toDate ? h.timestamp.toDate() : new Date();
+          return dt >= day && dt < next;
+        });
+        totals.push({
+          date: day,
+          count: entries.length,
+          mg: entries.reduce((sum, h) => sum + (h.mg || 0), 0)
+        });
+      }
+      return totals;
+    }
+
+    function calculateStreak(dailyTotals, limit) {
+      let streak = 0;
+      for (let i = dailyTotals.length - 1; i >= 0; i -= 1) {
+        if (dailyTotals[i].count <= limit) streak += 1; else break;
+      }
+      return streak;
+    }
+
+    function checkWeekendSuccess(dailyTotals, limit) {
+      const weekend = dailyTotals.slice(-7);
+      const saturday = weekend.find((d) => d.date.getDay() === 6);
+      const sunday = weekend.find((d) => d.date.getDay() === 0);
+      if (!saturday || !sunday) return false;
+      const diff = Math.abs((sunday.date - saturday.date) / (1000 * 60 * 60 * 24));
+      return diff === 1 && saturday.count <= limit && sunday.count <= limit;
+    }
+
+    function renderBadges(dailyTotals, todayPieces, todayMg, saved) {
+      const totalCount = historyData.length;
+      const totalMg = historyData.reduce((sum, h) => sum + (h.mg || 0), 0);
+      const totalSavings = historyData.reduce((sum, h) => sum + (h.cost || 0), 0);
+      const avgMg = dailyTotals.reduce((sum, d) => sum + d.mg, 0) / (dailyTotals.length || 1);
+      const streak = calculateStreak(dailyTotals, profile.dailyLimit);
+      const badges = [
+        { id: 'first', name: 'První krok', desc: '1 záznam', unlocked: totalCount >= 1, icon: '🥇' },
+        { id: 'novice', name: 'Začátečník', desc: '10 záznamů', unlocked: totalCount >= 10, icon: '🥈' },
+        { id: 'half', name: 'Půlkař', desc: '50 záznamů', unlocked: totalCount >= 50, icon: '🏅' },
+        { id: 'hundred', name: 'Stovkař', desc: '100 záznamů', unlocked: totalCount >= 100, icon: '🏆' },
+        { id: 'database', name: 'Databáze', desc: '500 záznamů', unlocked: totalCount >= 500, icon: '📚' },
+        { id: 'warmup', name: 'Zahřívací kolo', desc: '3 dny v řadě pod limitem', unlocked: streak >= 3, icon: '🔥' },
+        { id: 'week', name: 'Týden v kuse', desc: '7 dní v řadě pod limitem', unlocked: streak >= 7, icon: '📆' },
+        { id: 'iron', name: 'Iron Will', desc: '30 dní v kuse', unlocked: streak >= 30, icon: '🛡️' },
+        { id: 'weekend', name: 'Víkendový Válečník', desc: 'Limit sobota + neděle', unlocked: checkWeekendSuccess(dailyTotals, profile.dailyLimit), icon: '🧭' },
+        { id: 'clean', name: 'Čisté plíce', desc: '0 mg za den', unlocked: todayMg === 0 && todayPieces === 0, icon: '💨' },
+        { id: 'hardcore', name: 'Hardcore', desc: '>15 mg v záznamu', unlocked: historyData.some((h) => h.mg > 15), icon: '⚡' },
+        { id: 'morning', name: 'Ranní ptáče', desc: 'Použití mezi 4-9h', unlocked: historyData.some((h) => { const hr = (h.timestamp?.toDate ? h.timestamp.toDate() : new Date()).getHours(); return hr >= 4 && hr < 9; }), icon: '🌅' },
+        { id: 'reducer', name: 'Snižovač', desc: 'Průměr < 6 mg', unlocked: avgMg < 6, icon: '📉' },
+        { id: 'piggy', name: 'Prasátko', desc: 'Ušetřeno 100', unlocked: saved >= 100 || totalSavings >= 100, icon: '🐷' },
+        { id: 'investor', name: 'Investor', desc: 'Ušetřeno 1000', unlocked: saved >= 1000 || totalSavings >= 1000, icon: '💼' },
+        { id: 'diamond', name: 'Diamantové ruce', desc: 'Ušetřeno 5000', unlocked: saved >= 5000 || totalSavings >= 5000, icon: '💎' }
+      ];
+      badgeGrid.innerHTML = '';
+      badges.forEach((b) => {
+        const card = document.createElement('div');
+        card.className = `achievement ${b.unlocked ? 'unlocked' : 'locked'}`;
+        card.innerHTML = `<div class="icon">${b.icon}</div><div><h4 style="margin:0">${b.name}</h4><p style="margin:2px 0 0;">${b.desc}</p></div>`;
+        badgeGrid.appendChild(card);
+      });
+    }
+
+    function updateCharts(dailyTotals) {
+      const labels = dailyTotals.map((d) => d.date.toLocaleDateString('cs-CZ', { day: '2-digit', month: '2-digit' }));
+      const mgData = dailyTotals.map((d) => d.mg);
+      const hourly = new Array(24).fill(0);
+      historyData.forEach((h) => {
+        const date = h.timestamp?.toDate ? h.timestamp.toDate() : new Date();
+        hourly[date.getHours()] += 1;
+      });
+      if (lineChart) lineChart.destroy();
+      if (barChart) barChart.destroy();
+      const ctxLine = document.getElementById('lineChart');
+      const ctxBar = document.getElementById('barChart');
+      lineChart = new Chart(ctxLine, {
+        type: 'line',
+        data: { labels, datasets: [{ label: 'Mg', data: mgData, borderColor: '#10b981', backgroundColor: 'rgba(16,185,129,0.2)', tension: 0.3, fill: true }] },
+        options: { scales: { y: { beginAtZero: true } }, plugins: { legend: { display: false } } }
+      });
+      barChart = new Chart(ctxBar, {
+        type: 'bar',
+        data: { labels: Array.from({ length: 24 }, (_, i) => `${i}h`), datasets: [{ label: 'Kusy', data: hourly, backgroundColor: '#0ea5e9' }] },
+        options: { scales: { y: { beginAtZero: true } }, plugins: { legend: { display: false } } }
+      });
+    }
+
+    function registerServiceWorker() {
+      if ('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js');
+    }
+
+    registerServiceWorker();
+    mergeDatabases();
+    preloadDatetime();
   </script>
 </body>
 </html>
