@@ -140,8 +140,8 @@
       </div>
       <div class="stat">
         <div class="lbl" data-i18n="streak">Streak</div>
-        <div class="val" id="valStreak">0 <span style="font-size:16px">days</span></div>
-        <div class="sub" style="font-size:12px; color:var(--muted);">🔥 Keep it up</div>
+        <div class="val" id="valStreak">0 <span style="font-size:16px" data-i18n="days_label">days</span></div>
+        <div class="sub" style="font-size:12px; color:var(--muted);" data-i18n="streak_hint">🔥 Keep it up</div>
       </div>
       <div class="stat">
         <div class="lbl" data-i18n="money_saved">Saved</div>
@@ -149,9 +149,9 @@
         <div class="sub" style="font-size:12px; color:var(--muted);" id="valCost">Cost: 0</div>
       </div>
       <div class="stat">
-        <div class="lbl">Nicotine</div>
+        <div class="lbl" data-i18n="nicotine">Nicotine</div>
         <div class="val" id="valMg">0 mg</div>
-        <div class="sub" style="font-size:12px; color:var(--muted);">Total today</div>
+        <div class="sub" style="font-size:12px; color:var(--muted);" data-i18n="total_today">Total today</div>
       </div>
     </div>
 
@@ -215,12 +215,12 @@
     <div class="modal-body">
       <div class="grid" style="grid-template-columns: 2fr 1fr auto; margin-bottom:16px; align-items:end;">
         <div>
-            <label style="font-size:11px; color:var(--muted);">Brand Name</label>
-            <input type="text" id="newBrandName" placeholder="e.g. Kurwa Fatality">
+            <label style="font-size:11px; color:var(--muted);" data-i18n="brand_name_label">Brand Name</label>
+            <input type="text" id="newBrandName" placeholder="e.g. Kurwa Fatality" data-i18n-placeholder="brand_name_placeholder">
         </div>
         <div>
-            <label style="font-size:11px; color:var(--muted);">Mg</label>
-            <input type="number" id="newBrandMg" placeholder="mg" step="0.1">
+            <label style="font-size:11px; color:var(--muted);" data-i18n="mg_label">Mg</label>
+            <input type="number" id="newBrandMg" placeholder="mg" step="0.1" data-i18n-placeholder="mg_placeholder">
         </div>
         <button id="addNewBrandBtn" class="btn btn-primary" style="height:44px;">➕</button>
       </div>
@@ -248,7 +248,7 @@
         <div id="quitSettings" class="hidden" style="margin-top:10px;">
           <label data-i18n="quit_date">Target Quit Date</label>
           <input type="date" id="quitDateInput">
-          <p style="font-size:11px; color:var(--muted); margin:4px 0 0;">We will calculate your daily max based on this date.</p>
+          <p style="font-size:11px; color:var(--muted); margin:4px 0 0;" data-i18n="quit_date_note">We will calculate your daily max based on this date.</p>
         </div>
       </div>
 
@@ -275,7 +275,7 @@
       </div>
 
       <div style="border-top:1px solid var(--border); padding-top:10px;">
-        <button id="exportCsvBtn" class="btn btn-outline" style="width:100%; font-size:12px;">📥 Export CSV</button>
+        <button id="exportCsvBtn" class="btn btn-outline" style="width:100%; font-size:12px;" data-i18n="export_csv">📥 Export CSV</button>
       </div>
 
     </div>
@@ -291,10 +291,10 @@
     <div class="modal-body">
       <p style="font-size:13px; color:var(--muted); margin-bottom:16px;" data-i18n="auth_desc">Sign in to sync your local data to the cloud.</p>
       <div class="grid">
-        <input type="email" id="emailInput" placeholder="Email">
-        <input type="password" id="passInput" placeholder="Password">
+        <input type="email" id="emailInput" placeholder="Email" data-i18n-placeholder="email_placeholder">
+        <input type="password" id="passInput" placeholder="Password" data-i18n-placeholder="password_placeholder">
         <button id="loginBtn" class="btn btn-primary" data-i18n="login">Log In</button>
-        <button id="googleAuthBtn" class="btn btn-outline">Google Login</button>
+        <button id="googleAuthBtn" class="btn btn-outline" data-i18n="google_login">Google Login</button>
       </div>
       <div style="text-align:center; margin-top:10px; font-size:13px; color:var(--primary); cursor:pointer;" id="toggleReg" data-i18n="toggle_reg">New? Create Account</div>
     </div>
@@ -339,7 +339,12 @@
         seo_p1: "NicoTracker is the ultimate free tool to track Velo, Zyn, Killa. Runs locally or in cloud.",
         seo_h2_cost: "How much does it cost?", seo_h2_quit: "How to quit?",
         seo_p2: "Track your expenses and see how much you save.", seo_p3: "Use our Tapering Mode to quit gradually.",
-        manage_brands: "Manage Custom Brands"
+        manage_brands: "Manage Custom Brands", brand_name_label: "Brand Name", brand_name_placeholder: "e.g. Kurwa Fatality",
+        mg_label: "Mg", mg_placeholder: "mg", export_csv: "📥 Export CSV", google_login: "Google Login",
+        streak_hint: "🔥 Keep it up", nicotine: "Nicotine", total_today: "Total today", cost_label: "Cost", limit_label: "Limit",
+        days_label: "days", email_placeholder: "Email", password_placeholder: "Password", quit_date_note: "We will calculate your daily max based on this date.",
+        custom_group: "Custom", no_custom_brands: "No custom brands.", delete_brand_confirm: "Delete this brand?",
+        days_left: "{days} days left", freedom: "Freedom!"
       },
       cs: {
         auth_btn: "Přihlásit / Sync", today_usage: "DNES", streak: "ŘADA DNÍ", money_saved: "UŠETŘENO",
@@ -352,8 +357,22 @@
         seo_p1: "NicoTracker je nástroj zdarma pro sledování Velo, Killa a dalších. Funguje i bez internetu.",
         seo_h2_cost: "Kolik stojí závislost?", seo_h2_quit: "Jak přestat?",
         seo_p2: "Spočítej si, kolik utratíš ročně.", seo_p3: "Využij náš odvykací mód pro postupné snižování dávek.",
-        manage_brands: "Správa vlastních značek"
+        manage_brands: "Správa vlastních značek", brand_name_label: "Název značky", brand_name_placeholder: "např. Kurwa Fatality",
+        mg_label: "Mg", mg_placeholder: "mg", export_csv: "📥 Export CSV", google_login: "Přihlášení Google",
+        streak_hint: "🔥 Jen tak dál", nicotine: "Nikotin", total_today: "Celkem dnes", cost_label: "Cena", limit_label: "Limit",
+        days_label: "dní", email_placeholder: "E-mail", password_placeholder: "Heslo", quit_date_note: "Denní limit vypočítáme podle tohoto data.",
+        custom_group: "Vlastní", no_custom_brands: "Žádné vlastní značky.", delete_brand_confirm: "Smazat tuto značku?",
+        days_left: "Zbývá {days} dní", freedom: "Svoboda!"
       }
+    };
+
+    const t = (key, replacements = {}, langOverride) => {
+      const lang = langOverride || state?.lang || 'en';
+      let str = translations[lang]?.[key] || translations.en[key] || key;
+      Object.entries(replacements).forEach(([k, v]) => {
+        str = str.replace(`{${k}}`, v);
+      });
+      return str;
     };
 
     const pouchesDB = [
@@ -790,12 +809,18 @@
       state.lang = lang;
       localStorage.setItem('nt_lang', lang);
       document.getElementById('langBtn').innerText = lang === 'en' ? '🇺🇸 EN' : '🇨🇿 CS';
-      
+
       document.querySelectorAll('[data-i18n]').forEach(el => {
         const key = el.dataset.i18n;
-        if(translations[lang][key]) el.innerText = translations[lang][key];
+        const translated = t(key, {}, lang);
+        if(translated) el.innerText = translated;
       });
-      renderUI(); 
+      document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+        const key = el.dataset.i18nPlaceholder;
+        const translated = t(key, {}, lang);
+        if(translated) el.setAttribute('placeholder', translated);
+      });
+      renderUI();
     }
 
     function renderUI() {
@@ -811,7 +836,7 @@
 
       const groupedPouches = [...pouchesDB.map(g => ({ ...g, items: [...g.items] }))];
       if (state.customPouches.length) {
-        groupedPouches.push({ brand: 'Custom', items: [...state.customPouches] });
+        groupedPouches.push({ brand: t('custom_group'), items: [...state.customPouches] });
       }
 
       groupedPouches.sort((a, b) => a.brand.localeCompare(b.brand));
@@ -850,7 +875,7 @@
         
         document.getElementById('quitBanner').classList.remove('hidden');
         document.getElementById('quitTarget').innerText = limit;
-        document.getElementById('quitStatusText').innerText = daysLeft > 0 ? `${daysLeft} days left` : "Freedom!";
+        document.getElementById('quitStatusText').innerText = daysLeft > 0 ? t('days_left', { days: daysLeft }) : t('freedom');
         const percent = Math.min(100, (todayCount / limit) * 100);
         document.getElementById('quitProgress').style.width = percent + '%';
         document.getElementById('quitProgress').style.backgroundColor = percent > 100 ? 'var(--danger)' : 'var(--primary)';
@@ -860,16 +885,16 @@
 
       // Stats
       document.getElementById('valToday').innerText = todayCount;
-      document.getElementById('valLimit').innerText = `Limit: ${limit}`;
+      document.getElementById('valLimit').innerText = `${t('limit_label')}: ${limit}`;
       document.getElementById('valMg').innerText = `${todayMg.toFixed(1)} mg`;
       
       const costPerPouch = state.settings.packPrice / state.settings.pouchesPerPack;
       const saved = (limit - todayCount) * costPerPouch;
       document.getElementById('valSaved').innerText = `${Math.max(0, saved).toFixed(1)} ${state.settings.currency}`;
-      document.getElementById('valCost').innerText = `Cost: ${(todayCount * costPerPouch).toFixed(1)}`;
-      
+      document.getElementById('valCost').innerText = `${t('cost_label')}: ${(todayCount * costPerPouch).toFixed(1)}`;
+
       const streak = calcStreak();
-      document.getElementById('valStreak').innerHTML = `${streak} <span style="font-size:16px">days</span>`;
+      document.getElementById('valStreak').innerHTML = `${streak} <span style="font-size:16px">${t('days_label')}</span>`;
 
       renderBadges(streak);
 
@@ -892,7 +917,7 @@
         const list = document.getElementById('customBrandsList');
         list.innerHTML = '';
         if(state.customPouches.length === 0) {
-            list.innerHTML = '<p style="color:var(--muted); font-size:13px; text-align:center;">No custom brands.</p>';
+            list.innerHTML = `<p style="color:var(--muted); font-size:13px; text-align:center;">${t('no_custom_brands')}</p>`;
             return;
         }
         state.customPouches.forEach((p, index) => {
@@ -903,7 +928,7 @@
                 <button class="btn btn-danger" style="padding:6px 12px; font-size:14px;" data-idx="${index}">🗑️</button>
             `;
             div.querySelector('button').onclick = async () => {
-                if(!confirm('Delete this brand?')) return;
+                if(!confirm(t('delete_brand_confirm'))) return;
                 const toRemove = state.customPouches[index];
                 
                 state.customPouches.splice(index, 1);
