@@ -311,13 +311,15 @@
     import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, signOut } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
     import { getFirestore, doc, setDoc, getDoc, collection, addDoc, onSnapshot, deleteDoc, updateDoc, query, orderBy, Timestamp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
 
+    // OPRAVENÁ KONFIGURACE (ZDE BYLY CHYBY)
     const firebaseConfig = {
-      apiKey: 'YOUR_API_KEY',
-      authDomain: 'YOUR_AUTH_DOMAIN',
-      projectId: 'YOUR_PROJECT_ID',
-      storageBucket: 'YOUR_STORAGE_BUCKET',
-      messagingSenderId: 'YOUR_SENDER_ID',
-      appId: 'YOUR_APP_ID'
+        apiKey: "AIzaSyBKMDwYeSjmgQLnpYciReSK2yJU0pG6KS8",
+        authDomain: "nicotinepouches-d9d1c.firebaseapp.com",
+        projectId: "nicotinepouches-d9d1c",
+        storageBucket: "nicotinepouches-d9d1c.firebasestorage.app",
+        messagingSenderId: "42131125480",
+        appId: "1:42131125480:web:8022461f0a790a5677855d",
+        measurementId: "G-0NE6V1LVKN"
     };
 
     const app = initializeApp(firebaseConfig);
