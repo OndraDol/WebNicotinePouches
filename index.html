@@ -1067,14 +1067,14 @@
     function renderChart(){
         const days={}; for(let i=13;i>=0;i--){const d=new Date();d.setDate(d.getDate()-i); days[d.toISOString().slice(0,10)]=0;}
         state.history.forEach(h=>{const k=h.date.slice(0,10);if(days[k]!==undefined)days[k]++;});
-        const ctx=document.getElementById('trendChart'); if(window.myChart)window.myChart.destroy();
-        window.myChart=new Chart(ctx,{type:'line',data:{labels:Object.keys(days).map(d=>d.slice(5)),datasets:[{label:'Pouches',data:Object.values(days),borderColor:'#10b981',backgroundColor:'rgba(16,185,129,0.1)',fill:true,tension:0.4}]},options:{plugins:{legend:{display:false}},scales:{y:{beginAtZero:true}}}});
+        const ctx=document.getElementById('trendChart'); if(window.trendChartInst)window.trendChartInst.destroy();
+        window.trendChartInst=new Chart(ctx,{type:'line',data:{labels:Object.keys(days).map(d=>d.slice(5)),datasets:[{label:'Pouches',data:Object.values(days),borderColor:'#10b981',backgroundColor:'rgba(16,185,129,0.1)',fill:true,tension:0.4}]},options:{plugins:{legend:{display:false}},scales:{y:{beginAtZero:true}}}});
     }
     function renderHourlyChart() {
       const hours=Array.from({length:24},(_,i)=>({l:String(i).padStart(2,'0')+':00',c:0}));
       state.history.forEach(h=>hours[new Date(h.date).getHours()].c++);
-      const ctx=document.getElementById('hourlyChart'); if(window.hourlyChart)window.hourlyChart.destroy();
-      window.hourlyChart=new Chart(ctx,{type:'bar',data:{labels:hours.map(h=>h.l),datasets:[{data:hours.map(h=>h.c),backgroundColor:'#10b981'}]},options:{plugins:{legend:{display:false}},scales:{y:{beginAtZero:true}}}});
+      const ctx=document.getElementById('hourlyChart'); if(window.hourlyChartInst)window.hourlyChartInst.destroy();
+      window.hourlyChartInst=new Chart(ctx,{type:'bar',data:{labels:hours.map(h=>h.l),datasets:[{data:hours.map(h=>h.c),backgroundColor:'#10b981'}]},options:{plugins:{legend:{display:false}},scales:{y:{beginAtZero:true}}}});
     }
 
     // --- ACTIONS ---
@@ -1102,15 +1102,22 @@
 
     async function addEntry() {
       const sel = document.getElementById('pouchSelect');
-      if(!sel.value) return showToast("Select a pouch");
-      
-      const opt = sel.options[sel.selectedIndex];
-      const mg = opt ? (parseFloat(opt.dataset.mg)||0) : 0;
       const brand = sel.value;
+      if(!brand) return showToast("Select a pouch");
+
+      const safeValue = (typeof CSS !== 'undefined' && CSS.escape) ? CSS.escape(brand) : brand.replace(/(["\])/g,'\$1');
+      const opt = sel.querySelector(`option[value="${safeValue}"]`) || sel.querySelector('option:checked');
+      const mg = opt ? (parseFloat(opt.dataset.mg)||0) : 0;
 
       const rec={id:Date.now().toString(),brand,mg,date:new Date().toISOString()};
       state.history.unshift(rec); persistHistory();
-      if(state.user) try { await setDoc(doc(db,'users',state.user.uid,'history',rec.id),{brand,mg,timestamp:Timestamp.now()}); } catch(e){}
+      if(state.user){
+        try {
+          await setDoc(doc(db,'users',state.user.uid,'history',rec.id),{brand,mg,timestamp:Timestamp.now()});
+        } catch (e) {
+          console.error('Failed to sync entry', e);
+        }
+      }
       logEvent(analytics,'add_pouch',{brand,mg}); renderUI(); showToast("Added!");
     }
 
