@@ -87,7 +87,7 @@
     /* Modals & Utils */
     dialog { border:none; border-radius:16px; padding:0; width:min(500px,95vw); box-shadow:0 25px 50px -12px rgba(0,0,0,0.25); }
     dialog::backdrop { background:rgba(0,0,0,0.5); backdrop-filter:blur(2px); }
-    .modal-head { padding:16px 20px; font-weight:700; border-bottom:1px solid var(--border); background:#f8fafc; }
+    .modal-head { padding:16px 20px; font-weight:700; border-bottom:1px solid var(--border); background:#f8fafc; display:flex; justify-content:space-between; align-items:center; }
     .modal-body { padding:20px; }
     .modal-foot { padding:16px; display:flex; justify-content:flex-end; gap:10px; border-top:1px solid var(--border); }
     
@@ -99,6 +99,27 @@
     .progress-bar { height:6px; background:#e2e8f0; border-radius:3px; margin-top:8px; overflow:hidden; }
     .progress-fill { height:100%; background:var(--primary); width:0%; transition:width 0.5s; }
 
+    /* Wizard Styles */
+    .selection-card {
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+      cursor: pointer;
+      transition: all 0.2s;
+      background: white;
+      text-align: center;
+    }
+    .selection-card:hover { border-color: #cbd5e1; }
+    .selection-card.active {
+      border-color: var(--primary);
+      background-color: #ecfdf5;
+      box-shadow: 0 4px 6px -1px rgba(16,185,129,0.1);
+    }
+    .selection-card h4 { margin: 8px 0 4px; font-size: 15px; }
+    .selection-card p { margin: 0; font-size: 12px; color: var(--muted); line-height: 1.4; }
+    .wizard-step { animation: fadeIn 0.3s; }
+    @keyframes fadeIn { from { opacity:0; transform:translateY(5px); } to { opacity:1; transform:translateY(0); } }
+
     #toast { position:fixed; bottom:20px; right:20px; z-index:100; }
     .toast-msg { background:#1e293b; color:white; padding:12px 20px; border-radius:10px; margin-top:10px; animation:slideUp 0.3s; }
     @keyframes slideUp { from{transform:translateY(20px);opacity:0} to{transform:translateY(0);opacity:1} }
@@ -109,6 +130,7 @@
   <header>
     <div class="logo">💊 <span>NicoTracker</span></div>
     <div style="display:flex; gap:10px;">
+      <button id="installBtn" class="btn btn-primary hidden" style="padding:8px 12px; font-size:12px;">📲 Install</button>
       <button id="langBtn" class="btn btn-outline" style="padding:8px;">🇺🇸 EN</button>
       <button id="syncBtn" class="btn btn-primary" data-i18n="auth_btn">Login / Sync</button>
       <button id="menuBtn" class="btn btn-outline" style="font-size:18px;">⚙️</button>
@@ -122,7 +144,7 @@
       <div style="display:flex; justify-content:space-between; align-items:center;">
         <div>
           <h3 style="margin:0" data-i18n="quit_title">Freedom Journey</h3>
-          <p style="margin:4px 0 0; color:var(--primary-dark); font-size:13px;" id="quitStatusText">Day 5 of 30</p>
+          <p style="margin:4px 0 0; color:var(--primary-dark); font-size:13px;" id="quitStatusText">Plan active</p>
         </div>
         <div style="text-align:right;">
           <div class="val" style="font-size:20px;" id="quitTarget">0</div>
@@ -156,7 +178,7 @@
       </div>
     </div>
 
-    <!-- Add Action (UPDATED V2) -->
+    <!-- Add Action -->
     <div class="card" style="margin-top:16px;">
       <h3 style="margin:0 0 12px;" data-i18n="log_usage">Log Usage</h3>
       <div class="grid" style="grid-template-columns: 1fr auto;">
@@ -239,7 +261,7 @@
     </div>
   </dialog>
 
-  <!-- Manage Brands Modal (NEW) -->
+  <!-- Manage Brands Modal -->
   <dialog id="brandsModal">
     <div class="modal-head" data-i18n="manage_brands">Manage Brands</div>
     <div class="modal-body">
@@ -255,63 +277,98 @@
         <button id="addNewBrandBtn" class="btn btn-primary" style="height:44px;">➕</button>
       </div>
       <div style="border-top:1px solid var(--border); margin-bottom:10px;"></div>
-      <div id="customBrandsList" style="max-height: 250px; overflow-y: auto;">
-        <!-- Brands injected here -->
-      </div>
+      <div id="customBrandsList" style="max-height: 250px; overflow-y: auto;"></div>
     </div>
     <div class="modal-foot">
       <button class="btn btn-outline" onclick="document.getElementById('brandsModal').close()" data-i18n="close">Close</button>
     </div>
   </dialog>
 
-  <!-- Onboarding / Settings Modal -->
+  <!-- NEW SETTINGS WIZARD MODAL -->
   <dialog id="settingsModal">
-    <div class="modal-head" data-i18n="settings">Settings</div>
-    <div class="modal-body grid">
+    <div class="modal-head">
+      <span data-i18n="settings">Settings</span>
+      <span style="font-size:12px; color:var(--muted);" id="wizardStepIndicator">Step 1/3</span>
+    </div>
+    <div class="modal-body">
       
-      <!-- Quitting Program Switch -->
-      <div style="background:#ecfdf5; padding:10px; border-radius:8px; border:1px solid #a7f3d0;">
-        <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
-          <input type="checkbox" id="quitModeToggle" style="width:auto;">
-          <span style="font-weight:700" data-i18n="quit_mode_label">Enable Quitting Program</span>
-        </label>
-        <div id="quitSettings" class="hidden" style="margin-top:10px;">
-          <label data-i18n="quit_date">Target Quit Date</label>
-          <input type="date" id="quitDateInput">
-          <p style="font-size:11px; color:var(--muted); margin:4px 0 0;" data-i18n="quit_date_note">We will calculate your daily max based on this date.</p>
+      <!-- STEP 1: GOAL -->
+      <div id="step1" class="wizard-step">
+        <h3 style="margin:0 0 16px; font-size:16px; text-align:center;" data-i18n="wiz_step1_title">What is your goal?</h3>
+        <div class="grid" style="grid-template-columns: 1fr 1fr;">
+          <div class="selection-card" data-val="track" onclick="selectGoal('track')">
+            <div style="font-size:32px;">📊</div>
+            <h4 data-i18n="goal_track_title">Just Tracking</h4>
+            <p data-i18n="goal_track_desc">Monitor usage & cost without pressure.</p>
+          </div>
+          <div class="selection-card" data-val="quit" onclick="selectGoal('quit')">
+            <div style="font-size:32px;">💪</div>
+            <h4 data-i18n="goal_quit_title">I Want to Quit</h4>
+            <p data-i18n="goal_quit_desc">Reduce intake or stop completely.</p>
+          </div>
         </div>
       </div>
 
-      <div class="grid" style="grid-template-columns: 1fr 1fr;">
-        <div>
-          <label data-i18n="currency">Currency</label>
-          <input id="currencyInput" value="USD">
-        </div>
-        <div>
-          <label data-i18n="pack_price">Price / Can</label>
-          <input type="number" id="priceInput">
-        </div>
-      </div>
-      
-      <div class="grid" style="grid-template-columns: 1fr 1fr;">
-        <div>
-          <label data-i18n="pouches_pack">Pouches / Can</label>
-          <input type="number" id="piecesInput" value="20">
-        </div>
-        <div>
-          <label data-i18n="daily_limit">Daily Limit (Std)</label>
-          <input type="number" id="limitInput" value="10">
+      <!-- STEP 2: STRATEGY -->
+      <div id="step2" class="wizard-step hidden">
+        <h3 style="margin:0 0 16px; font-size:16px; text-align:center;" data-i18n="wiz_step2_title">Choose your Strategy</h3>
+        <div class="grid" style="gap:12px;">
+          <div class="selection-card" data-val="smooth" onclick="selectStrategy('smooth')" style="display:flex; align-items:center; gap:12px; text-align:left;">
+            <div style="font-size:24px;">📉</div>
+            <div>
+              <h4 style="margin:0" data-i18n="strat_smooth_title">Smooth Taper</h4>
+              <p data-i18n="strat_smooth_desc">Linear reduction to 0 by your target date.</p>
+            </div>
+          </div>
+          <div class="selection-card" data-val="weekly" onclick="selectStrategy('weekly')" style="display:flex; align-items:center; gap:12px; text-align:left;">
+            <div style="font-size:24px;">🪜</div>
+            <div>
+              <h4 style="margin:0" data-i18n="strat_weekly_title">Weekly Step-Down</h4>
+              <p data-i18n="strat_weekly_desc">Drop by fixed amount every week.</p>
+            </div>
+          </div>
+          <div class="selection-card" data-val="cutoff" onclick="selectStrategy('cutoff')" style="display:flex; align-items:center; gap:12px; text-align:left;">
+            <div style="font-size:24px;">🛑</div>
+            <div>
+              <h4 style="margin:0" data-i18n="strat_cutoff_title">Cold Turkey</h4>
+              <p data-i18n="strat_cutoff_desc">Maintain limit until Date D, then stop.</p>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div style="border-top:1px solid var(--border); padding-top:10px;">
-        <button id="exportCsvBtn" class="btn btn-outline" style="width:100%; font-size:12px;" data-i18n="export_csv">📥 Export CSV</button>
+      <!-- STEP 3: CONFIG -->
+      <div id="step3" class="wizard-step hidden">
+        <h3 style="margin:0 0 16px; font-size:16px; text-align:center;" data-i18n="wiz_step3_title">Final Setup</h3>
+        
+        <div class="grid" style="grid-template-columns: 1fr 1fr;">
+          <div><label data-i18n="currency">Currency</label><input id="currencyInput" value="USD"></div>
+          <div><label data-i18n="pack_price">Price / Can</label><input type="number" id="priceInput"></div>
+        </div>
+        <div class="grid" style="grid-template-columns: 1fr 1fr;">
+          <div><label data-i18n="pouches_pack">Pouches / Can</label><input type="number" id="piecesInput" value="20"></div>
+          <div><label data-i18n="start_limit" id="limitLabel">Daily Limit</label><input type="number" id="limitInput" value="15"></div>
+        </div>
+
+        <!-- Strategy Specific Inputs -->
+        <div id="dateInputContainer" class="hidden">
+           <label data-i18n="target_date" id="dateLabel">Target Date</label>
+           <input type="date" id="wizardDateInput">
+        </div>
+        <div id="reductionInputContainer" class="hidden">
+           <label data-i18n="reduction_rate">Reduction per Week (pouches)</label>
+           <input type="number" id="reductionInput" value="1">
+        </div>
+
+        <div style="border-top:1px solid var(--border); padding-top:10px; margin-top:10px;">
+          <button id="exportCsvBtn" class="btn btn-outline" style="width:100%; font-size:12px;" data-i18n="export_csv">📥 Export CSV</button>
+        </div>
       </div>
 
     </div>
     <div class="modal-foot">
-      <button class="btn btn-outline" onclick="document.getElementById('settingsModal').close()" data-i18n="close">Close</button>
-      <button id="saveSettingsBtn" class="btn btn-primary" data-i18n="save">Save</button>
+      <button id="wizBackBtn" class="btn btn-outline hidden" onclick="prevStep()" data-i18n="back">Back</button>
+      <button id="wizNextBtn" class="btn btn-primary" onclick="nextStep()" data-i18n="next">Next</button>
     </div>
   </dialog>
 
@@ -372,11 +429,20 @@
         manage_brands: "Manage Custom Brands", brand_name_label: "Brand Name", brand_name_placeholder: "e.g. Kurwa Fatality",
         mg_label: "Mg", mg_placeholder: "mg", export_csv: "📥 Export CSV", google_login: "Google Login",
         streak_hint: "🔥 Keep it up", nicotine: "Nicotine", total_today: "Total today", cost_label: "Cost", limit_label: "Limit",
-        days_label: "days", email_placeholder: "Email", password_placeholder: "Password", quit_date_note: "We will calculate your daily max based on this date.",
+        days_label: "days", email_placeholder: "Email", password_placeholder: "Password",
         custom_group: "Custom", no_custom_brands: "No custom brands.", delete_brand_confirm: "Delete this brand?",
         days_left: "{days} days left", freedom: "Freedom!", hourly_heatmap: "Hourly Heatmap", history_modal_title: "Full History",
         pick_date: "Pick Date & Time", select_brand: "Select Brand", add_past_entry: "Add Past Entry", delete_entry: "Delete",
-        history_empty: "No history yet."
+        history_empty: "No history yet.",
+        // Wizard
+        wiz_step1_title: "What is your goal?", wiz_step2_title: "Choose Strategy", wiz_step3_title: "Final Setup",
+        goal_track_title: "Just Tracking", goal_track_desc: "Monitor usage & cost without pressure.",
+        goal_quit_title: "I Want to Quit", goal_quit_desc: "Reduce intake or stop completely.",
+        strat_smooth_title: "Smooth Taper", strat_smooth_desc: "Linear reduction to 0 by date.",
+        strat_weekly_title: "Weekly Step-Down", strat_weekly_desc: "Drop by fixed amount every week.",
+        strat_cutoff_title: "Cold Turkey", strat_cutoff_desc: "Maintain limit until Date D, then stop.",
+        start_limit: "Start / Daily Limit", target_date: "Target Date", reduction_rate: "Reduction per Week",
+        back: "Back", next: "Next", finish: "Finish"
       },
       cs: {
         auth_btn: "Přihlásit / Sync", today_usage: "DNES", streak: "ŘADA DNÍ", money_saved: "UŠETŘENO",
@@ -392,11 +458,20 @@
         manage_brands: "Správa vlastních značek", brand_name_label: "Název značky", brand_name_placeholder: "např. Kurwa Fatality",
         mg_label: "Mg", mg_placeholder: "mg", export_csv: "📥 Export CSV", google_login: "Přihlášení Google",
         streak_hint: "🔥 Jen tak dál", nicotine: "Nikotin", total_today: "Celkem dnes", cost_label: "Cena", limit_label: "Limit",
-        days_label: "dní", email_placeholder: "E-mail", password_placeholder: "Heslo", quit_date_note: "Denní limit vypočítáme podle tohoto data.",
+        days_label: "dní", email_placeholder: "E-mail", password_placeholder: "Heslo",
         custom_group: "Vlastní", no_custom_brands: "Žádné vlastní značky.", delete_brand_confirm: "Smazat tuto značku?",
         days_left: "Zbývá {days} dní", freedom: "Svoboda!", hourly_heatmap: "Hodinová heatmapa", history_modal_title: "Kompletní historie",
         pick_date: "Vyber datum a čas", select_brand: "Vyber značku", add_past_entry: "Přidat zpětně", delete_entry: "Smazat",
-        history_empty: "Zatím žádná historie."
+        history_empty: "Zatím žádná historie.",
+        // Wizard
+        wiz_step1_title: "Jaký je tvůj cíl?", wiz_step2_title: "Vyber strategii", wiz_step3_title: "Nastavení",
+        goal_track_title: "Jen sledovat", goal_track_desc: "Sledovat útratu bez tlaku.",
+        goal_quit_title: "Chci přestat", goal_quit_desc: "Omezit nebo úplně skončit.",
+        strat_smooth_title: "Plynule (Smooth)", strat_smooth_desc: "Lineární snížení k nule.",
+        strat_weekly_title: "Týdenní schody", strat_weekly_desc: "Snížit o kus každý týden.",
+        strat_cutoff_title: "Rázný konec", strat_cutoff_desc: "Držet limit do data D, pak konec.",
+        start_limit: "Startovní / Denní Limit", target_date: "Cílové datum", reduction_rate: "Snížení za týden (ks)",
+        back: "Zpět", next: "Další", finish: "Dokončit"
       }
     };
 
@@ -411,410 +486,22 @@
 
     const pouchesDB = [
       {
-        brand: "77 Pouches",
-        items: [
-          { name: "77 Black Currant Ice", mg: 10.4, dots: 2 },
-          { name: "77 Blueberry", mg: 10.4, dots: 2 },
-          { name: "77 Cola & Cherry", mg: 10.4, dots: 2 },
-          { name: "77 Cola & Vanilla", mg: 10.4, dots: 2 },
-          { name: "77 Forest Fruit Light", mg: 5.2, dots: 1 }
-        ]
+        brand: "77 Pouches", items: [{ name: "77 Black Currant Ice", mg: 10.4 }, { name: "77 Blueberry", mg: 10.4 }, { name: "77 Forest Fruit Light", mg: 5.2 }]
       },
       {
-        brand: "ACE",
-        items: [
-          { name: "Ace Cool Mint", mg: 6.0, dots: 1 },
-          { name: "Ace Eucalyptus", mg: 6.0, dots: 1 },
-          { name: "Ace Extreme Cool", mg: 11.2, dots: 3 },
-          { name: "Ace Green Lemon", mg: 6.0, dots: 1 },
-          { name: "Ace X EXTEND Cool Mint", mg: 10.0, dots: 3 }
-        ]
+        brand: "ACE", items: [{ name: "Ace Cool Mint", mg: 6.0 }, { name: "Ace Extreme Cool", mg: 11.2 }]
       },
       {
-        brand: "AROMA KING",
-        items: [
-          { name: "Aroma King Full Kick Candy Tobacco", mg: 10.0, dots: 2 },
-          { name: "Aroma King Full Kick Double Mint", mg: 10.0, dots: 2 },
-          { name: "Aroma King Soft Kick Candy Tobacco", mg: 5.0, dots: 1 },
-          { name: "Aroma King Soft Kick Double Mint", mg: 5.0, dots: 1 }
-        ]
+        brand: "KILLA", items: [{ name: "Killa Cold Mint", mg: 12.8 }, { name: "Killa 13", mg: 12.8 }, { name: "Killa Blueberry", mg: 12.8 }]
       },
       {
-        brand: "CANDYS",
-        items: [
-          { name: "Candys Fresh Strong", mg: 16.0, dots: 4 },
-          { name: "Candys Sweet Bubblegum", mg: 8.0, dots: 2 },
-          { name: "Candys Sweet Strawberry", mg: 8.0, dots: 2 }
-        ]
+        brand: "PABLO", items: [{ name: "Pablo Ice Cold", mg: 12.0 }, { name: "Pablo X-Ice Cold", mg: 25.0 }]
       },
       {
-        brand: "CLEW",
-        items: [
-          { name: "Clew Mango Mint", mg: 10.0, dots: 2 },
-          { name: "Clew Watermelon Ice", mg: 10.0, dots: 2 }
-        ]
+        brand: "VELO", items: [{ name: "Velo Freeze", mg: 10.9 }, { name: "Velo Ice Cool", mg: 8.0 }, { name: "Velo Berry Frost", mg: 8.0 }, { name: "Velo Royal Purple", mg: 8.0 }]
       },
       {
-        brand: "CUBA",
-        items: [
-          { name: "Cuba Blueberry Strong", mg: 20.0, dots: 4 },
-          { name: "Cuba Cherry Strong", mg: 20.0, dots: 4 },
-          { name: "Cuba Cola Strong", mg: 20.0, dots: 4 },
-          { name: "Cuba Forest Berries Strong", mg: 20.0, dots: 4 },
-          { name: "Cuba Ninja Strawberry", mg: 20.0, dots: 4 }
-        ]
-      },
-      {
-        brand: "DENSSI",
-        items: [
-          { name: "DENSSI Cold Mint", mg: 10.0, dots: 2 },
-          { name: "DENSSI Spearmint", mg: 10.0, dots: 2 },
-          { name: "DENSSI Strawberry Freeze", mg: 10.0, dots: 2 }
-        ]
-      },
-      {
-        brand: "DOPE",
-        items: [
-          { name: "Dope Freeze Strong Edition", mg: 16.0, dots: 4 },
-          { name: "Dope Ice Cool Xtra Strong", mg: 16.0, dots: 4 },
-          { name: "Dope Mango", mg: 16.0, dots: 4 }
-        ]
-      },
-      {
-        brand: "FEDRS",
-        items: [
-          { name: "Fedrs Ice Cool Cinnamon Roll", mg: 20.0, dots: 4 },
-          { name: "Fedrs Ice Cool Irish Coffee", mg: 20.0, dots: 4 }
-        ]
-      },
-      {
-        brand: "Firefly",
-        items: [
-          { name: "Firefly Mango Ice", mg: 10.0, dots: 2 },
-          { name: "Firefly Mint X-Strong", mg: 15.0, dots: 4 }
-        ]
-      },
-      {
-        brand: "Fix",
-        items: [
-          { name: "Fix Blueberry", mg: 8.0, dots: 2 },
-          { name: "Fix Forest Fruit", mg: 11.5, dots: 3 },
-          { name: "Fix Lime", mg: 5.6, dots: 1 },
-          { name: "Fix Pomegranate", mg: 7.0, dots: 2 },
-          { name: "Fix Sweet Mint Lemon", mg: 8.0, dots: 2 }
-        ]
-      },
-      {
-        brand: "FUMI",
-        items: [
-          { name: "Fumi Fieri Mango", mg: 11.0, dots: 3 },
-          { name: "Fumi Freezy Mint", mg: 16.0, dots: 4 },
-          { name: "Fumi Minty Blueberry", mg: 8.0, dots: 2 },
-          { name: "Fumi Prickly Pear", mg: 11.0, dots: 3 },
-          { name: "Fumi Tangy Apple", mg: 11.0, dots: 3 },
-          { name: "Fumi Tangy Strawberry", mg: 11.0, dots: 3 },
-          { name: "Fumi Zingy Ginger", mg: 11.0, dots: 3 }
-        ]
-      },
-      {
-        brand: "FUZION",
-        items: [
-          { name: "Fuzion Berry Strong", mg: 18.0, dots: 4 },
-          { name: "Fuzion Max Extreme", mg: 30.0, dots: 5 },
-          { name: "Fuzion Orange Energy", mg: 16.0, dots: 3 }
-        ]
-      },
-      {
-        brand: "GARANT",
-        items: [
-          { name: "Garant Extreme Mint", mg: 16.0, dots: 4 },
-          { name: "Garant Strong Plus", mg: 20.0, dots: 4 },
-          { name: "Garant White Strong", mg: 15.0, dots: 4 }
-        ]
-      },
-      {
-        brand: "GOAT",
-        items: [
-          { name: "Goat Blueberry #12", mg: 8.4, dots: 2 },
-          { name: "Goat Frosted Strong", mg: 11.5, dots: 3 },
-          { name: "Goat White", mg: 5.6, dots: 2 }
-        ]
-      },
-      {
-        brand: "GRITT",
-        items: [
-          { name: "Gritt Crisp Ice Extra Strong", mg: 11.0, dots: 3 },
-          { name: "Gritt Frost Bite", mg: 11.2, dots: 3 },
-          { name: "Gritt Kiwi Green Apple", mg: 12.0, dots: 3 }
-        ]
-      },
-      {
-        brand: "Grant",
-        items: [
-          { name: "Grant Dragon Fruit", mg: 12.0, dots: 3 },
-          { name: "Grant Extreme Edition", mg: 24.0, dots: 5 },
-          { name: "Grant ICE Peach", mg: 20.0, dots: 4 },
-          { name: "Grant Licorice", mg: 9.6, dots: 2 },
-          { name: "Grant Mango Lime Extreme Edition", mg: 24.0, dots: 5 },
-          { name: "Grant Mint Slim", mg: 10.9, dots: 3 },
-          { name: "Grant Wild Berries", mg: 12.0, dots: 3 }
-        ]
-      },
-      {
-        brand: "Greatest",
-        items: [
-          { name: "Greatest Berry Punch", mg: 8.0, dots: 2 },
-          { name: "Greatest Cold Dry", mg: 8.0, dots: 2 }
-        ]
-      },
-      {
-        brand: "ICEBERG",
-        items: [
-          { name: "Iceberg Arasaka", mg: 12.0, dots: 3 },
-          { name: "Iceberg Danger Strong", mg: 25.0, dots: 5 },
-          { name: "Iceberg Dragon Fruit", mg: 25.0, dots: 5 },
-          { name: "Iceberg Extreme", mg: 20.0, dots: 4 },
-          { name: "Iceberg Grape", mg: 25.0, dots: 5 },
-          { name: "Iceberg Mango Banana", mg: 25.0, dots: 5 },
-          { name: "Iceberg Medium", mg: 12.0, dots: 3 },
-          { name: "Iceberg Watermelon Lime", mg: 25.0, dots: 5 }
-        ]
-      },
-      {
-        brand: "KICK",
-        items: [
-          { name: "Kick Strong Mint", mg: 8.0, dots: 2 }
-        ]
-      },
-      {
-        brand: "KILLA",
-        items: [
-          { name: "Killa 13", mg: 12.8, dots: 2 },
-          { name: "Killa Blueberry", mg: 12.8, dots: 2 },
-          { name: "Killa Cold Mint", mg: 12.8, dots: 2 },
-          { name: "Killa Cold X Mint", mg: 18.0, dots: 3 },
-          { name: "Killa Cola", mg: 12.8, dots: 2 },
-          { name: "Killa Mini Cold Mint", mg: 8.0, dots: 1 },
-          { name: "Killa Spearmint", mg: 12.8, dots: 2 },
-          { name: "Killa Watermelon", mg: 13.2, dots: 2 }
-        ]
-      },
-      {
-        brand: "KLINT",
-        items: [
-          { name: "Klint Arctic Mint X-Strong", mg: 12.0, dots: 4 },
-          { name: "Klint Fresh Mint Strong", mg: 10.0, dots: 3 },
-          { name: "Klint Freeze Mint", mg: 10.0, dots: 3 },
-          { name: "Klint Liquorice", mg: 5.6, dots: 1 },
-          { name: "Klint Polar Mint", mg: 8.0, dots: 2 },
-          { name: "Klint Rosé", mg: 5.0, dots: 1 }
-        ]
-      },
-      {
-        brand: "KURWA",
-        items: [
-          { name: "Kurwa Cocopilada", mg: 12.0, dots: 2 },
-          { name: "Kurwa Collection Blackcurrant Purple Grape Hard", mg: 25.0, dots: 5 },
-          { name: "Kurwa Collection Just Berries Forest Berries", mg: 12.0, dots: 2 },
-          { name: "Kurwa Mango Juicy", mg: 12.0, dots: 2 }
-        ]
-      },
-      {
-        brand: "LIV",
-        items: [
-          { name: "Liv X-Strong Mint", mg: 14.0, dots: 4 }
-        ]
-      },
-      {
-        brand: "Loop",
-        items: [
-          { name: "Loop Licorice Fusion Extra Strong", mg: 11.0, dots: 3 }
-        ]
-      },
-      {
-        brand: "LYFT",
-        items: [
-          { name: "LYFT Berry Frost", mg: 8.0, dots: 2 },
-          { name: "LYFT Mint Slim", mg: 10.0, dots: 3 },
-          { name: "LYFT Tropical Slim", mg: 6.0, dots: 2 }
-        ]
-      },
-      {
-        brand: "NICO",
-        items: [
-          { name: "Nico Citrus Crush", mg: 8.0, dots: 2 },
-          { name: "Nico Ice Rock", mg: 8.0, dots: 2 }
-        ]
-      },
-      {
-        brand: "NOIS",
-        items: [
-          { name: "Nois Black Edition (slabší)", mg: 4.0, dots: 1 },
-          { name: "Nois Cool Strong", mg: 17.5, dots: 4 },
-          { name: "Nois White Edition (silnější)", mg: 10.0, dots: 3 }
-        ]
-      },
-      {
-        brand: "NOX",
-        items: [
-          { name: "NOX Cool Mint", mg: 16.0, dots: 4 },
-          { name: "NOX Tropical", mg: 16.0, dots: 4 }
-        ]
-      },
-      {
-        brand: "ON!",
-        items: [
-          { name: "ON! Citrus 3 mg", mg: 3.0, dots: 1 },
-          { name: "ON! Citrus 6 mg", mg: 6.0, dots: 2 },
-          { name: "ON! Coffee 6 mg", mg: 6.0, dots: 2 },
-          { name: "ON! Licorice 6 mg", mg: 6.0, dots: 2 },
-          { name: "ON! Mint 3 mg", mg: 3.0, dots: 1 },
-          { name: "ON! Mint 6 mg", mg: 6.0, dots: 2 }
-        ]
-      },
-      {
-        brand: "PABLO",
-        items: [
-          { name: "Pablo Gold Edition Frosted Mint", mg: 25.0, dots: 5 },
-          { name: "Pablo Ice Cold", mg: 12.0, dots: 3 },
-          { name: "Pablo Mini Ice Cold", mg: 8.3, dots: 2 },
-          { name: "Pablo X-Ice Cold", mg: 25.0, dots: 5 },
-          { name: "Pablo X-Mint", mg: 16.0, dots: 4 }
-        ]
-      },
-      {
-        brand: "PUFF & POUCH",
-        items: [
-          { name: "Puff & Pouch Mint Blast", mg: 6.0, dots: 1 },
-          { name: "Puff & Pouch Red Energy", mg: 8.0, dots: 2 }
-        ]
-      },
-      {
-        brand: "R4VE kofeinové",
-        items: [
-          { name: "R4VE Energy Bubble Gun (100 mg kofeinu)", mg: 0, dots: 0 },
-          { name: "R4VE Energy Mango Django (160 mg kofeinu)", mg: 0, dots: 0 },
-          { name: "R4VE Energy Minty Berry (160 mg kofeinu)", mg: 0, dots: 0 },
-          { name: "R4VE Energy Skiddler (80 mg kofeinu)", mg: 0, dots: 0 }
-        ]
-      },
-      {
-        brand: "R4VE nikotinové",
-        items: [
-          { name: "R4VE Bubble Gun", mg: 10.0, dots: 2 },
-          { name: "R4VE Melon Strong", mg: 10.0, dots: 3 },
-          { name: "R4VE Red Berries", mg: 8.0, dots: 2 }
-        ]
-      },
-      {
-        brand: "SIBEIRA",
-        items: [
-          { name: "Sibeira Mint", mg: 6.0, dots: 2 },
-          { name: "Sibeira Spearmint Strong", mg: 9.6, dots: 3 }
-        ]
-      },
-      {
-        brand: "Siberia",
-        items: [
-          { name: "Siberia -80°C White Dry", mg: 34.0, dots: 5 },
-          { name: "Siberia White Dry Regular", mg: 33.0, dots: 5 }
-        ]
-      },
-      {
-        brand: "SNATCH",
-        items: [
-          { name: "Snatch Arctic Mint X-Strong", mg: 16.0, dots: 3 },
-          { name: "Snatch Citrus Strong Edition", mg: 16.0, dots: 3 },
-          { name: "Snatch Forest Fruits", mg: 16.0, dots: 3 },
-          { name: "Snatch Frozen Ultra Strong", mg: 30.0, dots: 5 }
-        ]
-      },
-      {
-        brand: "SYX",
-        items: [
-          { name: "SYX Blueberry", mg: 8.0, dots: 2 },
-          { name: "SYX Low", mg: 2.8, dots: 1 },
-          { name: "SYX Medium", mg: 5.6, dots: 2 },
-          { name: "SYX Royal Wintergreen Strong", mg: 11.5, dots: 3 }
-        ]
-      },
-      {
-        brand: "Velo",
-        items: [
-          { name: "Velo Breezy Mango Slim", mg: 11.6, dots: 5 },
-          { name: "Velo Bright Spearmint Mini", mg: 6.0, dots: 2 },
-          { name: "Velo Cherry Ice Mini", mg: 4.0, dots: 1 },
-          { name: "Velo Cinnamon Flame Slim", mg: 10.9, dots: 4 },
-          { name: "Velo Crispy Peppermint Slim", mg: 9.8, dots: 3 },
-          { name: "Velo Crispy Peppermint Zero Slim", mg: 0, dots: 0 },
-          { name: "Velo Eucalyptus Storm Slim", mg: 14.0, dots: 5 },
-          { name: "Velo Freezing Peppermint Slim", mg: 10.9, dots: 5 },
-          { name: "Velo Groovy Grape Slim", mg: 10.9, dots: 4 },
-          { name: "Velo Icy Berries Mini", mg: 6.0, dots: 2 },
-          { name: "Velo McLaren Papaya Slim", mg: 8.4, dots: 4 },
-          { name: "Velo Orange Spark Slim", mg: 10.9, dots: 4 },
-          { name: "Velo Peppermint Storm Slim", mg: 10.9, dots: 4 },
-          { name: "Velo Simply Spearmint Mini", mg: 4.0, dots: 1 },
-          { name: "Velo Strawberry Ice Mini", mg: 6.0, dots: 2 },
-          { name: "Velo Strawberry Ice Slim", mg: 10.9, dots: 4 },
-          { name: "Velo Tangy Lime Slim", mg: 9.8, dots: 3 },
-          { name: "Velo Tropic Breeze Zero Slim", mg: 0, dots: 0 },
-          { name: "Velo Watermelon Ice Slim", mg: 8.1, dots: 3 }
-        ]
-      },
-      {
-        brand: "VIDAR",
-        items: [
-          { name: "Vidar Mint Strong", mg: 14.0, dots: 4 }
-        ]
-      },
-      {
-        brand: "VOLT",
-        items: [
-          { name: "VOLT Cool Crisp", mg: 12.0, dots: 3 },
-          { name: "VOLT Dark Frost", mg: 16.0, dots: 4 },
-          { name: "VOLT Frosted Apple", mg: 10.0, dots: 2 }
-        ]
-      },
-      {
-        brand: "WHITE FOX",
-        items: [
-          { name: "White Fox Double Mint", mg: 12.0, dots: 3 },
-          { name: "White Fox Full Charge", mg: 22.5, dots: 5 },
-          { name: "White Fox Peppered Mint", mg: 12.0, dots: 3 },
-          { name: "White Fox Slim Original", mg: 12.0, dots: 3 }
-        ]
-      },
-      {
-        brand: "XQS",
-        items: [
-          { name: "XQS Black Cherry", mg: 8.0, dots: 2 },
-          { name: "XQS Blueberry Mint", mg: 8.0, dots: 2 },
-          { name: "XQS Cool Ice", mg: 9.6, dots: 3 },
-          { name: "XQS Tropical Strong", mg: 9.6, dots: 3 }
-        ]
-      },
-      {
-        brand: "ZAFARI",
-        items: [
-          { name: "Zafari Desert Mint", mg: 8.0, dots: 2 },
-          { name: "Zafari Lemongrass Ginger", mg: 8.0, dots: 2 }
-        ]
-      },
-      {
-        brand: "ZYN",
-        items: [
-          { name: "ZYN Black Cherry Mini", mg: 3.0, dots: 1 },
-          { name: "ZYN Black Cherry Mini Extra", mg: 6.0, dots: 2 },
-          { name: "ZYN Blackcurrant Frost Slim", mg: 11.0, dots: 4 },
-          { name: "ZYN Chili Guava Slim", mg: 11.0, dots: 4 },
-          { name: "ZYN Cool Mint Mini", mg: 3.0, dots: 1 },
-          { name: "ZYN Cool Mint Mini Extra", mg: 6.0, dots: 2 },
-          { name: "ZYN Cool Mint Slim", mg: 9.0, dots: 3 },
-          { name: "ZYN Menthol Ice Slim", mg: 11.0, dots: 4 },
-          { name: "ZYN Spearmint Mini", mg: 1.5, dots: 1 },
-          { name: "ZYN Spearmint Mini Extra", mg: 6.0, dots: 2 }
-        ]
+        brand: "ZYN", items: [{ name: "ZYN Cool Mint", mg: 9.0 }, { name: "ZYN Citrus", mg: 6.0 }, { name: "ZYN Espressino", mg: 6.0 }]
       }
     ];
 
@@ -822,10 +509,17 @@
     let state = {
       user: null,
       lang: localStorage.getItem('nt_lang') || 'en',
-      settings: JSON.parse(localStorage.getItem('nt_settings')) || { currency: 'USD', packPrice: 5, pouchesPerPack: 20, dailyLimit: 10, quitMode: false, quitDate: null },
+      settings: JSON.parse(localStorage.getItem('nt_settings')) || { 
+        currency: 'USD', packPrice: 5, pouchesPerPack: 20, dailyLimit: 10, 
+        goal: 'track', strategy: null, strategyStartDate: null, quitDate: null, reductionRate: 1
+      },
       history: JSON.parse(localStorage.getItem('nt_history')) || [],
       customPouches: JSON.parse(localStorage.getItem('nt_custom_pouches')) || []
     };
+
+    // Wizard Temp State
+    let wizStep = 1;
+    let tempSettings = {};
 
     function persistHistory() {
       state.history.sort((a, b) => new Date(b.date) - new Date(a.date));
@@ -839,10 +533,27 @@
       renderUI();
       setupListeners();
       
-      if (!localStorage.getItem('nt_settings')) {
-        document.getElementById('settingsModal').showModal();
+      // Auto-open wizard if no settings or missing goal
+      if (!localStorage.getItem('nt_settings') || !state.settings.goal) {
+        openWizard();
       }
       if('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js');
+      
+      // PWA Install Logic
+      let deferredPrompt;
+      const installBtn = document.getElementById('installBtn');
+      window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        installBtn.classList.remove('hidden');
+      });
+      installBtn.addEventListener('click', async () => {
+        if (!deferredPrompt) return;
+        deferredPrompt.prompt();
+        const { outcome } = await deferredPrompt.userChoice;
+        deferredPrompt = null;
+        installBtn.classList.add('hidden');
+      });
     }
 
     function applyLanguage(lang) {
@@ -861,6 +572,41 @@
         if(translated) el.setAttribute('placeholder', translated);
       });
       renderUI();
+    }
+
+    function calculateCurrentLimit() {
+      const s = state.settings;
+      if (s.goal === 'track' || !s.strategy || !s.strategyStartDate) return s.dailyLimit;
+
+      const now = new Date();
+      const startDate = new Date(s.strategyStartDate);
+      
+      // Calculate Days Passed
+      const diffTime = Math.abs(now - startDate);
+      const daysPassed = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+
+      if (s.strategy === 'smooth') {
+        if(!s.quitDate) return s.dailyLimit;
+        const quitDate = new Date(s.quitDate);
+        const totalDays = Math.ceil((quitDate - startDate) / (1000 * 60 * 60 * 24));
+        if (totalDays <= 0) return 0;
+        const daysLeft = Math.ceil((quitDate - now) / (1000 * 60 * 60 * 24));
+        if (daysLeft <= 0) return 0;
+        
+        const factor = Math.max(0, daysLeft / totalDays); 
+        return Math.ceil(s.dailyLimit * factor);
+      } 
+      else if (s.strategy === 'weekly') {
+        const weeksPassed = Math.floor(daysPassed / 7);
+        const reduction = weeksPassed * (s.reductionRate || 1);
+        return Math.max(0, s.dailyLimit - reduction);
+      }
+      else if (s.strategy === 'cutoff') {
+        if(!s.quitDate) return s.dailyLimit;
+        const quitDate = new Date(s.quitDate);
+        return now >= quitDate ? 0 : s.dailyLimit;
+      }
+      return s.dailyLimit;
     }
 
     function renderUI() {
@@ -884,41 +630,38 @@
       groupedPouches.forEach(group => {
         const optgroup = document.createElement('optgroup');
         optgroup.label = group.brand;
-
-        group.items
-          .slice()
-          .sort((a, b) => a.name.localeCompare(b.name))
-          .forEach(p => {
+        group.items.slice().sort((a, b) => a.name.localeCompare(b.name)).forEach(p => {
             const opt = document.createElement('option');
             opt.value = p.name;
             opt.dataset.mg = p.mg;
             opt.textContent = `${p.name} (${p.mg}mg)`;
             optgroup.appendChild(opt);
           });
-
         sel.appendChild(optgroup);
       });
-
       if(currentVal && Array.from(sel.options).some(o => o.value === currentVal)) sel.value = currentVal;
       if(historySel) historySel.innerHTML = sel.innerHTML;
 
-      // Limit & Tapering
-      let limit = state.settings.dailyLimit;
-      if (state.settings.quitMode && state.settings.quitDate) {
-        const quitDate = new Date(state.settings.quitDate);
-        const now = new Date();
-        const daysLeft = Math.ceil((quitDate - now) / (1000 * 60 * 60 * 24));
-        
-        if (daysLeft <= 0) limit = 0;
-        else {
-           const factor = Math.min(1, daysLeft / 30); 
-           limit = Math.max(0, Math.ceil(state.settings.dailyLimit * factor));
-        }
-        
+      // Limit Calculation
+      const limit = calculateCurrentLimit();
+      const s = state.settings;
+      
+      // Banner Logic
+      if (s.goal === 'quit' && s.strategy) {
         document.getElementById('quitBanner').classList.remove('hidden');
         document.getElementById('quitTarget').innerText = limit;
-        document.getElementById('quitStatusText').innerText = daysLeft > 0 ? t('days_left', { days: daysLeft }) : t('freedom');
-        const percent = Math.min(100, (todayCount / limit) * 100);
+        
+        let statusText = "";
+        if(s.strategy === 'smooth' || s.strategy === 'cutoff') {
+            const daysLeft = Math.ceil((new Date(s.quitDate) - new Date()) / (86400000));
+            statusText = daysLeft > 0 ? t('days_left', { days: daysLeft }) : t('freedom');
+        } else if (s.strategy === 'weekly') {
+            const daysInCycle = Math.ceil((Math.abs(new Date() - new Date(s.strategyStartDate)) / 86400000) % 7);
+            statusText = `${7 - daysInCycle} days to drop`;
+        }
+        document.getElementById('quitStatusText').innerText = statusText;
+        
+        const percent = limit > 0 ? Math.min(100, (todayCount / limit) * 100) : 100;
         document.getElementById('quitProgress').style.width = percent + '%';
         document.getElementById('quitProgress').style.backgroundColor = percent > 100 ? 'var(--danger)' : 'var(--primary)';
       } else {
@@ -939,61 +682,141 @@
       document.getElementById('valStreak').innerHTML = `${streak} <span style="font-size:16px">${t('days_label')}</span>`;
 
       renderBadges(streak);
-
-      // History
+      
+      // Simple History List
       const list = document.getElementById('historyList');
       list.innerHTML = '';
-      if(state.history.length === 0) {
-        list.innerHTML = `<p style="color:var(--muted); font-size:13px;">${t('history_empty')}</p>`;
-      } else {
-        state.history.slice(0, 5).forEach(h => {
+      if(state.history.length === 0) list.innerHTML = `<p style="color:var(--muted); font-size:13px;">${t('history_empty')}</p>`;
+      else state.history.slice(0, 5).forEach(h => {
           const d = new Date(h.date);
-          list.innerHTML += `<div class="history-item">
-            <div><strong>${h.brand}</strong> <span style="color:var(--muted)">${h.mg}mg</span></div>
-            <div>${d.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</div>
-          </div>`;
-        });
-      }
+          list.innerHTML += `<div class="history-item"><div><strong>${h.brand}</strong> <span style="color:var(--muted)">${h.mg}mg</span></div><div>${d.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</div></div>`;
+      });
 
       renderChart();
       renderHourlyChart();
       renderFullHistoryList();
     }
     
-    // --- BRAND MGMT ---
+    // --- WIZARD LOGIC ---
+    window.selectGoal = (goal) => {
+        tempSettings.goal = goal;
+        document.querySelectorAll('#step1 .selection-card').forEach(c => c.classList.remove('active'));
+        document.querySelector(`#step1 .selection-card[data-val="${goal}"]`).classList.add('active');
+    };
+    
+    window.selectStrategy = (strat) => {
+        tempSettings.strategy = strat;
+        document.querySelectorAll('#step2 .selection-card').forEach(c => c.classList.remove('active'));
+        document.querySelector(`#step2 .selection-card[data-val="${strat}"]`).classList.add('active');
+    };
+
+    window.nextStep = () => {
+        if(wizStep === 1) {
+            if(!tempSettings.goal) return alert("Select a goal");
+            if(tempSettings.goal === 'track') { wizStep = 3; } // Skip strategy
+            else { wizStep = 2; }
+        } else if (wizStep === 2) {
+            if(!tempSettings.strategy) return alert("Select a strategy");
+            wizStep = 3;
+        } else if (wizStep === 3) {
+            // FINISH
+            saveWizardSettings();
+            return;
+        }
+        renderWizard();
+    };
+
+    window.prevStep = () => {
+        if(wizStep === 3) {
+             wizStep = (tempSettings.goal === 'track') ? 1 : 2;
+        } else if (wizStep === 2) {
+            wizStep = 1;
+        }
+        renderWizard();
+    };
+
+    function openWizard() {
+        wizStep = 1;
+        tempSettings = { ...state.settings };
+        renderWizard();
+        document.getElementById('settingsModal').showModal();
+    }
+
+    function renderWizard() {
+        // Hide all steps
+        document.querySelectorAll('.wizard-step').forEach(el => el.classList.add('hidden'));
+        document.getElementById(`step${wizStep}`).classList.remove('hidden');
+        
+        // Buttons
+        document.getElementById('wizBackBtn').classList.toggle('hidden', wizStep === 1);
+        document.getElementById('wizNextBtn').innerText = (wizStep === 3) ? t('finish') : t('next');
+        document.getElementById('wizardStepIndicator').innerText = `Step ${wizStep}/3`;
+
+        // Inputs visibility in Step 3
+        if(wizStep === 3) {
+            document.getElementById('currencyInput').value = tempSettings.currency;
+            document.getElementById('priceInput').value = tempSettings.packPrice;
+            document.getElementById('piecesInput').value = tempSettings.pouchesPerPack;
+            document.getElementById('limitInput').value = tempSettings.dailyLimit;
+            
+            // Logic for Quit Inputs
+            const isQuit = tempSettings.goal === 'quit';
+            const strat = tempSettings.strategy;
+            
+            document.getElementById('dateInputContainer').classList.toggle('hidden', !(isQuit && (strat === 'smooth' || strat === 'cutoff')));
+            document.getElementById('reductionInputContainer').classList.toggle('hidden', !(isQuit && strat === 'weekly'));
+            
+            if(tempSettings.quitDate) document.getElementById('wizardDateInput').value = tempSettings.quitDate;
+        }
+    }
+
+    function saveWizardSettings() {
+        // Grab inputs
+        const newSettings = {
+            ...tempSettings,
+            currency: document.getElementById('currencyInput').value,
+            packPrice: parseFloat(document.getElementById('priceInput').value) || 0,
+            pouchesPerPack: parseFloat(document.getElementById('piecesInput').value) || 20,
+            dailyLimit: parseFloat(document.getElementById('limitInput').value) || 10,
+            quitDate: document.getElementById('wizardDateInput').value || null,
+            reductionRate: parseFloat(document.getElementById('reductionInput').value) || 1
+        };
+
+        // Set start date if strategy changed or new
+        if(newSettings.goal === 'quit' && newSettings.strategy !== state.settings.strategy) {
+            newSettings.strategyStartDate = new Date().toISOString();
+        }
+
+        state.settings = newSettings;
+        localStorage.setItem('nt_settings', JSON.stringify(state.settings));
+        if(state.user) setDoc(doc(db, 'users', state.user.uid, 'settings', 'profile'), state.settings);
+        
+        document.getElementById('settingsModal').close();
+        renderUI();
+        showToast("Settings Saved");
+    }
+
+    // --- GENERIC FUNCTIONS ---
     function renderBrandsModal() {
         const list = document.getElementById('customBrandsList');
         list.innerHTML = '';
-        if(state.customPouches.length === 0) {
-            list.innerHTML = `<p style="color:var(--muted); font-size:13px; text-align:center;">${t('no_custom_brands')}</p>`;
-            return;
-        }
-        state.customPouches.forEach((p, index) => {
+        if(state.customPouches.length === 0) list.innerHTML = `<p style="color:var(--muted); font-size:13px; text-align:center;">${t('no_custom_brands')}</p>`;
+        else state.customPouches.forEach((p, index) => {
             const div = document.createElement('div');
             div.style.cssText = "display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid var(--border);";
-            div.innerHTML = `
-                <span style="font-size:14px;"><b>${p.name}</b> <span style="color:var(--muted); margin-left:4px;">${p.mg}mg</span></span>
-                <button class="btn btn-danger" style="padding:6px 12px; font-size:14px;" data-idx="${index}">🗑️</button>
-            `;
+            div.innerHTML = `<span style="font-size:14px;"><b>${p.name}</b> <span style="color:var(--muted); margin-left:4px;">${p.mg}mg</span></span><button class="btn btn-danger" style="padding:6px 12px; font-size:14px;" data-idx="${index}">🗑️</button>`;
             div.querySelector('button').onclick = async () => {
                 if(!confirm(t('delete_brand_confirm'))) return;
                 const toRemove = state.customPouches[index];
-                
                 state.customPouches.splice(index, 1);
                 localStorage.setItem('nt_custom_pouches', JSON.stringify(state.customPouches));
-                
-                if(state.user && toRemove.id) {
-                    try { await deleteDoc(doc(db, 'users', state.user.uid, 'custom_pouches', toRemove.id)); } catch(e){}
-                }
-                logEvent(analytics, 'delete_brand');
-                renderBrandsModal();
-                renderUI();
+                if(state.user && toRemove.id) try { await deleteDoc(doc(db, 'users', state.user.uid, 'custom_pouches', toRemove.id)); } catch(e){}
+                renderBrandsModal(); renderUI();
             };
             list.appendChild(div);
         });
     }
 
-    // --- GAMIFICATION LOGIC ---
     function getDailyStats() {
       const days = {};
       state.history.forEach(h => {
@@ -1007,13 +830,13 @@
 
     function calcStreak() {
       const daily = getDailyStats();
-      const limit = state.settings.dailyLimit;
+      const limit = calculateCurrentLimit(); // Use calculated limit
       let streak = 0;
       let d = new Date();
       for(let i=0; i<365; i++) {
          const key = d.toISOString().slice(0,10);
          const stat = daily[key];
-         if(i===0 && (!stat || stat.count <= limit)) { /* Today ok so far */ }
+         if(i===0 && (!stat || stat.count <= limit)) { }
          else if(stat && stat.count <= limit) streak++;
          else if(i > 0 && !stat) streak++; 
          else if(stat && stat.count > limit) break;
@@ -1024,12 +847,12 @@
 
     function checkWeekendSuccess() {
       const daily = getDailyStats();
-      const limit = state.settings.dailyLimit;
+      const limit = calculateCurrentLimit();
       const days = Object.keys(daily).sort();
       for(let i=0; i<days.length-1; i++) {
          const d1 = new Date(days[i]);
          const d2 = new Date(days[i+1]);
-         if(d1.getDay() === 6 && d2.getDay() === 0) { // Sat & Sun
+         if(d1.getDay() === 6 && d2.getDay() === 0) { 
              if(daily[days[i]].count <= limit && daily[days[i+1]].count <= limit) return true;
          }
       }
@@ -1042,11 +865,9 @@
         const hasZero = state.history.some(h => h.mg === 0);
         const hasHigh = state.history.some(h => h.mg > 15);
         const isWeekend = checkWeekendSuccess();
-        
         const labels = state.lang === 'en' ? 
           ['Beginner', 'Pro', 'Streak 3', 'Streak 7', 'Iron Will', 'Weekend Warrior', 'Clean Lungs', 'Hardcore', 'Saver', 'Investor'] :
           ['Začátečník', 'Profík', 'Řada 3', 'Řada 7', 'Iron Will', 'Víkendový Válečník', 'Čisté plíce', 'Hardcore', 'Šetřílek', 'Investor'];
-          
         const descs = state.lang === 'en' ?
           ['10 entries', '100 entries', '3 days', '7 days', '30 days', 'Sat+Sun limit', '0mg pouch', '>15mg pouch', 'Saved 100', 'Saved 1000'] :
           ['10 záznamů', '100 záznamů', '3 dny', '7 dní', '30 dní', 'So+Ne limit', '0mg sáček', '>15mg sáček', 'Ušetřeno 100', 'Ušetřeno 1000'];
@@ -1063,7 +884,6 @@
             { i:8, icon:'🐷', u: totalSaved >= 100 },
             { i:9, icon:'💰', u: totalSaved >= 1000 },
         ];
-
         const grid = document.getElementById('badgeGrid');
         grid.innerHTML = '';
         badges.forEach(b => {
@@ -1073,7 +893,6 @@
             grid.appendChild(el);
         });
     }
-
 
     function renderChart() {
       const days = {};
@@ -1085,21 +904,13 @@
         const key = h.date.slice(0,10);
         if(days[key] !== undefined) days[key]++;
       });
-
       const ctx = document.getElementById('trendChart');
       if(window.myChart) window.myChart.destroy();
       window.myChart = new Chart(ctx, {
         type: 'line',
         data: {
           labels: Object.keys(days).map(d => d.slice(5)),
-          datasets: [{
-            label: 'Pouches',
-            data: Object.values(days),
-            borderColor: '#10b981',
-            backgroundColor: 'rgba(16,185,129,0.1)',
-            fill: true,
-            tension: 0.4
-          }]
+          datasets: [{ label: 'Pouches', data: Object.values(days), borderColor: '#10b981', backgroundColor: 'rgba(16,185,129,0.1)', fill: true, tension: 0.4 }]
         },
         options: { plugins:{legend:{display:false}}, scales:{y:{beginAtZero:true}} }
       });
@@ -1109,26 +920,14 @@
       const hours = Array.from({ length: 24 }, (_, i) => ({ label: String(i).padStart(2, '0') + ':00', count: 0 }));
       state.history.forEach(h => {
         const d = new Date(h.date);
-        const hr = d.getHours();
-        hours[hr].count++;
+        hours[d.getHours()].count++;
       });
-
       const ctx = document.getElementById('hourlyChart');
       if(window.hourlyChart) window.hourlyChart.destroy();
       window.hourlyChart = new Chart(ctx, {
         type: 'bar',
-        data: {
-          labels: hours.map(h => h.label),
-          datasets: [{
-            label: 'Pouches',
-            data: hours.map(h => h.count),
-            backgroundColor: '#10b981'
-          }]
-        },
-        options: {
-          plugins: { legend: { display: false } },
-          scales: { y: { beginAtZero: true } }
-        }
+        data: { labels: hours.map(h => h.label), datasets: [{ label: 'Pouches', data: hours.map(h => h.count), backgroundColor: '#10b981' }] },
+        options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
       });
     }
 
@@ -1136,24 +935,13 @@
       const dt = document.getElementById('backdateInput').value;
       const brandSel = document.getElementById('historyPouchSelect');
       if(!dt || !brandSel.value) { showToast('Set date and brand'); return; }
-
       const chosenDate = new Date(dt);
       if(chosenDate > new Date()) { showToast('Cannot log future time'); return; }
-
       const mg = parseFloat(brandSel.options[brandSel.selectedIndex].dataset.mg) || 0;
       const record = { id: Date.now().toString(), brand: brandSel.value, mg, date: chosenDate.toISOString() };
-
       state.history.push(record);
       persistHistory();
-
-      if(state.user) {
-        await setDoc(doc(db, 'users', state.user.uid, 'history', record.id), {
-          brand: record.brand,
-          mg: record.mg,
-          timestamp: Timestamp.fromDate(chosenDate)
-        });
-      }
-
+      if(state.user) await setDoc(doc(db, 'users', state.user.uid, 'history', record.id), { brand: record.brand, mg: record.mg, timestamp: Timestamp.fromDate(chosenDate) });
       renderUI();
       renderFullHistoryList();
       showToast('Added!');
@@ -1164,13 +952,7 @@
       if(idx === -1) return;
       const removed = state.history.splice(idx, 1)[0];
       persistHistory();
-
-      if(state.user && removed?.id) {
-        try {
-          await deleteDoc(doc(db, 'users', state.user.uid, 'history', removed.id));
-        } catch(e) {}
-      }
-
+      if(state.user && removed?.id) try { await deleteDoc(doc(db, 'users', state.user.uid, 'history', removed.id)); } catch(e){}
       renderUI();
       renderFullHistoryList();
     }
@@ -1179,21 +961,12 @@
       const container = document.getElementById('fullHistoryList');
       if(!container) return;
       container.innerHTML = '';
-
-      if(state.history.length === 0) {
-        container.innerHTML = `<p style="color:var(--muted); font-size:13px;">${t('history_empty')}</p>`;
-        return;
-      }
-
-      state.history.forEach(h => {
+      if(state.history.length === 0) container.innerHTML = `<p style="color:var(--muted); font-size:13px;">${t('history_empty')}</p>`;
+      else state.history.forEach(h => {
         const d = new Date(h.date);
-        const row = document.createElement('div');
-        row.className = 'history-item';
+        const row = document.createElement('div'); row.className = 'history-item';
         row.innerHTML = `<div><strong>${h.brand}</strong> <span style="color:var(--muted)">${h.mg}mg</span><div style="font-size:12px; color:var(--muted);">${d.toLocaleString()}</div></div>`;
-        const delBtn = document.createElement('button');
-        delBtn.className = 'btn btn-danger';
-        delBtn.style.padding = '6px 10px';
-        delBtn.innerText = t('delete_entry');
+        const delBtn = document.createElement('button'); delBtn.className = 'btn btn-danger'; delBtn.style.padding = '6px 10px'; delBtn.innerText = t('delete_entry');
         delBtn.onclick = () => deleteHistory(h.id);
         row.appendChild(delBtn);
         container.appendChild(row);
@@ -1204,25 +977,10 @@
       const sel = document.getElementById('pouchSelect');
       const brand = sel.value;
       const mg = parseFloat(sel.options[sel.selectedIndex].dataset.mg) || 0;
-
-      const record = {
-        id: Date.now().toString(),
-        brand: brand,
-        mg: mg,
-        date: new Date().toISOString()
-      };
-
+      const record = { id: Date.now().toString(), brand: brand, mg: mg, date: new Date().toISOString() };
       state.history.unshift(record);
       persistHistory();
-
-      if (state.user) {
-        await setDoc(doc(db, 'users', state.user.uid, 'history', record.id), {
-          brand,
-          mg,
-          timestamp: Timestamp.fromDate(new Date(record.date))
-        });
-      }
-
+      if (state.user) await setDoc(doc(db, 'users', state.user.uid, 'history', record.id), { brand, mg, timestamp: Timestamp.fromDate(new Date(record.date)) });
       logEvent(analytics, 'add_pouch', { brand, mg });
       renderUI();
       showToast("Added!");
@@ -1230,104 +988,33 @@
 
     function setupListeners() {
       document.getElementById('langBtn').onclick = () => applyLanguage(state.lang === 'en' ? 'cs' : 'en');
-      
-      document.getElementById('menuBtn').onclick = () => {
-        document.getElementById('currencyInput').value = state.settings.currency;
-        document.getElementById('priceInput').value = state.settings.packPrice;
-        document.getElementById('piecesInput').value = state.settings.pouchesPerPack;
-        document.getElementById('limitInput').value = state.settings.dailyLimit;
-        document.getElementById('quitModeToggle').checked = state.settings.quitMode;
-        if(state.settings.quitMode) document.getElementById('quitSettings').classList.remove('hidden');
-        if(state.settings.quitDate) document.getElementById('quitDateInput').value = state.settings.quitDate;
-        document.getElementById('settingsModal').showModal();
-      };
-
-      document.getElementById('syncBtn').onclick = () => {
-        if(state.user) { if(confirm("Log out?")) signOut(auth); } 
-        else document.getElementById('authModal').showModal();
-      };
-
-      document.getElementById('saveSettingsBtn').onclick = () => {
-        state.settings = {
-          currency: document.getElementById('currencyInput').value,
-          packPrice: parseFloat(document.getElementById('priceInput').value),
-          pouchesPerPack: parseFloat(document.getElementById('piecesInput').value),
-          dailyLimit: parseFloat(document.getElementById('limitInput').value),
-          quitMode: document.getElementById('quitModeToggle').checked,
-          quitDate: document.getElementById('quitDateInput').value
-        };
-        localStorage.setItem('nt_settings', JSON.stringify(state.settings));
-        if(state.user) setDoc(doc(db, 'users', state.user.uid, 'settings', 'profile'), state.settings);
-        document.getElementById('settingsModal').close();
-        renderUI();
-      };
-
-      document.getElementById('quitModeToggle').onchange = (e) => {
-        e.target.checked ? document.getElementById('quitSettings').classList.remove('hidden') : document.getElementById('quitSettings').classList.add('hidden');
-      };
-
+      document.getElementById('menuBtn').onclick = () => openWizard(); // Re-open wizard on settings click
+      document.getElementById('syncBtn').onclick = () => { if(state.user) { if(confirm("Log out?")) signOut(auth); } else document.getElementById('authModal').showModal(); };
       document.getElementById('addBtn').onclick = addEntry;
-
-      document.getElementById('viewAllHistoryBtn').onclick = () => {
-        const now = new Date();
-        document.getElementById('backdateInput').value = new Date(now.getTime() - now.getTimezoneOffset()*60000).toISOString().slice(0,16);
-        renderFullHistoryList();
-        document.getElementById('historyModal').showModal();
-      };
-
+      document.getElementById('viewAllHistoryBtn').onclick = () => { const now = new Date(); document.getElementById('backdateInput').value = new Date(now.getTime() - now.getTimezoneOffset()*60000).toISOString().slice(0,16); renderFullHistoryList(); document.getElementById('historyModal').showModal(); };
       document.getElementById('addPastEntryBtn').onclick = addPastEntry;
-
-      document.getElementById('openBrandsBtn').onclick = () => {
-          renderBrandsModal();
-          document.getElementById('brandsModal').showModal();
-      };
-
+      document.getElementById('openBrandsBtn').onclick = () => { renderBrandsModal(); document.getElementById('brandsModal').showModal(); };
       document.getElementById('addNewBrandBtn').onclick = async () => {
           const name = document.getElementById('newBrandName').value.trim();
           const mg = parseFloat(document.getElementById('newBrandMg').value);
           if(!name || isNaN(mg)) { alert('Please fill name and mg.'); return; }
-          
           const newPouch = { name, mg, id: Date.now().toString() };
-          
           state.customPouches.push(newPouch);
           localStorage.setItem('nt_custom_pouches', JSON.stringify(state.customPouches));
-          
-          if(state.user) {
-              await setDoc(doc(db, 'users', state.user.uid, 'custom_pouches', newPouch.id), {
-                  name, mg, createdAt: Timestamp.now()
-              });
-          }
+          if(state.user) await setDoc(doc(db, 'users', state.user.uid, 'custom_pouches', newPouch.id), { name, mg, createdAt: Timestamp.now() });
           logEvent(analytics, 'create_brand', { name });
-          
-          document.getElementById('newBrandName').value = '';
-          document.getElementById('newBrandMg').value = '';
-          renderBrandsModal();
-          renderUI();
-          showToast("Brand Created!");
+          document.getElementById('newBrandName').value = ''; document.getElementById('newBrandMg').value = '';
+          renderBrandsModal(); renderUI(); showToast("Brand Created!");
       };
-
       document.getElementById('googleAuthBtn').onclick = () => signInWithPopup(auth, new GoogleAuthProvider()).then(() => document.getElementById('authModal').close());
-      
       let isReg = false;
-      document.getElementById('toggleReg').onclick = () => {
-        isReg = !isReg;
-        document.getElementById('loginBtn').innerText = isReg ? "Register" : "Log In";
-      };
-
+      document.getElementById('toggleReg').onclick = () => { isReg = !isReg; document.getElementById('loginBtn').innerText = isReg ? "Register" : "Log In"; };
       document.getElementById('loginBtn').onclick = async () => {
         const email = document.getElementById('emailInput').value;
         const pass = document.getElementById('passInput').value;
-        try {
-          if(isReg) await createUserWithEmailAndPassword(auth, email, pass);
-          else await signInWithEmailAndPassword(auth, email, pass);
-          document.getElementById('authModal').close();
-        } catch(e) { alert(e.message); }
+        try { if(isReg) await createUserWithEmailAndPassword(auth, email, pass); else await signInWithEmailAndPassword(auth, email, pass); document.getElementById('authModal').close(); } catch(e) { alert(e.message); }
       };
-      
-      document.getElementById('exportCsvBtn').onclick = () => {
-          let csv = "Date,Brand,Mg\n" + state.history.map(h => `${h.date},${h.brand},${h.mg}`).join('\n');
-          const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([csv])); a.download = 'export.csv'; a.click();
-      };
+      document.getElementById('exportCsvBtn').onclick = () => { let csv = "Date,Brand,Mg\n" + state.history.map(h => `${h.date},${h.brand},${h.mg}`).join('\n'); const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([csv])); a.download = 'export.csv'; a.click(); };
     }
 
     function showToast(msg) {
@@ -1342,57 +1029,21 @@
         state.user = user;
         document.getElementById('syncBtn').innerText = user.email;
         document.getElementById('syncBtn').classList.replace('btn-primary', 'btn-outline');
-        
-        // Sync Settings
         const sSnap = await getDoc(doc(db, 'users', user.uid, 'settings', 'profile'));
-        if(sSnap.exists()) {
-           state.settings = sSnap.data();
-           localStorage.setItem('nt_settings', JSON.stringify(state.settings));
-        } else {
-           setDoc(doc(db, 'users', user.uid, 'settings', 'profile'), state.settings);
-        }
-
-        // Sync Custom Pouches
+        if(sSnap.exists()) { state.settings = sSnap.data(); localStorage.setItem('nt_settings', JSON.stringify(state.settings)); }
+        else setDoc(doc(db, 'users', user.uid, 'settings', 'profile'), state.settings);
+        
         onSnapshot(query(collection(db, 'users', user.uid, 'custom_pouches')), (snap) => {
             const cloudPouches = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-            if(cloudPouches.length > 0) {
-                state.customPouches = cloudPouches;
-                localStorage.setItem('nt_custom_pouches', JSON.stringify(state.customPouches));
-                renderUI();
-            } else if (state.customPouches.length > 0) {
-                 const batch = writeBatch(db);
-                 state.customPouches.forEach(p => {
-                    const pid = p.id || Date.now().toString();
-                    const ref = doc(db, 'users', user.uid, 'custom_pouches', pid);
-                    batch.set(ref, { name: p.name, mg: p.mg, createdAt: Timestamp.now() });
-                 });
-                 batch.commit();
-            }
+            if(cloudPouches.length > 0) { state.customPouches = cloudPouches; localStorage.setItem('nt_custom_pouches', JSON.stringify(state.customPouches)); renderUI(); }
+            else if (state.customPouches.length > 0) { const batch = writeBatch(db); state.customPouches.forEach(p => { const pid = p.id || Date.now().toString(); const ref = doc(db, 'users', user.uid, 'custom_pouches', pid); batch.set(ref, { name: p.name, mg: p.mg, createdAt: Timestamp.now() }); }); batch.commit(); }
         });
-
-        // Sync History
         const q = query(collection(db, 'users', user.uid, 'history'), orderBy('timestamp', 'desc'));
         onSnapshot(q, (snap) => {
-           const cloudHistory = snap.docs.map(d => {
-             const data = d.data();
-             return { id: d.id, brand: data.brand, mg: data.mg, date: data.timestamp.toDate().toISOString() };
-           });
-
-           if(cloudHistory.length > 0) {
-             state.history = cloudHistory;
-             persistHistory();
-             renderUI();
-             renderFullHistoryList();
-           } else if (state.history.length > 0) {
-             const batch = writeBatch(db);
-             state.history.forEach(h => {
-               const ref = doc(collection(db, 'users', user.uid, 'history'));
-               batch.set(ref, { brand: h.brand, mg: h.mg, timestamp: Timestamp.fromDate(new Date(h.date)) });
-             });
-             batch.commit();
-           }
+           const cloudHistory = snap.docs.map(d => { const data = d.data(); return { id: d.id, brand: data.brand, mg: data.mg, date: data.timestamp.toDate().toISOString() }; });
+           if(cloudHistory.length > 0) { state.history = cloudHistory; persistHistory(); renderUI(); renderFullHistoryList(); }
+           else if (state.history.length > 0) { const batch = writeBatch(db); state.history.forEach(h => { const ref = doc(collection(db, 'users', user.uid, 'history')); batch.set(ref, { brand: h.brand, mg: h.mg, timestamp: Timestamp.fromDate(new Date(h.date)) }); }); batch.commit(); }
         });
-
       } else {
         state.user = null;
         document.getElementById('syncBtn').innerText = translations[state.lang].auth_btn;
