@@ -50,23 +50,40 @@
     .logo span { color:var(--primary); }
     
     /* UI Components */
-    .card { background:var(--card); border:1px solid var(--border); border-radius:16px; padding:20px; margin-bottom:16px; box-shadow:0 4px 6px -1px rgba(0,0,0,0.05); }
+    .card { background:var(--card); border:1px solid var(--border); border-radius:16px; padding:16px; margin-bottom:12px; box-shadow:0 4px 6px -1px rgba(0,0,0,0.05); }
     .btn { border:none; border-radius:10px; padding:10px 16px; font-weight:600; cursor:pointer; font-size:14px; transition:0.2s; display:inline-flex; align-items:center; gap:6px; }
     .btn-primary { background:var(--primary); color:white; }
     .btn-outline { background:white; border:1px solid var(--border); color:var(--text); }
     .btn-danger { background:#fee2e2; color:var(--danger); }
     .btn:active { transform:scale(0.98); }
     
-    .grid { display:grid; gap:16px; }
-    .stats-grid { grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); }
+    .grid { display:grid; gap:12px; }
+    .stats-grid { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
     
+    /* Compact Stats */
     .stat { border:1px solid var(--border); border-radius:12px; padding:10px; background:white; }
-    .stat .val { font-size:20px; font-weight:800; margin-top:4px; }
-    .stat .lbl { font-size:12px; font-weight:700; color:var(--muted); text-transform:uppercase; }
+    .stat .val { font-size:20px; font-weight:800; margin-top:2px; }
+    .stat .lbl { font-size:11px; font-weight:700; color:var(--muted); text-transform:uppercase; }
+    .stat .sub { font-size:11px; color:var(--muted); margin-top:2px; }
     
     input, select { width:100%; padding:12px; border:1px solid var(--border); border-radius:10px; background:#fff; font-size:15px; outline:none; }
     input:focus { border-color:var(--primary); box-shadow:0 0 0 3px rgba(16,185,129,0.1); }
     
+    /* Collapsible Details */
+    details > summary { list-style: none; cursor: pointer; font-weight: 700; font-size: 16px; display: flex; justify-content: space-between; align-items: center; }
+    details > summary::-webkit-details-marker { display: none; }
+    details > summary::after { content: '▼'; font-size: 12px; color: var(--muted); transition: transform 0.2s; }
+    details[open] > summary::after { transform: rotate(180deg); }
+    details[open] .content { animation: fadeIn 0.3s ease-in-out; margin-top: 12px; }
+
+    /* Health Timeline */
+    .health-item { display: flex; gap: 10px; align-items: flex-start; padding: 8px 0; border-bottom: 1px dashed var(--border); font-size: 13px; }
+    .health-item:last-child { border-bottom: none; }
+    .health-icon { font-size: 16px; min-width: 20px; }
+    .health-locked { color: var(--muted); filter: grayscale(1); opacity: 0.7; }
+    .health-done { color: var(--text); }
+    .health-done .health-icon { color: var(--primary); }
+
     /* Gamification Grid */
     .achievements { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
     .achievement { 
@@ -123,15 +140,6 @@
     #toast { position:fixed; bottom:20px; right:20px; z-index:100; }
     .toast-msg { background:#1e293b; color:white; padding:12px 20px; border-radius:10px; margin-top:10px; animation:slideUp 0.3s; }
     @keyframes slideUp { from{transform:translateY(20px);opacity:0} to{transform:translateY(0);opacity:1} }
-
-    /* Collapsible cards */
-    details { border-radius:16px; background:var(--card); border:1px solid var(--border); margin-bottom:16px; box-shadow:0 4px 6px -1px rgba(0,0,0,0.05); overflow:hidden; }
-    details > summary { list-style: none; cursor: pointer; padding:14px 16px; display:flex; align-items:center; justify-content:space-between; gap:12px; font-weight:700; }
-    details > summary::-webkit-details-marker { display:none; }
-    details > summary::after { content:'▶'; color:var(--muted); transition: transform 0.2s ease; }
-    details[open] > summary::after { transform: rotate(90deg); }
-    .collapsible-content { padding: 0 16px 16px; animation: accordion 0.22s ease; }
-    @keyframes accordion { from { opacity:0; transform: translateY(-4px); } to { opacity:1; transform: translateY(0); } }
   </style>
 </head>
 <body>
@@ -148,7 +156,7 @@
 
   <main class="shell">
     
-    <!-- Quit Program Banner (Visible if active) -->
+    <!-- Quit Program Banner -->
     <div id="quitBanner" class="card quit-active hidden">
       <div style="display:flex; justify-content:space-between; align-items:center;">
         <div>
@@ -163,32 +171,38 @@
       <div class="progress-bar"><div id="quitProgress" class="progress-fill"></div></div>
     </div>
 
-    <!-- Dashboard -->
+    <!-- Dashboard Stats -->
     <div class="grid stats-grid">
       <div class="stat">
         <div class="lbl" data-i18n="today_usage">Today</div>
         <div class="val" id="valToday">0</div>
-        <div class="sub" style="font-size:12px; color:var(--muted);" id="valLimit">Limit: 10</div>
+        <div class="sub" id="valLimit">Limit: 10</div>
       </div>
       <div class="stat">
         <div class="lbl" data-i18n="streak">Streak</div>
-        <div class="val" id="valStreak">0 <span style="font-size:16px" data-i18n="days_label">days</span></div>
-        <div class="sub" style="font-size:12px; color:var(--muted);" data-i18n="streak_hint">🔥 Keep it up</div>
+        <div class="val" id="valStreak">0 <span style="font-size:14px" data-i18n="days_label">days</span></div>
+        <div class="sub" data-i18n="streak_hint">🔥 Keep it up</div>
       </div>
       <div class="stat">
         <div class="lbl" data-i18n="money_saved">Saved</div>
         <div class="val" id="valSaved" style="color:var(--primary);">0</div>
-        <div class="sub" style="font-size:12px; color:var(--muted);" id="valCost">Cost: 0</div>
+        <div class="sub" id="valCost">Cost: 0</div>
       </div>
       <div class="stat">
         <div class="lbl" data-i18n="nicotine">Nicotine</div>
         <div class="val" id="valMg">0 mg</div>
-        <div class="sub" style="font-size:12px; color:var(--muted);" data-i18n="total_today">Total today</div>
+        <div class="sub" data-i18n="total_today">Total today</div>
       </div>
     </div>
 
-    <!-- Add Action -->
-    <div class="card" style="margin-top:16px;">
+    <!-- Health Recovery (Collapsible, Quit Mode Only) -->
+    <details id="healthSection" class="card hidden">
+      <summary><span data-i18n="health_timeline">Health Recovery</span></summary>
+      <div class="content" id="healthList"></div>
+    </details>
+
+    <!-- Add Action with Smart Favorites -->
+    <div class="card" style="margin-top:4px;">
       <h3 style="margin:0 0 12px;" data-i18n="log_usage">Log Usage</h3>
       <div class="grid" style="grid-template-columns: 1fr auto;">
         <select id="pouchSelect"></select>
@@ -199,71 +213,42 @@
       </div>
     </div>
 
-    <!-- Gamification Badges -->
-    <details class="collapsible" id="achievementsSection">
-      <summary>
-        <span data-i18n="achievements">Achievements</span>
-      </summary>
-      <div class="collapsible-content">
-        <div id="badgeGrid" class="achievements"></div>
-      </div>
+    <!-- Achievements (Collapsible) -->
+    <details class="card">
+        <summary><span data-i18n="achievements">Achievements</span></summary>
+        <div class="content">
+            <div id="badgeGrid" class="achievements"></div>
+        </div>
     </details>
 
-    <!-- Health Recovery (Quit Mode) -->
-    <details class="collapsible" id="healthRecoverySection" open>
-      <summary>
+    <!-- Charts (Collapsible, Open by default) -->
+    <details class="card" open>
+      <summary><span data-i18n="charts_title">Analytics</span></summary>
+      <div class="content grid" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));">
         <div>
-          <div style="font-weight:700;">Health Recovery</div>
-          <div id="healthRecoverySummary" style="font-size:12px; color:var(--muted);"></div>
+           <h4 style="margin:0 0 10px; font-size:12px; color:var(--muted); text-transform:uppercase;" data-i18n="chart_trend">Trend (14 days)</h4>
+           <canvas id="trendChart" height="200"></canvas>
         </div>
-      </summary>
-      <div class="collapsible-content">
-        <ul id="healthRecoveryList" style="list-style:none; padding:0; margin:0; display:grid; gap:8px;"></ul>
-      </div>
-    </details>
-
-    <!-- Charts -->
-    <details class="collapsible" id="chartsSection" open>
-      <summary>
-        <span data-i18n="charts">Charts</span>
-      </summary>
-      <div class="collapsible-content">
-        <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));">
-          <div class="card" style="margin-bottom:0;">
-            <h4 style="margin:0 0 10px;" data-i18n="chart_trend">Usage Trend (14 days)</h4>
-            <canvas id="trendChart" height="200"></canvas>
-          </div>
-          <div class="card" style="margin-bottom:0;">
-            <h4 style="margin:0 0 10px;" data-i18n="hourly_heatmap">Hourly Heatmap</h4>
-            <canvas id="hourlyChart" height="200"></canvas>
-          </div>
+        <div>
+           <h4 style="margin:20px 0 10px; font-size:12px; color:var(--muted); text-transform:uppercase;" data-i18n="hourly_heatmap">Hourly Heatmap</h4>
+           <canvas id="hourlyChart" height="200"></canvas>
         </div>
       </div>
     </details>
 
-    <!-- History -->
+    <!-- History (Always visible but compact) -->
     <div class="card">
       <div style="display:flex; justify-content:space-between; align-items:center; gap:8px;">
         <h3 style="margin:0;" data-i18n="history">Recent History</h3>
-        <button id="viewAllHistoryBtn" class="btn btn-outline" style="padding:8px 12px; font-size:13px;" data-i18n="view_all">View All</button>
+        <button id="viewAllHistoryBtn" class="btn btn-outline" style="padding:6px 10px; font-size:12px;" data-i18n="view_all">View All</button>
       </div>
       <div id="historyList"></div>
     </div>
 
-    <!-- SEO & Content Section -->
+    <!-- SEO & Content -->
     <article class="seo-content">
       <h1 data-i18n="seo_h1">Nicotine Pouch Tracker & Quitting Tool</h1>
       <p data-i18n="seo_p1">NicoTracker is the ultimate free tool to track Velo, Zyn, Killa. Runs locally or in cloud.</p>
-      
-      <h2 data-i18n="seo_h2_cost">How much does it cost?</h2>
-      <p data-i18n="seo_p2">Track your expenses and see how much you save. The average user spends over $1,800 annually.</p>
-
-      <h2 data-i18n="seo_h2_quit">How to quit?</h2>
-      <p data-i18n="seo_p3">Use our Tapering Mode to quit gradually by reducing your daily limit automatically.</p>
-      
-      <div style="font-size:12px; color:#94a3b8; margin-top:20px;">
-        Keywords: Velo Tracker, Zyn Counter, Quit Snus App, Nicotine Tapering, Financial Calculator.
-      </div>
     </article>
 
   </main>
@@ -274,24 +259,15 @@
 
   <!-- Full History Modal -->
   <dialog id="historyModal">
-    <div class="modal-head" data-i18n="history_modal_title">Full History</div>
+    <div class="modal-head"><span data-i18n="history_modal_title">Full History</span></div>
     <div class="modal-body grid" style="gap:12px;">
-      <div>
-        <label style="font-size:12px; color:var(--muted);" data-i18n="pick_date">Pick Date & Time</label>
-        <input type="datetime-local" id="backdateInput">
-      </div>
-      <div>
-        <label style="font-size:12px; color:var(--muted);" data-i18n="select_brand">Select Brand</label>
-        <select id="historyPouchSelect"></select>
-      </div>
+      <div><label style="font-size:12px; color:var(--muted);" data-i18n="pick_date">Pick Date</label><input type="datetime-local" id="backdateInput"></div>
+      <div><label style="font-size:12px; color:var(--muted);" data-i18n="select_brand">Brand</label><select id="historyPouchSelect"></select></div>
       <button id="addPastEntryBtn" class="btn btn-primary" style="width:100%;" data-i18n="add_past_entry">Add Past Entry</button>
-
       <div style="border-top:1px solid var(--border); margin:8px 0;"></div>
       <div id="fullHistoryList" style="max-height:300px; overflow-y:auto;"></div>
     </div>
-    <div class="modal-foot">
-      <button class="btn btn-outline" onclick="document.getElementById('historyModal').close()" data-i18n="close">Close</button>
-    </div>
+    <div class="modal-foot"><button class="btn btn-outline" onclick="document.getElementById('historyModal').close()" data-i18n="close">Close</button></div>
   </dialog>
 
   <!-- Manage Brands Modal -->
@@ -299,105 +275,50 @@
     <div class="modal-head" data-i18n="manage_brands">Manage Brands</div>
     <div class="modal-body">
       <div class="grid" style="grid-template-columns: 2fr 1fr auto; margin-bottom:16px; align-items:end;">
-        <div>
-            <label style="font-size:11px; color:var(--muted);" data-i18n="brand_name_label">Brand Name</label>
-            <input type="text" id="newBrandName" placeholder="e.g. Kurwa Fatality" data-i18n-placeholder="brand_name_placeholder">
-        </div>
-        <div>
-            <label style="font-size:11px; color:var(--muted);" data-i18n="mg_label">Mg</label>
-            <input type="number" id="newBrandMg" placeholder="mg" step="0.1" data-i18n-placeholder="mg_placeholder">
-        </div>
+        <div><label style="font-size:11px;" data-i18n="brand_name_label">Name</label><input type="text" id="newBrandName" placeholder="e.g. Kurwa"></div>
+        <div><label style="font-size:11px;" data-i18n="mg_label">Mg</label><input type="number" id="newBrandMg" placeholder="mg" step="0.1"></div>
         <button id="addNewBrandBtn" class="btn btn-primary" style="height:44px;">➕</button>
       </div>
-      <div style="border-top:1px solid var(--border); margin-bottom:10px;"></div>
       <div id="customBrandsList" style="max-height: 250px; overflow-y: auto;"></div>
     </div>
-    <div class="modal-foot">
-      <button class="btn btn-outline" onclick="document.getElementById('brandsModal').close()" data-i18n="close">Close</button>
-    </div>
+    <div class="modal-foot"><button class="btn btn-outline" onclick="document.getElementById('brandsModal').close()" data-i18n="close">Close</button></div>
   </dialog>
 
-  <!-- NEW SETTINGS WIZARD MODAL -->
+  <!-- Settings Wizard Modal -->
   <dialog id="settingsModal">
-    <div class="modal-head">
-      <span data-i18n="settings">Settings</span>
-      <span style="font-size:12px; color:var(--muted);" id="wizardStepIndicator">Step 1/3</span>
-    </div>
+    <div class="modal-head"><span data-i18n="settings">Settings</span><span style="font-size:12px; color:var(--muted);" id="wizardStepIndicator">Step 1/3</span></div>
     <div class="modal-body">
-      
-      <!-- STEP 1: GOAL -->
+      <!-- STEP 1 -->
       <div id="step1" class="wizard-step">
         <h3 style="margin:0 0 16px; font-size:16px; text-align:center;" data-i18n="wiz_step1_title">What is your goal?</h3>
         <div class="grid" style="grid-template-columns: 1fr 1fr;">
-          <div class="selection-card" data-val="track" onclick="selectGoal('track')">
-            <div style="font-size:32px;">📊</div>
-            <h4 data-i18n="goal_track_title">Just Tracking</h4>
-            <p data-i18n="goal_track_desc">Monitor usage & cost without pressure.</p>
-          </div>
-          <div class="selection-card" data-val="quit" onclick="selectGoal('quit')">
-            <div style="font-size:32px;">💪</div>
-            <h4 data-i18n="goal_quit_title">I Want to Quit</h4>
-            <p data-i18n="goal_quit_desc">Reduce intake or stop completely.</p>
-          </div>
+          <div class="selection-card" data-val="track" onclick="selectGoal('track')"><div style="font-size:32px;">📊</div><h4 data-i18n="goal_track_title">Just Tracking</h4></div>
+          <div class="selection-card" data-val="quit" onclick="selectGoal('quit')"><div style="font-size:32px;">💪</div><h4 data-i18n="goal_quit_title">I Want to Quit</h4></div>
         </div>
       </div>
-
-      <!-- STEP 2: STRATEGY -->
+      <!-- STEP 2 -->
       <div id="step2" class="wizard-step hidden">
-        <h3 style="margin:0 0 16px; font-size:16px; text-align:center;" data-i18n="wiz_step2_title">Choose your Strategy</h3>
+        <h3 style="margin:0 0 16px; font-size:16px; text-align:center;" data-i18n="wiz_step2_title">Choose Strategy</h3>
         <div class="grid" style="gap:12px;">
-          <div class="selection-card" data-val="smooth" onclick="selectStrategy('smooth')" style="display:flex; align-items:center; gap:12px; text-align:left;">
-            <div style="font-size:24px;">📉</div>
-            <div>
-              <h4 style="margin:0" data-i18n="strat_smooth_title">Smooth Taper</h4>
-              <p data-i18n="strat_smooth_desc">Linear reduction to 0 by your target date.</p>
-            </div>
-          </div>
-          <div class="selection-card" data-val="weekly" onclick="selectStrategy('weekly')" style="display:flex; align-items:center; gap:12px; text-align:left;">
-            <div style="font-size:24px;">🪜</div>
-            <div>
-              <h4 style="margin:0" data-i18n="strat_weekly_title">Weekly Step-Down</h4>
-              <p data-i18n="strat_weekly_desc">Drop by fixed amount every week.</p>
-            </div>
-          </div>
-          <div class="selection-card" data-val="cutoff" onclick="selectStrategy('cutoff')" style="display:flex; align-items:center; gap:12px; text-align:left;">
-            <div style="font-size:24px;">🛑</div>
-            <div>
-              <h4 style="margin:0" data-i18n="strat_cutoff_title">Cold Turkey</h4>
-              <p data-i18n="strat_cutoff_desc">Maintain limit until Date D, then stop.</p>
-            </div>
-          </div>
+          <div class="selection-card" data-val="smooth" onclick="selectStrategy('smooth')"><h4 data-i18n="strat_smooth_title">Smooth Taper</h4><p data-i18n="strat_smooth_desc">Linear reduction</p></div>
+          <div class="selection-card" data-val="weekly" onclick="selectStrategy('weekly')"><h4 data-i18n="strat_weekly_title">Weekly Step-Down</h4><p data-i18n="strat_weekly_desc">Weekly drops</p></div>
+          <div class="selection-card" data-val="cutoff" onclick="selectStrategy('cutoff')"><h4 data-i18n="strat_cutoff_title">Cold Turkey</h4><p data-i18n="strat_cutoff_desc">Fixed limit then stop</p></div>
         </div>
       </div>
-
-      <!-- STEP 3: CONFIG -->
+      <!-- STEP 3 -->
       <div id="step3" class="wizard-step hidden">
         <h3 style="margin:0 0 16px; font-size:16px; text-align:center;" data-i18n="wiz_step3_title">Final Setup</h3>
-        
         <div class="grid" style="grid-template-columns: 1fr 1fr;">
-          <div><label data-i18n="currency">Currency</label><input id="currencyInput" value="USD"></div>
-          <div><label data-i18n="pack_price">Price / Can</label><input type="number" id="priceInput"></div>
+          <div><label data-i18n="currency">Currency</label><input id="currencyInput"></div>
+          <div><label data-i18n="pack_price">Price/Can</label><input type="number" id="priceInput"></div>
         </div>
         <div class="grid" style="grid-template-columns: 1fr 1fr;">
-          <div><label data-i18n="pouches_pack">Pouches / Can</label><input type="number" id="piecesInput" value="20"></div>
-          <div><label data-i18n="start_limit" id="limitLabel">Daily Limit</label><input type="number" id="limitInput" value="15"></div>
+          <div><label data-i18n="pouches_pack">Pouches/Can</label><input type="number" id="piecesInput"></div>
+          <div><label data-i18n="start_limit">Daily Limit</label><input type="number" id="limitInput"></div>
         </div>
-
-        <!-- Strategy Specific Inputs -->
-        <div id="dateInputContainer" class="hidden">
-           <label data-i18n="target_date" id="dateLabel">Target Date</label>
-           <input type="date" id="wizardDateInput">
-        </div>
-        <div id="reductionInputContainer" class="hidden">
-           <label data-i18n="reduction_rate">Reduction per Week (pouches)</label>
-           <input type="number" id="reductionInput" value="1">
-        </div>
-
-        <div style="border-top:1px solid var(--border); padding-top:10px; margin-top:10px;">
-          <button id="exportCsvBtn" class="btn btn-outline" style="width:100%; font-size:12px;" data-i18n="export_csv">📥 Export CSV</button>
-        </div>
+        <div id="dateInputContainer" class="hidden"><label data-i18n="target_date">Target Date</label><input type="date" id="wizardDateInput"></div>
+        <div id="reductionInputContainer" class="hidden"><label data-i18n="reduction_rate">Reduction/Week</label><input type="number" id="reductionInput"></div>
       </div>
-
     </div>
     <div class="modal-foot">
       <button id="wizBackBtn" class="btn btn-outline hidden" onclick="prevStep()" data-i18n="back">Back</button>
@@ -409,18 +330,10 @@
   <dialog id="authModal">
     <div class="modal-head" data-i18n="auth_title">Sync & Backup</div>
     <div class="modal-body">
-      <p style="font-size:13px; color:var(--muted); margin-bottom:16px;" data-i18n="auth_desc">Sign in to sync your local data to the cloud.</p>
-      <div class="grid">
-        <input type="email" id="emailInput" placeholder="Email" data-i18n-placeholder="email_placeholder">
-        <input type="password" id="passInput" placeholder="Password" data-i18n-placeholder="password_placeholder">
-        <button id="loginBtn" class="btn btn-primary" data-i18n="login">Log In</button>
-        <button id="googleAuthBtn" class="btn btn-outline" data-i18n="google_login">Google Login</button>
-      </div>
+      <div class="grid"><input type="email" id="emailInput" placeholder="Email"><input type="password" id="passInput" placeholder="Password"><button id="loginBtn" class="btn btn-primary" data-i18n="login">Log In</button><button id="googleAuthBtn" class="btn btn-outline" data-i18n="google_login">Google Login</button></div>
       <div style="text-align:center; margin-top:10px; font-size:13px; color:var(--primary); cursor:pointer;" id="toggleReg" data-i18n="toggle_reg">New? Create Account</div>
     </div>
-    <div class="modal-foot">
-      <button class="btn btn-outline" onclick="document.getElementById('authModal').close()" data-i18n="close">Close</button>
-    </div>
+    <div class="modal-foot"><button class="btn btn-outline" onclick="document.getElementById('authModal').close()" data-i18n="close">Close</button></div>
   </dialog>
 
   <!-- JAVASCRIPT LOGIC -->
@@ -450,98 +363,75 @@
     const translations = {
       en: {
         auth_btn: "Login / Sync", today_usage: "TODAY", streak: "STREAK", money_saved: "SAVED",
-        log_usage: "Log Usage", manage_custom_brands: "Manage Custom Brands", chart_trend: "Usage Trend (14 days)",
+        log_usage: "Log Usage", manage_custom_brands: "Manage Custom Brands", chart_trend: "Usage Trend",
         history: "History", view_all: "View All", settings: "Settings", quit_mode_label: "Enable Quitting Program",
         quit_date: "Quit Date", currency: "Currency", pack_price: "Price / Can", pouches_pack: "Pouches / Can",
         daily_limit: "Standard Limit", close: "Close", save: "Save", auth_title: "Sync & Backup",
         auth_desc: "Sign in to backup data.", login: "Log In", toggle_reg: "Need account? Register", daily_max: "DAILY MAX",
-        quit_title: "Freedom Journey", seo_h1: "Nicotine Pouch Tracker & Quitting Tool", achievements: "Achievements",
-        seo_p1: "NicoTracker is the ultimate free tool to track Velo, Zyn, Killa. Runs locally or in cloud.",
-        seo_h2_cost: "How much does it cost?", seo_h2_quit: "How to quit?",
-        seo_p2: "Track your expenses and see how much you save.", seo_p3: "Use our Tapering Mode to quit gradually.",
-        manage_brands: "Manage Custom Brands", brand_name_label: "Brand Name", brand_name_placeholder: "e.g. Kurwa Fatality",
-        mg_label: "Mg", mg_placeholder: "mg", export_csv: "📥 Export CSV", google_login: "Google Login",
-        streak_hint: "🔥 Keep it up", nicotine: "Nicotine", total_today: "Total today", cost_label: "Cost", limit_label: "Limit",
-        days_label: "days", email_placeholder: "Email", password_placeholder: "Password",
+        quit_title: "Freedom Journey", seo_h1: "Nicotine Pouch Tracker", achievements: "Achievements",
+        manage_brands: "Manage Custom Brands", brand_name_label: "Brand Name", mg_label: "Mg",
+        export_csv: "📥 Export CSV", google_login: "Google Login", streak_hint: "🔥 Keep it up", nicotine: "Nicotine", 
+        total_today: "Total today", cost_label: "Cost", limit_label: "Limit", days_label: "days",
         custom_group: "Custom", no_custom_brands: "No custom brands.", delete_brand_confirm: "Delete this brand?",
         days_left: "{days} days left", freedom: "Freedom!", hourly_heatmap: "Hourly Heatmap", history_modal_title: "Full History",
         pick_date: "Pick Date & Time", select_brand: "Select Brand", add_past_entry: "Add Past Entry", delete_entry: "Delete",
-        history_empty: "No history yet.",
-        // Wizard
+        history_empty: "No history yet.", charts_title: "Analytics", favorites: "⭐ Favorites",
+        health_timeline: "Health Recovery", health_20m: "20m: Pulse normal", health_2h: "2h: Craving peak", health_8h: "8h: Oxygen levels",
+        health_24h: "24h: Nicotine gone", health_48h: "48h: Taste improves", health_72h: "72h: Breathing easier", health_14d: "14d: Circulation",
         wiz_step1_title: "What is your goal?", wiz_step2_title: "Choose Strategy", wiz_step3_title: "Final Setup",
-        goal_track_title: "Just Tracking", goal_track_desc: "Monitor usage & cost without pressure.",
-        goal_quit_title: "I Want to Quit", goal_quit_desc: "Reduce intake or stop completely.",
-        strat_smooth_title: "Smooth Taper", strat_smooth_desc: "Linear reduction to 0 by date.",
-        strat_weekly_title: "Weekly Step-Down", strat_weekly_desc: "Drop by fixed amount every week.",
-        strat_cutoff_title: "Cold Turkey", strat_cutoff_desc: "Maintain limit until Date D, then stop.",
-        start_limit: "Start / Daily Limit", target_date: "Target Date", reduction_rate: "Reduction per Week",
+        goal_track_title: "Just Tracking", goal_quit_title: "I Want to Quit",
+        strat_smooth_title: "Smooth Taper", strat_smooth_desc: "Linear reduction",
+        strat_weekly_title: "Weekly Step-Down", strat_weekly_desc: "Weekly drops",
+        strat_cutoff_title: "Cold Turkey", strat_cutoff_desc: "Fixed then stop",
+        start_limit: "Daily Limit", target_date: "Target Date", reduction_rate: "Reduction per Week",
         back: "Back", next: "Next", finish: "Finish"
       },
       cs: {
         auth_btn: "Přihlásit / Sync", today_usage: "DNES", streak: "ŘADA DNÍ", money_saved: "UŠETŘENO",
-        log_usage: "Zapsat sáček", manage_custom_brands: "Spravovat vlastní značky", chart_trend: "Vývoj (14 dní)",
+        log_usage: "Zapsat sáček", manage_custom_brands: "Spravovat značky", chart_trend: "Vývoj",
         history: "Historie", view_all: "Zobrazit vše", settings: "Nastavení", quit_mode_label: "Zapnout odvykací program",
         quit_date: "Datum konce", currency: "Měna", pack_price: "Cena puku", pouches_pack: "Ks v puku",
         daily_limit: "Denní limit", close: "Zavřít", save: "Uložit", auth_title: "Záloha dat",
-        auth_desc: "Přihlas se pro synchronizaci mezi zařízeními.", login: "Přihlásit", toggle_reg: "Registrovat se", daily_max: "DENNÍ CÍL",
-        quit_title: "Cesta ke svobodě", seo_h1: "Aplikace na odvykání nikotinových sáčků", achievements: "Úspěchy",
-        seo_p1: "NicoTracker je nástroj zdarma pro sledování Velo, Killa a dalších. Funguje i bez internetu.",
-        seo_h2_cost: "Kolik stojí závislost?", seo_h2_quit: "Jak přestat?",
-        seo_p2: "Spočítej si, kolik utratíš ročně.", seo_p3: "Využij náš odvykací mód pro postupné snižování dávek.",
-        manage_brands: "Správa vlastních značek", brand_name_label: "Název značky", brand_name_placeholder: "např. Kurwa Fatality",
-        mg_label: "Mg", mg_placeholder: "mg", export_csv: "📥 Export CSV", google_login: "Přihlášení Google",
-        streak_hint: "🔥 Jen tak dál", nicotine: "Nikotin", total_today: "Celkem dnes", cost_label: "Cena", limit_label: "Limit",
-        days_label: "dní", email_placeholder: "E-mail", password_placeholder: "Heslo",
-        custom_group: "Vlastní", no_custom_brands: "Žádné vlastní značky.", delete_brand_confirm: "Smazat tuto značku?",
+        auth_desc: "Přihlas se pro synchronizaci.", login: "Přihlásit", toggle_reg: "Registrovat se", daily_max: "DENNÍ CÍL",
+        quit_title: "Cesta ke svobodě", seo_h1: "Aplikace na odvykání", achievements: "Úspěchy",
+        manage_brands: "Správa značek", brand_name_label: "Název", mg_label: "Mg",
+        export_csv: "📥 Export CSV", google_login: "Google", streak_hint: "🔥 Jen tak dál", nicotine: "Nikotin", 
+        total_today: "Celkem dnes", cost_label: "Cena", limit_label: "Limit", days_label: "dní",
+        custom_group: "Vlastní", no_custom_brands: "Žádné značky.", delete_brand_confirm: "Smazat?",
         days_left: "Zbývá {days} dní", freedom: "Svoboda!", hourly_heatmap: "Hodinová heatmapa", history_modal_title: "Kompletní historie",
-        pick_date: "Vyber datum a čas", select_brand: "Vyber značku", add_past_entry: "Přidat zpětně", delete_entry: "Smazat",
-        history_empty: "Zatím žádná historie.",
-        // Wizard
-        wiz_step1_title: "Jaký je tvůj cíl?", wiz_step2_title: "Vyber strategii", wiz_step3_title: "Nastavení",
-        goal_track_title: "Jen sledovat", goal_track_desc: "Sledovat útratu bez tlaku.",
-        goal_quit_title: "Chci přestat", goal_quit_desc: "Omezit nebo úplně skončit.",
-        strat_smooth_title: "Plynule (Smooth)", strat_smooth_desc: "Lineární snížení k nule.",
-        strat_weekly_title: "Týdenní schody", strat_weekly_desc: "Snížit o kus každý týden.",
-        strat_cutoff_title: "Rázný konec", strat_cutoff_desc: "Držet limit do data D, pak konec.",
-        start_limit: "Startovní / Denní Limit", target_date: "Cílové datum", reduction_rate: "Snížení za týden (ks)",
-        back: "Zpět", next: "Další", finish: "Dokončit"
+        pick_date: "Vyber datum a čas", select_brand: "Značka", add_past_entry: "Přidat zpětně", delete_entry: "Smazat",
+        history_empty: "Žádná historie.", charts_title: "Statistiky", favorites: "⭐ Oblíbené",
+        health_timeline: "Zdravotní regenerace", health_20m: "20m: Tep v normálu", health_2h: "2h: Vrchol chutí", health_8h: "8h: Kyslík v krvi",
+        health_24h: "24h: Nikotin pryč", health_48h: "48h: Lepší chuť", health_72h: "72h: Lepší dýchání", health_14d: "14d: Oběh krve",
+        wiz_step1_title: "Jaký je tvůj cíl?", wiz_step2_title: "Strategie", wiz_step3_title: "Nastavení",
+        goal_track_title: "Jen sledovat", goal_quit_title: "Chci přestat",
+        strat_smooth_title: "Plynule (Smooth)", strat_smooth_desc: "Lineární snížení",
+        strat_weekly_title: "Týdenní schody", strat_weekly_desc: "Snížení týdně",
+        strat_cutoff_title: "Rázný konec", strat_cutoff_desc: "Stop k datu",
+        start_limit: "Denní Limit", target_date: "Datum konce", reduction_rate: "Snížení/Týden",
+        back: "Zpět", next: "Další", finish: "Hotovo"
       }
     };
 
     const t = (key, replacements = {}, langOverride) => {
       const lang = langOverride || state?.lang || 'en';
       let str = translations[lang]?.[key] || translations.en[key] || key;
-      Object.entries(replacements).forEach(([k, v]) => {
-        str = str.replace(`{${k}}`, v);
-      });
+      Object.entries(replacements).forEach(([k, v]) => str = str.replace(`{${k}}`, v));
       return str;
     };
 
     const pouchesDB = [
-      {
-        brand: "77 Pouches", items: [{ name: "77 Black Currant Ice", mg: 10.4 }, { name: "77 Blueberry", mg: 10.4 }, { name: "77 Forest Fruit Light", mg: 5.2 }]
-      },
-      {
-        brand: "ACE", items: [{ name: "Ace Cool Mint", mg: 6.0 }, { name: "Ace Extreme Cool", mg: 11.2 }]
-      },
-      {
-        brand: "KILLA", items: [{ name: "Killa Cold Mint", mg: 12.8 }, { name: "Killa 13", mg: 12.8 }, { name: "Killa Blueberry", mg: 12.8 }]
-      },
-      {
-        brand: "PABLO", items: [{ name: "Pablo Ice Cold", mg: 12.0 }, { name: "Pablo X-Ice Cold", mg: 25.0 }]
-      },
-      {
-        brand: "VELO", items: [{ name: "Velo Freeze", mg: 10.9 }, { name: "Velo Ice Cool", mg: 8.0 }, { name: "Velo Berry Frost", mg: 8.0 }, { name: "Velo Royal Purple", mg: 8.0 }]
-      },
-      {
-        brand: "ZYN", items: [{ name: "ZYN Cool Mint", mg: 9.0 }, { name: "ZYN Citrus", mg: 6.0 }, { name: "ZYN Espressino", mg: 6.0 }]
-      }
+      { brand: "77 Pouches", items: [{ name: "77 Black Currant Ice", mg: 10.4 }, { name: "77 Blueberry", mg: 10.4 }, { name: "77 Forest Fruit Light", mg: 5.2 }] },
+      { brand: "ACE", items: [{ name: "Ace Cool Mint", mg: 6.0 }, { name: "Ace Extreme Cool", mg: 11.2 }] },
+      { brand: "KILLA", items: [{ name: "Killa Cold Mint", mg: 12.8 }, { name: "Killa 13", mg: 12.8 }, { name: "Killa Blueberry", mg: 12.8 }] },
+      { brand: "PABLO", items: [{ name: "Pablo Ice Cold", mg: 12.0 }, { name: "Pablo X-Ice Cold", mg: 25.0 }] },
+      { brand: "VELO", items: [{ name: "Velo Freeze", mg: 10.9 }, { name: "Velo Ice Cool", mg: 8.0 }, { name: "Velo Berry Frost", mg: 8.0 }, { name: "Velo Royal Purple", mg: 8.0 }] },
+      { brand: "ZYN", items: [{ name: "ZYN Cool Mint", mg: 9.0 }, { name: "ZYN Citrus", mg: 6.0 }, { name: "ZYN Espressino", mg: 6.0 }] }
     ];
 
-    // === 3. STATE (HYBRID) ===
+    // === 3. STATE ===
     let state = {
-      user: null,
-      lang: localStorage.getItem('nt_lang') || 'en',
+      user: null, lang: localStorage.getItem('nt_lang') || 'en',
       settings: JSON.parse(localStorage.getItem('nt_settings')) || { 
         currency: 'USD', packPrice: 5, pouchesPerPack: 20, dailyLimit: 10, 
         goal: 'track', strategy: null, strategyStartDate: null, quitDate: null, reductionRate: 1
@@ -549,13 +439,7 @@
       history: JSON.parse(localStorage.getItem('nt_history')) || [],
       customPouches: JSON.parse(localStorage.getItem('nt_custom_pouches')) || []
     };
-
-    // Wizard Temp State
-    let wizStep = 1;
-    let tempSettings = {};
-
-    // Chart Instances
-    let hourlyChartInstance = null;
+    let wizStep = 1; let tempSettings = {};
 
     function persistHistory() {
       state.history.sort((a, b) => new Date(b.date) - new Date(a.date));
@@ -564,83 +448,39 @@
 
     // === 4. LOGIC ===
     function init() {
-      applyLanguage(state.lang);
-      persistHistory();
-      renderUI();
-      setupListeners();
-      
-      // Auto-open wizard if no settings or missing goal
-      if (!localStorage.getItem('nt_settings') || !state.settings.goal) {
-        openWizard();
-      }
+      applyLanguage(state.lang); persistHistory(); renderUI(); setupListeners();
+      if (!localStorage.getItem('nt_settings') || !state.settings.goal) openWizard();
       if('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js');
       
-      // PWA Install Logic
-      let deferredPrompt;
-      const installBtn = document.getElementById('installBtn');
-      window.addEventListener('beforeinstallprompt', (e) => {
-        e.preventDefault();
-        deferredPrompt = e;
-        installBtn.classList.remove('hidden');
-      });
-      installBtn.addEventListener('click', async () => {
-        if (!deferredPrompt) return;
-        deferredPrompt.prompt();
-        const { outcome } = await deferredPrompt.userChoice;
-        deferredPrompt = null;
-        installBtn.classList.add('hidden');
-      });
+      let deferredPrompt; const installBtn = document.getElementById('installBtn');
+      window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferredPrompt = e; installBtn.classList.remove('hidden'); });
+      installBtn.addEventListener('click', async () => { if (!deferredPrompt) return; deferredPrompt.prompt(); deferredPrompt = null; installBtn.classList.add('hidden'); });
     }
 
     function applyLanguage(lang) {
-      state.lang = lang;
-      localStorage.setItem('nt_lang', lang);
-      document.getElementById('langBtn').innerText = lang === 'en' ? '🇺🇸 EN' : '🇨🇿 CS';
-
-      document.querySelectorAll('[data-i18n]').forEach(el => {
-        const key = el.dataset.i18n;
-        const translated = t(key, {}, lang);
-        if(translated) el.innerText = translated;
-      });
-      document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
-        const key = el.dataset.i18nPlaceholder;
-        const translated = t(key, {}, lang);
-        if(translated) el.setAttribute('placeholder', translated);
-      });
+      state.lang = lang; localStorage.setItem('nt_lang', lang); document.getElementById('langBtn').innerText = lang === 'en' ? '🇺🇸 EN' : '🇨🇿 CS';
+      document.querySelectorAll('[data-i18n]').forEach(el => { const tr = t(el.dataset.i18n, {}, lang); if(tr) el.innerText = tr; });
       renderUI();
     }
 
     function calculateCurrentLimit() {
       const s = state.settings;
       if (s.goal === 'track' || !s.strategy || !s.strategyStartDate) return s.dailyLimit;
-
-      const now = new Date();
-      const startDate = new Date(s.strategyStartDate);
+      const now = new Date(); const startDate = new Date(s.strategyStartDate);
+      const daysPassed = Math.ceil(Math.abs(now - startDate) / (86400000));
       
-      // Calculate Days Passed
-      const diffTime = Math.abs(now - startDate);
-      const daysPassed = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
-
       if (s.strategy === 'smooth') {
         if(!s.quitDate) return s.dailyLimit;
-        const quitDate = new Date(s.quitDate);
-        const totalDays = Math.ceil((quitDate - startDate) / (1000 * 60 * 60 * 24));
+        const totalDays = Math.ceil((new Date(s.quitDate) - startDate) / 86400000);
         if (totalDays <= 0) return 0;
-        const daysLeft = Math.ceil((quitDate - now) / (1000 * 60 * 60 * 24));
-        if (daysLeft <= 0) return 0;
-        
-        const factor = Math.max(0, daysLeft / totalDays); 
-        return Math.ceil(s.dailyLimit * factor);
+        const daysLeft = Math.ceil((new Date(s.quitDate) - now) / 86400000);
+        return Math.max(0, Math.ceil(s.dailyLimit * (Math.max(0, daysLeft) / totalDays)));
       } 
       else if (s.strategy === 'weekly') {
-        const weeksPassed = Math.floor(daysPassed / 7);
-        const reduction = weeksPassed * (s.reductionRate || 1);
-        return Math.max(0, s.dailyLimit - reduction);
+        return Math.max(0, s.dailyLimit - (Math.floor(daysPassed / 7) * (s.reductionRate || 1)));
       }
       else if (s.strategy === 'cutoff') {
-        if(!s.quitDate) return s.dailyLimit;
-        const quitDate = new Date(s.quitDate);
-        return now >= quitDate ? 0 : s.dailyLimit;
+        return (s.quitDate && now >= new Date(s.quitDate)) ? 0 : s.dailyLimit;
       }
       return s.dailyLimit;
     }
@@ -649,504 +489,271 @@
       const today = new Date().toISOString().slice(0,10);
       const todayEntries = state.history.filter(h => h.date.startsWith(today));
       const todayCount = todayEntries.length;
-      const todayMg = todayEntries.reduce((s, i) => s + (i.mg || 0), 0);
       
-      // Update Select Dropdown
+      // -- SMART FAVORITES DROPDOWN --
       const sel = document.getElementById('pouchSelect');
       const historySel = document.getElementById('historyPouchSelect');
       const currentVal = sel.value;
       sel.innerHTML = '';
 
-      const groupedPouches = [...pouchesDB.map(g => ({ ...g, items: [...g.items] }))];
-      if (state.customPouches.length) {
-        groupedPouches.push({ brand: t('custom_group'), items: [...state.customPouches] });
+      // 1. All available items flat list for lookup
+      const allItems = [];
+      pouchesDB.forEach(g => allItems.push(...g.items));
+      state.customPouches.forEach(p => allItems.push(p));
+
+      // 2. Calculate Top 5
+      const counts = {};
+      state.history.forEach(h => counts[h.brand] = (counts[h.brand] || 0) + 1);
+      const topBrands = Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0,5).map(e=>e[0]);
+
+      // 3. Render Favorites
+      if(topBrands.length > 0) {
+        const favGroup = document.createElement('optgroup');
+        favGroup.label = t('favorites');
+        topBrands.forEach(name => {
+           const p = allItems.find(x => x.name === name);
+           if(p) {
+               const opt = document.createElement('option');
+               opt.value = p.name; opt.dataset.mg = p.mg; opt.textContent = `${p.name} (${p.mg}mg)`;
+               favGroup.appendChild(opt);
+           }
+        });
+        sel.appendChild(favGroup);
       }
 
+      // 4. Render Standard Groups
+      const groupedPouches = [...pouchesDB.map(g => ({ ...g, items: [...g.items] }))];
+      if (state.customPouches.length) groupedPouches.push({ brand: t('custom_group'), items: [...state.customPouches] });
       groupedPouches.sort((a, b) => a.brand.localeCompare(b.brand));
+      
       groupedPouches.forEach(group => {
-        const optgroup = document.createElement('optgroup');
-        optgroup.label = group.brand;
+        const optgroup = document.createElement('optgroup'); optgroup.label = group.brand;
         group.items.slice().sort((a, b) => a.name.localeCompare(b.name)).forEach(p => {
             const opt = document.createElement('option');
-            opt.value = p.name;
-            opt.dataset.mg = p.mg;
-            opt.textContent = `${p.name} (${p.mg}mg)`;
+            opt.value = p.name; opt.dataset.mg = p.mg; opt.textContent = `${p.name} (${p.mg}mg)`;
             optgroup.appendChild(opt);
-          });
+        });
         sel.appendChild(optgroup);
       });
       if(currentVal && Array.from(sel.options).some(o => o.value === currentVal)) sel.value = currentVal;
       if(historySel) historySel.innerHTML = sel.innerHTML;
 
-      // Limit Calculation
+      // -- STATS & BANNER --
       const limit = calculateCurrentLimit();
       const s = state.settings;
-      
-      // Banner Logic
       if (s.goal === 'quit' && s.strategy) {
         document.getElementById('quitBanner').classList.remove('hidden');
         document.getElementById('quitTarget').innerText = limit;
-        
-        let statusText = "";
-        if(s.strategy === 'smooth' || s.strategy === 'cutoff') {
-            const daysLeft = Math.ceil((new Date(s.quitDate) - new Date()) / (86400000));
-            statusText = daysLeft > 0 ? t('days_left', { days: daysLeft }) : t('freedom');
-        } else if (s.strategy === 'weekly') {
-            const daysInCycle = Math.ceil((Math.abs(new Date() - new Date(s.strategyStartDate)) / 86400000) % 7);
-            statusText = `${7 - daysInCycle} days to drop`;
-        }
-        document.getElementById('quitStatusText').innerText = statusText;
-        
         const percent = limit > 0 ? Math.min(100, (todayCount / limit) * 100) : 100;
         document.getElementById('quitProgress').style.width = percent + '%';
         document.getElementById('quitProgress').style.backgroundColor = percent > 100 ? 'var(--danger)' : 'var(--primary)';
+        
+        // Show Health Timeline
+        document.getElementById('healthSection').classList.remove('hidden');
+        renderHealthTimeline();
       } else {
         document.getElementById('quitBanner').classList.add('hidden');
+        document.getElementById('healthSection').classList.add('hidden');
       }
 
-      // Stats
       document.getElementById('valToday').innerText = todayCount;
       document.getElementById('valLimit').innerText = `${t('limit_label')}: ${limit}`;
-      document.getElementById('valMg').innerText = `${todayMg.toFixed(1)} mg`;
+      const saved = (limit - todayCount) * (s.packPrice / s.pouchesPerPack);
+      document.getElementById('valSaved').innerText = `${Math.max(0, saved).toFixed(0)} ${s.currency}`;
+      document.getElementById('valCost').innerText = `${t('cost_label')}: ${(todayCount * (s.packPrice/s.pouchesPerPack)).toFixed(0)}`;
+      document.getElementById('valMg').innerText = `${todayEntries.reduce((s,i)=>s+(i.mg||0),0).toFixed(1)} mg`;
+      document.getElementById('valStreak').innerHTML = `${calcStreak()} <span style="font-size:14px">${t('days_label')}</span>`;
+
+      renderBadges(calcStreak());
       
-      const costPerPouch = state.settings.packPrice / state.settings.pouchesPerPack;
-      const saved = (limit - todayCount) * costPerPouch;
-      document.getElementById('valSaved').innerText = `${Math.max(0, saved).toFixed(1)} ${state.settings.currency}`;
-      document.getElementById('valCost').innerText = `${t('cost_label')}: ${(todayCount * costPerPouch).toFixed(1)}`;
-
-        const streak = calcStreak();
-        document.getElementById('valStreak').innerHTML = `${streak} <span style="font-size:16px">${t('days_label')}</span>`;
-
-        renderBadges(streak);
-        renderHealthRecovery();
-
-        // Simple History List
-      const list = document.getElementById('historyList');
-      list.innerHTML = '';
+      const list = document.getElementById('historyList'); list.innerHTML = '';
       if(state.history.length === 0) list.innerHTML = `<p style="color:var(--muted); font-size:13px;">${t('history_empty')}</p>`;
       else state.history.slice(0, 5).forEach(h => {
-          const d = new Date(h.date);
-          list.innerHTML += `<div class="history-item"><div><strong>${h.brand}</strong> <span style="color:var(--muted)">${h.mg}mg</span></div><div>${d.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</div></div>`;
+          list.innerHTML += `<div class="history-item"><div><strong>${h.brand}</strong> <span style="color:var(--muted)">${h.mg}mg</span></div><div style="font-size:11px; color:var(--muted);">${new Date(h.date).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</div></div>`;
       });
 
-      renderChart();
-      renderHourlyChart();
-      renderFullHistoryList();
-    }
-    
-    // --- WIZARD LOGIC ---
-    window.selectGoal = (goal) => {
-        tempSettings.goal = goal;
-        document.querySelectorAll('#step1 .selection-card').forEach(c => c.classList.remove('active'));
-        document.querySelector(`#step1 .selection-card[data-val="${goal}"]`).classList.add('active');
-    };
-    
-    window.selectStrategy = (strat) => {
-        tempSettings.strategy = strat;
-        document.querySelectorAll('#step2 .selection-card').forEach(c => c.classList.remove('active'));
-        document.querySelector(`#step2 .selection-card[data-val="${strat}"]`).classList.add('active');
-    };
-
-    window.nextStep = () => {
-        if(wizStep === 1) {
-            if(!tempSettings.goal) return alert("Select a goal");
-            if(tempSettings.goal === 'track') { wizStep = 3; } // Skip strategy
-            else { wizStep = 2; }
-        } else if (wizStep === 2) {
-            if(!tempSettings.strategy) return alert("Select a strategy");
-            wizStep = 3;
-        } else if (wizStep === 3) {
-            // FINISH
-            saveWizardSettings();
-            return;
-        }
-        renderWizard();
-    };
-
-    window.prevStep = () => {
-        if(wizStep === 3) {
-             wizStep = (tempSettings.goal === 'track') ? 1 : 2;
-        } else if (wizStep === 2) {
-            wizStep = 1;
-        }
-        renderWizard();
-    };
-
-    function openWizard() {
-        wizStep = 1;
-        tempSettings = { ...state.settings };
-        renderWizard();
-        document.getElementById('settingsModal').showModal();
+      renderChart(); renderHourlyChart(); renderFullHistoryList();
     }
 
-    function renderWizard() {
-        // Hide all steps
-        document.querySelectorAll('.wizard-step').forEach(el => el.classList.add('hidden'));
-        document.getElementById(`step${wizStep}`).classList.remove('hidden');
+    function renderHealthTimeline() {
+        const container = document.getElementById('healthList');
+        container.innerHTML = '';
+        if(state.history.length === 0) return;
         
-        // Buttons
-        document.getElementById('wizBackBtn').classList.toggle('hidden', wizStep === 1);
-        document.getElementById('wizNextBtn').innerText = (wizStep === 3) ? t('finish') : t('next');
-        document.getElementById('wizardStepIndicator').innerText = `Step ${wizStep}/3`;
+        const last = new Date(state.history[0].date);
+        const diffMins = (new Date() - last) / 60000;
+        const diffHours = diffMins / 60;
+        const diffDays = diffHours / 24;
 
-        // Inputs visibility in Step 3
-        if(wizStep === 3) {
+        const milestones = [
+            { t: 20, unit: 'min', label: 'health_20m', done: diffMins >= 20 },
+            { t: 2, unit: 'h', label: 'health_2h', done: diffHours >= 2 },
+            { t: 8, unit: 'h', label: 'health_8h', done: diffHours >= 8 },
+            { t: 24, unit: 'h', label: 'health_24h', done: diffHours >= 24 },
+            { t: 48, unit: 'h', label: 'health_48h', done: diffHours >= 48 },
+            { t: 72, unit: 'h', label: 'health_72h', done: diffHours >= 72 },
+            { t: 14, unit: 'd', label: 'health_14d', done: diffDays >= 14 },
+        ];
+
+        milestones.forEach(m => {
+            const div = document.createElement('div');
+            div.className = `health-item ${m.done ? 'health-done' : 'health-locked'}`;
+            div.innerHTML = `<div class="health-icon">${m.done ? '✅' : '🔒'}</div><div>${t(m.label)}</div>`;
+            container.appendChild(div);
+        });
+    }
+
+    // --- GENERIC HELPERS ---
+    window.selectGoal = (g) => { tempSettings.goal = g; document.querySelectorAll('#step1 .selection-card').forEach(c=>c.classList.remove('active')); document.querySelector(`#step1 .selection-card[data-val="${g}"]`).classList.add('active'); };
+    window.selectStrategy = (s) => { tempSettings.strategy = s; document.querySelectorAll('#step2 .selection-card').forEach(c=>c.classList.remove('active')); document.querySelector(`#step2 .selection-card[data-val="${s}"]`).classList.add('active'); };
+    window.nextStep = () => {
+        if(wizStep===1) wizStep = (tempSettings.goal === 'track') ? 3 : 2;
+        else if(wizStep===2) wizStep = 3;
+        else { saveWizardSettings(); return; }
+        renderWizard();
+    };
+    window.prevStep = () => { wizStep = (wizStep===3 && tempSettings.goal==='track') ? 1 : wizStep-1; renderWizard(); };
+    function openWizard() { wizStep=1; tempSettings={...state.settings}; renderWizard(); document.getElementById('settingsModal').showModal(); }
+    function renderWizard() {
+        document.querySelectorAll('.wizard-step').forEach(e=>e.classList.add('hidden')); document.getElementById(`step${wizStep}`).classList.remove('hidden');
+        document.getElementById('wizBackBtn').classList.toggle('hidden', wizStep===1);
+        document.getElementById('wizNextBtn').innerText = (wizStep===3) ? t('finish') : t('next');
+        document.getElementById('wizardStepIndicator').innerText = `Step ${wizStep}/3`;
+        if(wizStep===3) {
             document.getElementById('currencyInput').value = tempSettings.currency;
             document.getElementById('priceInput').value = tempSettings.packPrice;
             document.getElementById('piecesInput').value = tempSettings.pouchesPerPack;
             document.getElementById('limitInput').value = tempSettings.dailyLimit;
-            
-            // Logic for Quit Inputs
             const isQuit = tempSettings.goal === 'quit';
-            const strat = tempSettings.strategy;
-            
-            document.getElementById('dateInputContainer').classList.toggle('hidden', !(isQuit && (strat === 'smooth' || strat === 'cutoff')));
-            document.getElementById('reductionInputContainer').classList.toggle('hidden', !(isQuit && strat === 'weekly'));
-            
+            document.getElementById('dateInputContainer').classList.toggle('hidden', !(isQuit && ['smooth','cutoff'].includes(tempSettings.strategy)));
+            document.getElementById('reductionInputContainer').classList.toggle('hidden', !(isQuit && tempSettings.strategy==='weekly'));
             if(tempSettings.quitDate) document.getElementById('wizardDateInput').value = tempSettings.quitDate;
         }
     }
-
     function saveWizardSettings() {
-        // Grab inputs
-        const newSettings = {
-            ...tempSettings,
+        const newSettings = { ...tempSettings, 
             currency: document.getElementById('currencyInput').value,
-            packPrice: parseFloat(document.getElementById('priceInput').value) || 0,
-            pouchesPerPack: parseFloat(document.getElementById('piecesInput').value) || 20,
-            dailyLimit: parseFloat(document.getElementById('limitInput').value) || 10,
-            quitDate: document.getElementById('wizardDateInput').value || null,
-            reductionRate: parseFloat(document.getElementById('reductionInput').value) || 1
+            packPrice: parseFloat(document.getElementById('priceInput').value)||0,
+            pouchesPerPack: parseFloat(document.getElementById('piecesInput').value)||20,
+            dailyLimit: parseFloat(document.getElementById('limitInput').value)||10,
+            quitDate: document.getElementById('wizardDateInput').value||null,
+            reductionRate: parseFloat(document.getElementById('reductionInput').value)||1
         };
-
-        // Set start date if strategy changed or new
-        if(newSettings.goal === 'quit' && newSettings.strategy !== state.settings.strategy) {
-            newSettings.strategyStartDate = new Date().toISOString();
-        }
-
-        state.settings = newSettings;
-        localStorage.setItem('nt_settings', JSON.stringify(state.settings));
+        if(newSettings.goal==='quit' && newSettings.strategy !== state.settings.strategy) newSettings.strategyStartDate = new Date().toISOString();
+        state.settings = newSettings; localStorage.setItem('nt_settings', JSON.stringify(state.settings));
         if(state.user) setDoc(doc(db, 'users', state.user.uid, 'settings', 'profile'), state.settings);
-        
-        document.getElementById('settingsModal').close();
-        renderUI();
-        showToast("Settings Saved");
+        document.getElementById('settingsModal').close(); renderUI();
     }
-
-    // --- GENERIC FUNCTIONS ---
-    function renderBrandsModal() {
-        const list = document.getElementById('customBrandsList');
-        list.innerHTML = '';
-        if(state.customPouches.length === 0) list.innerHTML = `<p style="color:var(--muted); font-size:13px; text-align:center;">${t('no_custom_brands')}</p>`;
-        else state.customPouches.forEach((p, index) => {
-            const div = document.createElement('div');
-            div.style.cssText = "display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid var(--border);";
-            div.innerHTML = `<span style="font-size:14px;"><b>${p.name}</b> <span style="color:var(--muted); margin-left:4px;">${p.mg}mg</span></span><button class="btn btn-danger" style="padding:6px 12px; font-size:14px;" data-idx="${index}">🗑️</button>`;
-            div.querySelector('button').onclick = async () => {
-                if(!confirm(t('delete_brand_confirm'))) return;
-                const toRemove = state.customPouches[index];
-                state.customPouches.splice(index, 1);
-                localStorage.setItem('nt_custom_pouches', JSON.stringify(state.customPouches));
-                if(state.user && toRemove.id) try { await deleteDoc(doc(db, 'users', state.user.uid, 'custom_pouches', toRemove.id)); } catch(e){}
-                renderBrandsModal(); renderUI();
-            };
-            list.appendChild(div);
-        });
-    }
-
-    function getDailyStats() {
-      const days = {};
-      state.history.forEach(h => {
-        const key = h.date.slice(0,10);
-        if(!days[key]) days[key] = { count: 0, mg: 0 };
-        days[key].count++;
-        days[key].mg += (h.mg || 0);
-      });
-      return days;
-    }
-
+    
+    // --- GAMIFICATION & CHARTS ---
+    function getDailyStats() { const d={}; state.history.forEach(h=>{const k=h.date.slice(0,10); if(!d[k])d[k]={count:0}; d[k].count++}); return d; }
     function calcStreak() {
-      const daily = getDailyStats();
-      const limit = calculateCurrentLimit(); // Use calculated limit
-      let streak = 0;
-      let d = new Date();
-
-      while (true) {
-        const key = d.toISOString().slice(0,10);
-        const stat = daily[key];
-
-        if (stat && stat.count <= limit) {
-          streak++;
-          d.setDate(d.getDate() - 1);
-        } else {
-          break;
-        }
-      }
-
-      return streak;
+      const daily=getDailyStats(); const limit=calculateCurrentLimit(); let s=0; let d=new Date();
+      for(let i=0;i<365;i++){ const k=d.toISOString().slice(0,10); const st=daily[k];
+      if(i===0 && (!st || st.count<=limit)){} else if(st && st.count<=limit)s++; else if(i>0 && !st)s++; else if(st && st.count>limit)break; d.setDate(d.getDate()-1);} return s;
     }
-
-    function checkWeekendSuccess() {
-      const daily = getDailyStats();
-      const limit = calculateCurrentLimit();
-      const days = Object.keys(daily).sort();
-      for(let i=0; i<days.length-1; i++) {
-         const d1 = new Date(days[i]);
-         const d2 = new Date(days[i+1]);
-         if(d1.getDay() === 6 && d2.getDay() === 0) { 
-             if(daily[days[i]].count <= limit && daily[days[i+1]].count <= limit) return true;
-         }
-      }
-      return false;
-    }
-
-    function renderBadges(streak) {
-        const total = state.history.length;
-        const totalSaved = parseFloat(document.getElementById('valSaved').innerText) || 0;
-        const hasZero = state.history.some(h => h.mg === 0);
-        const hasHigh = state.history.some(h => h.mg > 15);
-        const isWeekend = checkWeekendSuccess();
-        const labels = state.lang === 'en' ? 
-          ['Beginner', 'Pro', 'Streak 3', 'Streak 7', 'Iron Will', 'Weekend Warrior', 'Clean Lungs', 'Hardcore', 'Saver', 'Investor'] :
-          ['Začátečník', 'Profík', 'Řada 3', 'Řada 7', 'Iron Will', 'Víkendový Válečník', 'Čisté plíce', 'Hardcore', 'Šetřílek', 'Investor'];
-        const descs = state.lang === 'en' ?
-          ['10 entries', '100 entries', '3 days', '7 days', '30 days', 'Sat+Sun limit', '0mg pouch', '>15mg pouch', 'Saved 100', 'Saved 1000'] :
-          ['10 záznamů', '100 záznamů', '3 dny', '7 dní', '30 dní', 'So+Ne limit', '0mg sáček', '>15mg sáček', 'Ušetřeno 100', 'Ušetřeno 1000'];
-
-        const badges = [
-            { i:0, icon:'👶', u: total >= 10 },
-            { i:1, icon:'💯', u: total >= 100 },
-            { i:2, icon:'🔥', u: streak >= 3 },
-            { i:3, icon:'📆', u: streak >= 7 },
-            { i:4, icon:'🛡️', u: streak >= 30 },
-            { i:5, icon:'⚔️', u: isWeekend },
-            { i:6, icon:'🫁', u: hasZero },
-            { i:7, icon:'⚡', u: hasHigh },
-            { i:8, icon:'🐷', u: totalSaved >= 100 },
-            { i:9, icon:'💰', u: totalSaved >= 1000 },
-        ];
-        const grid = document.getElementById('badgeGrid');
-        grid.innerHTML = '';
-        badges.forEach(b => {
-            const el = document.createElement('div');
-            el.className = `achievement ${b.u ? 'unlocked' : 'locked'}`;
-            el.innerHTML = `<div class="icon">${b.icon}</div><div><h4>${labels[b.i]}</h4><p>${descs[b.i]}</p></div>`;
+    function renderBadges(streak){
+        const total=state.history.length; const saved=parseFloat(document.getElementById('valSaved').innerText)||0;
+        const badges=[{i:0,u:total>=10},{i:1,u:total>=100},{i:2,u:streak>=3},{i:3,u:streak>=7},{i:4,u:streak>=30},{i:8,u:saved>=100},{i:9,u:saved>=1000}];
+        const grid=document.getElementById('badgeGrid'); grid.innerHTML='';
+        const icons=['👶','💯','🔥','📆','🛡️','⚔️','🫁','⚡','🐷','💰'];
+        const labels=['Beginner','Pro','Streak 3','Streak 7','Iron Will','Weekend','Clean','Hardcore','Saver','Investor'];
+        badges.forEach(b=>{
+            const el=document.createElement('div'); el.className=`achievement ${b.u?'unlocked':'locked'}`;
+            el.innerHTML=`<div class="icon">${icons[b.i]}</div><div><h4>${labels[b.i]}</h4></div>`;
             grid.appendChild(el);
         });
     }
-
-    function renderHealthRecovery() {
-      const section = document.getElementById('healthRecoverySection');
-      if (!section) return;
-
-      if (state.settings.goal !== 'quit') {
-        section.classList.add('hidden');
-        return;
-      }
-
-      section.classList.remove('hidden');
-      const summaryText = document.getElementById('healthRecoverySummary');
-      const list = document.getElementById('healthRecoveryList');
-      list.innerHTML = '';
-
-      const lastEntry = state.history.length ? new Date(state.history[0].date) : null;
-      if (!lastEntry) {
-        summaryText.innerText = 'Log your first entry to start recovery timeline.';
-        list.innerHTML = '<li style="color:var(--muted); font-size:14px;">No history yet.</li>';
-        return;
-      }
-
-      const elapsed = Date.now() - lastEntry.getTime();
-      const timeAgo = new Intl.RelativeTimeFormat('en', { numeric: 'auto' });
-      const minutesAgo = Math.round(elapsed / 60000);
-      const displayAgo = minutesAgo < 60
-        ? timeAgo.format(-minutesAgo, 'minute')
-        : timeAgo.format(-Math.round(minutesAgo / 60), 'hour');
-      summaryText.innerText = `Last entry ${displayAgo}`;
-
-      const milestones = [
-        { label: '20 mins: Pulse returns to normal.', ms: 20 * 60 * 1000 },
-        { label: '8 hours: Oxygen levels recover.', ms: 8 * 60 * 60 * 1000 },
-        { label: '24 hours: Nicotine leaves blood.', ms: 24 * 60 * 60 * 1000 },
-        { label: '48 hours: Taste & smell improve.', ms: 48 * 60 * 60 * 1000 },
-        { label: '72 hours: Breathing becomes easier.', ms: 72 * 60 * 60 * 1000 },
-        { label: '2 weeks: Circulation improves.', ms: 14 * 24 * 60 * 60 * 1000 },
-      ];
-
-      milestones.forEach(m => {
-        const achieved = elapsed >= m.ms;
-        const item = document.createElement('li');
-        item.style.display = 'flex';
-        item.style.alignItems = 'center';
-        item.style.gap = '8px';
-        item.style.fontSize = '14px';
-        item.innerHTML = `<span>${achieved ? '✅' : '🔒'}</span><span>${m.label}</span>`;
-        list.appendChild(item);
-      });
+    function renderChart(){
+        const days={}; for(let i=13;i>=0;i--){const d=new Date();d.setDate(d.getDate()-i); days[d.toISOString().slice(0,10)]=0;}
+        state.history.forEach(h=>{const k=h.date.slice(0,10);if(days[k]!==undefined)days[k]++;});
+        const ctx=document.getElementById('trendChart'); if(window.myChart)window.myChart.destroy();
+        window.myChart=new Chart(ctx,{type:'line',data:{labels:Object.keys(days).map(d=>d.slice(5)),datasets:[{label:'Pouches',data:Object.values(days),borderColor:'#10b981',backgroundColor:'rgba(16,185,129,0.1)',fill:true,tension:0.4}]},options:{plugins:{legend:{display:false}},scales:{y:{beginAtZero:true}}}});
     }
-
-    function renderChart() {
-      const days = {};
-      for(let i=13; i>=0; i--) {
-        const d = new Date(); d.setDate(d.getDate() - i);
-        days[d.toISOString().slice(0,10)] = 0;
-      }
-      state.history.forEach(h => {
-        const key = h.date.slice(0,10);
-        if(days[key] !== undefined) days[key]++;
-      });
-      const ctx = document.getElementById('trendChart');
-      if(window.myChart) window.myChart.destroy();
-      window.myChart = new Chart(ctx, {
-        type: 'line',
-        data: {
-          labels: Object.keys(days).map(d => d.slice(5)),
-          datasets: [{ label: 'Pouches', data: Object.values(days), borderColor: '#10b981', backgroundColor: 'rgba(16,185,129,0.1)', fill: true, tension: 0.4 }]
-        },
-        options: { plugins:{legend:{display:false}}, scales:{y:{beginAtZero:true}} }
-      });
-    }
-
     function renderHourlyChart() {
-      const canvas = document.getElementById('hourlyChart');
-      if (!canvas) return;
-
-      const hours = Array.from({ length: 24 }, (_, i) => ({ label: String(i).padStart(2, '0') + ':00', count: 0 }));
-      state.history.forEach(h => {
-        const d = new Date(h.date);
-        hours[d.getHours()].count++;
-      });
-      const ctx = canvas.getContext('2d');
-      if(hourlyChartInstance) hourlyChartInstance.destroy();
-      hourlyChartInstance = new Chart(ctx, {
-        type: 'bar',
-        data: { labels: hours.map(h => h.label), datasets: [{ label: 'Pouches', data: hours.map(h => h.count), backgroundColor: '#10b981' }] },
-        options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
-      });
+      const hours=Array.from({length:24},(_,i)=>({l:String(i).padStart(2,'0')+':00',c:0}));
+      state.history.forEach(h=>hours[new Date(h.date).getHours()].c++);
+      const ctx=document.getElementById('hourlyChart'); if(window.hourlyChart)window.hourlyChart.destroy();
+      window.hourlyChart=new Chart(ctx,{type:'bar',data:{labels:hours.map(h=>h.l),datasets:[{data:hours.map(h=>h.c),backgroundColor:'#10b981'}]},options:{plugins:{legend:{display:false}},scales:{y:{beginAtZero:true}}}});
     }
 
-    async function addPastEntry() {
-      const dt = document.getElementById('backdateInput').value;
-      const brandSel = document.getElementById('historyPouchSelect');
-      if(!dt || !brandSel.value) { showToast('Set date and brand'); return; }
-      const chosenDate = new Date(dt);
-      if(chosenDate > new Date()) { showToast('Cannot log future time'); return; }
-      const mg = parseFloat(brandSel.options[brandSel.selectedIndex].dataset.mg) || 0;
-      const record = { id: Date.now().toString(), brand: brandSel.value, mg, date: chosenDate.toISOString() };
-      state.history.push(record);
-      persistHistory();
-      if(state.user) await setDoc(doc(db, 'users', state.user.uid, 'history', record.id), { brand: record.brand, mg: record.mg, timestamp: Timestamp.fromDate(chosenDate) });
-      renderUI();
-      renderFullHistoryList();
-      showToast('Added!');
+    // --- ACTIONS ---
+    function renderBrandsModal(){
+        const list=document.getElementById('customBrandsList'); list.innerHTML='';
+        if(state.customPouches.length===0) list.innerHTML=`<p style="color:var(--muted);text-align:center;">${t('no_custom_brands')}</p>`;
+        else state.customPouches.forEach((p,i)=>{
+            const d=document.createElement('div'); d.style.cssText="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #eee;";
+            d.innerHTML=`<span><b>${p.name}</b> ${p.mg}mg</span><button class="btn btn-danger" style="padding:4px 8px;" onclick="delBrand(${i})">🗑️</button>`;
+            list.appendChild(d);
+        });
     }
-
-    async function deleteHistory(id) {
-      const idx = state.history.findIndex(h => h.id === id);
-      if(idx === -1) return;
-      const removed = state.history.splice(idx, 1)[0];
-      persistHistory();
-      if(state.user && removed?.id) try { await deleteDoc(doc(db, 'users', state.user.uid, 'history', removed.id)); } catch(e){}
-      renderUI();
-      renderFullHistoryList();
-    }
+    window.delBrand = async (i) => { if(!confirm(t('delete_brand_confirm')))return; const r=state.customPouches[i]; state.customPouches.splice(i,1); localStorage.setItem('nt_custom_pouches',JSON.stringify(state.customPouches)); if(state.user&&r.id)await deleteDoc(doc(db,'users',state.user.uid,'custom_pouches',r.id)); renderBrandsModal(); renderUI(); };
 
     function renderFullHistoryList() {
-      const container = document.getElementById('fullHistoryList');
-      if(!container) return;
-      container.innerHTML = '';
-      if(state.history.length === 0) container.innerHTML = `<p style="color:var(--muted); font-size:13px;">${t('history_empty')}</p>`;
-      else state.history.forEach(h => {
-        const d = new Date(h.date);
-        const row = document.createElement('div'); row.className = 'history-item';
-        row.innerHTML = `<div><strong>${h.brand}</strong> <span style="color:var(--muted)">${h.mg}mg</span><div style="font-size:12px; color:var(--muted);">${d.toLocaleString()}</div></div>`;
-        const delBtn = document.createElement('button'); delBtn.className = 'btn btn-danger'; delBtn.style.padding = '6px 10px'; delBtn.innerText = t('delete_entry');
-        delBtn.onclick = () => deleteHistory(h.id);
-        row.appendChild(delBtn);
-        container.appendChild(row);
+      const c=document.getElementById('fullHistoryList'); c.innerHTML='';
+      if(state.history.length===0) c.innerHTML=`<p>${t('history_empty')}</p>`;
+      else state.history.forEach(h=>{
+         const d=document.createElement('div'); d.className='history-item';
+         d.innerHTML=`<div><strong>${h.brand}</strong> ${h.mg}mg<br><small style="color:var(--muted)">${new Date(h.date).toLocaleString()}</small></div><button class="btn btn-danger" onclick="delHist('${h.id}')">${t('delete_entry')}</button>`;
+         c.appendChild(d);
       });
     }
+    window.delHist = async (id) => { const i=state.history.findIndex(h=>h.id===id); if(i===-1)return; const r=state.history.splice(i,1)[0]; persistHistory(); if(state.user&&r.id)await deleteDoc(doc(db,'users',state.user.uid,'history',r.id)); renderUI(); renderFullHistoryList(); };
 
     async function addEntry() {
-      const sel = document.getElementById('pouchSelect');
-      const brand = sel.value;
-      const mg = parseFloat(sel.options[sel.selectedIndex].dataset.mg) || 0;
-      const record = { id: Date.now().toString(), brand: brand, mg: mg, date: new Date().toISOString() };
-      state.history.unshift(record);
-      persistHistory();
-      if (state.user) await setDoc(doc(db, 'users', state.user.uid, 'history', record.id), { brand, mg, timestamp: Timestamp.fromDate(new Date(record.date)) });
-      logEvent(analytics, 'add_pouch', { brand, mg });
-      renderUI();
-      showToast("Added!");
+      const sel=document.getElementById('pouchSelect'); const brand=sel.value; const mg=parseFloat(sel.options[sel.selectedIndex].dataset.mg)||0;
+      const rec={id:Date.now().toString(),brand,mg,date:new Date().toISOString()};
+      state.history.unshift(rec); persistHistory();
+      if(state.user) await setDoc(doc(db,'users',state.user.uid,'history',rec.id),{brand,mg,timestamp:Timestamp.now()});
+      logEvent(analytics,'add_pouch',{brand,mg}); renderUI(); showToast("Added!");
+    }
+    async function addPastEntry() {
+        const dt=document.getElementById('backdateInput').value; const sel=document.getElementById('historyPouchSelect');
+        if(!dt||!sel.value) return alert('Date & Brand required');
+        const rec={id:Date.now().toString(),brand:sel.value,mg:parseFloat(sel.options[sel.selectedIndex].dataset.mg)||0,date:new Date(dt).toISOString()};
+        state.history.push(rec); persistHistory();
+        if(state.user) await setDoc(doc(db,'users',state.user.uid,'history',rec.id),{brand:rec.brand,mg:rec.mg,timestamp:Timestamp.fromDate(new Date(dt))});
+        renderUI(); renderFullHistoryList(); showToast("Added!");
     }
 
     function setupListeners() {
-      document.getElementById('langBtn').onclick = () => applyLanguage(state.lang === 'en' ? 'cs' : 'en');
-      document.getElementById('menuBtn').onclick = () => openWizard(); // Re-open wizard on settings click
-      document.getElementById('syncBtn').onclick = () => { if(state.user) { if(confirm("Log out?")) signOut(auth); } else document.getElementById('authModal').showModal(); };
-      document.getElementById('addBtn').onclick = addEntry;
-      document.getElementById('viewAllHistoryBtn').onclick = () => { const now = new Date(); document.getElementById('backdateInput').value = new Date(now.getTime() - now.getTimezoneOffset()*60000).toISOString().slice(0,16); renderFullHistoryList(); document.getElementById('historyModal').showModal(); };
-      document.getElementById('addPastEntryBtn').onclick = addPastEntry;
-      document.getElementById('openBrandsBtn').onclick = () => { renderBrandsModal(); document.getElementById('brandsModal').showModal(); };
-      document.getElementById('addNewBrandBtn').onclick = async () => {
-          const name = document.getElementById('newBrandName').value.trim();
-          const mg = parseFloat(document.getElementById('newBrandMg').value);
-          if(!name || isNaN(mg)) { alert('Please fill name and mg.'); return; }
-          const newPouch = { name, mg, id: Date.now().toString() };
-          state.customPouches.push(newPouch);
-          localStorage.setItem('nt_custom_pouches', JSON.stringify(state.customPouches));
-          if(state.user) await setDoc(doc(db, 'users', state.user.uid, 'custom_pouches', newPouch.id), { name, mg, createdAt: Timestamp.now() });
-          logEvent(analytics, 'create_brand', { name });
-          document.getElementById('newBrandName').value = ''; document.getElementById('newBrandMg').value = '';
-          renderBrandsModal(); renderUI(); showToast("Brand Created!");
+      document.getElementById('langBtn').onclick=()=>applyLanguage(state.lang==='en'?'cs':'en');
+      document.getElementById('menuBtn').onclick=()=>openWizard();
+      document.getElementById('syncBtn').onclick=()=>{if(state.user){if(confirm("Logout?"))signOut(auth);}else document.getElementById('authModal').showModal();};
+      document.getElementById('addBtn').onclick=addEntry;
+      document.getElementById('openBrandsBtn').onclick=()=>{renderBrandsModal();document.getElementById('brandsModal').showModal();};
+      document.getElementById('addNewBrandBtn').onclick=async()=>{
+          const n=document.getElementById('newBrandName').value.trim(); const m=parseFloat(document.getElementById('newBrandMg').value);
+          if(!n||isNaN(m))return; const p={name:n,mg:m,id:Date.now().toString()};
+          state.customPouches.push(p); localStorage.setItem('nt_custom_pouches',JSON.stringify(state.customPouches));
+          if(state.user) await setDoc(doc(db,'users',state.user.uid,'custom_pouches',p.id),{name:n,mg:m,createdAt:Timestamp.now()});
+          renderBrandsModal(); renderUI(); document.getElementById('newBrandName').value='';
       };
-      document.getElementById('googleAuthBtn').onclick = () => signInWithPopup(auth, new GoogleAuthProvider()).then(() => document.getElementById('authModal').close());
-      let isReg = false;
-      document.getElementById('toggleReg').onclick = () => { isReg = !isReg; document.getElementById('loginBtn').innerText = isReg ? "Register" : "Log In"; };
-      document.getElementById('loginBtn').onclick = async () => {
-        const email = document.getElementById('emailInput').value;
-        const pass = document.getElementById('passInput').value;
-        try { if(isReg) await createUserWithEmailAndPassword(auth, email, pass); else await signInWithEmailAndPassword(auth, email, pass); document.getElementById('authModal').close(); } catch(e) { alert(e.message); }
+      document.getElementById('viewAllHistoryBtn').onclick=()=>{
+          const now=new Date(); document.getElementById('backdateInput').value=new Date(now.getTime()-now.getTimezoneOffset()*60000).toISOString().slice(0,16);
+          renderFullHistoryList(); document.getElementById('historyModal').showModal();
       };
-      document.getElementById('exportCsvBtn').onclick = () => { let csv = "Date,Brand,Mg\n" + state.history.map(h => `${h.date},${h.brand},${h.mg}`).join('\n'); const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([csv])); a.download = 'export.csv'; a.click(); };
+      document.getElementById('addPastEntryBtn').onclick=addPastEntry;
+      document.getElementById('googleAuthBtn').onclick=()=>signInWithPopup(auth,new GoogleAuthProvider()).then(()=>document.getElementById('authModal').close());
+      let isReg=false; document.getElementById('toggleReg').onclick=()=>{isReg=!isReg;document.getElementById('loginBtn').innerText=isReg?"Register":"Log In";};
+      document.getElementById('loginBtn').onclick=async()=>{const e=document.getElementById('emailInput').value,p=document.getElementById('passInput').value; try{if(isReg)await createUserWithEmailAndPassword(auth,e,p);else await signInWithEmailAndPassword(auth,e,p);document.getElementById('authModal').close();}catch(err){alert(err.message);}};
     }
+    function showToast(m) { const t=document.createElement('div');t.className='toast-msg';t.innerText=m;document.getElementById('toast').appendChild(t);setTimeout(()=>t.remove(),3000); }
 
-    function showToast(msg) {
-      const t = document.createElement('div'); t.className='toast-msg'; t.innerText = msg;
-      document.getElementById('toast').appendChild(t);
-      setTimeout(() => t.remove(), 3000);
-    }
-
-    // === 5. FIREBASE SYNC ===
-    onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        state.user = user;
-        document.getElementById('syncBtn').innerText = user.email;
-        document.getElementById('syncBtn').classList.replace('btn-primary', 'btn-outline');
-        const sSnap = await getDoc(doc(db, 'users', user.uid, 'settings', 'profile'));
-        if(sSnap.exists()) { state.settings = sSnap.data(); localStorage.setItem('nt_settings', JSON.stringify(state.settings)); }
-        else setDoc(doc(db, 'users', user.uid, 'settings', 'profile'), state.settings);
+    // === SYNC ===
+    onAuthStateChanged(auth, async (u) => {
+      if(u){ state.user=u; document.getElementById('syncBtn').innerText=u.email;
+        const sSnap=await getDoc(doc(db,'users',u.uid,'settings','profile'));
+        if(sSnap.exists()){state.settings=sSnap.data();localStorage.setItem('nt_settings',JSON.stringify(state.settings));}
         
-        onSnapshot(query(collection(db, 'users', user.uid, 'custom_pouches')), (snap) => {
-            const cloudPouches = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-            if(cloudPouches.length > 0) { state.customPouches = cloudPouches; localStorage.setItem('nt_custom_pouches', JSON.stringify(state.customPouches)); renderUI(); }
-            else if (state.customPouches.length > 0) { const batch = writeBatch(db); state.customPouches.forEach(p => { const pid = p.id || Date.now().toString(); const ref = doc(db, 'users', user.uid, 'custom_pouches', pid); batch.set(ref, { name: p.name, mg: p.mg, createdAt: Timestamp.now() }); }); batch.commit(); }
+        onSnapshot(query(collection(db,'users',u.uid,'custom_pouches')),(s)=>{
+            const cp=s.docs.map(d=>({id:d.id,...d.data()})); if(cp.length){state.customPouches=cp;localStorage.setItem('nt_custom_pouches',JSON.stringify(cp));renderUI();}
         });
-        const q = query(collection(db, 'users', user.uid, 'history'), orderBy('timestamp', 'desc'));
-        onSnapshot(q, (snap) => {
-           const cloudHistory = snap.docs.map(d => { const data = d.data(); return { id: d.id, brand: data.brand, mg: data.mg, date: data.timestamp.toDate().toISOString() }; });
-           if(cloudHistory.length > 0) { state.history = cloudHistory; persistHistory(); renderUI(); renderFullHistoryList(); }
-           else if (state.history.length > 0) { const batch = writeBatch(db); state.history.forEach(h => { const ref = doc(collection(db, 'users', user.uid, 'history')); batch.set(ref, { brand: h.brand, mg: h.mg, timestamp: Timestamp.fromDate(new Date(h.date)) }); }); batch.commit(); }
+        onSnapshot(query(collection(db,'users',u.uid,'history'),orderBy('timestamp','desc')),(s)=>{
+           const h=s.docs.map(d=>({id:d.id,brand:d.data().brand,mg:d.data().mg,date:d.data().timestamp.toDate().toISOString()}));
+           if(h.length){state.history=h;persistHistory();renderUI();}
         });
-      } else {
-        state.user = null;
-        document.getElementById('syncBtn').innerText = translations[state.lang].auth_btn;
-        document.getElementById('syncBtn').classList.replace('btn-outline', 'btn-primary');
-        state.history = JSON.parse(localStorage.getItem('nt_history')) || [];
-        state.customPouches = JSON.parse(localStorage.getItem('nt_custom_pouches')) || [];
-        persistHistory();
-        renderUI();
-      }
+      } else { state.user=null; renderUI(); }
     });
 
     init();
