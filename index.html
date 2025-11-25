@@ -326,12 +326,30 @@
     </div>
   </dialog>
 
-  <!-- Auth Modal -->
+  <!-- Auth / Data Modal -->
   <dialog id="authModal">
     <div class="modal-head" data-i18n="auth_title">Sync & Backup</div>
     <div class="modal-body">
-      <div class="grid"><input type="email" id="emailInput" placeholder="Email"><input type="password" id="passInput" placeholder="Password"><button id="loginBtn" class="btn btn-primary" data-i18n="login">Log In</button><button id="googleAuthBtn" class="btn btn-outline" data-i18n="google_login">Google Login</button></div>
-      <div style="text-align:center; margin-top:10px; font-size:13px; color:var(--primary); cursor:pointer;" id="toggleReg" data-i18n="toggle_reg">New? Create Account</div>
+      <!-- Login Section -->
+      <div id="authSection">
+          <div class="grid">
+              <input type="email" id="emailInput" placeholder="Email">
+              <input type="password" id="passInput" placeholder="Password">
+              <button id="loginBtn" class="btn btn-primary" data-i18n="login">Log In</button>
+              <button id="googleAuthBtn" class="btn btn-outline" data-i18n="google_login">Google Login</button>
+          </div>
+          <div style="text-align:center; margin-top:10px; font-size:13px; color:var(--primary); cursor:pointer;" id="toggleReg" data-i18n="toggle_reg">New? Create Account</div>
+      </div>
+
+      <!-- Data Export Section -->
+      <div style="border-top:1px solid var(--border); margin-top:20px; padding-top:20px;">
+           <h4 style="margin:0 0 12px; font-size:14px; color:var(--muted); text-transform:uppercase;" data-i18n="data_management">Data Management</h4>
+           <div class="grid" style="grid-template-columns: 1fr 1fr;">
+              <button id="btnExportCsv" class="btn btn-outline" style="justify-content:center;">📄 CSV Export</button>
+              <button id="btnExportJson" class="btn btn-outline" style="justify-content:center;">💾 Full Backup</button>
+           </div>
+           <p style="font-size:11px; color:var(--muted); margin:8px 0 0; text-align:center;">Download your data locally.</p>
+      </div>
     </div>
     <div class="modal-foot"><button class="btn btn-outline" onclick="document.getElementById('authModal').close()" data-i18n="close">Close</button></div>
   </dialog>
@@ -362,7 +380,7 @@
     // === 2. LOCALIZATION ===
     const translations = {
       en: {
-        auth_btn: "Login / Sync", today_usage: "TODAY", streak: "STREAK", money_saved: "SAVED",
+        auth_btn: "Sync / Data", today_usage: "TODAY", streak: "STREAK", money_saved: "SAVED",
         log_usage: "Log Usage", manage_custom_brands: "Manage Custom Brands", chart_trend: "Usage Trend",
         history: "History", view_all: "View All", settings: "Settings", quit_mode_label: "Enable Quitting Program",
         quit_date: "Quit Date", currency: "Currency", pack_price: "Price / Can", pouches_pack: "Pouches / Can",
@@ -384,10 +402,10 @@
         strat_weekly_title: "Weekly Step-Down", strat_weekly_desc: "Weekly drops",
         strat_cutoff_title: "Cold Turkey", strat_cutoff_desc: "Fixed then stop",
         start_limit: "Daily Limit", target_date: "Target Date", reduction_rate: "Reduction per Week",
-        back: "Back", next: "Next", finish: "Finish"
+        back: "Back", next: "Next", finish: "Finish", data_management: "Data Management"
       },
       cs: {
-        auth_btn: "Přihlásit / Sync", today_usage: "DNES", streak: "ŘADA DNÍ", money_saved: "UŠETŘENO",
+        auth_btn: "Sync / Data", today_usage: "DNES", streak: "ŘADA DNÍ", money_saved: "UŠETŘENO",
         log_usage: "Zapsat sáček", manage_custom_brands: "Spravovat značky", chart_trend: "Vývoj",
         history: "Historie", view_all: "Zobrazit vše", settings: "Nastavení", quit_mode_label: "Zapnout odvykací program",
         quit_date: "Datum konce", currency: "Měna", pack_price: "Cena puku", pouches_pack: "Ks v puku",
@@ -409,7 +427,7 @@
         strat_weekly_title: "Týdenní schody", strat_weekly_desc: "Snížení týdně",
         strat_cutoff_title: "Rázný konec", strat_cutoff_desc: "Stop k datu",
         start_limit: "Denní Limit", target_date: "Datum konce", reduction_rate: "Snížení/Týden",
-        back: "Zpět", next: "Další", finish: "Hotovo"
+        back: "Zpět", next: "Další", finish: "Hotovo", data_management: "Správa dat"
       }
     };
 
@@ -1100,6 +1118,38 @@
     }
     window.delHist = async (id) => { const i=state.history.findIndex(h=>h.id===id); if(i===-1)return; const r=state.history.splice(i,1)[0]; persistHistory(); if(state.user&&r.id)await deleteDoc(doc(db,'users',state.user.uid,'history',r.id)); renderUI(); renderFullHistoryList(); };
 
+    // --- DATA EXPORT ---
+    function downloadFile(content, fileName, mimeType) {
+        const blob = new Blob([content], { type: mimeType });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url; a.download = fileName;
+        document.body.appendChild(a); a.click(); document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }
+    
+    function exportCSV() {
+        if(state.history.length === 0) return alert("No data to export");
+        // BOM \uFEFF ensures Excel reads UTF-8 correctly
+        let csvContent = "\uFEFFDate,Time,Brand,Mg,Est.Cost\n";
+        const unitCost = (state.settings.packPrice / (state.settings.pouchesPerPack || 20)) || 0;
+        state.history.forEach(row => {
+            const d = new Date(row.date);
+            const dateStr = d.toLocaleDateString();
+            const timeStr = d.toLocaleTimeString();
+            csvContent += `${dateStr},${timeStr},"${row.brand.replace(/"/g, '""')}",${row.mg},${unitCost.toFixed(2)}\n`;
+        });
+        downloadFile(csvContent, 'nicotracker_history.csv', 'text/csv');
+    }
+
+    function exportJSON() {
+        const data = {
+            version: 1, exportedAt: new Date().toISOString(),
+            settings: state.settings, history: state.history, customPouches: state.customPouches
+        };
+        downloadFile(JSON.stringify(data, null, 2), 'nicotracker_backup.json', 'application/json');
+    }
+
     async function addEntry() {
       const sel = document.getElementById('pouchSelect');
       const brand = sel.value;
@@ -1135,7 +1185,20 @@
     function setupListeners() {
       document.getElementById('langBtn').onclick=()=>applyLanguage(state.lang==='en'?'cs':'en');
       document.getElementById('menuBtn').onclick=()=>openWizard();
-      document.getElementById('syncBtn').onclick=()=>{if(state.user){if(confirm("Logout?"))signOut(auth);}else document.getElementById('authModal').showModal();};
+      document.getElementById('syncBtn').onclick=()=>{
+          if(state.user){ 
+              // Logged in: Hide auth section, show logout logic if needed, but mainly show export
+              document.getElementById('authSection').classList.add('hidden');
+          } else {
+              document.getElementById('authSection').classList.remove('hidden');
+          }
+          document.getElementById('authModal').showModal();
+      };
+      
+      // Data Export Listeners
+      document.getElementById('btnExportCsv').onclick = exportCSV;
+      document.getElementById('btnExportJson').onclick = exportJSON;
+
       document.getElementById('addBtn').onclick=addEntry;
       document.getElementById('openBrandsBtn').onclick=()=>{renderBrandsModal();document.getElementById('brandsModal').showModal();};
       document.getElementById('addNewBrandBtn').onclick=async()=>{
@@ -1169,7 +1232,11 @@
            const h=s.docs.map(d=>({id:d.id,brand:d.data().brand,mg:d.data().mg,date:d.data().timestamp.toDate().toISOString()}));
            if(h.length){state.history=h;persistHistory();renderUI();}
         });
-      } else { state.user=null; renderUI(); }
+      } else { 
+          state.user=null; 
+          document.getElementById('syncBtn').innerText = t('auth_btn');
+          renderUI(); 
+      }
     });
 
     init();
