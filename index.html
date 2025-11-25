@@ -60,8 +60,8 @@
     .grid { display:grid; gap:16px; }
     .stats-grid { grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); }
     
-    .stat { border:1px solid var(--border); border-radius:12px; padding:14px; background:white; }
-    .stat .val { font-size:24px; font-weight:800; margin-top:4px; }
+    .stat { border:1px solid var(--border); border-radius:12px; padding:10px; background:white; }
+    .stat .val { font-size:20px; font-weight:800; margin-top:4px; }
     .stat .lbl { font-size:12px; font-weight:700; color:var(--muted); text-transform:uppercase; }
     
     input, select { width:100%; padding:12px; border:1px solid var(--border); border-radius:10px; background:#fff; font-size:15px; outline:none; }
@@ -123,6 +123,15 @@
     #toast { position:fixed; bottom:20px; right:20px; z-index:100; }
     .toast-msg { background:#1e293b; color:white; padding:12px 20px; border-radius:10px; margin-top:10px; animation:slideUp 0.3s; }
     @keyframes slideUp { from{transform:translateY(20px);opacity:0} to{transform:translateY(0);opacity:1} }
+
+    /* Collapsible cards */
+    details { border-radius:16px; background:var(--card); border:1px solid var(--border); margin-bottom:16px; box-shadow:0 4px 6px -1px rgba(0,0,0,0.05); overflow:hidden; }
+    details > summary { list-style: none; cursor: pointer; padding:14px 16px; display:flex; align-items:center; justify-content:space-between; gap:12px; font-weight:700; }
+    details > summary::-webkit-details-marker { display:none; }
+    details > summary::after { content:'▶'; color:var(--muted); transition: transform 0.2s ease; }
+    details[open] > summary::after { transform: rotate(90deg); }
+    .collapsible-content { padding: 0 16px 16px; animation: accordion 0.22s ease; }
+    @keyframes accordion { from { opacity:0; transform: translateY(-4px); } to { opacity:1; transform: translateY(0); } }
   </style>
 </head>
 <body>
@@ -191,22 +200,46 @@
     </div>
 
     <!-- Gamification Badges -->
-    <div class="card">
-        <h3 style="margin:0 0 12px;" data-i18n="achievements">Achievements</h3>
+    <details class="collapsible" id="achievementsSection">
+      <summary>
+        <span data-i18n="achievements">Achievements</span>
+      </summary>
+      <div class="collapsible-content">
         <div id="badgeGrid" class="achievements"></div>
-    </div>
+      </div>
+    </details>
+
+    <!-- Health Recovery (Quit Mode) -->
+    <details class="collapsible" id="healthRecoverySection" open>
+      <summary>
+        <div>
+          <div style="font-weight:700;">Health Recovery</div>
+          <div id="healthRecoverySummary" style="font-size:12px; color:var(--muted);"></div>
+        </div>
+      </summary>
+      <div class="collapsible-content">
+        <ul id="healthRecoveryList" style="list-style:none; padding:0; margin:0; display:grid; gap:8px;"></ul>
+      </div>
+    </details>
 
     <!-- Charts -->
-    <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); margin-top:16px;">
-      <div class="card">
-        <h4 style="margin:0 0 10px;" data-i18n="chart_trend">Usage Trend (14 days)</h4>
-        <canvas id="trendChart" height="200"></canvas>
+    <details class="collapsible" id="chartsSection" open>
+      <summary>
+        <span data-i18n="charts">Charts</span>
+      </summary>
+      <div class="collapsible-content">
+        <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));">
+          <div class="card" style="margin-bottom:0;">
+            <h4 style="margin:0 0 10px;" data-i18n="chart_trend">Usage Trend (14 days)</h4>
+            <canvas id="trendChart" height="200"></canvas>
+          </div>
+          <div class="card" style="margin-bottom:0;">
+            <h4 style="margin:0 0 10px;" data-i18n="hourly_heatmap">Hourly Heatmap</h4>
+            <canvas id="hourlyChart" height="200"></canvas>
+          </div>
+        </div>
       </div>
-      <div class="card">
-        <h4 style="margin:0 0 10px;" data-i18n="hourly_heatmap">Hourly Heatmap</h4>
-        <canvas id="hourlyChart" height="200"></canvas>
-      </div>
-    </div>
+    </details>
 
     <!-- History -->
     <div class="card">
@@ -681,12 +714,13 @@
       document.getElementById('valSaved').innerText = `${Math.max(0, saved).toFixed(1)} ${state.settings.currency}`;
       document.getElementById('valCost').innerText = `${t('cost_label')}: ${(todayCount * costPerPouch).toFixed(1)}`;
 
-      const streak = calcStreak();
-      document.getElementById('valStreak').innerHTML = `${streak} <span style="font-size:16px">${t('days_label')}</span>`;
+        const streak = calcStreak();
+        document.getElementById('valStreak').innerHTML = `${streak} <span style="font-size:16px">${t('days_label')}</span>`;
 
-      renderBadges(streak);
-      
-      // Simple History List
+        renderBadges(streak);
+        renderHealthRecovery();
+
+        // Simple History List
       const list = document.getElementById('historyList');
       list.innerHTML = '';
       if(state.history.length === 0) list.innerHTML = `<p style="color:var(--muted); font-size:13px;">${t('history_empty')}</p>`;
@@ -868,7 +902,7 @@
 
     function renderBadges(streak) {
         const total = state.history.length;
-        const totalSaved = parseFloat(document.getElementById('valSaved').innerText) || 0; 
+        const totalSaved = parseFloat(document.getElementById('valSaved').innerText) || 0;
         const hasZero = state.history.some(h => h.mg === 0);
         const hasHigh = state.history.some(h => h.mg > 15);
         const isWeekend = checkWeekendSuccess();
@@ -899,6 +933,56 @@
             el.innerHTML = `<div class="icon">${b.icon}</div><div><h4>${labels[b.i]}</h4><p>${descs[b.i]}</p></div>`;
             grid.appendChild(el);
         });
+    }
+
+    function renderHealthRecovery() {
+      const section = document.getElementById('healthRecoverySection');
+      if (!section) return;
+
+      if (state.settings.goal !== 'quit') {
+        section.classList.add('hidden');
+        return;
+      }
+
+      section.classList.remove('hidden');
+      const summaryText = document.getElementById('healthRecoverySummary');
+      const list = document.getElementById('healthRecoveryList');
+      list.innerHTML = '';
+
+      const lastEntry = state.history.length ? new Date(state.history[0].date) : null;
+      if (!lastEntry) {
+        summaryText.innerText = 'Log your first entry to start recovery timeline.';
+        list.innerHTML = '<li style="color:var(--muted); font-size:14px;">No history yet.</li>';
+        return;
+      }
+
+      const elapsed = Date.now() - lastEntry.getTime();
+      const timeAgo = new Intl.RelativeTimeFormat('en', { numeric: 'auto' });
+      const minutesAgo = Math.round(elapsed / 60000);
+      const displayAgo = minutesAgo < 60
+        ? timeAgo.format(-minutesAgo, 'minute')
+        : timeAgo.format(-Math.round(minutesAgo / 60), 'hour');
+      summaryText.innerText = `Last entry ${displayAgo}`;
+
+      const milestones = [
+        { label: '20 mins: Pulse returns to normal.', ms: 20 * 60 * 1000 },
+        { label: '8 hours: Oxygen levels recover.', ms: 8 * 60 * 60 * 1000 },
+        { label: '24 hours: Nicotine leaves blood.', ms: 24 * 60 * 60 * 1000 },
+        { label: '48 hours: Taste & smell improve.', ms: 48 * 60 * 60 * 1000 },
+        { label: '72 hours: Breathing becomes easier.', ms: 72 * 60 * 60 * 1000 },
+        { label: '2 weeks: Circulation improves.', ms: 14 * 24 * 60 * 60 * 1000 },
+      ];
+
+      milestones.forEach(m => {
+        const achieved = elapsed >= m.ms;
+        const item = document.createElement('li');
+        item.style.display = 'flex';
+        item.style.alignItems = 'center';
+        item.style.gap = '8px';
+        item.style.fontSize = '14px';
+        item.innerHTML = `<span>${achieved ? '✅' : '🔒'}</span><span>${m.label}</span>`;
+        list.appendChild(item);
+      });
     }
 
     function renderChart() {
