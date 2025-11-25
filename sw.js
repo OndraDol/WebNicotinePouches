@@ -1,4 +1,4 @@
-const CACHE_NAME = 'nicotracker-ultimate-v1';
+const CACHE_NAME = 'nicotracker-ultimate-v2';
 const APP_SHELL = ['./', './index.html', './manifest.json'];
 
 self.addEventListener('install', (event) => {
@@ -15,6 +15,8 @@ self.addEventListener('activate', (event) => {
 
 self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
+  const url = event.request.url;
+  if (!url.startsWith('http://') && !url.startsWith('https://')) return;
   event.respondWith(networkFirst(event.request));
 });
 
