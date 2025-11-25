@@ -39,6 +39,7 @@
       --primary: #10b981; --primary-dark: #059669; --danger: #ef4444; --border: #e2e8f0;
       --gold: #f59e0b;
     }
+
     * { box-sizing: border-box; }
     body { margin:0; font-family:'Inter',sans-serif; background:var(--bg); color:var(--text); padding-bottom:60px; -webkit-tap-highlight-color:transparent; }
     
@@ -179,11 +180,18 @@
         <h4 style="margin:0 0 10px;" data-i18n="chart_trend">Usage Trend (14 days)</h4>
         <canvas id="trendChart" height="200"></canvas>
       </div>
+      <div class="card">
+        <h4 style="margin:0 0 10px;" data-i18n="hourly_heatmap">Hourly Heatmap</h4>
+        <canvas id="hourlyChart" height="200"></canvas>
+      </div>
     </div>
 
     <!-- History -->
     <div class="card">
-      <h3 style="margin:0 0 10px;" data-i18n="history">Recent History</h3>
+      <div style="display:flex; justify-content:space-between; align-items:center; gap:8px;">
+        <h3 style="margin:0;" data-i18n="history">Recent History</h3>
+        <button id="viewAllHistoryBtn" class="btn btn-outline" style="padding:8px 12px; font-size:13px;" data-i18n="view_all">View All</button>
+      </div>
       <div id="historyList"></div>
     </div>
 
@@ -208,7 +216,29 @@
   <div id="toast"></div>
 
   <!-- DIALOGS -->
-  
+
+  <!-- Full History Modal -->
+  <dialog id="historyModal">
+    <div class="modal-head" data-i18n="history_modal_title">Full History</div>
+    <div class="modal-body grid" style="gap:12px;">
+      <div>
+        <label style="font-size:12px; color:var(--muted);" data-i18n="pick_date">Pick Date & Time</label>
+        <input type="datetime-local" id="backdateInput">
+      </div>
+      <div>
+        <label style="font-size:12px; color:var(--muted);" data-i18n="select_brand">Select Brand</label>
+        <select id="historyPouchSelect"></select>
+      </div>
+      <button id="addPastEntryBtn" class="btn btn-primary" style="width:100%;" data-i18n="add_past_entry">Add Past Entry</button>
+
+      <div style="border-top:1px solid var(--border); margin:8px 0;"></div>
+      <div id="fullHistoryList" style="max-height:300px; overflow-y:auto;"></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-outline" onclick="document.getElementById('historyModal').close()" data-i18n="close">Close</button>
+    </div>
+  </dialog>
+
   <!-- Manage Brands Modal (NEW) -->
   <dialog id="brandsModal">
     <div class="modal-head" data-i18n="manage_brands">Manage Brands</div>
@@ -308,7 +338,7 @@
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
     import { getAnalytics, logEvent } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-analytics.js";
     import { getAuth, signInWithPopup, GoogleAuthProvider, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
-    import { getFirestore, doc, setDoc, getDoc, collection, addDoc, onSnapshot, query, orderBy, Timestamp, writeBatch, deleteDoc } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+    import { getFirestore, doc, setDoc, getDoc, collection, onSnapshot, query, orderBy, Timestamp, writeBatch, deleteDoc } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
 
     // === 1. CONFIGURATION ===
     const firebaseConfig = {
@@ -344,7 +374,9 @@
         streak_hint: "🔥 Keep it up", nicotine: "Nicotine", total_today: "Total today", cost_label: "Cost", limit_label: "Limit",
         days_label: "days", email_placeholder: "Email", password_placeholder: "Password", quit_date_note: "We will calculate your daily max based on this date.",
         custom_group: "Custom", no_custom_brands: "No custom brands.", delete_brand_confirm: "Delete this brand?",
-        days_left: "{days} days left", freedom: "Freedom!"
+        days_left: "{days} days left", freedom: "Freedom!", hourly_heatmap: "Hourly Heatmap", history_modal_title: "Full History",
+        pick_date: "Pick Date & Time", select_brand: "Select Brand", add_past_entry: "Add Past Entry", delete_entry: "Delete",
+        history_empty: "No history yet."
       },
       cs: {
         auth_btn: "Přihlásit / Sync", today_usage: "DNES", streak: "ŘADA DNÍ", money_saved: "UŠETŘENO",
@@ -362,7 +394,9 @@
         streak_hint: "🔥 Jen tak dál", nicotine: "Nikotin", total_today: "Celkem dnes", cost_label: "Cena", limit_label: "Limit",
         days_label: "dní", email_placeholder: "E-mail", password_placeholder: "Heslo", quit_date_note: "Denní limit vypočítáme podle tohoto data.",
         custom_group: "Vlastní", no_custom_brands: "Žádné vlastní značky.", delete_brand_confirm: "Smazat tuto značku?",
-        days_left: "Zbývá {days} dní", freedom: "Svoboda!"
+        days_left: "Zbývá {days} dní", freedom: "Svoboda!", hourly_heatmap: "Hodinová heatmapa", history_modal_title: "Kompletní historie",
+        pick_date: "Vyber datum a čas", select_brand: "Vyber značku", add_past_entry: "Přidat zpětně", delete_entry: "Smazat",
+        history_empty: "Zatím žádná historie."
       }
     };
 
@@ -786,16 +820,22 @@
 
     // === 3. STATE (HYBRID) ===
     let state = {
-      user: null, 
+      user: null,
       lang: localStorage.getItem('nt_lang') || 'en',
       settings: JSON.parse(localStorage.getItem('nt_settings')) || { currency: 'USD', packPrice: 5, pouchesPerPack: 20, dailyLimit: 10, quitMode: false, quitDate: null },
       history: JSON.parse(localStorage.getItem('nt_history')) || [],
       customPouches: JSON.parse(localStorage.getItem('nt_custom_pouches')) || []
     };
 
+    function persistHistory() {
+      state.history.sort((a, b) => new Date(b.date) - new Date(a.date));
+      localStorage.setItem('nt_history', JSON.stringify(state.history));
+    }
+
     // === 4. LOGIC ===
     function init() {
       applyLanguage(state.lang);
+      persistHistory();
       renderUI();
       setupListeners();
       
@@ -831,6 +871,7 @@
       
       // Update Select Dropdown
       const sel = document.getElementById('pouchSelect');
+      const historySel = document.getElementById('historyPouchSelect');
       const currentVal = sel.value;
       sel.innerHTML = '';
 
@@ -859,6 +900,7 @@
       });
 
       if(currentVal && Array.from(sel.options).some(o => o.value === currentVal)) sel.value = currentVal;
+      if(historySel) historySel.innerHTML = sel.innerHTML;
 
       // Limit & Tapering
       let limit = state.settings.dailyLimit;
@@ -901,15 +943,21 @@
       // History
       const list = document.getElementById('historyList');
       list.innerHTML = '';
-      state.history.slice(0, 5).forEach(h => {
-        const d = new Date(h.date);
-        list.innerHTML += `<div class="history-item">
-          <div><strong>${h.brand}</strong> <span style="color:var(--muted)">${h.mg}mg</span></div>
-          <div>${d.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</div>
-        </div>`;
-      });
+      if(state.history.length === 0) {
+        list.innerHTML = `<p style="color:var(--muted); font-size:13px;">${t('history_empty')}</p>`;
+      } else {
+        state.history.slice(0, 5).forEach(h => {
+          const d = new Date(h.date);
+          list.innerHTML += `<div class="history-item">
+            <div><strong>${h.brand}</strong> <span style="color:var(--muted)">${h.mg}mg</span></div>
+            <div>${d.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</div>
+          </div>`;
+        });
+      }
 
       renderChart();
+      renderHourlyChart();
+      renderFullHistoryList();
     }
     
     // --- BRAND MGMT ---
@@ -1057,7 +1105,102 @@
       });
     }
 
-    function addEntry() {
+    function renderHourlyChart() {
+      const hours = Array.from({ length: 24 }, (_, i) => ({ label: String(i).padStart(2, '0') + ':00', count: 0 }));
+      state.history.forEach(h => {
+        const d = new Date(h.date);
+        const hr = d.getHours();
+        hours[hr].count++;
+      });
+
+      const ctx = document.getElementById('hourlyChart');
+      if(window.hourlyChart) window.hourlyChart.destroy();
+      window.hourlyChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: hours.map(h => h.label),
+          datasets: [{
+            label: 'Pouches',
+            data: hours.map(h => h.count),
+            backgroundColor: '#10b981'
+          }]
+        },
+        options: {
+          plugins: { legend: { display: false } },
+          scales: { y: { beginAtZero: true } }
+        }
+      });
+    }
+
+    async function addPastEntry() {
+      const dt = document.getElementById('backdateInput').value;
+      const brandSel = document.getElementById('historyPouchSelect');
+      if(!dt || !brandSel.value) { showToast('Set date and brand'); return; }
+
+      const chosenDate = new Date(dt);
+      if(chosenDate > new Date()) { showToast('Cannot log future time'); return; }
+
+      const mg = parseFloat(brandSel.options[brandSel.selectedIndex].dataset.mg) || 0;
+      const record = { id: Date.now().toString(), brand: brandSel.value, mg, date: chosenDate.toISOString() };
+
+      state.history.push(record);
+      persistHistory();
+
+      if(state.user) {
+        await setDoc(doc(db, 'users', state.user.uid, 'history', record.id), {
+          brand: record.brand,
+          mg: record.mg,
+          timestamp: Timestamp.fromDate(chosenDate)
+        });
+      }
+
+      renderUI();
+      renderFullHistoryList();
+      showToast('Added!');
+    }
+
+    async function deleteHistory(id) {
+      const idx = state.history.findIndex(h => h.id === id);
+      if(idx === -1) return;
+      const removed = state.history.splice(idx, 1)[0];
+      persistHistory();
+
+      if(state.user && removed?.id) {
+        try {
+          await deleteDoc(doc(db, 'users', state.user.uid, 'history', removed.id));
+        } catch(e) {}
+      }
+
+      renderUI();
+      renderFullHistoryList();
+    }
+
+    function renderFullHistoryList() {
+      const container = document.getElementById('fullHistoryList');
+      if(!container) return;
+      container.innerHTML = '';
+
+      if(state.history.length === 0) {
+        container.innerHTML = `<p style="color:var(--muted); font-size:13px;">${t('history_empty')}</p>`;
+        return;
+      }
+
+      state.history.forEach(h => {
+        const d = new Date(h.date);
+        const row = document.createElement('div');
+        row.className = 'history-item';
+        row.innerHTML = `<div><strong>${h.brand}</strong> <span style="color:var(--muted)">${h.mg}mg</span><div style="font-size:12px; color:var(--muted);">${d.toLocaleString()}</div></div>`;
+        const delBtn = document.createElement('button');
+        delBtn.className = 'btn btn-danger';
+        delBtn.style.padding = '6px 10px';
+        delBtn.innerText = t('delete_entry');
+        delBtn.onclick = () => deleteHistory(h.id);
+        row.appendChild(delBtn);
+        container.appendChild(row);
+      });
+    }
+
+    async function addEntry() {
       const sel = document.getElementById('pouchSelect');
       const brand = sel.value;
       const mg = parseFloat(sel.options[sel.selectedIndex].dataset.mg) || 0;
@@ -1070,12 +1213,13 @@
       };
 
       state.history.unshift(record);
-      localStorage.setItem('nt_history', JSON.stringify(state.history));
-      
+      persistHistory();
+
       if (state.user) {
-        addDoc(collection(db, 'users', state.user.uid, 'history'), {
-          ...record,
-          timestamp: Timestamp.now()
+        await setDoc(doc(db, 'users', state.user.uid, 'history', record.id), {
+          brand,
+          mg,
+          timestamp: Timestamp.fromDate(new Date(record.date))
         });
       }
 
@@ -1123,6 +1267,15 @@
       };
 
       document.getElementById('addBtn').onclick = addEntry;
+
+      document.getElementById('viewAllHistoryBtn').onclick = () => {
+        const now = new Date();
+        document.getElementById('backdateInput').value = new Date(now.getTime() - now.getTimezoneOffset()*60000).toISOString().slice(0,16);
+        renderFullHistoryList();
+        document.getElementById('historyModal').showModal();
+      };
+
+      document.getElementById('addPastEntryBtn').onclick = addPastEntry;
 
       document.getElementById('openBrandsBtn').onclick = () => {
           renderBrandsModal();
@@ -1224,11 +1377,12 @@
              const data = d.data();
              return { id: d.id, brand: data.brand, mg: data.mg, date: data.timestamp.toDate().toISOString() };
            });
-           
+
            if(cloudHistory.length > 0) {
              state.history = cloudHistory;
-             localStorage.setItem('nt_history', JSON.stringify(state.history));
+             persistHistory();
              renderUI();
+             renderFullHistoryList();
            } else if (state.history.length > 0) {
              const batch = writeBatch(db);
              state.history.forEach(h => {
@@ -1245,6 +1399,7 @@
         document.getElementById('syncBtn').classList.replace('btn-outline', 'btn-primary');
         state.history = JSON.parse(localStorage.getItem('nt_history')) || [];
         state.customPouches = JSON.parse(localStorage.getItem('nt_custom_pouches')) || [];
+        persistHistory();
         renderUI();
       }
     });
