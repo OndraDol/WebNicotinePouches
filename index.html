@@ -1105,7 +1105,9 @@
       const brand = sel.value;
       if(!brand) return showToast("Select a pouch");
 
-      const safeValue = (typeof CSS !== 'undefined' && CSS.escape) ? CSS.escape(brand) : brand.replace(/(["\])/g,'\$1');
+      // FIX: Robust escaping without crashing regex
+      const safeValue = (typeof CSS !== 'undefined' && CSS.escape) ? CSS.escape(brand) : brand.replace(/["\\]/g, '\\$&');
+      
       const opt = sel.querySelector(`option[value="${safeValue}"]`) || sel.querySelector('option:checked');
       const mg = opt ? (parseFloat(opt.dataset.mg)||0) : 0;
 
