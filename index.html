@@ -521,6 +521,9 @@
     let wizStep = 1;
     let tempSettings = {};
 
+    // Chart Instances
+    let hourlyChartInstance = null;
+
     function persistHistory() {
       state.history.sort((a, b) => new Date(b.date) - new Date(a.date));
       localStorage.setItem('nt_history', JSON.stringify(state.history));
@@ -833,15 +836,19 @@
       const limit = calculateCurrentLimit(); // Use calculated limit
       let streak = 0;
       let d = new Date();
-      for(let i=0; i<365; i++) {
-         const key = d.toISOString().slice(0,10);
-         const stat = daily[key];
-         if(i===0 && (!stat || stat.count <= limit)) { }
-         else if(stat && stat.count <= limit) streak++;
-         else if(i > 0 && !stat) streak++; 
-         else if(stat && stat.count > limit) break;
-         d.setDate(d.getDate()-1);
+
+      while (true) {
+        const key = d.toISOString().slice(0,10);
+        const stat = daily[key];
+
+        if (stat && stat.count <= limit) {
+          streak++;
+          d.setDate(d.getDate() - 1);
+        } else {
+          break;
+        }
       }
+
       return streak;
     }
 
@@ -917,14 +924,17 @@
     }
 
     function renderHourlyChart() {
+      const canvas = document.getElementById('hourlyChart');
+      if (!canvas) return;
+
       const hours = Array.from({ length: 24 }, (_, i) => ({ label: String(i).padStart(2, '0') + ':00', count: 0 }));
       state.history.forEach(h => {
         const d = new Date(h.date);
         hours[d.getHours()].count++;
       });
-      const ctx = document.getElementById('hourlyChart');
-      if(window.hourlyChart) window.hourlyChart.destroy();
-      window.hourlyChart = new Chart(ctx, {
+      const ctx = canvas.getContext('2d');
+      if(hourlyChartInstance) hourlyChartInstance.destroy();
+      hourlyChartInstance = new Chart(ctx, {
         type: 'bar',
         data: { labels: hours.map(h => h.label), datasets: [{ label: 'Pouches', data: hours.map(h => h.count), backgroundColor: '#10b981' }] },
         options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
