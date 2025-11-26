@@ -443,4 +443,53 @@
     };
 
     // --- HELPERS ---
-    function showToast(m) { const t=document.getElementById('toast');
+    function showToast(m) { const t=document.getElementById('toast');t.innerHTML=`<div class="toast-msg">${m}</div>`;setTimeout(()=>t.innerHTML='',2000); }
+    
+    function renderChart(){
+        const days={}; for(let i=13;i>=0;i--){const d=new Date();d.setDate(d.getDate()-i); days[d.toISOString().slice(0,10)]=0;}
+        state.history.forEach(h=>{const k=h.date.slice(0,10);if(days[k]!==undefined)days[k]++;});
+        const ctx=document.getElementById('trendChart'); if(window.trendChartInst)window.trendChartInst.destroy();
+        window.trendChartInst=new Chart(ctx,{type:'line',data:{labels:Object.keys(days).map(d=>d.slice(5)),datasets:[{label:'Pcs',data:Object.values(days),borderColor:'#10b981',backgroundColor:'rgba(16,185,129,0.1)',fill:true,tension:0.4}]},options:{plugins:{legend:{display:false}},scales:{y:{beginAtZero:true}}}});
+    }
+    function renderHourlyChart() {
+      const hours=Array.from({length:24},(_,i)=>({l:i,c:0}));
+      state.history.forEach(h=>hours[new Date(h.date).getHours()].c++);
+      const ctx=document.getElementById('hourlyChart'); if(window.hourlyChartInst)window.hourlyChartInst.destroy();
+      window.hourlyChartInst=new Chart(ctx,{type:'bar',data:{labels:hours.map(h=>h.l),datasets:[{data:hours.map(h=>h.c),backgroundColor:'#10b981'}]},options:{plugins:{legend:{display:false}},scales:{y:{display:false},x:{grid:{display:false}}}}});
+    }
+
+    // --- LISTENERS ---
+    function setupListeners() {
+      document.getElementById('langBtn').onclick=()=>applyLanguage(state.lang==='en'?'cs':'en');
+      document.getElementById('menuBtn').onclick=()=>{
+          document.getElementById('currencyInput').value = state.settings.currency;
+          document.getElementById('priceInput').value = state.settings.packPrice;
+          document.getElementById('piecesInput').value = state.settings.pouchesPerPack;
+          document.getElementById('limitInput').value = state.settings.dailyLimit;
+          window.selectGoal(state.settings.goal);
+          document.getElementById('settingsModal').showModal();
+      };
+      document.getElementById('syncBtn').onclick=()=>document.getElementById('authModal').showModal();
+      document.getElementById('addBtn').onclick=addEntry;
+      document.getElementById('viewAllHistoryBtn').onclick=()=>{
+          const c=document.getElementById('fullHistoryList'); c.innerHTML='';
+          state.history.forEach(h=>{
+             const realMg = getRealMg(h.brand, h.name, h.mg);
+             c.innerHTML+=`<div class="history-item"><div>${h.name} (${realMg}mg)<br><small>${new Date(h.date).toLocaleString()}</small></div><button class="btn btn-danger" onclick="window.delHist('${h.id}')">${t('delete_entry')}</button></div>`;
+          });
+          document.getElementById('historyModal').showModal();
+      };
+      window.delHist = (id) => { state.history=state.history.filter(h=>h.id!==id); persistHistory(); renderUI(); document.getElementById('historyModal').close(); };
+      
+      // Auth
+      document.getElementById('loginBtn').onclick=async()=>{const e=document.getElementById('emailInput').value,p=document.getElementById('passInput').value; try{await signInWithEmailAndPassword(auth,e,p);document.getElementById('authModal').close();}catch{try{await createUserWithEmailAndPassword(auth,e,p);document.getElementById('authModal').close();}catch(err){alert(err.message);}}};
+      document.getElementById('googleAuthBtn').onclick=()=>signInWithPopup(auth,new GoogleAuthProvider()).then(()=>document.getElementById('authModal').close());
+      onAuthStateChanged(auth, async (u) => { if(u){ state.user=u; document.getElementById('syncBtn').innerText="✅"; 
+        onSnapshot(query(collection(db,'users',u.uid,'history'),orderBy('timestamp','desc')),(s)=>{const h=s.docs.map(d=>({id:d.id, brand:d.data().brand, name:d.data().name||d.data().brand, mg:d.data().mg, date:d.data().timestamp.toDate().toISOString()})); if(h.length){state.history=h;persistHistory();renderUI();}});
+      }});
+    }
+
+    init();
+  </script>
+</body>
+</html>
