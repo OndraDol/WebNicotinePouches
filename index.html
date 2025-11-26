@@ -3,95 +3,122 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <meta name="description" content="Nicotine Pouch Tracker.">
+  <meta name="description" content="Free Nicotine Pouch Tracker & Quitting Tool.">
+  
+  <!-- PWA & Mobile -->
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="theme-color" content="#10b981">
   <link rel="manifest" href="./manifest.json">
-  <title>NicoTracker Ultimate</title>
   
+  <title>NicoTracker | Quit Nicotine Pouches & Save Money</title>
+  
+  <!-- Fonts & Libs -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
 
   <style>
-    :root { --bg: #f8fafc; --card: #ffffff; --text: #0f172a; --muted: #64748b; --primary: #10b981; --primary-dark: #059669; --danger: #ef4444; --border: #e2e8f0; }
+    :root {
+      --bg: #f8fafc; --card: #ffffff; --text: #0f172a; --muted: #64748b;
+      --primary: #10b981; --primary-dark: #059669; --danger: #ef4444; --border: #e2e8f0;
+    }
+
     * { box-sizing: border-box; }
     body { margin:0; font-family:'Inter',sans-serif; background:var(--bg); color:var(--text); padding-bottom:60px; -webkit-tap-highlight-color:transparent; }
-    .shell { max-width: 1100px; margin: 0 auto; padding: 20px 16px; }
     
-    /* Header & Card */
+    .shell { max-width: 1100px; margin: 0 auto; padding: 20px 16px; }
     header { background:var(--card); border-bottom:1px solid var(--border); padding:16px 20px; position:sticky; top:0; z-index:50; display:flex; justify-content:space-between; align-items:center; }
     .logo { font-weight:800; font-size:20px; color:var(--text); display:flex; align-items:center; gap:6px; }
     .logo span { color:var(--primary); }
-    .card { background:var(--card); border:1px solid var(--border); border-radius:16px; padding:16px; margin-bottom:12px; box-shadow:0 4px 6px -1px rgba(0,0,0,0.05); }
     
-    /* Buttons */
+    /* UI Components */
+    .card { background:var(--card); border:1px solid var(--border); border-radius:16px; padding:16px; margin-bottom:12px; box-shadow:0 4px 6px -1px rgba(0,0,0,0.05); }
     .btn { border:none; border-radius:10px; padding:10px 16px; font-weight:600; cursor:pointer; font-size:14px; transition:0.2s; display:inline-flex; align-items:center; gap:6px; }
     .btn-primary { background:var(--primary); color:white; }
     .btn-outline { background:white; border:1px solid var(--border); color:var(--text); }
     .btn:active { transform:scale(0.98); }
     
-    /* Grid & Stats */
     .grid { display:grid; gap:12px; }
     .stats-grid { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
+    
+    /* Compact Stats */
     .stat { border:1px solid var(--border); border-radius:12px; padding:10px; background:white; }
     .stat .val { font-size:20px; font-weight:800; margin-top:2px; }
     .stat .lbl { font-size:11px; font-weight:700; color:var(--muted); text-transform:uppercase; }
     .stat .sub { font-size:11px; color:var(--muted); margin-top:2px; }
     
-    /* Search & Selection Styles */
-    .selector-btn { width: 100%; text-align: left; background: white; border: 1px solid var(--border); padding: 12px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; font-family: inherit; font-size: 14px; color: var(--text); cursor: pointer; }
-    .selector-btn:active { background: #f8fafc; }
-    .quick-actions { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; margin-bottom: 12px; scrollbar-width: none; }
-    .quick-chip { flex-shrink: 0; background: #ecfdf5; color: var(--primary-dark); border: 1px solid #a7f3d0; padding: 8px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; cursor: pointer; }
+    input, select { width:100%; padding:12px; border:1px solid var(--border); border-radius:10px; background:#fff; font-size:15px; outline:none; }
+    input:focus { border-color:var(--primary); box-shadow:0 0 0 3px rgba(16,185,129,0.1); }
     
-    /* Search Modal (Centered & Green) */
-    #searchModal { 
-        position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); margin: 0; bottom: auto;
-        height: 80vh; max-height: 600px; width: min(500px, 90vw); 
-        border-radius: 16px; border: 2px solid var(--primary); /* GREEN BORDER */
-        box-shadow: 0 20px 60px rgba(0,0,0,0.25); animation: popIn 0.2s ease-out; padding: 0;
-    }
-    @keyframes popIn { from { opacity:0; transform:translate(-50%, -45%) scale(0.95); } to { opacity:1; transform:translate(-50%, -50%) scale(1); } }
-    
-    .search-header { padding: 16px; border-bottom: 1px solid var(--border); display: flex; gap: 10px; align-items: center; background: white; }
-    #searchInput { width: 100%; padding: 12px 16px; border-radius: 10px; border: 1px solid var(--border); font-size: 16px; outline: none; background: #f8fafc; }
-    #searchInput:focus { border-color: var(--primary); background: white; }
-    .search-results { overflow-y: auto; height: calc(100% - 74px); padding: 0 16px 20px; background: white; }
-    .search-item { padding: 12px 0; border-bottom: 1px solid #f1f5f9; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
-    .search-item:hover { background: #f8fafc; }
-    .mg-badge { background: #f1f5f9; padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: 700; color: var(--text); }
-
-    /* Other UI */
     details > summary { list-style: none; cursor: pointer; font-weight: 700; font-size: 16px; display: flex; justify-content: space-between; align-items: center; }
     details > summary::after { content: '▼'; font-size: 12px; color: var(--muted); transition: transform 0.2s; }
     details[open] > summary::after { transform: rotate(180deg); }
-    .history-item { display:flex; justify-content:space-between; padding:12px 0; border-bottom:1px solid var(--border); font-size:14px; }
-    .quit-active { border: 2px solid var(--primary); background: #ecfdf5; }
-    .progress-bar { height:6px; background:#e2e8f0; border-radius:3px; margin-top:8px; overflow:hidden; }
-    .progress-fill { height:100%; background:var(--primary); width:0%; transition:width 0.5s; }
-    .hidden { display:none !important; }
     
-    /* Utils */
-    dialog:not(#searchModal) { border:none; border-radius:16px; padding:20px; width:min(500px,95vw); box-shadow:0 20px 50px rgba(0,0,0,0.2); }
-    dialog::backdrop { background:rgba(0,0,0,0.5); backdrop-filter:blur(2px); }
-    #toast { position:fixed; bottom:20px; right:20px; z-index:100; }
-    .toast-msg { background:#1e293b; color:white; padding:12px 20px; border-radius:10px; margin-top:10px; animation:slideUp 0.3s; }
-    @keyframes slideUp { from{transform:translateY(20px);opacity:0} to{transform:translateY(0);opacity:1} }
-    .selection-card { border: 2px solid var(--border); border-radius: 12px; padding: 16px; cursor: pointer; text-align: center; }
-    .selection-card.active { border-color: var(--primary); background-color: #ecfdf5; }
-    
-    /* Health */
+    /* Health & Achievements */
     .health-item { display: flex; gap: 10px; align-items: flex-start; padding: 8px 0; border-bottom: 1px dashed var(--border); font-size: 13px; }
     .health-done { color: var(--text); } .health-done .health-icon { color: var(--primary); }
     .health-locked { color: var(--muted); filter: grayscale(1); opacity: 0.7; }
     
-    /* Achievements */
     .achievements { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
     .achievement { padding: 12px; border: 1px solid var(--border); border-radius: 12px; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 110px; }
     .achievement.unlocked { background: #ecfdf5; border-color: #6ee7b7; }
     .achievement.locked { opacity: 0.5; background: #f1f5f9; border-style: dashed; filter: grayscale(1); }
+
+    /* Modals */
+    dialog { border:none; border-radius:16px; padding:0; width:min(500px,95vw); box-shadow:0 25px 50px -12px rgba(0,0,0,0.25); }
+    dialog::backdrop { background:rgba(0,0,0,0.5); backdrop-filter:blur(2px); }
+    .modal-head { padding:16px 20px; font-weight:700; border-bottom:1px solid var(--border); background:#f8fafc; display:flex; justify-content:space-between; align-items:center; }
+    .modal-body { padding:20px; }
+    .modal-foot { padding:16px; display:flex; justify-content:flex-end; gap:10px; border-top:1px solid var(--border); }
+    
+    .hidden { display:none !important; }
+    .history-item { display:flex; justify-content:space-between; padding:12px 0; border-bottom:1px solid var(--border); font-size:14px; }
+    .quit-active { border: 2px solid var(--primary); background: #ecfdf5; }
+    .progress-bar { height:6px; background:#e2e8f0; border-radius:3px; margin-top:8px; overflow:hidden; }
+    .progress-fill { height:100%; background:var(--primary); width:0%; transition:width 0.5s; }
+
+    /* Wizard */
+    .selection-card { border: 2px solid var(--border); border-radius: 12px; padding: 16px; cursor: pointer; text-align: center; transition:0.2s; }
+    .selection-card.active { border-color: var(--primary); background-color: #ecfdf5; }
+    .wizard-step { animation: fadeIn 0.3s; }
+    @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+
+    #toast { position:fixed; bottom:20px; right:20px; z-index:100; }
+    .toast-msg { background:#1e293b; color:white; padding:12px 20px; border-radius:10px; margin-top:10px; animation:slideUp 0.3s; }
+    @keyframes slideUp { from{transform:translateY(20px);opacity:0} to{transform:translateY(0);opacity:1} }
+
+    /* --- SEARCH STYLE (CENTERED & BORDERED) --- */
+    .selector-btn {
+      width: 100%; text-align: left; background: white; border: 1px solid var(--border);
+      padding: 12px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center;
+      font-family: inherit; font-size: 14px; color: var(--text); cursor: pointer;
+    }
+    .selector-btn:active { background: #f8fafc; }
+    
+    .quick-actions { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; margin-bottom: 12px; scrollbar-width: none; }
+    .quick-chip { 
+      flex-shrink: 0; background: #ecfdf5; color: var(--primary-dark); border: 1px solid #a7f3d0; 
+      padding: 8px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; cursor: pointer;
+    }
+
+    #searchModal { 
+        position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); margin: 0; bottom: auto;
+        height: 80vh; max-height: 600px; width: min(500px, 90vw); 
+        border-radius: 16px; border: 2px solid var(--primary); /* GREEN BORDER */
+        box-shadow: 0 20px 60px rgba(0,0,0,0.2); animation: popIn 0.2s ease-out; 
+    }
+    @keyframes popIn { from { opacity:0; transform:translate(-50%, -45%) scale(0.95); } to { opacity:1; transform:translate(-50%, -50%) scale(1); } }
+
+    .search-header { padding: 16px; border-bottom: 1px solid var(--border); display: flex; gap: 10px; align-items: center; background: white; }
+    #searchInput { width: 100%; padding: 12px 16px; border-radius: 10px; border: 1px solid var(--border); font-size: 16px; outline: none; background: #f8fafc; }
+    #searchInput:focus { border-color: var(--primary); background: white; }
+    .search-results { overflow-y: auto; height: calc(100% - 70px); padding: 0 16px 20px; background: white; }
+    .search-item { padding: 12px 0; border-bottom: 1px solid #f1f5f9; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+    .search-item:hover { background: #f8fafc; }
+    .search-item strong { display: block; font-size: 14px; margin-bottom: 2px; }
+    .search-item small { color: var(--muted); font-size: 12px; }
+    .mg-badge { background: #f1f5f9; padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: 700; color: var(--text); }
   </style>
 </head>
 <body>
@@ -108,21 +135,43 @@
 
   <main class="shell">
     
-    <!-- Quit Banner -->
+    <!-- Quit Program Banner -->
     <div id="quitBanner" class="card quit-active hidden">
       <div style="display:flex; justify-content:space-between; align-items:center;">
-        <div><h3 style="margin:0" data-i18n="quit_title">Freedom Journey</h3><p style="margin:4px 0 0; color:var(--primary-dark); font-size:13px;" data-i18n="quit_status_active">Active</p></div>
-        <div style="text-align:right;"><div class="val" style="font-size:20px;" id="quitTarget">0</div><div class="lbl" data-i18n="daily_max">Max</div></div>
+        <div>
+          <h3 style="margin:0" data-i18n="quit_title">Freedom Journey</h3>
+          <p style="margin:4px 0 0; color:var(--primary-dark); font-size:13px;" id="quitStatusText">Plan active</p>
+        </div>
+        <div style="text-align:right;">
+          <div class="val" style="font-size:20px;" id="quitTarget">0</div>
+          <div class="lbl" data-i18n="daily_max">Daily Max</div>
+        </div>
       </div>
       <div class="progress-bar"><div id="quitProgress" class="progress-fill"></div></div>
     </div>
 
     <!-- Dashboard Stats -->
     <div class="grid stats-grid">
-      <div class="stat"><div class="lbl" data-i18n="today_usage">Today</div><div class="val" id="valToday">0</div><div class="sub" id="valLimit">Limit: 10</div></div>
-      <div class="stat"><div class="lbl" data-i18n="streak">Streak</div><div class="val" id="valStreak">0</div><div class="sub" data-i18n="streak_hint">🔥 Keep it up</div></div>
-      <div class="stat"><div class="lbl" data-i18n="money_saved">Saved</div><div class="val" id="valSaved" style="color:var(--primary);">0</div><div class="sub" id="valCost">Cost: 0</div></div>
-      <div class="stat"><div class="lbl" data-i18n="nicotine">Nicotine</div><div class="val" id="valMg">0 mg</div><div class="sub" data-i18n="total_today">Total today</div></div>
+      <div class="stat">
+        <div class="lbl" data-i18n="today_usage">Today</div>
+        <div class="val" id="valToday">0</div>
+        <div class="sub" id="valLimit">Limit: 10</div>
+      </div>
+      <div class="stat">
+        <div class="lbl" data-i18n="streak">Streak</div>
+        <div class="val" id="valStreak">0 <span style="font-size:14px" data-i18n="days_label">days</span></div>
+        <div class="sub" data-i18n="streak_hint">🔥 Keep it up</div>
+      </div>
+      <div class="stat">
+        <div class="lbl" data-i18n="money_saved">Saved</div>
+        <div class="val" id="valSaved" style="color:var(--primary);">0</div>
+        <div class="sub" id="valCost">Cost: 0</div>
+      </div>
+      <div class="stat">
+        <div class="lbl" data-i18n="nicotine">Nicotine</div>
+        <div class="val" id="valMg">0 mg</div>
+        <div class="sub" data-i18n="total_today">Total today</div>
+      </div>
     </div>
 
     <!-- Health Recovery -->
@@ -131,13 +180,16 @@
       <div class="content" id="healthList"></div>
     </details>
 
-    <!-- LOG USAGE -->
+    <!-- LOG USAGE (Search & Quick Actions) -->
     <div class="card" style="margin-top:4px;">
       <h3 style="margin:0 0 12px;" data-i18n="log_usage">Log Usage</h3>
       <div id="quickActions" class="quick-actions"></div>
       <div class="grid" style="grid-template-columns: 1fr auto;">
         <button id="openSearchBtn" class="selector-btn">
-          <div><div style="font-size:11px; color:var(--muted);" data-i18n="selected_pouch">Selected</div><div id="selectedPouchName" style="font-weight:700;">...</div></div>
+          <div>
+            <div style="font-size:11px; color:var(--muted);" data-i18n="selected_pouch">Selected</div>
+            <div id="selectedPouchName" style="font-weight:700;">...</div>
+          </div>
           <span style="font-size:18px;">🔍</span>
         </button>
         <button id="addBtn" class="btn btn-primary" style="height:50px; width:60px; justify-content:center; font-size:24px;">➕</button>
@@ -154,15 +206,21 @@
     <details class="card" open>
       <summary><span data-i18n="charts_title">Analytics</span></summary>
       <div class="content grid" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));">
-        <div><h4 style="margin:0 0 10px; font-size:12px; color:var(--muted);" data-i18n="chart_trend">Trend</h4><canvas id="trendChart" height="200"></canvas></div>
-        <div><h4 style="margin:20px 0 10px; font-size:12px; color:var(--muted);" data-i18n="hourly_heatmap">Heatmap</h4><canvas id="hourlyChart" height="200"></canvas></div>
+        <div>
+           <h4 style="margin:0 0 10px; font-size:12px; color:var(--muted); text-transform:uppercase;" data-i18n="chart_trend">Trend (14 days)</h4>
+           <canvas id="trendChart" height="200"></canvas>
+        </div>
+        <div>
+           <h4 style="margin:20px 0 10px; font-size:12px; color:var(--muted); text-transform:uppercase;" data-i18n="hourly_heatmap">Hourly Heatmap</h4>
+           <canvas id="hourlyChart" height="200"></canvas>
+        </div>
       </div>
     </details>
 
     <!-- History -->
     <div class="card">
       <div style="display:flex; justify-content:space-between; align-items:center; gap:8px;">
-        <h3 style="margin:0;" data-i18n="history">History</h3>
+        <h3 style="margin:0;" data-i18n="history">Recent History</h3>
         <button id="viewAllHistoryBtn" class="btn btn-outline" style="padding:6px 10px; font-size:12px;" data-i18n="view_all">View All</button>
       </div>
       <div id="historyList"></div>
@@ -172,20 +230,21 @@
 
   <div id="toast"></div>
 
-  <!-- MODALS -->
+  <!-- SEARCH MODAL -->
   <dialog id="searchModal">
     <div class="search-header">
       <input type="search" id="searchInput" placeholder="..." autocomplete="off">
-      <button class="btn btn-outline" style="border:none; font-size:20px; padding:0 10px;" onclick="document.getElementById('searchModal').close()">✕</button>
+      <button class="btn btn-outline" style="border:none; font-size:20px; padding:0 8px;" onclick="document.getElementById('searchModal').close()">✕</button>
     </div>
     <div id="searchResults" class="search-results"></div>
   </dialog>
 
+  <!-- Full History Modal -->
   <dialog id="historyModal">
     <div class="modal-head"><span data-i18n="history_modal_title">Full History</span></div>
     <div class="modal-body grid" style="gap:12px;">
-      <div><label style="font-size:12px; color:var(--muted);" data-i18n="pick_date">Pick Date</label><input type="datetime-local" id="backdateInput" style="width:100%; padding:10px; border:1px solid #e2e8f0; border-radius:8px;"></div>
-      <div style="font-size:12px; color:var(--muted);" data-i18n="past_entry_help">...</div>
+      <div><label style="font-size:12px; color:var(--muted);" data-i18n="pick_date">Pick Date</label><input type="datetime-local" id="backdateInput"></div>
+      <div style="font-size:12px; color:var(--muted);" data-i18n="past_entry_help">Hint</div>
       <button id="addPastEntryBtn" class="btn btn-primary" style="width:100%;" data-i18n="add_past_entry">Add</button>
       <div style="border-top:1px solid var(--border); margin:8px 0;"></div>
       <div id="fullHistoryList" style="max-height:300px; overflow-y:auto;"></div>
@@ -193,33 +252,45 @@
     <div class="modal-foot"><button class="btn btn-outline" onclick="document.getElementById('historyModal').close()" data-i18n="close">Close</button></div>
   </dialog>
 
+  <!-- Settings Wizard Modal -->
   <dialog id="settingsModal">
-    <div class="modal-head"><span data-i18n="settings">Settings</span></div>
+    <div class="modal-head"><span data-i18n="settings">Settings</span><span style="font-size:12px; color:var(--muted);" id="wizardStepIndicator">Step 1/3</span></div>
     <div class="modal-body">
-      <div id="step1">
-        <h3 style="margin:0 0 10px; font-size:14px;" data-i18n="wiz_step1_title">Goal</h3>
+      <div id="step1" class="wizard-step">
+        <h3 style="margin:0 0 16px; font-size:16px; text-align:center;" data-i18n="wiz_step1_title">Goal?</h3>
         <div class="grid" style="grid-template-columns: 1fr 1fr;">
-          <div class="selection-card" data-val="track" onclick="selectGoal('track')"><div style="font-size:24px;">📊</div><h4 data-i18n="goal_track_title">Track</h4></div>
-          <div class="selection-card" data-val="quit" onclick="selectGoal('quit')"><div style="font-size:24px;">💪</div><h4 data-i18n="goal_quit_title">Quit</h4></div>
+          <div class="selection-card" data-val="track" onclick="selectGoal('track')"><div style="font-size:32px;">📊</div><h4 data-i18n="goal_track_title">Track</h4></div>
+          <div class="selection-card" data-val="quit" onclick="selectGoal('quit')"><div style="font-size:32px;">💪</div><h4 data-i18n="goal_quit_title">Quit</h4></div>
         </div>
       </div>
-      <div style="margin-top:20px; border-top:1px solid #eee; padding-top:10px;">
-          <div class="grid" style="grid-template-columns: 1fr 1fr;">
-            <div><label data-i18n="currency">Curr</label><input id="currencyInput"></div>
-            <div><label data-i18n="pack_price">Price</label><input type="number" id="priceInput"></div>
-          </div>
-          <div class="grid" style="grid-template-columns: 1fr 1fr;">
-            <div><label data-i18n="pouches_pack">Pcs</label><input type="number" id="piecesInput"></div>
-            <div><label data-i18n="start_limit">Limit</label><input type="number" id="limitInput"></div>
-          </div>
-          <div id="quitSettings" class="hidden" style="margin-top:10px;">
-             <label data-i18n="quit_date">Quit Date</label><input type="date" id="quitDateInput" style="width:100%; padding:8px;">
-          </div>
+      <div id="step2" class="wizard-step hidden">
+        <h3 style="margin:0 0 16px; font-size:16px; text-align:center;" data-i18n="wiz_step2_title">Strategy</h3>
+        <div class="grid" style="gap:12px;">
+          <div class="selection-card" data-val="smooth" onclick="selectStrategy('smooth')"><h4 data-i18n="strat_smooth_title">Smooth</h4></div>
+          <div class="selection-card" data-val="weekly" onclick="selectStrategy('weekly')"><h4 data-i18n="strat_weekly_title">Weekly</h4></div>
+          <div class="selection-card" data-val="cutoff" onclick="selectStrategy('cutoff')"><h4 data-i18n="strat_cutoff_title">Cutoff</h4></div>
+        </div>
+      </div>
+      <div id="step3" class="wizard-step hidden">
+        <h3 style="margin:0 0 16px; font-size:16px; text-align:center;" data-i18n="wiz_step3_title">Setup</h3>
+        <div class="grid" style="grid-template-columns: 1fr 1fr;">
+          <div><label data-i18n="currency">Curr</label><input id="currencyInput"></div>
+          <div><label data-i18n="pack_price">Price</label><input type="number" id="priceInput"></div>
+        </div>
+        <div class="grid" style="grid-template-columns: 1fr 1fr;">
+          <div><label data-i18n="pouches_pack">Pcs</label><input type="number" id="piecesInput"></div>
+          <div><label data-i18n="start_limit">Limit</label><input type="number" id="limitInput"></div>
+        </div>
+        <div id="dateInputContainer" class="hidden"><label data-i18n="target_date">Date</label><input type="date" id="wizardDateInput"></div>
       </div>
     </div>
-    <div class="modal-foot"><button class="btn btn-primary" onclick="saveSettings()" data-i18n="save">Save</button> <button class="btn btn-outline" onclick="document.getElementById('settingsModal').close()" data-i18n="close">Close</button></div>
+    <div class="modal-foot">
+      <button id="wizBackBtn" class="btn btn-outline hidden" onclick="prevStep()" data-i18n="back">Back</button>
+      <button id="wizNextBtn" class="btn btn-primary" onclick="nextStep()" data-i18n="next">Next</button>
+    </div>
   </dialog>
 
+  <!-- Auth Modal -->
   <dialog id="authModal">
     <div class="modal-head" data-i18n="auth_title">Sync</div>
     <div class="modal-body">
@@ -233,6 +304,7 @@
           <div style="text-align:center; margin-top:10px; font-size:13px; color:var(--primary); cursor:pointer;" id="toggleReg" data-i18n="toggle_reg">Register</div>
       </div>
       <div style="border-top:1px solid var(--border); margin-top:20px; padding-top:20px;">
+           <h4 style="margin:0 0 12px; font-size:14px; color:var(--muted); text-transform:uppercase;" data-i18n="data_management">Data</h4>
            <div class="grid" style="grid-template-columns: 1fr 1fr;">
               <button id="btnExportCsv" class="btn btn-outline" style="justify-content:center;" data-i18n="export_csv">CSV</button>
               <button id="btnExportJson" class="btn btn-outline" style="justify-content:center;" data-i18n="export_json">Backup</button>
@@ -267,7 +339,7 @@
         data_management: "Data Management", selected_pouch: "Selected", search_placeholder: "Search brand or flavor...", 
         select_placeholder: "Select a pouch...", past_entry_help: "To add past entry, first select a pouch on dashboard.",
         quit_status_active: "Plan active", auth_btn: "Sync / Data", auth_title: "Sync & Backup", login: "Log In", toggle_reg: "Register",
-        currency: "Currency", pack_price: "Price/Can", pouches_pack: "Pcs/Can", close: "Close", delete_entry: "Delete", added: "Added!", save: "Save", quit_date: "Quit Date"
+        currency: "Currency", pack_price: "Price/Can", pouches_pack: "Pcs/Can", close: "Close", delete_entry: "Delete", added: "Added!"
       },
       cs: {
         today_usage: "DNES", streak: "ŘADA DNÍ", money_saved: "UŠETŘENO", log_usage: "Zapsat sáček", history: "Historie", view_all: "Zobrazit vše", 
@@ -282,7 +354,7 @@
         data_management: "Správa dat", selected_pouch: "Vybráno", search_placeholder: "Hledat značku nebo příchuť...", 
         select_placeholder: "Vyberte sáček...", past_entry_help: "Pro zpětné vložení nejdřív vyberte sáček na hl. stránce.",
         quit_status_active: "Plán aktivní", auth_btn: "Sync / Data", auth_title: "Záloha dat", login: "Přihlásit", toggle_reg: "Registrovat",
-        currency: "Měna", pack_price: "Cena/Puk", pouches_pack: "Ks/Puk", close: "Zavřít", delete_entry: "Smazat", added: "Přidáno!", save: "Uložit", quit_date: "Datum konce"
+        currency: "Měna", pack_price: "Cena/Puk", pouches_pack: "Ks/Puk", close: "Zavřít", delete_entry: "Smazat", added: "Přidáno!"
       }
     };
 
@@ -295,7 +367,8 @@
       history: JSON.parse(localStorage.getItem('nt_history')) || [],
       selection: JSON.parse(localStorage.getItem('nt_last_pouch')) || null
     };
-    let currentSearchResults = [];
+    let wizStep = 1; let tempSettings = {};
+    let currentSearchResults = []; 
 
     function persistHistory() {
       state.history.sort((a, b) => new Date(b.date) - new Date(a.date));
@@ -305,7 +378,7 @@
     // --- LOGIC ---
     function init() {
       applyLanguage(state.lang); persistHistory(); renderUI(); setupSearch(); setupListeners();
-      if (!localStorage.getItem('nt_settings')) document.getElementById('settingsModal').showModal();
+      if (!localStorage.getItem('nt_settings')) openWizard();
       if('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js');
     }
 
@@ -316,21 +389,12 @@
       renderUI();
     }
 
-    // --- HELPER: FIND REAL MG ---
-    // This fixes the issue where old history or bad clicks show "0mg"
-    function getRealMg(brand, name, storedMg) {
-        if (storedMg && storedMg > 0) return storedMg;
-        // Try to find in DB
-        const found = POUCH_DB.find(p => p.n === name) || POUCH_DB.find(p => p.b === brand && p.n === name);
-        return found ? found.mg : 0;
-    }
-
     function renderUI() {
       const today = new Date().toISOString().slice(0,10);
       const todayEntries = state.history.filter(h => h.date.startsWith(today));
-      const limit = state.settings.dailyLimit || 10;
+      const limit = state.settings.dailyLimit || 10; 
       
-      // Favorites - Logic corrected to find item properly
+      // Favorites
       const counts = {}; state.history.forEach(h => { const k = h.brand + '|' + (h.name||''); counts[k] = (counts[k]||0)+1; });
       const top = Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0, 3).map(e=>e[0]);
       const container = document.getElementById('quickActions');
@@ -338,37 +402,33 @@
       container.querySelectorAll('.quick-chip').forEach((el, i) => {
           el.onclick = () => {
               const [b, n] = top[i].split('|');
-              // Find full object to get mg, fallback to 0 if not found
-              const full = POUCH_DB.find(p => p.n === n) || POUCH_DB.find(p => p.b === b && p.n === n) || { b, n, mg: 0 };
+              const full = POUCH_DB.find(p => p.b === b && p.n === n) || { b, n, mg: 0 }; 
               selectPouch(full); addEntry();
           };
       });
 
       // Selection
       const selName = document.getElementById('selectedPouchName');
-      if (state.selection) selName.innerHTML = `${state.selection.n} <span style="color:var(--primary); font-size:11px;">${getRealMg(state.selection.b, state.selection.n, state.selection.mg)}mg</span>`;
+      if (state.selection) selName.innerHTML = `${state.selection.n} <span style="color:var(--primary); font-size:11px;">${state.selection.mg}mg</span>`;
       else selName.innerText = t('select_placeholder');
 
-      // Stats (Fixing the 0mg total by using getRealMg)
+      // Stats
       document.getElementById('valToday').innerText = todayEntries.length;
       document.getElementById('valLimit').innerText = `${t('limit_label')}: ${limit}`;
       const saved = (limit - todayEntries.length) * (state.settings.packPrice / state.settings.pouchesPerPack);
       document.getElementById('valSaved').innerText = `${Math.max(0, saved).toFixed(0)} ${state.settings.currency}`;
+      document.getElementById('valMg').innerText = `${todayEntries.reduce((s,i)=>s+(i.mg||0),0).toFixed(1)} mg`;
       
-      const totalMg = todayEntries.reduce((sum, item) => sum + getRealMg(item.brand, item.name, item.mg), 0);
-      document.getElementById('valMg').innerText = `${totalMg.toFixed(1)} mg`;
-      
-      // History List (Visual Fix for 0mg)
+      // History
       const list = document.getElementById('historyList'); list.innerHTML = '';
       state.history.slice(0, 5).forEach(h => {
-          const realMg = getRealMg(h.brand, h.name, h.mg);
-          list.innerHTML += `<div class="history-item"><div><strong>${h.name || h.brand}</strong> <span style="color:var(--muted)">${realMg}mg</span></div><div style="font-size:11px; color:var(--muted);">${new Date(h.date).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</div></div>`;
+          list.innerHTML += `<div class="history-item"><div><strong>${h.name || h.brand}</strong> <span style="color:var(--muted)">${h.mg}mg</span></div><div style="font-size:11px; color:var(--muted);">${new Date(h.date).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</div></div>`;
       });
 
       renderChart(); renderHourlyChart();
     }
 
-    // --- SEARCH FIX (Index based) ---
+    // --- SEARCH FIX ---
     function setupSearch() {
         const input = document.getElementById('searchInput');
         const results = document.getElementById('searchResults');
@@ -411,36 +471,30 @@
 
     async function addEntry() {
       if(!state.selection) return document.getElementById('openSearchBtn').click();
-      let item = state.selection;
-      
-      // SAFETY CHECK: If mg is 0, try to find it in DB again before saving
-      if (!item.mg || item.mg === 0) {
-          const found = POUCH_DB.find(p => p.n === item.n) || POUCH_DB.find(p => p.b === item.b && p.n === item.n);
-          if (found) item.mg = found.mg;
-      }
-
+      const item = state.selection;
       const rec = { id: Date.now().toString(), brand: item.b, name: item.n, mg: item.mg, date: new Date().toISOString() };
       state.history.unshift(rec); persistHistory();
       if(state.user) setDoc(doc(db,'users',state.user.uid,'history',rec.id),{ ...rec, timestamp:Timestamp.now() });
       renderUI(); showToast(t('added'));
     }
 
-    // --- SETTINGS LOGIC ---
-    window.selectGoal = (g) => { 
-        document.querySelectorAll('.selection-card').forEach(c=>c.classList.remove('active')); 
-        document.querySelector(`.selection-card[data-val="${g}"]`).classList.add('active');
-        document.getElementById('quitSettings').classList.toggle('hidden', g!=='quit');
-    };
-    window.saveSettings = () => {
-        state.settings.currency = document.getElementById('currencyInput').value || 'CZK';
-        state.settings.packPrice = parseFloat(document.getElementById('priceInput').value) || 0;
-        state.settings.pouchesPerPack = parseFloat(document.getElementById('piecesInput').value) || 20;
-        state.settings.dailyLimit = parseInt(document.getElementById('limitInput').value) || 10;
-        state.settings.quitDate = document.getElementById('quitDateInput').value;
-        state.settings.goal = document.querySelector('.selection-card.active')?.dataset.val || 'track';
+    // --- WIZARD ---
+    window.selectGoal = (g) => { tempSettings.goal = g; document.querySelectorAll('#step1 .selection-card').forEach(c=>c.classList.remove('active')); document.querySelector(`#step1 .selection-card[data-val="${g}"]`).classList.add('active'); };
+    window.selectStrategy = (s) => { tempSettings.strategy = s; document.querySelectorAll('#step2 .selection-card').forEach(c=>c.classList.remove('active')); document.querySelector(`#step2 .selection-card[data-val="${s}"]`).classList.add('active'); };
+    window.nextStep = () => { if(wizStep===1) wizStep=(tempSettings.goal==='track')?3:2; else if(wizStep===2) wizStep=3; else { saveWizard(); return; } renderWizard(); };
+    window.prevStep = () => { wizStep=(wizStep===3 && tempSettings.goal==='track')?1:wizStep-1; renderWizard(); };
+    function openWizard() { wizStep=1; tempSettings={...state.settings}; renderWizard(); document.getElementById('settingsModal').showModal(); }
+    function renderWizard() {
+        document.querySelectorAll('.wizard-step').forEach(e=>e.classList.add('hidden')); document.getElementById(`step${wizStep}`).classList.remove('hidden');
+        document.getElementById('wizBackBtn').classList.toggle('hidden', wizStep===1);
+        document.getElementById('wizNextBtn').innerText = (wizStep===3) ? t('finish') : t('next');
+        if(wizStep===3) { document.getElementById('currencyInput').value=tempSettings.currency; document.getElementById('priceInput').value=tempSettings.packPrice; }
+    }
+    function saveWizard() {
+        state.settings = { ...tempSettings, currency: document.getElementById('currencyInput').value, packPrice: parseFloat(document.getElementById('priceInput').value)||0, pouchesPerPack: parseFloat(document.getElementById('piecesInput').value)||20, dailyLimit: parseFloat(document.getElementById('limitInput').value)||10 };
         localStorage.setItem('nt_settings', JSON.stringify(state.settings));
         document.getElementById('settingsModal').close(); renderUI();
-    };
+    }
 
     // --- HELPERS ---
     function showToast(m) { const t=document.getElementById('toast');t.innerHTML=`<div class="toast-msg">${m}</div>`;setTimeout(()=>t.innerHTML='',2000); }
@@ -461,21 +515,13 @@
     // --- LISTENERS ---
     function setupListeners() {
       document.getElementById('langBtn').onclick=()=>applyLanguage(state.lang==='en'?'cs':'en');
-      document.getElementById('menuBtn').onclick=()=>{
-          document.getElementById('currencyInput').value = state.settings.currency;
-          document.getElementById('priceInput').value = state.settings.packPrice;
-          document.getElementById('piecesInput').value = state.settings.pouchesPerPack;
-          document.getElementById('limitInput').value = state.settings.dailyLimit;
-          window.selectGoal(state.settings.goal);
-          document.getElementById('settingsModal').showModal();
-      };
+      document.getElementById('menuBtn').onclick=()=>openWizard();
       document.getElementById('syncBtn').onclick=()=>document.getElementById('authModal').showModal();
       document.getElementById('addBtn').onclick=addEntry;
       document.getElementById('viewAllHistoryBtn').onclick=()=>{
           const c=document.getElementById('fullHistoryList'); c.innerHTML='';
           state.history.forEach(h=>{
-             const realMg = getRealMg(h.brand, h.name, h.mg);
-             c.innerHTML+=`<div class="history-item"><div>${h.name} (${realMg}mg)<br><small>${new Date(h.date).toLocaleString()}</small></div><button class="btn btn-danger" onclick="window.delHist('${h.id}')">${t('delete_entry')}</button></div>`;
+             c.innerHTML+=`<div class="history-item"><div>${h.name} (${h.mg}mg)<br><small>${new Date(h.date).toLocaleString()}</small></div><button class="btn btn-danger" onclick="window.delHist('${h.id}')">${t('delete_entry')}</button></div>`;
           });
           document.getElementById('historyModal').showModal();
       };
