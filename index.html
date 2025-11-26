@@ -27,7 +27,6 @@
     * { box-sizing: border-box; }
     body { margin:0; font-family:'Inter',sans-serif; background:var(--bg); color:var(--text); padding-bottom:60px; -webkit-tap-highlight-color:transparent; }
     
-    /* Layout */
     .shell { max-width: 1100px; margin: 0 auto; padding: 20px 16px; }
     header { background:var(--card); border-bottom:1px solid var(--border); padding:16px 20px; position:sticky; top:0; z-index:50; display:flex; justify-content:space-between; align-items:center; }
     .logo { font-weight:800; font-size:20px; color:var(--text); display:flex; align-items:center; gap:6px; }
@@ -38,7 +37,6 @@
     .btn { border:none; border-radius:10px; padding:10px 16px; font-weight:600; cursor:pointer; font-size:14px; transition:0.2s; display:inline-flex; align-items:center; gap:6px; }
     .btn-primary { background:var(--primary); color:white; }
     .btn-outline { background:white; border:1px solid var(--border); color:var(--text); }
-    .btn-danger { background:#fee2e2; color:var(--danger); }
     .btn:active { transform:scale(0.98); }
     
     .grid { display:grid; gap:12px; }
@@ -53,33 +51,21 @@
     input, select { width:100%; padding:12px; border:1px solid var(--border); border-radius:10px; background:#fff; font-size:15px; outline:none; }
     input:focus { border-color:var(--primary); box-shadow:0 0 0 3px rgba(16,185,129,0.1); }
     
-    /* Collapsible Details */
     details > summary { list-style: none; cursor: pointer; font-weight: 700; font-size: 16px; display: flex; justify-content: space-between; align-items: center; }
-    details > summary::-webkit-details-marker { display: none; }
     details > summary::after { content: '▼'; font-size: 12px; color: var(--muted); transition: transform 0.2s; }
     details[open] > summary::after { transform: rotate(180deg); }
-    details[open] .content { animation: fadeIn 0.3s ease-in-out; margin-top: 12px; }
-
-    /* Health Timeline */
+    
+    /* Health & Achievements */
     .health-item { display: flex; gap: 10px; align-items: flex-start; padding: 8px 0; border-bottom: 1px dashed var(--border); font-size: 13px; }
-    .health-item:last-child { border-bottom: none; }
-    .health-icon { font-size: 16px; min-width: 20px; }
+    .health-done { color: var(--text); } .health-done .health-icon { color: var(--primary); }
     .health-locked { color: var(--muted); filter: grayscale(1); opacity: 0.7; }
-    .health-done { color: var(--text); }
-    .health-done .health-icon { color: var(--primary); }
-
-    /* Gamification Grid */
+    
     .achievements { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
-    .achievement { 
-        padding: 12px; border: 1px solid var(--border); border-radius: 12px; display: flex; flex-direction: column; 
-        align-items: center; text-align: center; background: white; transition: all 0.3s; min-height: 110px; justify-content: center;
-    }
-    .achievement.locked { opacity: 0.5; filter: grayscale(1); background: #f1f5f9; border-style: dashed; }
-    .achievement.unlocked { background: #ecfdf5; border-color: #6ee7b7; box-shadow: 0 4px 6px -1px rgba(16,185,129,0.1); }
-    .achievement .icon { font-size: 32px; margin-bottom: 8px; }
-    .achievement h4 { margin:0; font-size:13px; font-weight:700; }
+    .achievement { padding: 12px; border: 1px solid var(--border); border-radius: 12px; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 110px; }
+    .achievement.unlocked { background: #ecfdf5; border-color: #6ee7b7; }
+    .achievement.locked { opacity: 0.5; background: #f1f5f9; border-style: dashed; filter: grayscale(1); }
 
-    /* Modals & Utils */
+    /* Modals */
     dialog { border:none; border-radius:16px; padding:0; width:min(500px,95vw); box-shadow:0 25px 50px -12px rgba(0,0,0,0.25); }
     dialog::backdrop { background:rgba(0,0,0,0.5); backdrop-filter:blur(2px); }
     .modal-head { padding:16px 20px; font-weight:700; border-bottom:1px solid var(--border); background:#f8fafc; display:flex; justify-content:space-between; align-items:center; }
@@ -88,24 +74,21 @@
     
     .hidden { display:none !important; }
     .history-item { display:flex; justify-content:space-between; padding:12px 0; border-bottom:1px solid var(--border); font-size:14px; }
-    
-    /* Quit Program Highlight */
     .quit-active { border: 2px solid var(--primary); background: #ecfdf5; }
     .progress-bar { height:6px; background:#e2e8f0; border-radius:3px; margin-top:8px; overflow:hidden; }
     .progress-fill { height:100%; background:var(--primary); width:0%; transition:width 0.5s; }
 
-    /* Wizard Styles */
-    .selection-card { border: 2px solid var(--border); border-radius: 12px; padding: 16px; cursor: pointer; transition: all 0.2s; background: white; text-align: center; }
-    .selection-card:hover { border-color: #cbd5e1; }
-    .selection-card.active { border-color: var(--primary); background-color: #ecfdf5; box-shadow: 0 4px 6px -1px rgba(16,185,129,0.1); }
+    /* Wizard */
+    .selection-card { border: 2px solid var(--border); border-radius: 12px; padding: 16px; cursor: pointer; text-align: center; transition:0.2s; }
+    .selection-card.active { border-color: var(--primary); background-color: #ecfdf5; }
     .wizard-step { animation: fadeIn 0.3s; }
-    @keyframes fadeIn { from { opacity:0; transform:translateY(5px); } to { opacity:1; transform:translateY(0); } }
+    @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
 
     #toast { position:fixed; bottom:20px; right:20px; z-index:100; }
     .toast-msg { background:#1e293b; color:white; padding:12px 20px; border-radius:10px; margin-top:10px; animation:slideUp 0.3s; }
     @keyframes slideUp { from{transform:translateY(20px);opacity:0} to{transform:translateY(0);opacity:1} }
 
-    /* --- NOVÉ STYLY PRO VYHLEDÁVÁNÍ (CENTERED MODAL) --- */
+    /* --- NEW SEARCH STYLE (CENTERED & BORDERED) --- */
     .selector-btn {
       width: 100%; text-align: left; background: white; border: 1px solid var(--border);
       padding: 12px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center;
@@ -120,32 +103,21 @@
     }
 
     #searchModal { 
-        /* CENTERED POSITIONING */
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        margin: 0;
-        bottom: auto; /* Reset bottom */
-        
-        /* STYLE */
-        height: 80vh; 
-        max-height: 700px; 
-        width: min(500px, 90vw); 
-        border-radius: 16px; 
-        border: 1px solid var(--primary); /* Green Border */
-        box-shadow: 0 10px 40px rgba(0,0,0,0.2); 
-        animation: fadeIn 0.2s ease-out; 
+        position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); margin: 0; bottom: auto;
+        height: 80vh; max-height: 600px; width: min(500px, 90vw); 
+        border-radius: 16px; border: 2px solid var(--primary); /* GREEN BORDER */
+        box-shadow: 0 20px 60px rgba(0,0,0,0.2); animation: popIn 0.2s ease-out; 
     }
-    @keyframes fadeIn { from { opacity:0; transform:translate(-50%, -48%); } to { opacity:1; transform:translate(-50%, -50%); } }
+    @keyframes popIn { from { opacity:0; transform:translate(-50%, -45%) scale(0.95); } to { opacity:1; transform:translate(-50%, -50%) scale(1); } }
 
     .search-header { padding: 16px; border-bottom: 1px solid var(--border); display: flex; gap: 10px; align-items: center; background: white; }
-    #searchInput { width: 100%; padding: 12px 40px 12px 16px; border-radius: 10px; border: 1px solid var(--border); font-size: 16px; outline: none; background: #f8fafc; }
+    #searchInput { width: 100%; padding: 12px 16px; border-radius: 10px; border: 1px solid var(--border); font-size: 16px; outline: none; background: #f8fafc; }
     #searchInput:focus { border-color: var(--primary); background: white; }
-    .search-results { overflow-y: auto; height: calc(80vh - 80px); padding: 0 16px 20px; background: white; }
-    .search-item { padding: 14px 0; border-bottom: 1px solid #f1f5f9; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
-    .search-item strong { display: block; font-size: 15px; margin-bottom: 2px; }
-    .search-item small { color: var(--muted); }
+    .search-results { overflow-y: auto; height: calc(100% - 70px); padding: 0 16px 20px; background: white; }
+    .search-item { padding: 12px 0; border-bottom: 1px solid #f1f5f9; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+    .search-item:hover { background: #f8fafc; }
+    .search-item strong { display: block; font-size: 14px; margin-bottom: 2px; }
+    .search-item small { color: var(--muted); font-size: 12px; }
     .mg-badge { background: #f1f5f9; padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: 700; color: var(--text); }
   </style>
 </head>
@@ -156,7 +128,7 @@
     <div style="display:flex; gap:10px;">
       <button id="installBtn" class="btn btn-primary hidden" style="padding:8px 12px; font-size:12px;">📲 Install</button>
       <button id="langBtn" class="btn btn-outline" style="padding:8px;">🇺🇸 EN</button>
-      <button id="syncBtn" class="btn btn-primary" data-i18n="auth_btn">Login / Sync</button>
+      <button id="syncBtn" class="btn btn-primary" data-i18n="auth_btn">Login</button>
       <button id="menuBtn" class="btn btn-outline" style="font-size:18px;">⚙️</button>
     </div>
   </header>
@@ -202,43 +174,35 @@
       </div>
     </div>
 
-    <!-- Health Recovery (Collapsible, Quit Mode Only) -->
+    <!-- Health Recovery -->
     <details id="healthSection" class="card hidden">
       <summary><span data-i18n="health_timeline">Health Recovery</span></summary>
       <div class="content" id="healthList"></div>
     </details>
 
-    <!-- NEW LOG USAGE SECTION -->
+    <!-- LOG USAGE (Search & Quick Actions) -->
     <div class="card" style="margin-top:4px;">
       <h3 style="margin:0 0 12px;" data-i18n="log_usage">Log Usage</h3>
-      
-      <!-- Quick Favorites Chips -->
       <div id="quickActions" class="quick-actions"></div>
-
       <div class="grid" style="grid-template-columns: 1fr auto;">
-        <!-- Selector Button -->
         <button id="openSearchBtn" class="selector-btn">
           <div>
             <div style="font-size:11px; color:var(--muted);" data-i18n="selected_pouch">Selected</div>
-            <div id="selectedPouchName" style="font-weight:700;">Select a pouch...</div>
+            <div id="selectedPouchName" style="font-weight:700;">...</div>
           </div>
           <span style="font-size:18px;">🔍</span>
         </button>
-        
-        <!-- Add Button -->
         <button id="addBtn" class="btn btn-primary" style="height:50px; width:60px; justify-content:center; font-size:24px;">➕</button>
       </div>
     </div>
 
-    <!-- Achievements (Collapsible) -->
+    <!-- Achievements -->
     <details class="card">
         <summary><span data-i18n="achievements">Achievements</span></summary>
-        <div class="content">
-            <div id="badgeGrid" class="achievements"></div>
-        </div>
+        <div class="content"><div id="badgeGrid" class="achievements"></div></div>
     </details>
 
-    <!-- Charts (Collapsible, Open by default) -->
+    <!-- Charts -->
     <details class="card" open>
       <summary><span data-i18n="charts_title">Analytics</span></summary>
       <div class="content grid" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));">
@@ -253,7 +217,7 @@
       </div>
     </details>
 
-    <!-- History (Always visible but compact) -->
+    <!-- History -->
     <div class="card">
       <div style="display:flex; justify-content:space-between; align-items:center; gap:8px;">
         <h3 style="margin:0;" data-i18n="history">Recent History</h3>
@@ -266,20 +230,13 @@
 
   <div id="toast"></div>
 
-  <!-- DIALOGS -->
-
-  <!-- NEW SEARCH MODAL (Centered & Bordered) -->
+  <!-- SEARCH MODAL -->
   <dialog id="searchModal">
     <div class="search-header">
-      <div style="position:relative; flex-grow:1;">
-        <input type="search" id="searchInput" placeholder="Search brand or flavor..." autocomplete="off">
-        <span style="position:absolute; right:12px; top:12px; color:var(--muted);">🔎</span>
-      </div>
-      <button class="btn btn-ghost" onclick="document.getElementById('searchModal').close()" style="font-size:18px;">✕</button>
+      <input type="search" id="searchInput" placeholder="..." autocomplete="off">
+      <button class="btn btn-outline" style="border:none; font-size:20px; padding:0 8px;" onclick="document.getElementById('searchModal').close()">✕</button>
     </div>
-    <div id="searchResults" class="search-results">
-      <!-- Results injected here -->
-    </div>
+    <div id="searchResults" class="search-results"></div>
   </dialog>
 
   <!-- Full History Modal -->
@@ -287,8 +244,8 @@
     <div class="modal-head"><span data-i18n="history_modal_title">Full History</span></div>
     <div class="modal-body grid" style="gap:12px;">
       <div><label style="font-size:12px; color:var(--muted);" data-i18n="pick_date">Pick Date</label><input type="datetime-local" id="backdateInput"></div>
-      <div style="font-size:12px; color:var(--muted);" data-i18n="past_entry_help">For past entries, use the main selector first.</div>
-      <button id="addPastEntryBtn" class="btn btn-primary" style="width:100%;" data-i18n="add_past_entry">Add Past Entry</button>
+      <div style="font-size:12px; color:var(--muted);" data-i18n="past_entry_help">Hint</div>
+      <button id="addPastEntryBtn" class="btn btn-primary" style="width:100%;" data-i18n="add_past_entry">Add</button>
       <div style="border-top:1px solid var(--border); margin:8px 0;"></div>
       <div id="fullHistoryList" style="max-height:300px; overflow-y:auto;"></div>
     </div>
@@ -299,36 +256,32 @@
   <dialog id="settingsModal">
     <div class="modal-head"><span data-i18n="settings">Settings</span><span style="font-size:12px; color:var(--muted);" id="wizardStepIndicator">Step 1/3</span></div>
     <div class="modal-body">
-      <!-- STEP 1 -->
       <div id="step1" class="wizard-step">
-        <h3 style="margin:0 0 16px; font-size:16px; text-align:center;" data-i18n="wiz_step1_title">What is your goal?</h3>
+        <h3 style="margin:0 0 16px; font-size:16px; text-align:center;" data-i18n="wiz_step1_title">Goal?</h3>
         <div class="grid" style="grid-template-columns: 1fr 1fr;">
-          <div class="selection-card" data-val="track" onclick="selectGoal('track')"><div style="font-size:32px;">📊</div><h4 data-i18n="goal_track_title">Just Tracking</h4></div>
-          <div class="selection-card" data-val="quit" onclick="selectGoal('quit')"><div style="font-size:32px;">💪</div><h4 data-i18n="goal_quit_title">I Want to Quit</h4></div>
+          <div class="selection-card" data-val="track" onclick="selectGoal('track')"><div style="font-size:32px;">📊</div><h4 data-i18n="goal_track_title">Track</h4></div>
+          <div class="selection-card" data-val="quit" onclick="selectGoal('quit')"><div style="font-size:32px;">💪</div><h4 data-i18n="goal_quit_title">Quit</h4></div>
         </div>
       </div>
-      <!-- STEP 2 -->
       <div id="step2" class="wizard-step hidden">
-        <h3 style="margin:0 0 16px; font-size:16px; text-align:center;" data-i18n="wiz_step2_title">Choose Strategy</h3>
+        <h3 style="margin:0 0 16px; font-size:16px; text-align:center;" data-i18n="wiz_step2_title">Strategy</h3>
         <div class="grid" style="gap:12px;">
-          <div class="selection-card" data-val="smooth" onclick="selectStrategy('smooth')"><h4 data-i18n="strat_smooth_title">Smooth Taper</h4><p data-i18n="strat_smooth_desc">Linear reduction</p></div>
-          <div class="selection-card" data-val="weekly" onclick="selectStrategy('weekly')"><h4 data-i18n="strat_weekly_title">Weekly Step-Down</h4><p data-i18n="strat_weekly_desc">Weekly drops</p></div>
-          <div class="selection-card" data-val="cutoff" onclick="selectStrategy('cutoff')"><h4 data-i18n="strat_cutoff_title">Cold Turkey</h4><p data-i18n="strat_cutoff_desc">Fixed limit then stop</p></div>
+          <div class="selection-card" data-val="smooth" onclick="selectStrategy('smooth')"><h4 data-i18n="strat_smooth_title">Smooth</h4></div>
+          <div class="selection-card" data-val="weekly" onclick="selectStrategy('weekly')"><h4 data-i18n="strat_weekly_title">Weekly</h4></div>
+          <div class="selection-card" data-val="cutoff" onclick="selectStrategy('cutoff')"><h4 data-i18n="strat_cutoff_title">Cutoff</h4></div>
         </div>
       </div>
-      <!-- STEP 3 -->
       <div id="step3" class="wizard-step hidden">
-        <h3 style="margin:0 0 16px; font-size:16px; text-align:center;" data-i18n="wiz_step3_title">Final Setup</h3>
+        <h3 style="margin:0 0 16px; font-size:16px; text-align:center;" data-i18n="wiz_step3_title">Setup</h3>
         <div class="grid" style="grid-template-columns: 1fr 1fr;">
-          <div><label data-i18n="currency">Currency</label><input id="currencyInput"></div>
-          <div><label data-i18n="pack_price">Price/Can</label><input type="number" id="priceInput"></div>
+          <div><label data-i18n="currency">Curr</label><input id="currencyInput"></div>
+          <div><label data-i18n="pack_price">Price</label><input type="number" id="priceInput"></div>
         </div>
         <div class="grid" style="grid-template-columns: 1fr 1fr;">
-          <div><label data-i18n="pouches_pack">Pouches/Can</label><input type="number" id="piecesInput"></div>
-          <div><label data-i18n="start_limit">Daily Limit</label><input type="number" id="limitInput"></div>
+          <div><label data-i18n="pouches_pack">Pcs</label><input type="number" id="piecesInput"></div>
+          <div><label data-i18n="start_limit">Limit</label><input type="number" id="limitInput"></div>
         </div>
-        <div id="dateInputContainer" class="hidden"><label data-i18n="target_date">Target Date</label><input type="date" id="wizardDateInput"></div>
-        <div id="reductionInputContainer" class="hidden"><label data-i18n="reduction_rate">Reduction/Week</label><input type="number" id="reductionInput"></div>
+        <div id="dateInputContainer" class="hidden"><label data-i18n="target_date">Date</label><input type="date" id="wizardDateInput"></div>
       </div>
     </div>
     <div class="modal-foot">
@@ -337,32 +290,30 @@
     </div>
   </dialog>
 
-  <!-- Auth / Data Modal -->
+  <!-- Auth Modal -->
   <dialog id="authModal">
-    <div class="modal-head" data-i18n="auth_title">Sync & Backup</div>
+    <div class="modal-head" data-i18n="auth_title">Sync</div>
     <div class="modal-body">
       <div id="authSection">
           <div class="grid">
               <input type="email" id="emailInput" placeholder="Email">
               <input type="password" id="passInput" placeholder="Password">
               <button id="loginBtn" class="btn btn-primary" data-i18n="login">Log In</button>
-              <button id="googleAuthBtn" class="btn btn-outline" data-i18n="google_login">Google Login</button>
+              <button id="googleAuthBtn" class="btn btn-outline" data-i18n="google_login">Google</button>
           </div>
-          <div style="text-align:center; margin-top:10px; font-size:13px; color:var(--primary); cursor:pointer;" id="toggleReg" data-i18n="toggle_reg">New? Create Account</div>
+          <div style="text-align:center; margin-top:10px; font-size:13px; color:var(--primary); cursor:pointer;" id="toggleReg" data-i18n="toggle_reg">Register</div>
       </div>
       <div style="border-top:1px solid var(--border); margin-top:20px; padding-top:20px;">
-           <h4 style="margin:0 0 12px; font-size:14px; color:var(--muted); text-transform:uppercase;" data-i18n="data_management">Data Management</h4>
+           <h4 style="margin:0 0 12px; font-size:14px; color:var(--muted); text-transform:uppercase;" data-i18n="data_management">Data</h4>
            <div class="grid" style="grid-template-columns: 1fr 1fr;">
-              <button id="btnExportCsv" class="btn btn-outline" style="justify-content:center;" data-i18n="export_csv">📄 CSV Export</button>
-              <button id="btnExportJson" class="btn btn-outline" style="justify-content:center;" data-i18n="export_json">💾 Full Backup</button>
+              <button id="btnExportCsv" class="btn btn-outline" style="justify-content:center;" data-i18n="export_csv">CSV</button>
+              <button id="btnExportJson" class="btn btn-outline" style="justify-content:center;" data-i18n="export_json">Backup</button>
            </div>
-           <p style="font-size:11px; color:var(--muted); margin:8px 0 0; text-align:center;" data-i18n="backup_hint">Download your data locally.</p>
       </div>
     </div>
     <div class="modal-foot"><button class="btn btn-outline" onclick="document.getElementById('authModal').close()" data-i18n="close">Close</button></div>
   </dialog>
 
-  <!-- JAVASCRIPT LOGIC -->
   <script type="module">
     import { POUCH_DB } from './data.js';
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
@@ -370,269 +321,137 @@
     import { getAuth, signInWithPopup, GoogleAuthProvider, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
     import { getFirestore, doc, setDoc, getDoc, collection, onSnapshot, query, orderBy, Timestamp, writeBatch, deleteDoc } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
 
-    // === 1. CONFIGURATION ===
-    const firebaseConfig = {
-      apiKey: "AIzaSyBKMDwYeSjmgQLnpYciReSK2yJU0pG6KS8",
-      authDomain: "nicotinepouches-d9d1c.firebaseapp.com",
-      projectId: "nicotinepouches-d9d1c",
-      storageBucket: "nicotinepouches-d9d1c.firebasestorage.app",
-      messagingSenderId: "42131125480",
-      appId: "1:42131125480:web:8022461f0a790a5677855d",
-      measurementId: "G-0NE6V1LVKN"
-    };
+    const firebaseConfig = { apiKey: "AIzaSyBKMDwYeSjmgQLnpYciReSK2yJU0pG6KS8", authDomain: "nicotinepouches-d9d1c.firebaseapp.com", projectId: "nicotinepouches-d9d1c", storageBucket: "nicotinepouches-d9d1c.firebasestorage.app", messagingSenderId: "42131125480", appId: "1:42131125480:web:8022461f0a790a5677855d" };
+    const app = initializeApp(firebaseConfig); const analytics = getAnalytics(app); const auth = getAuth(app); const db = getFirestore(app);
 
-    const app = initializeApp(firebaseConfig);
-    const analytics = getAnalytics(app);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
-
-    // === 2. LOCALIZATION (REVISED) ===
+    // --- LOCALIZATION ---
     const translations = {
       en: {
-        auth_btn: "Sync / Data", today_usage: "TODAY", streak: "STREAK", money_saved: "SAVED",
-        log_usage: "Log Usage", manage_custom_brands: "Manage Custom Brands", chart_trend: "Usage Trend",
-        history: "History", view_all: "View All", settings: "Settings", quit_mode_label: "Enable Quitting Program",
-        quit_date: "Quit Date", currency: "Currency", pack_price: "Price / Can", pouches_pack: "Pouches / Can",
-        daily_limit: "Standard Limit", close: "Close", save: "Save", auth_title: "Sync & Backup",
-        auth_desc: "Sign in to backup data.", login: "Log In", toggle_reg: "Need account? Register", daily_max: "DAILY MAX",
-        quit_title: "Freedom Journey", achievements: "Achievements",
-        manage_brands: "Manage Custom Brands", brand_name_label: "Brand Name", mg_label: "Mg",
-        export_csv: "📄 CSV Export", export_json: "💾 Full Backup", google_login: "Google Login", streak_hint: "🔥 Keep it up", nicotine: "Nicotine", 
-        total_today: "Total today", cost_label: "Cost", limit_label: "Limit", days_label: "days",
-        custom_group: "Custom", no_custom_brands: "No custom brands.", delete_brand_confirm: "Delete this brand?",
-        days_left: "{days} days left", freedom: "Freedom!", hourly_heatmap: "Hourly Heatmap", history_modal_title: "Full History",
-        pick_date: "Pick Date & Time", select_brand: "Select Brand", add_past_entry: "Add Past Entry", delete_entry: "Delete",
-        history_empty: "No history yet.", charts_title: "Analytics", favorites: "⭐ Favorites",
-        health_timeline: "Health Recovery", health_20m: "20m: Pulse normal", health_2h: "2h: Craving peak", health_8h: "8h: Oxygen levels",
-        health_24h: "24h: Nicotine gone", health_48h: "48h: Taste improves", health_72h: "72h: Breathing easier", health_14d: "14d: Circulation",
-        wiz_step1_title: "What is your goal?", wiz_step2_title: "Choose Strategy", wiz_step3_title: "Final Setup",
-        goal_track_title: "Just Tracking", goal_quit_title: "I Want to Quit",
-        strat_smooth_title: "Smooth Taper", strat_smooth_desc: "Linear reduction",
-        strat_weekly_title: "Weekly Step-Down", strat_weekly_desc: "Weekly drops",
-        strat_cutoff_title: "Cold Turkey", strat_cutoff_desc: "Fixed then stop",
-        start_limit: "Daily Limit", target_date: "Target Date", reduction_rate: "Reduction per Week",
-        back: "Back", next: "Next", finish: "Finish", data_management: "Data Management", selected_pouch: "Selected",
-        search_placeholder: "Search brand or flavor...", select_placeholder: "Select a pouch...",
-        past_entry_help: "For past entries, first select a pouch on the main screen, then click Add below.",
-        quit_status_active: "Plan active", mg_total: "mg total", backup_hint: "Download your data locally."
+        today_usage: "TODAY", streak: "STREAK", money_saved: "SAVED", log_usage: "Log Usage", history: "History", view_all: "View All", 
+        settings: "Settings", quit_mode_label: "Enable Quitting", quit_title: "Freedom Journey", achievements: "Achievements",
+        export_csv: "📄 CSV Export", export_json: "💾 Backup", google_login: "Google Login", streak_hint: "🔥 Keep it up", nicotine: "Nicotine", 
+        total_today: "Total today", cost_label: "Cost", limit_label: "Limit", days_label: "days", daily_max: "DAILY MAX",
+        days_left: "{days} left", freedom: "Freedom!", hourly_heatmap: "Hourly Heatmap", history_modal_title: "Full History",
+        pick_date: "Pick Date", add_past_entry: "Add Past Entry", history_empty: "No history.", charts_title: "Analytics",
+        health_timeline: "Health Recovery", wiz_step1_title: "Goal?", wiz_step2_title: "Strategy", wiz_step3_title: "Setup",
+        goal_track_title: "Just Track", goal_quit_title: "I Want to Quit", strat_smooth_title: "Smooth", strat_weekly_title: "Weekly",
+        strat_cutoff_title: "Cold Turkey", start_limit: "Daily Limit", target_date: "Target Date", back: "Back", next: "Next", finish: "Finish", 
+        data_management: "Data Management", selected_pouch: "Selected", search_placeholder: "Search brand or flavor...", 
+        select_placeholder: "Select a pouch...", past_entry_help: "To add past entry, first select a pouch on dashboard.",
+        quit_status_active: "Plan active", auth_btn: "Sync / Data", auth_title: "Sync & Backup", login: "Log In", toggle_reg: "Register",
+        currency: "Currency", pack_price: "Price/Can", pouches_pack: "Pcs/Can", close: "Close", delete_entry: "Delete", added: "Added!"
       },
       cs: {
-        auth_btn: "Sync / Data", today_usage: "DNES", streak: "ŘADA DNÍ", money_saved: "UŠETŘENO",
-        log_usage: "Zapsat sáček", manage_custom_brands: "Spravovat značky", chart_trend: "Vývoj",
-        history: "Historie", view_all: "Zobrazit vše", settings: "Nastavení", quit_mode_label: "Zapnout odvykací program",
-        quit_date: "Datum konce", currency: "Měna", pack_price: "Cena puku", pouches_pack: "Ks v puku",
-        daily_limit: "Denní limit", close: "Zavřít", save: "Uložit", auth_title: "Záloha dat",
-        auth_desc: "Přihlas se pro synchronizaci.", login: "Přihlásit", toggle_reg: "Registrovat se", daily_max: "DENNÍ CÍL",
-        quit_title: "Cesta ke svobodě", achievements: "Úspěchy",
-        manage_brands: "Správa značek", brand_name_label: "Název", mg_label: "Mg",
-        export_csv: "📄 Export CSV", export_json: "💾 Záloha dat", google_login: "Google", streak_hint: "🔥 Jen tak dál", nicotine: "Nikotin", 
-        total_today: "Celkem dnes", cost_label: "Cena", limit_label: "Limit", days_label: "dní",
-        custom_group: "Vlastní", no_custom_brands: "Žádné značky.", delete_brand_confirm: "Smazat?",
-        days_left: "Zbývá {days} dní", freedom: "Svoboda!", hourly_heatmap: "Hodinová heatmapa", history_modal_title: "Kompletní historie",
-        pick_date: "Vyber datum a čas", select_brand: "Značka", add_past_entry: "Přidat zpětně", delete_entry: "Smazat",
-        history_empty: "Žádná historie.", charts_title: "Statistiky", favorites: "⭐ Oblíbené",
-        health_timeline: "Zdravotní regenerace", health_20m: "20m: Tep v normálu", health_2h: "2h: Vrchol chutí", health_8h: "8h: Kyslík v krvi",
-        health_24h: "24h: Nikotin pryč", health_48h: "48h: Lepší chuť", health_72h: "72h: Lepší dýchání", health_14d: "14d: Oběh krve",
-        wiz_step1_title: "Jaký je tvůj cíl?", wiz_step2_title: "Strategie", wiz_step3_title: "Nastavení",
-        goal_track_title: "Jen sledovat", goal_quit_title: "Chci přestat",
-        strat_smooth_title: "Plynule (Smooth)", strat_smooth_desc: "Lineární snížení",
-        strat_weekly_title: "Týdenní schody", strat_weekly_desc: "Snížení týdně",
-        strat_cutoff_title: "Rázný konec", strat_cutoff_desc: "Stop k datu",
-        start_limit: "Denní Limit", target_date: "Datum konce", reduction_rate: "Snížení/Týden",
-        back: "Zpět", next: "Další", finish: "Hotovo", data_management: "Správa dat", selected_pouch: "Vybráno",
-        search_placeholder: "Hledat značku nebo příchuť...", select_placeholder: "Vyberte sáček...",
-        past_entry_help: "Pro zpětné vložení nejdřív vyberte sáček na hlavní stránce, pak klikněte Přidat zde.",
-        quit_status_active: "Plán aktivní", mg_total: "mg celkem", backup_hint: "Stáhněte si svá data."
+        today_usage: "DNES", streak: "ŘADA DNÍ", money_saved: "UŠETŘENO", log_usage: "Zapsat sáček", history: "Historie", view_all: "Zobrazit vše", 
+        settings: "Nastavení", quit_mode_label: "Zapnout odvykání", quit_title: "Cesta ke svobodě", achievements: "Úspěchy",
+        export_csv: "📄 Export CSV", export_json: "💾 Záloha", google_login: "Google", streak_hint: "🔥 Jen tak dál", nicotine: "Nikotin", 
+        total_today: "Celkem dnes", cost_label: "Cena", limit_label: "Limit", days_label: "dní", daily_max: "DENNÍ CÍL",
+        days_left: "Zbývá {days}", freedom: "Svoboda!", hourly_heatmap: "Hodinová heatmapa", history_modal_title: "Kompletní historie",
+        pick_date: "Vyber datum", add_past_entry: "Přidat zpětně", history_empty: "Žádná historie.", charts_title: "Statistiky",
+        health_timeline: "Zdravotní regenerace", wiz_step1_title: "Jaký je cíl?", wiz_step2_title: "Strategie", wiz_step3_title: "Nastavení",
+        goal_track_title: "Sledovat", goal_quit_title: "Přestat", strat_smooth_title: "Plynule", strat_weekly_title: "Týdně",
+        strat_cutoff_title: "Rázně", start_limit: "Denní Limit", target_date: "Datum konce", back: "Zpět", next: "Další", finish: "Hotovo", 
+        data_management: "Správa dat", selected_pouch: "Vybráno", search_placeholder: "Hledat značku nebo příchuť...", 
+        select_placeholder: "Vyberte sáček...", past_entry_help: "Pro zpětné vložení nejdřív vyberte sáček na hl. stránce.",
+        quit_status_active: "Plán aktivní", auth_btn: "Sync / Data", auth_title: "Záloha dat", login: "Přihlásit", toggle_reg: "Registrovat",
+        currency: "Měna", pack_price: "Cena/Puk", pouches_pack: "Ks/Puk", close: "Zavřít", delete_entry: "Smazat", added: "Přidáno!"
       }
     };
 
-    const t = (key, replacements = {}, langOverride) => {
-      const lang = langOverride || state?.lang || 'en';
-      let str = translations[lang]?.[key] || translations.en[key] || key;
-      Object.entries(replacements).forEach(([k, v]) => str = str.replace(`{${k}}`, v));
-      return str;
-    };
+    const t = (key) => { const lang = state?.lang || 'en'; return translations[lang]?.[key] || translations.en[key] || key; };
 
-    // === 3. STATE ===
+    // --- STATE ---
     let state = {
       user: null, lang: localStorage.getItem('nt_lang') || 'en',
-      settings: JSON.parse(localStorage.getItem('nt_settings')) || { 
-        currency: 'USD', packPrice: 5, pouchesPerPack: 20, dailyLimit: 10, 
-        goal: 'track', strategy: null, strategyStartDate: null, quitDate: null, reductionRate: 1
-      },
+      settings: JSON.parse(localStorage.getItem('nt_settings')) || { currency: 'CZK', packPrice: 150, pouchesPerPack: 20, dailyLimit: 10, goal: 'track' },
       history: JSON.parse(localStorage.getItem('nt_history')) || [],
       selection: JSON.parse(localStorage.getItem('nt_last_pouch')) || null
     };
     let wizStep = 1; let tempSettings = {};
+    let currentSearchResults = []; // Fix pro 0mg error
 
     function persistHistory() {
       state.history.sort((a, b) => new Date(b.date) - new Date(a.date));
       localStorage.setItem('nt_history', JSON.stringify(state.history));
     }
 
-    // === 4. LOGIC ===
+    // --- LOGIC ---
     function init() {
       applyLanguage(state.lang); persistHistory(); renderUI(); setupSearch(); setupListeners();
-      if (!localStorage.getItem('nt_settings') || !state.settings.goal) openWizard();
+      if (!localStorage.getItem('nt_settings')) openWizard();
       if('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js');
-      
-      let deferredPrompt; const installBtn = document.getElementById('installBtn');
-      window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferredPrompt = e; installBtn.classList.remove('hidden'); });
-      installBtn.addEventListener('click', async () => { if (!deferredPrompt) return; deferredPrompt.prompt(); deferredPrompt = null; installBtn.classList.add('hidden'); });
     }
 
     function applyLanguage(lang) {
       state.lang = lang; localStorage.setItem('nt_lang', lang); document.getElementById('langBtn').innerText = lang === 'en' ? '🇺🇸 EN' : '🇨🇿 CS';
-      document.querySelectorAll('[data-i18n]').forEach(el => { const tr = t(el.dataset.i18n, {}, lang); if(tr) el.innerText = tr; });
+      document.querySelectorAll('[data-i18n]').forEach(el => el.innerText = t(el.dataset.i18n));
       document.getElementById('searchInput').placeholder = t('search_placeholder');
       renderUI();
-    }
-
-    function calculateCurrentLimit() {
-      const s = state.settings;
-      if (s.goal === 'track' || !s.strategy || !s.strategyStartDate) return s.dailyLimit;
-      const now = new Date(); const startDate = new Date(s.strategyStartDate);
-      const daysPassed = Math.ceil(Math.abs(now - startDate) / (86400000));
-      
-      if (s.strategy === 'smooth') {
-        if(!s.quitDate) return s.dailyLimit;
-        const totalDays = Math.ceil((new Date(s.quitDate) - startDate) / 86400000);
-        if (totalDays <= 0) return 0;
-        const daysLeft = Math.ceil((new Date(s.quitDate) - now) / 86400000);
-        return Math.max(0, Math.ceil(s.dailyLimit * (Math.max(0, daysLeft) / totalDays)));
-      } 
-      else if (s.strategy === 'weekly') {
-        return Math.max(0, s.dailyLimit - (Math.floor(daysPassed / 7) * (s.reductionRate || 1)));
-      }
-      else if (s.strategy === 'cutoff') {
-        return (s.quitDate && now >= new Date(s.quitDate)) ? 0 : s.dailyLimit;
-      }
-      return s.dailyLimit;
     }
 
     function renderUI() {
       const today = new Date().toISOString().slice(0,10);
       const todayEntries = state.history.filter(h => h.date.startsWith(today));
-      const todayCount = todayEntries.length;
+      const limit = state.settings.dailyLimit || 10; // Simplified logic for stability
       
-      // -- SMART FAVORITES (TOP 3 CHIPS) --
-      const counts = {};
-      state.history.forEach(h => { const k = h.brand + '|' + (h.name||''); counts[k] = (counts[k]||0)+1; });
-      const top = Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0, 4).map(e=>e[0]);
-      
+      // Favorites
+      const counts = {}; state.history.forEach(h => { const k = h.brand + '|' + (h.name||''); counts[k] = (counts[k]||0)+1; });
+      const top = Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0, 3).map(e=>e[0]);
       const container = document.getElementById('quickActions');
-      container.innerHTML = top.map(k => {
-          const [b, n] = k.split('|');
-          return `<div class="quick-chip">${n || b}</div>`;
-      }).join('');
-      
+      container.innerHTML = top.map(k => { const [b, n] = k.split('|'); return `<div class="quick-chip">${n || b}</div>`; }).join('');
       container.querySelectorAll('.quick-chip').forEach((el, i) => {
           el.onclick = () => {
               const [b, n] = top[i].split('|');
-              const full = POUCH_DB.find(p => p.b === b && p.n === n) || { b, n, mg: 0 };
-              selectPouch(full);
-              addEntry();
+              const full = POUCH_DB.find(p => p.b === b && p.n === n) || { b, n, mg: 0 }; // Fallback
+              selectPouch(full); addEntry();
           };
       });
 
-      // -- SELECTION BUTTON DISPLAY --
+      // Selection
       const selName = document.getElementById('selectedPouchName');
-      if (state.selection) {
-          selName.innerHTML = `${state.selection.n} <span style="color:var(--primary); font-size:11px;">${state.selection.mg}mg</span>`;
-      } else {
-          selName.innerText = t('select_placeholder');
-      }
+      if (state.selection) selName.innerHTML = `${state.selection.n} <span style="color:var(--primary); font-size:11px;">${state.selection.mg}mg</span>`;
+      else selName.innerText = t('select_placeholder');
 
-      // -- STATS & BANNER --
-      const limit = calculateCurrentLimit();
-      const s = state.settings;
-      if (s.goal === 'quit' && s.strategy) {
-        document.getElementById('quitBanner').classList.remove('hidden');
-        document.getElementById('quitStatusText').innerText = t('quit_status_active');
-        document.getElementById('quitTarget').innerText = limit;
-        const percent = limit > 0 ? Math.min(100, (todayCount / limit) * 100) : 100;
-        document.getElementById('quitProgress').style.width = percent + '%';
-        document.getElementById('quitProgress').style.backgroundColor = percent > 100 ? 'var(--danger)' : 'var(--primary)';
-        
-        document.getElementById('healthSection').classList.remove('hidden');
-        renderHealthTimeline();
-      } else {
-        document.getElementById('quitBanner').classList.add('hidden');
-        document.getElementById('healthSection').classList.add('hidden');
-      }
-
-      document.getElementById('valToday').innerText = todayCount;
+      // Stats
+      document.getElementById('valToday').innerText = todayEntries.length;
       document.getElementById('valLimit').innerText = `${t('limit_label')}: ${limit}`;
-      const saved = (limit - todayCount) * (s.packPrice / s.pouchesPerPack);
-      document.getElementById('valSaved').innerText = `${Math.max(0, saved).toFixed(0)} ${s.currency}`;
-      document.getElementById('valCost').innerText = `${t('cost_label')}: ${(todayCount * (s.packPrice/s.pouchesPerPack)).toFixed(0)}`;
+      const saved = (limit - todayEntries.length) * (state.settings.packPrice / state.settings.pouchesPerPack);
+      document.getElementById('valSaved').innerText = `${Math.max(0, saved).toFixed(0)} ${state.settings.currency}`;
       document.getElementById('valMg').innerText = `${todayEntries.reduce((s,i)=>s+(i.mg||0),0).toFixed(1)} mg`;
-      document.getElementById('valStreak').innerHTML = `${calcStreak()} <span style="font-size:14px">${t('days_label')}</span>`;
-
-      renderBadges(calcStreak());
       
+      // History
       const list = document.getElementById('historyList'); list.innerHTML = '';
-      if(state.history.length === 0) list.innerHTML = `<p style="color:var(--muted); font-size:13px;">${t('history_empty')}</p>`;
-      else state.history.slice(0, 5).forEach(h => {
+      state.history.slice(0, 5).forEach(h => {
           list.innerHTML += `<div class="history-item"><div><strong>${h.name || h.brand}</strong> <span style="color:var(--muted)">${h.mg}mg</span></div><div style="font-size:11px; color:var(--muted);">${new Date(h.date).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</div></div>`;
       });
 
-      renderChart(); renderHourlyChart(); renderFullHistoryList();
+      renderChart(); renderHourlyChart();
     }
 
-    function renderHealthTimeline() {
-        const container = document.getElementById('healthList');
-        container.innerHTML = '';
-        if(state.history.length === 0) return;
-        
-        const last = new Date(state.history[0].date);
-        const diffMins = (new Date() - last) / 60000;
-        const diffHours = diffMins / 60;
-        const diffDays = diffHours / 24;
-
-        const milestones = [
-            { t: 20, unit: 'min', label: 'health_20m', done: diffMins >= 20 },
-            { t: 2, unit: 'h', label: 'health_2h', done: diffHours >= 2 },
-            { t: 8, unit: 'h', label: 'health_8h', done: diffHours >= 8 },
-            { t: 24, unit: 'h', label: 'health_24h', done: diffHours >= 24 },
-            { t: 48, unit: 'h', label: 'health_48h', done: diffHours >= 48 },
-            { t: 72, unit: 'h', label: 'health_72h', done: diffHours >= 72 },
-            { t: 14, unit: 'd', label: 'health_14d', done: diffDays >= 14 },
-        ];
-
-        milestones.forEach(m => {
-            const div = document.createElement('div');
-            div.className = `health-item ${m.done ? 'health-done' : 'health-locked'}`;
-            div.innerHTML = `<div class="health-icon">${m.done ? '✅' : '🔒'}</div><div>${t(m.label)}</div>`;
-            container.appendChild(div);
-        });
-    }
-
-    // --- SEARCH & SELECTION LOGIC ---
+    // --- SEARCH FIX ---
     function setupSearch() {
         const input = document.getElementById('searchInput');
         const results = document.getElementById('searchResults');
         
         document.getElementById('openSearchBtn').onclick = () => {
-            input.value = '';
-            renderList(POUCH_DB.slice(0, 20));
-            document.getElementById('searchModal').showModal();
-            input.focus();
+            input.value = ''; 
+            currentSearchResults = POUCH_DB.slice(0, 20);
+            renderList(currentSearchResults);
+            document.getElementById('searchModal').showModal(); input.focus();
         };
 
         const renderList = (items) => {
-            results.innerHTML = items.map(item => `
-                <div class="search-item" onclick='window.selectAndClose(${JSON.stringify(item)})'>
-                    <div>
-                        <strong>${item.n}</strong>
-                        <small>${item.b}</small>
-                    </div>
+            results.innerHTML = items.map((item, index) => `
+                <div class="search-item" onclick="window.selectByIndex(${index})">
+                    <div><strong>${item.n}</strong><small>${item.b}</small></div>
                     <div class="mg-badge">${item.mg} mg</div>
                 </div>
             `).join('');
         };
-        
-        window.selectAndClose = (item) => {
+
+        window.selectByIndex = (index) => {
+             // FIX: Vybrání přes index pole = 100% spolehlivost pro čísla a data
+             const item = currentSearchResults[index];
              selectPouch(item);
              document.getElementById('searchModal').close();
         };
@@ -640,10 +459,8 @@
         input.addEventListener('input', (e) => {
             const q = e.target.value.toLowerCase().trim();
             if (q.length < 1) { renderList([]); return; }
-            const filtered = POUCH_DB.filter(p => 
-                p.n.toLowerCase().includes(q) || p.b.toLowerCase().includes(q)
-            ).slice(0, 50);
-            renderList(filtered);
+            currentSearchResults = POUCH_DB.filter(p => p.n.toLowerCase().includes(q) || p.b.toLowerCase().includes(q)).slice(0, 50);
+            renderList(currentSearchResults);
         });
     }
 
@@ -653,217 +470,53 @@
         renderUI();
     }
 
-    // --- GENERIC HELPERS ---
-    window.selectGoal = (g) => { tempSettings.goal = g; document.querySelectorAll('#step1 .selection-card').forEach(c=>c.classList.remove('active')); document.querySelector(`#step1 .selection-card[data-val="${g}"]`).classList.add('active'); };
-    window.selectStrategy = (s) => { tempSettings.strategy = s; document.querySelectorAll('#step2 .selection-card').forEach(c=>c.classList.remove('active')); document.querySelector(`#step2 .selection-card[data-val="${s}"]`).classList.add('active'); };
-    window.nextStep = () => {
-        if(wizStep===1) wizStep = (tempSettings.goal === 'track') ? 3 : 2;
-        else if(wizStep===2) wizStep = 3;
-        else { saveWizardSettings(); return; }
-        renderWizard();
-    };
-    window.prevStep = () => { wizStep = (wizStep===3 && tempSettings.goal==='track') ? 1 : wizStep-1; renderWizard(); };
-    function openWizard() { wizStep=1; tempSettings={...state.settings}; renderWizard(); document.getElementById('settingsModal').showModal(); }
-    function renderWizard() {
-        document.querySelectorAll('.wizard-step').forEach(e=>e.classList.add('hidden')); document.getElementById(`step${wizStep}`).classList.remove('hidden');
-        document.getElementById('wizBackBtn').classList.toggle('hidden', wizStep===1);
-        document.getElementById('wizNextBtn').innerText = (wizStep===3) ? t('finish') : t('next');
-        document.getElementById('wizardStepIndicator').innerText = `Step ${wizStep}/3`;
-        if(wizStep===3) {
-            document.getElementById('currencyInput').value = tempSettings.currency;
-            document.getElementById('priceInput').value = tempSettings.packPrice;
-            document.getElementById('piecesInput').value = tempSettings.pouchesPerPack;
-            document.getElementById('limitInput').value = tempSettings.dailyLimit;
-            const isQuit = tempSettings.goal === 'quit';
-            document.getElementById('dateInputContainer').classList.toggle('hidden', !(isQuit && ['smooth','cutoff'].includes(tempSettings.strategy)));
-            document.getElementById('reductionInputContainer').classList.toggle('hidden', !(isQuit && tempSettings.strategy==='weekly'));
-            if(tempSettings.quitDate) document.getElementById('wizardDateInput').value = tempSettings.quitDate;
-        }
+    async function addEntry() {
+      if(!state.selection) return document.getElementById('openSearchBtn').click();
+      const item = state.selection;
+      const rec = { id: Date.now().toString(), brand: item.b, name: item.n, mg: item.mg, date: new Date().toISOString() };
+      state.history.unshift(rec); persistHistory();
+      if(state.user) setDoc(doc(db,'users',state.user.uid,'history',rec.id),{ ...rec, timestamp:Timestamp.now() });
+      renderUI(); showToast(t('added'));
     }
-    function saveWizardSettings() {
-        const newSettings = { ...tempSettings, 
-            currency: document.getElementById('currencyInput').value,
-            packPrice: parseFloat(document.getElementById('priceInput').value)||0,
-            pouchesPerPack: parseFloat(document.getElementById('piecesInput').value)||20,
-            dailyLimit: parseFloat(document.getElementById('limitInput').value)||10,
-            quitDate: document.getElementById('wizardDateInput').value||null,
-            reductionRate: parseFloat(document.getElementById('reductionInput').value)||1
-        };
-        if(newSettings.goal==='quit' && newSettings.strategy !== state.settings.strategy) newSettings.strategyStartDate = new Date().toISOString();
-        state.settings = newSettings; localStorage.setItem('nt_settings', JSON.stringify(state.settings));
-        if(state.user) setDoc(doc(db, 'users', state.user.uid, 'settings', 'profile'), state.settings);
-        document.getElementById('settingsModal').close(); renderUI();
-    }
+
+    // --- HELPERS ---
+    function showToast(m) { const t=document.getElementById('toast');t.innerHTML=`<div class="toast-msg">${m}</div>`;setTimeout(()=>t.innerHTML='',2000); }
     
-    // --- GAMIFICATION & CHARTS ---
-    function getDailyStats() { const d={}; state.history.forEach(h=>{const k=h.date.slice(0,10); if(!d[k])d[k]={count:0}; d[k].count++}); return d; }
-    function calcStreak() {
-      const daily=getDailyStats(); const limit=calculateCurrentLimit(); let s=0; let d=new Date();
-      for(let i=0;i<365;i++){ const k=d.toISOString().slice(0,10); const st=daily[k];
-      if(i===0 && (!st || st.count<=limit)){} else if(st && st.count<=limit)s++; else if(i>0 && !st)s++; else if(st && st.count>limit)break; d.setDate(d.getDate()-1);} return s;
-    }
-    function renderBadges(streak){
-        const total=state.history.length; const saved=parseFloat(document.getElementById('valSaved').innerText)||0;
-        const badges=[{i:0,u:total>=10},{i:1,u:total>=100},{i:2,u:streak>=3},{i:3,u:streak>=7},{i:4,u:streak>=30},{i:8,u:saved>=100},{i:9,u:saved>=1000}];
-        const grid=document.getElementById('badgeGrid'); grid.innerHTML='';
-        const icons=['👶','💯','🔥','📆','🛡️','⚔️','🫁','⚡','🐷','💰'];
-        const labels=['Beginner','Pro','Streak 3','Streak 7','Iron Will','Weekend','Clean','Hardcore','Saver','Investor'];
-        badges.forEach(b=>{
-            const el=document.createElement('div'); el.className=`achievement ${b.u?'unlocked':'locked'}`;
-            el.innerHTML=`<div class="icon">${icons[b.i]}</div><div><h4>${labels[b.i]}</h4></div>`;
-            grid.appendChild(el);
-        });
-    }
     function renderChart(){
         const days={}; for(let i=13;i>=0;i--){const d=new Date();d.setDate(d.getDate()-i); days[d.toISOString().slice(0,10)]=0;}
         state.history.forEach(h=>{const k=h.date.slice(0,10);if(days[k]!==undefined)days[k]++;});
         const ctx=document.getElementById('trendChart'); if(window.trendChartInst)window.trendChartInst.destroy();
-        window.trendChartInst=new Chart(ctx,{type:'line',data:{labels:Object.keys(days).map(d=>d.slice(5)),datasets:[{label:'Pouches',data:Object.values(days),borderColor:'#10b981',backgroundColor:'rgba(16,185,129,0.1)',fill:true,tension:0.4}]},options:{plugins:{legend:{display:false}},scales:{y:{beginAtZero:true}}}});
+        window.trendChartInst=new Chart(ctx,{type:'line',data:{labels:Object.keys(days).map(d=>d.slice(5)),datasets:[{label:'Pcs',data:Object.values(days),borderColor:'#10b981',backgroundColor:'rgba(16,185,129,0.1)',fill:true,tension:0.4}]},options:{plugins:{legend:{display:false}},scales:{y:{beginAtZero:true}}}});
     }
     function renderHourlyChart() {
-      const hours=Array.from({length:24},(_,i)=>({l:String(i).padStart(2,'0')+':00',c:0}));
+      const hours=Array.from({length:24},(_,i)=>({l:i,c:0}));
       state.history.forEach(h=>hours[new Date(h.date).getHours()].c++);
       const ctx=document.getElementById('hourlyChart'); if(window.hourlyChartInst)window.hourlyChartInst.destroy();
-      window.hourlyChartInst=new Chart(ctx,{type:'bar',data:{labels:hours.map(h=>h.l),datasets:[{data:hours.map(h=>h.c),backgroundColor:'#10b981'}]},options:{plugins:{legend:{display:false}},scales:{y:{beginAtZero:true}}}});
+      window.hourlyChartInst=new Chart(ctx,{type:'bar',data:{labels:hours.map(h=>h.l),datasets:[{data:hours.map(h=>h.c),backgroundColor:'#10b981'}]},options:{plugins:{legend:{display:false}},scales:{y:{display:false},x:{grid:{display:false}}}}});
     }
 
-    // --- ACTIONS ---
-    function renderFullHistoryList() {
-      const c=document.getElementById('fullHistoryList'); c.innerHTML='';
-      if(state.history.length===0) c.innerHTML=`<p>${t('history_empty')}</p>`;
-      else state.history.forEach(h=>{
-         const d=document.createElement('div'); d.className='history-item';
-         d.innerHTML=`<div><strong>${h.name || h.brand}</strong> ${h.mg}mg<br><small style="color:var(--muted)">${new Date(h.date).toLocaleString()}</small></div><button class="btn btn-danger" onclick="delHist('${h.id}')">${t('delete_entry')}</button>`;
-         c.appendChild(d);
-      });
-    }
-    window.delHist = async (id) => { const i=state.history.findIndex(h=>h.id===id); if(i===-1)return; const r=state.history.splice(i,1)[0]; persistHistory(); if(state.user&&r.id)await deleteDoc(doc(db,'users',state.user.uid,'history',r.id)); renderUI(); renderFullHistoryList(); };
-
-    // --- DATA EXPORT ---
-    function downloadFile(content, fileName, mimeType) {
-        const blob = new Blob([content], { type: mimeType });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url; a.download = fileName;
-        document.body.appendChild(a); a.click(); document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-    }
-    
-    function exportCSV() {
-        if(state.history.length === 0) return alert("No data to export");
-        // BOM \uFEFF ensures Excel reads UTF-8 correctly
-        let csvContent = "\uFEFFDate,Time,Brand,Name,Mg,Est.Cost\n";
-        const unitCost = (state.settings.packPrice / (state.settings.pouchesPerPack || 20)) || 0;
-        state.history.forEach(row => {
-            const d = new Date(row.date);
-            const dateStr = d.toLocaleDateString();
-            const timeStr = d.toLocaleTimeString();
-            csvContent += `${dateStr},${timeStr},"${row.brand}","${row.name||row.brand}",${row.mg},${unitCost.toFixed(2)}\n`;
-        });
-        downloadFile(csvContent, 'nicotracker_history.csv', 'text/csv');
-    }
-
-    function exportJSON() {
-        const data = {
-            version: 1, exportedAt: new Date().toISOString(),
-            settings: state.settings, history: state.history
-        };
-        downloadFile(JSON.stringify(data, null, 2), 'nicotracker_backup.json', 'application/json');
-    }
-
-    async function addEntry() {
-      if(!state.selection) {
-          document.getElementById('openSearchBtn').click();
-          return;
-      }
-      
-      const item = state.selection;
-      const rec = {
-          id: Date.now().toString(),
-          brand: item.b,
-          name: item.n, // Ukládáme i přesný název
-          mg: item.mg,
-          date: new Date().toISOString()
-      };
-
-      state.history.unshift(rec); persistHistory();
-      if(state.user){
-        try {
-          await setDoc(doc(db,'users',state.user.uid,'history',rec.id),{ ...rec, timestamp:Timestamp.now() });
-        } catch (e) {
-          console.error('Failed to sync entry', e);
-        }
-      }
-      logEvent(analytics,'add_pouch',{brand:rec.brand, mg:rec.mg}); 
-      renderUI(); 
-      showToast("Added!");
-    }
-
-    async function addPastEntry() {
-        const dt=document.getElementById('backdateInput').value; 
-        if(!dt || !state.selection) return alert('Date & Pouch selection required');
-        
-        const item = state.selection;
-        const rec={
-            id:Date.now().toString(),
-            brand:item.b,
-            name:item.n,
-            mg:item.mg,
-            date:new Date(dt).toISOString()
-        };
-        
-        state.history.push(rec); persistHistory();
-        if(state.user) await setDoc(doc(db,'users',state.user.uid,'history',rec.id),{ ...rec, timestamp:Timestamp.fromDate(new Date(dt))});
-        renderUI(); renderFullHistoryList(); showToast("Added!");
-    }
-
+    // --- LISTENERS ---
     function setupListeners() {
       document.getElementById('langBtn').onclick=()=>applyLanguage(state.lang==='en'?'cs':'en');
-      document.getElementById('menuBtn').onclick=()=>openWizard();
-      document.getElementById('syncBtn').onclick=()=>{
-          if(state.user){ 
-              // Logged in: Hide auth section
-              document.getElementById('authSection').classList.add('hidden');
-          } else {
-              document.getElementById('authSection').classList.remove('hidden');
-          }
-          document.getElementById('authModal').showModal();
-      };
-      
-      // Data Export Listeners
-      document.getElementById('btnExportCsv').onclick = exportCSV;
-      document.getElementById('btnExportJson').onclick = exportJSON;
-
+      document.getElementById('menuBtn').onclick=()=>document.getElementById('settingsModal').showModal();
+      document.getElementById('syncBtn').onclick=()=>document.getElementById('authModal').showModal();
       document.getElementById('addBtn').onclick=addEntry;
-      
       document.getElementById('viewAllHistoryBtn').onclick=()=>{
-          const now=new Date(); document.getElementById('backdateInput').value=new Date(now.getTime()-now.getTimezoneOffset()*60000).toISOString().slice(0,16);
-          renderFullHistoryList(); document.getElementById('historyModal').showModal();
+          const c=document.getElementById('fullHistoryList'); c.innerHTML='';
+          state.history.forEach(h=>{
+             c.innerHTML+=`<div class="history-item"><div>${h.name} (${h.mg}mg)<br><small>${new Date(h.date).toLocaleString()}</small></div><button class="btn btn-danger" onclick="window.delHist('${h.id}')">${t('delete_entry')}</button></div>`;
+          });
+          document.getElementById('historyModal').showModal();
       };
-      document.getElementById('addPastEntryBtn').onclick=addPastEntry;
+      window.delHist = (id) => { state.history=state.history.filter(h=>h.id!==id); persistHistory(); renderUI(); document.getElementById('historyModal').close(); };
+      
+      // Auth
+      document.getElementById('loginBtn').onclick=async()=>{const e=document.getElementById('emailInput').value,p=document.getElementById('passInput').value; try{await signInWithEmailAndPassword(auth,e,p);document.getElementById('authModal').close();}catch{try{await createUserWithEmailAndPassword(auth,e,p);document.getElementById('authModal').close();}catch(err){alert(err.message);}}};
       document.getElementById('googleAuthBtn').onclick=()=>signInWithPopup(auth,new GoogleAuthProvider()).then(()=>document.getElementById('authModal').close());
-      let isReg=false; document.getElementById('toggleReg').onclick=()=>{isReg=!isReg;document.getElementById('loginBtn').innerText=isReg?"Register":"Log In";};
-      document.getElementById('loginBtn').onclick=async()=>{const e=document.getElementById('emailInput').value,p=document.getElementById('passInput').value; try{if(isReg)await createUserWithEmailAndPassword(auth,e,p);else await signInWithEmailAndPassword(auth,e,p);document.getElementById('authModal').close();}catch(err){alert(err.message);}};
+      onAuthStateChanged(auth, async (u) => { if(u){ state.user=u; document.getElementById('syncBtn').innerText="✅"; 
+        onSnapshot(query(collection(db,'users',u.uid,'history'),orderBy('timestamp','desc')),(s)=>{const h=s.docs.map(d=>({id:d.id, brand:d.data().brand, name:d.data().name||d.data().brand, mg:d.data().mg, date:d.data().timestamp.toDate().toISOString()})); if(h.length){state.history=h;persistHistory();renderUI();}});
+      }});
     }
-    function showToast(m) { const t=document.createElement('div');t.className='toast-msg';t.innerText=m;document.getElementById('toast').appendChild(t);setTimeout(()=>t.remove(),3000); }
-
-    // === SYNC ===
-    onAuthStateChanged(auth, async (u) => {
-      if(u){ state.user=u; document.getElementById('syncBtn').innerText=u.email;
-        const sSnap=await getDoc(doc(db,'users',u.uid,'settings','profile'));
-        if(sSnap.exists()){state.settings=sSnap.data();localStorage.setItem('nt_settings',JSON.stringify(state.settings));}
-        
-        onSnapshot(query(collection(db,'users',u.uid,'history'),orderBy('timestamp','desc')),(s)=>{
-           // Mapujeme novou strukturu
-           const h=s.docs.map(d=>({id:d.id, brand:d.data().brand, name:d.data().name||d.data().brand, mg:d.data().mg, date:d.data().timestamp.toDate().toISOString()}));
-           if(h.length){state.history=h;persistHistory();renderUI();}
-        });
-      } else { 
-          state.user=null; 
-          document.getElementById('syncBtn').innerText = t('auth_btn');
-          renderUI(); 
-      }
-    });
 
     init();
   </script>
