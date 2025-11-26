@@ -22,7 +22,6 @@
     :root {
       --bg: #f8fafc; --card: #ffffff; --text: #0f172a; --muted: #64748b;
       --primary: #10b981; --primary-dark: #059669; --danger: #ef4444; --border: #e2e8f0;
-      --gold: #f59e0b;
     }
 
     * { box-sizing: border-box; }
@@ -96,23 +95,9 @@
     .progress-fill { height:100%; background:var(--primary); width:0%; transition:width 0.5s; }
 
     /* Wizard Styles */
-    .selection-card {
-      border: 2px solid var(--border);
-      border-radius: 12px;
-      padding: 16px;
-      cursor: pointer;
-      transition: all 0.2s;
-      background: white;
-      text-align: center;
-    }
+    .selection-card { border: 2px solid var(--border); border-radius: 12px; padding: 16px; cursor: pointer; transition: all 0.2s; background: white; text-align: center; }
     .selection-card:hover { border-color: #cbd5e1; }
-    .selection-card.active {
-      border-color: var(--primary);
-      background-color: #ecfdf5;
-      box-shadow: 0 4px 6px -1px rgba(16,185,129,0.1);
-    }
-    .selection-card h4 { margin: 8px 0 4px; font-size: 15px; }
-    .selection-card p { margin: 0; font-size: 12px; color: var(--muted); line-height: 1.4; }
+    .selection-card.active { border-color: var(--primary); background-color: #ecfdf5; box-shadow: 0 4px 6px -1px rgba(16,185,129,0.1); }
     .wizard-step { animation: fadeIn 0.3s; }
     @keyframes fadeIn { from { opacity:0; transform:translateY(5px); } to { opacity:1; transform:translateY(0); } }
 
@@ -120,7 +105,7 @@
     .toast-msg { background:#1e293b; color:white; padding:12px 20px; border-radius:10px; margin-top:10px; animation:slideUp 0.3s; }
     @keyframes slideUp { from{transform:translateY(20px);opacity:0} to{transform:translateY(0);opacity:1} }
 
-    /* --- NOVÉ STYLY PRO VYHLEDÁVÁNÍ (V2.1) --- */
+    /* --- NOVÉ STYLY PRO VYHLEDÁVÁNÍ (CENTERED MODAL) --- */
     .selector-btn {
       width: 100%; text-align: left; background: white; border: 1px solid var(--border);
       padding: 12px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center;
@@ -134,7 +119,26 @@
       padding: 8px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; cursor: pointer;
     }
 
-    #searchModal { height: 80vh; max-height: 800px; width: 100%; max-width: 600px; border-radius: 20px 20px 0 0; position: fixed; bottom: 0; margin: 0; top: auto; border: none; box-shadow: 0 -10px 40px rgba(0,0,0,0.15); animation: slideUp 0.3s ease-out; }
+    #searchModal { 
+        /* CENTERED POSITIONING */
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        margin: 0;
+        bottom: auto; /* Reset bottom */
+        
+        /* STYLE */
+        height: 80vh; 
+        max-height: 700px; 
+        width: min(500px, 90vw); 
+        border-radius: 16px; 
+        border: 1px solid var(--primary); /* Green Border */
+        box-shadow: 0 10px 40px rgba(0,0,0,0.2); 
+        animation: fadeIn 0.2s ease-out; 
+    }
+    @keyframes fadeIn { from { opacity:0; transform:translate(-50%, -48%); } to { opacity:1; transform:translate(-50%, -50%); } }
+
     .search-header { padding: 16px; border-bottom: 1px solid var(--border); display: flex; gap: 10px; align-items: center; background: white; }
     #searchInput { width: 100%; padding: 12px 40px 12px 16px; border-radius: 10px; border: 1px solid var(--border); font-size: 16px; outline: none; background: #f8fafc; }
     #searchInput:focus { border-color: var(--primary); background: white; }
@@ -204,7 +208,7 @@
       <div class="content" id="healthList"></div>
     </details>
 
-    <!-- NEW LOG USAGE SECTION (V2.1 - Search & Quick Actions) -->
+    <!-- NEW LOG USAGE SECTION -->
     <div class="card" style="margin-top:4px;">
       <h3 style="margin:0 0 12px;" data-i18n="log_usage">Log Usage</h3>
       
@@ -264,7 +268,7 @@
 
   <!-- DIALOGS -->
 
-  <!-- NEW SEARCH MODAL (V2.1) -->
+  <!-- NEW SEARCH MODAL (Centered & Bordered) -->
   <dialog id="searchModal">
     <div class="search-header">
       <div style="position:relative; flex-grow:1;">
@@ -283,7 +287,7 @@
     <div class="modal-head"><span data-i18n="history_modal_title">Full History</span></div>
     <div class="modal-body grid" style="gap:12px;">
       <div><label style="font-size:12px; color:var(--muted);" data-i18n="pick_date">Pick Date</label><input type="datetime-local" id="backdateInput"></div>
-      <div style="font-size:12px; color:var(--muted);">For past entries, use the main selector first, then click "Add Past Entry" here.</div>
+      <div style="font-size:12px; color:var(--muted);" data-i18n="past_entry_help">For past entries, use the main selector first.</div>
       <button id="addPastEntryBtn" class="btn btn-primary" style="width:100%;" data-i18n="add_past_entry">Add Past Entry</button>
       <div style="border-top:1px solid var(--border); margin:8px 0;"></div>
       <div id="fullHistoryList" style="max-height:300px; overflow-y:auto;"></div>
@@ -337,7 +341,6 @@
   <dialog id="authModal">
     <div class="modal-head" data-i18n="auth_title">Sync & Backup</div>
     <div class="modal-body">
-      <!-- Login Section -->
       <div id="authSection">
           <div class="grid">
               <input type="email" id="emailInput" placeholder="Email">
@@ -347,15 +350,13 @@
           </div>
           <div style="text-align:center; margin-top:10px; font-size:13px; color:var(--primary); cursor:pointer;" id="toggleReg" data-i18n="toggle_reg">New? Create Account</div>
       </div>
-
-      <!-- Data Export Section -->
       <div style="border-top:1px solid var(--border); margin-top:20px; padding-top:20px;">
            <h4 style="margin:0 0 12px; font-size:14px; color:var(--muted); text-transform:uppercase;" data-i18n="data_management">Data Management</h4>
            <div class="grid" style="grid-template-columns: 1fr 1fr;">
-              <button id="btnExportCsv" class="btn btn-outline" style="justify-content:center;">📄 CSV Export</button>
-              <button id="btnExportJson" class="btn btn-outline" style="justify-content:center;">💾 Full Backup</button>
+              <button id="btnExportCsv" class="btn btn-outline" style="justify-content:center;" data-i18n="export_csv">📄 CSV Export</button>
+              <button id="btnExportJson" class="btn btn-outline" style="justify-content:center;" data-i18n="export_json">💾 Full Backup</button>
            </div>
-           <p style="font-size:11px; color:var(--muted); margin:8px 0 0; text-align:center;">Download your data locally.</p>
+           <p style="font-size:11px; color:var(--muted); margin:8px 0 0; text-align:center;" data-i18n="backup_hint">Download your data locally.</p>
       </div>
     </div>
     <div class="modal-foot"><button class="btn btn-outline" onclick="document.getElementById('authModal').close()" data-i18n="close">Close</button></div>
@@ -385,7 +386,7 @@
     const auth = getAuth(app);
     const db = getFirestore(app);
 
-    // === 2. LOCALIZATION ===
+    // === 2. LOCALIZATION (REVISED) ===
     const translations = {
       en: {
         auth_btn: "Sync / Data", today_usage: "TODAY", streak: "STREAK", money_saved: "SAVED",
@@ -396,7 +397,7 @@
         auth_desc: "Sign in to backup data.", login: "Log In", toggle_reg: "Need account? Register", daily_max: "DAILY MAX",
         quit_title: "Freedom Journey", achievements: "Achievements",
         manage_brands: "Manage Custom Brands", brand_name_label: "Brand Name", mg_label: "Mg",
-        export_csv: "📥 Export CSV", google_login: "Google Login", streak_hint: "🔥 Keep it up", nicotine: "Nicotine", 
+        export_csv: "📄 CSV Export", export_json: "💾 Full Backup", google_login: "Google Login", streak_hint: "🔥 Keep it up", nicotine: "Nicotine", 
         total_today: "Total today", cost_label: "Cost", limit_label: "Limit", days_label: "days",
         custom_group: "Custom", no_custom_brands: "No custom brands.", delete_brand_confirm: "Delete this brand?",
         days_left: "{days} days left", freedom: "Freedom!", hourly_heatmap: "Hourly Heatmap", history_modal_title: "Full History",
@@ -410,7 +411,10 @@
         strat_weekly_title: "Weekly Step-Down", strat_weekly_desc: "Weekly drops",
         strat_cutoff_title: "Cold Turkey", strat_cutoff_desc: "Fixed then stop",
         start_limit: "Daily Limit", target_date: "Target Date", reduction_rate: "Reduction per Week",
-        back: "Back", next: "Next", finish: "Finish", data_management: "Data Management", selected_pouch: "Selected"
+        back: "Back", next: "Next", finish: "Finish", data_management: "Data Management", selected_pouch: "Selected",
+        search_placeholder: "Search brand or flavor...", select_placeholder: "Select a pouch...",
+        past_entry_help: "For past entries, first select a pouch on the main screen, then click Add below.",
+        quit_status_active: "Plan active", mg_total: "mg total", backup_hint: "Download your data locally."
       },
       cs: {
         auth_btn: "Sync / Data", today_usage: "DNES", streak: "ŘADA DNÍ", money_saved: "UŠETŘENO",
@@ -421,7 +425,7 @@
         auth_desc: "Přihlas se pro synchronizaci.", login: "Přihlásit", toggle_reg: "Registrovat se", daily_max: "DENNÍ CÍL",
         quit_title: "Cesta ke svobodě", achievements: "Úspěchy",
         manage_brands: "Správa značek", brand_name_label: "Název", mg_label: "Mg",
-        export_csv: "📥 Export CSV", google_login: "Google", streak_hint: "🔥 Jen tak dál", nicotine: "Nikotin", 
+        export_csv: "📄 Export CSV", export_json: "💾 Záloha dat", google_login: "Google", streak_hint: "🔥 Jen tak dál", nicotine: "Nikotin", 
         total_today: "Celkem dnes", cost_label: "Cena", limit_label: "Limit", days_label: "dní",
         custom_group: "Vlastní", no_custom_brands: "Žádné značky.", delete_brand_confirm: "Smazat?",
         days_left: "Zbývá {days} dní", freedom: "Svoboda!", hourly_heatmap: "Hodinová heatmapa", history_modal_title: "Kompletní historie",
@@ -435,7 +439,10 @@
         strat_weekly_title: "Týdenní schody", strat_weekly_desc: "Snížení týdně",
         strat_cutoff_title: "Rázný konec", strat_cutoff_desc: "Stop k datu",
         start_limit: "Denní Limit", target_date: "Datum konce", reduction_rate: "Snížení/Týden",
-        back: "Zpět", next: "Další", finish: "Hotovo", data_management: "Správa dat", selected_pouch: "Vybráno"
+        back: "Zpět", next: "Další", finish: "Hotovo", data_management: "Správa dat", selected_pouch: "Vybráno",
+        search_placeholder: "Hledat značku nebo příchuť...", select_placeholder: "Vyberte sáček...",
+        past_entry_help: "Pro zpětné vložení nejdřív vyberte sáček na hlavní stránce, pak klikněte Přidat zde.",
+        quit_status_active: "Plán aktivní", mg_total: "mg celkem", backup_hint: "Stáhněte si svá data."
       }
     };
 
@@ -454,7 +461,6 @@
         goal: 'track', strategy: null, strategyStartDate: null, quitDate: null, reductionRate: 1
       },
       history: JSON.parse(localStorage.getItem('nt_history')) || [],
-      // NOVÉ: Ukládáme vybraný sáček do state
       selection: JSON.parse(localStorage.getItem('nt_last_pouch')) || null
     };
     let wizStep = 1; let tempSettings = {};
@@ -478,6 +484,7 @@
     function applyLanguage(lang) {
       state.lang = lang; localStorage.setItem('nt_lang', lang); document.getElementById('langBtn').innerText = lang === 'en' ? '🇺🇸 EN' : '🇨🇿 CS';
       document.querySelectorAll('[data-i18n]').forEach(el => { const tr = t(el.dataset.i18n, {}, lang); if(tr) el.innerText = tr; });
+      document.getElementById('searchInput').placeholder = t('search_placeholder');
       renderUI();
     }
 
@@ -522,7 +529,6 @@
       container.querySelectorAll('.quick-chip').forEach((el, i) => {
           el.onclick = () => {
               const [b, n] = top[i].split('|');
-              // Najít plná data pro mg
               const full = POUCH_DB.find(p => p.b === b && p.n === n) || { b, n, mg: 0 };
               selectPouch(full);
               addEntry();
@@ -534,7 +540,7 @@
       if (state.selection) {
           selName.innerHTML = `${state.selection.n} <span style="color:var(--primary); font-size:11px;">${state.selection.mg}mg</span>`;
       } else {
-          selName.innerText = "Select a pouch...";
+          selName.innerText = t('select_placeholder');
       }
 
       // -- STATS & BANNER --
@@ -542,12 +548,12 @@
       const s = state.settings;
       if (s.goal === 'quit' && s.strategy) {
         document.getElementById('quitBanner').classList.remove('hidden');
+        document.getElementById('quitStatusText').innerText = t('quit_status_active');
         document.getElementById('quitTarget').innerText = limit;
         const percent = limit > 0 ? Math.min(100, (todayCount / limit) * 100) : 100;
         document.getElementById('quitProgress').style.width = percent + '%';
         document.getElementById('quitProgress').style.backgroundColor = percent > 100 ? 'var(--danger)' : 'var(--primary)';
         
-        // Show Health Timeline
         document.getElementById('healthSection').classList.remove('hidden');
         renderHealthTimeline();
       } else {
@@ -609,7 +615,6 @@
         
         document.getElementById('openSearchBtn').onclick = () => {
             input.value = '';
-            // Show default list (e.g. first 20)
             renderList(POUCH_DB.slice(0, 20));
             document.getElementById('searchModal').showModal();
             input.focus();
@@ -627,9 +632,7 @@
             `).join('');
         };
         
-        // Expose to window for onclick
         window.selectAndClose = (item) => {
-             // Zde se ujistíme, že item je objekt
              selectPouch(item);
              document.getElementById('searchModal').close();
         };
@@ -769,7 +772,6 @@
     }
 
     async function addEntry() {
-      // POUŽÍVÁME NOVÝ VÝBĚR ZE STATE.SELECTION
       if(!state.selection) {
           document.getElementById('openSearchBtn').click();
           return;
