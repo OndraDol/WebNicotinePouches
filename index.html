@@ -3,11 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <meta name="description" content="Nicotine Pouch Tracker.">
+  <meta name="description" content="Nicotine Pouch Tracker & Quitting Tool.">
   <meta name="theme-color" content="#10b981">
   <link rel="manifest" href="./manifest.json">
   <title>NicoTracker Ultimate</title>
   
+  <!-- Fonts & Libs -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -21,62 +22,75 @@
     * { box-sizing: border-box; }
     body { margin:0; font-family:'Inter',sans-serif; background:var(--bg); color:var(--text); padding-bottom:80px; -webkit-tap-highlight-color:transparent; }
     
-    .shell { max-width: 600px; margin: 0 auto; padding: 20px 16px; } /* Zúženo pro lepší vzhled na desktopu */
-    
+    .shell { max-width: 600px; margin: 0 auto; padding: 20px 16px; }
+
     header { background:var(--card); border-bottom:1px solid var(--border); padding:16px 20px; position:sticky; top:0; z-index:50; display:flex; justify-content:space-between; align-items:center; }
     .logo { font-weight:800; font-size:20px; display:flex; align-items:center; gap:6px; }
     .logo span { color:var(--primary); }
     
-    .card { background:var(--card); border:1px solid var(--border); border-radius:16px; padding:16px; margin-bottom:12px; box-shadow:0 2px 4px rgba(0,0,0,0.02); }
+    .card { background:var(--card); border:1px solid var(--border); border-radius:16px; padding:16px; margin-bottom:12px; box-shadow:0 4px 6px -1px rgba(0,0,0,0.05); }
     
-    .btn { border:none; border-radius:12px; padding:12px 16px; font-weight:600; cursor:pointer; font-size:14px; transition:0.2s; display:inline-flex; align-items:center; justify-content:center; gap:6px; }
+    .btn { border:none; border-radius:12px; padding:10px 16px; font-weight:600; cursor:pointer; font-size:14px; transition:0.2s; display:inline-flex; align-items:center; justify-content:center; gap:6px; }
     .btn-primary { background:var(--primary); color:white; }
     .btn-outline { background:white; border:1px solid var(--border); color:var(--text); }
-    .btn-ghost { background:transparent; color:var(--muted); padding:8px; }
+    .btn-ghost { background:transparent; color:var(--text); padding:8px; font-size:18px; }
     .btn:active { transform:scale(0.96); }
 
-    /* Stats Grid */
-    .grid { display:grid; gap:10px; }
+    /* STATS GRID (Old Style) */
+    .grid { display:grid; gap:12px; }
     .stats-grid { grid-template-columns: repeat(2, 1fr); }
-    .stat { background:white; border:1px solid var(--border); border-radius:12px; padding:12px; text-align:center; }
-    .stat .val { font-size:22px; font-weight:800; }
-    .stat .lbl { font-size:10px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:0.5px; }
+    @media (min-width: 400px) { .stats-grid { grid-template-columns: repeat(4, 1fr); } }
 
-    /* New Search UI */
+    .stat { background:white; border:1px solid var(--border); border-radius:12px; padding:10px; text-align:center; }
+    .stat .val { font-size:20px; font-weight:800; }
+    .stat .lbl { font-size:10px; font-weight:700; color:var(--muted); text-transform:uppercase; margin-top:4px; }
+    .stat .sub { font-size:10px; color:var(--muted); margin-top:2px; }
+
+    /* QUIT BANNER */
+    .quit-active { border: 2px solid var(--primary); background: #ecfdf5; }
+    .progress-bar { height:6px; background:#e2e8f0; border-radius:3px; margin-top:8px; overflow:hidden; }
+    .progress-fill { height:100%; background:var(--primary); width:0%; transition:width 0.5s; }
+    
+    /* LOG USAGE (Hybrid) */
     .selector-btn {
       width: 100%; text-align: left; background: white; border: 1px solid var(--border);
-      padding: 14px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center;
-      font-size: 15px;
+      padding: 12px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center;
     }
-    .selector-btn:active { background: #f1f5f9; }
-    
-    .quick-actions { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; margin-bottom: 12px; scrollbar-width: none; }
+    .quick-actions { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 8px; scrollbar-width: none; margin-bottom:12px; }
     .quick-chip { 
       flex-shrink: 0; background: #ecfdf5; color: var(--primary-dark); border: 1px solid #a7f3d0; 
-      padding: 8px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; cursor: pointer;
+      padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; cursor: pointer;
     }
-    .quick-chip:active { transform: scale(0.95); }
 
-    /* Search Modal Specifics */
-    #searchModal { height: 80vh; max-height: 800px; width: 100%; max-width: 600px; border-radius: 20px 20px 0 0; position: fixed; bottom: 0; top: auto; margin: 0; border: none; box-shadow: 0 -4px 20px rgba(0,0,0,0.1); animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+    /* SEARCH MODAL */
+    #searchModal { height: 80vh; max-height: 800px; width: 100%; max-width: 600px; border-radius: 20px 20px 0 0; position: fixed; bottom: 0; margin: 0; border: none; box-shadow: 0 -10px 40px rgba(0,0,0,0.1); animation: slideUp 0.3s ease-out; }
     @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
-    
-    .search-header { padding: 16px; border-bottom: 1px solid var(--border); display: flex; gap: 10px; align-items: center; }
-    #searchInput { width: 100%; padding: 12px 40px 12px 16px; border-radius: 10px; border: 1px solid var(--border); font-size: 16px; outline: none; background: #f8fafc; }
-    #searchInput:focus { border-color: var(--primary); background: white; }
-    
-    .search-results { overflow-y: auto; height: calc(80vh - 80px); padding: 0 16px 20px; }
+    .search-header { padding: 16px; border-bottom: 1px solid var(--border); display: flex; gap: 10px; }
+    #searchInput { width: 100%; padding: 12px 16px; border-radius: 10px; border: 1px solid var(--border); font-size: 16px; outline:none; background:#f8fafc; }
+    .search-results { overflow-y: auto; height: calc(80vh - 80px); padding: 0 16px; }
     .search-item { padding: 14px 0; border-bottom: 1px solid #f1f5f9; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
-    .search-item:last-child { border-bottom: none; }
-    .search-item strong { display: block; font-size: 15px; margin-bottom: 2px; }
-    .search-item small { color: var(--muted); }
-    .search-item .mg-badge { background: #f1f5f9; padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: 700; color: var(--text); }
-
-    /* Other standard UI */
+    
+    /* UTILS */
     .hidden { display:none !important; }
-    details > summary { list-style: none; font-weight: 600; cursor: pointer; padding: 8px 0; }
+    details > summary { list-style: none; font-weight: 700; cursor: pointer; padding: 10px 0; display:flex; justify-content:space-between; }
+    details > summary::after { content: '▼'; font-size: 12px; color: var(--muted); }
+    details[open] > summary::after { transform: rotate(180deg); }
+    
+    /* HEALTH TIMELINE */
+    .health-item { display: flex; gap: 10px; align-items: flex-start; padding: 8px 0; border-bottom: 1px dashed var(--border); font-size: 13px; }
+    .health-icon { min-width: 20px; }
+    .health-done { color: var(--text); } .health-done .health-icon { color: var(--primary); }
+    .health-locked { color: var(--muted); opacity: 0.7; filter: grayscale(1); }
+
+    /* WIZARD & MODALS */
+    dialog:not(#searchModal) { border:none; border-radius:16px; padding:20px; width:min(500px, 90vw); box-shadow:0 20px 50px rgba(0,0,0,0.2); }
+    dialog::backdrop { background:rgba(0,0,0,0.4); backdrop-filter:blur(2px); }
+    .wizard-step { animation: fadeIn 0.3s; }
+    .selection-card { border: 2px solid var(--border); border-radius: 12px; padding: 16px; cursor: pointer; text-align: center; margin-bottom:10px; }
+    .selection-card.active { border-color: var(--primary); background: #ecfdf5; }
+    
     #toast { position:fixed; bottom:20px; left:50%; transform:translateX(-50%); z-index:100; pointer-events:none; }
-    .toast-msg { background:rgba(15, 23, 42, 0.9); color:white; padding:10px 20px; border-radius:20px; margin-top:10px; font-size:14px; backdrop-filter:blur(4px); }
+    .toast-msg { background:#1e293b; color:white; padding:10px 20px; border-radius:20px; margin-top:10px; font-size:14px; }
   </style>
 </head>
 <body>
@@ -84,36 +98,67 @@
   <header>
     <div class="logo">💊 <span>NicoTracker</span></div>
     <div style="display:flex; gap:8px;">
-      <button id="langBtn" class="btn btn-outline" style="padding:6px 10px; font-size:12px;">EN</button>
+      <button id="langBtn" class="btn btn-outline" style="padding:8px;">🇺🇸</button>
+      <button id="syncBtn" class="btn btn-primary" style="padding:8px 12px;">Sync</button>
       <button id="menuBtn" class="btn btn-ghost">⚙️</button>
     </div>
   </header>
 
   <main class="shell">
 
-    <!-- Dashboard Stats -->
-    <div class="grid stats-grid" style="margin-bottom:16px;">
+    <!-- Quit Program Banner (Old Style) -->
+    <div id="quitBanner" class="card quit-active hidden">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <div>
+          <h3 style="margin:0" data-i18n="quit_title">Freedom Journey</h3>
+          <p style="margin:4px 0 0; color:var(--primary-dark); font-size:13px;" id="quitStatusText">Plan active</p>
+        </div>
+        <div style="text-align:right;">
+          <div class="val" style="font-size:20px;" id="quitTarget">0</div>
+          <div class="lbl" data-i18n="daily_max">Daily Max</div>
+        </div>
+      </div>
+      <div class="progress-bar"><div id="quitProgress" class="progress-fill"></div></div>
+    </div>
+
+    <!-- Stats Grid (4 Columns - Old Style) -->
+    <div class="grid stats-grid" style="margin-bottom:12px;">
       <div class="stat">
         <div class="lbl" data-i18n="today_usage">Today</div>
         <div class="val" id="valToday">0</div>
-        <div class="sub" style="font-size:11px; color:var(--muted)" id="valLimit">/ 10</div>
+        <div class="sub" id="valLimit">Limit: 10</div>
       </div>
       <div class="stat">
         <div class="lbl" data-i18n="streak">Streak</div>
         <div class="val" id="valStreak">0</div>
-        <div class="sub" style="font-size:11px; color:var(--muted)">days</div>
+        <div class="sub" data-i18n="days_label">days</div>
+      </div>
+      <div class="stat">
+        <div class="lbl" data-i18n="money_saved">Saved</div>
+        <div class="val" id="valSaved" style="color:var(--primary);">0</div>
+        <div class="sub" id="valCost">Cost: 0</div>
+      </div>
+      <div class="stat">
+        <div class="lbl" data-i18n="nicotine">Nicotine</div>
+        <div class="val" id="valMg">0</div>
+        <div class="sub">mg total</div>
       </div>
     </div>
 
-    <!-- MAIN ACTION CARD -->
+    <!-- Health Recovery (Collapsible) -->
+    <details id="healthSection" class="card hidden">
+      <summary><span data-i18n="health_timeline">Health Recovery</span></summary>
+      <div id="healthList" style="margin-top:12px;"></div>
+    </details>
+
+    <!-- Log Usage (Hybrid Style - Card + Search) -->
     <div class="card" style="border-color: var(--primary);">
       <h3 style="margin:0 0 12px; font-size:14px; text-transform:uppercase; color:var(--muted);" data-i18n="log_usage">Log Usage</h3>
       
-      <!-- Quick Favorites (Auto-populated) -->
+      <!-- Quick Favorites Chips -->
       <div id="quickActions" class="quick-actions"></div>
 
       <div class="grid" style="grid-template-columns: 1fr auto; gap:8px;">
-        <!-- Selector Button -->
         <button id="openSearchBtn" class="selector-btn">
           <div>
             <div style="font-size:11px; color:var(--muted);" data-i18n="selected_pouch">Selected</div>
@@ -121,25 +166,26 @@
           </div>
           <span style="font-size:18px;">🔍</span>
         </button>
-        
-        <!-- Add Button -->
         <button id="addBtn" class="btn btn-primary" style="width:60px; font-size:24px;">+</button>
       </div>
     </div>
 
-    <!-- Analytics & History -->
+    <!-- Charts -->
     <details class="card" open>
-      <summary data-i18n="history">Recent History</summary>
-      <div id="historyList"></div>
-      <div style="text-align:center; padding-top:10px;">
-        <button id="viewAllHistoryBtn" class="btn btn-outline" style="font-size:12px; width:100%;" data-i18n="view_all">View Full History</button>
-      </div>
+      <summary><span data-i18n="charts_title">Analytics</span></summary>
+      <canvas id="trendChart" height="200" style="margin-top:10px;"></canvas>
+      <h4 style="margin:20px 0 10px; font-size:12px; color:var(--muted); text-transform:uppercase;" data-i18n="hourly_heatmap">Hourly Heatmap</h4>
+      <canvas id="hourlyChart" height="150"></canvas>
     </details>
 
-    <details class="card">
-        <summary data-i18n="charts_title">Analytics</summary>
-        <canvas id="trendChart" height="200"></canvas>
-    </details>
+    <!-- History -->
+    <div class="card">
+      <div style="display:flex; justify-content:space-between; align-items:center; gap:8px;">
+        <h3 style="margin:0;" data-i18n="history">Recent History</h3>
+        <button id="viewAllHistoryBtn" class="btn btn-outline" style="padding:6px 10px; font-size:12px;" data-i18n="view_all">View All</button>
+      </div>
+      <div id="historyList" style="margin-top:10px;"></div>
+    </div>
 
   </main>
 
@@ -148,70 +194,102 @@
   <!-- SEARCH MODAL -->
   <dialog id="searchModal">
     <div class="search-header">
-      <div style="position:relative; flex-grow:1;">
-        <input type="search" id="searchInput" placeholder="Search brand or flavor..." autocomplete="off">
-        <span style="position:absolute; right:12px; top:12px; color:var(--muted);">🔎</span>
-      </div>
-      <button class="btn btn-ghost" onclick="document.getElementById('searchModal').close()" style="font-size:18px;">✕</button>
+      <input type="search" id="searchInput" placeholder="Search brand or flavor..." autocomplete="off">
+      <button class="btn btn-ghost" onclick="document.getElementById('searchModal').close()">✕</button>
     </div>
-    <div id="searchResults" class="search-results">
-      <!-- Results injected here -->
+    <div id="searchResults" class="search-results"></div>
+  </dialog>
+
+  <!-- SETTINGS WIZARD MODAL -->
+  <dialog id="settingsModal">
+    <h3 data-i18n="settings">Settings</h3>
+    <div id="wizardContent">
+        <!-- Simplified for brevity, functional logic in JS -->
+        <label>Goal</label>
+        <div class="grid" style="grid-template-columns:1fr 1fr; gap:10px; margin-bottom:10px;">
+            <div class="selection-card" onclick="setGoal('track')" id="goalTrack">📊 Track</div>
+            <div class="selection-card" onclick="setGoal('quit')" id="goalQuit">💪 Quit</div>
+        </div>
+        
+        <label>Details</label>
+        <div class="grid" style="grid-template-columns:1fr 1fr; gap:10px;">
+            <input id="currencyInput" placeholder="Currency (USD)">
+            <input id="priceInput" type="number" placeholder="Price/Can">
+            <input id="piecesInput" type="number" placeholder="Pouches/Can">
+            <input id="limitInput" type="number" placeholder="Daily Limit">
+        </div>
+        
+        <div id="quitSettings" class="hidden" style="margin-top:10px;">
+            <label>Quit Date</label>
+            <input type="date" id="quitDateInput" style="width:100%; padding:10px; border:1px solid #ddd; border-radius:8px;">
+        </div>
+    </div>
+    <div style="margin-top:20px; text-align:right;">
+        <button class="btn btn-primary" onclick="saveSettings()">Save & Close</button>
     </div>
   </dialog>
 
-  <!-- Full History / Settings / Auth Modals (Simplified placeholders for brevity, logic remains) -->
-  <dialog id="settingsModal" style="border:none; padding:20px; border-radius:16px;">
-      <h3 data-i18n="settings">Settings</h3>
-      <label style="display:block; margin-top:10px;" data-i18n="daily_limit">Daily Limit</label>
-      <input type="number" id="limitInput" style="width:100%; padding:8px; margin-top:4px; border:1px solid #ccc; border-radius:8px;">
-      <div style="margin-top:20px; display:flex; justify-content:flex-end; gap:10px;">
-          <button class="btn btn-outline" onclick="this.closest('dialog').close()">Cancel</button>
-          <button class="btn btn-primary" id="saveSettingsBtn">Save</button>
-      </div>
+  <!-- AUTH MODAL -->
+  <dialog id="authModal">
+      <h3 data-i18n="auth_title">Sync & Backup</h3>
+      <input type="email" id="emailInput" placeholder="Email" style="width:100%; padding:10px; margin-bottom:10px; border:1px solid #ddd; border-radius:8px;">
+      <input type="password" id="passInput" placeholder="Password" style="width:100%; padding:10px; margin-bottom:10px; border:1px solid #ddd; border-radius:8px;">
+      <button id="loginBtn" class="btn btn-primary" style="width:100%;">Log In / Register</button>
+      <hr style="margin:20px 0; border-top:1px solid #eee;">
+      <button id="exportBtn" class="btn btn-outline" style="width:100%;">📥 Export CSV</button>
+      <button class="btn btn-outline" style="width:100%; margin-top:10px;" onclick="document.getElementById('authModal').close()">Close</button>
+  </dialog>
+
+  <!-- FULL HISTORY MODAL -->
+  <dialog id="historyModal">
+      <h3>Full History</h3>
+      <div id="fullHistoryList" style="max-height:400px; overflow-y:auto;"></div>
+      <button class="btn btn-outline" style="width:100%; margin-top:10px;" onclick="document.getElementById('historyModal').close()">Close</button>
   </dialog>
 
   <script type="module">
-    // IMPORT DATA
     import { POUCH_DB } from './data.js';
-    
-    // FIREBASE IMPORTS (Keep your config)
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
-    import { getFirestore, doc, setDoc, getDoc, collection, onSnapshot, query, orderBy, Timestamp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+    import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+    import { getFirestore, doc, setDoc, getDoc, collection, onSnapshot, query, orderBy, Timestamp, deleteDoc } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
 
     // CONFIG
-    const firebaseConfig = { 
+    const app = initializeApp({ 
        apiKey: "AIzaSyBKMDwYeSjmgQLnpYciReSK2yJU0pG6KS8",
        authDomain: "nicotinepouches-d9d1c.firebaseapp.com",
        projectId: "nicotinepouches-d9d1c",
        storageBucket: "nicotinepouches-d9d1c.firebasestorage.app",
        messagingSenderId: "42131125480",
        appId: "1:42131125480:web:8022461f0a790a5677855d"
-    };
-    const app = initializeApp(firebaseConfig);
+    });
+    const auth = getAuth(app);
     const db = getFirestore(app);
 
     // STATE
     let state = {
-        lang: localStorage.getItem('nt_lang') || 'cs',
+        user: null,
+        lang: localStorage.getItem('nt_lang') || 'en',
         history: JSON.parse(localStorage.getItem('nt_history')) || [],
-        settings: JSON.parse(localStorage.getItem('nt_settings')) || { dailyLimit: 10 },
-        currentSelection: JSON.parse(localStorage.getItem('nt_last_pouch')) || null
+        settings: JSON.parse(localStorage.getItem('nt_settings')) || { 
+            currency: 'CZK', packPrice: 150, pouchesPerPack: 20, dailyLimit: 10, goal: 'track', quitDate: null 
+        },
+        selection: JSON.parse(localStorage.getItem('nt_last_pouch')) || null
     };
 
-    // TRANSLATIONS
-    const texts = {
-        en: { today_usage: "TODAY", streak: "STREAK", log_usage: "LOG USAGE", selected_pouch: "Selected", history: "Recent History", charts_title: "Analytics", view_all: "History", settings: "Settings", daily_limit: "Daily Limit" },
-        cs: { today_usage: "DNES", streak: "ŘADA DNÍ", log_usage: "ZAPSAT SÁČEK", selected_pouch: "Vybráno", history: "Historie", charts_title: "Statistiky", view_all: "Celá historie", settings: "Nastavení", daily_limit: "Denní limit" }
+    // I18N
+    const t = (k) => {
+        const d = {
+            en: { today_usage: "Today", streak: "Streak", money_saved: "Saved", nicotine: "Nicotine", log_usage: "Log Usage", selected_pouch: "Selected", history: "Recent History", charts_title: "Analytics", settings: "Settings", quit_title: "Freedom Journey", daily_max: "Daily Max", days_label: "days", view_all: "View All", hourly_heatmap: "Hourly Heatmap", auth_title: "Sync / Backup" },
+            cs: { today_usage: "DNES", streak: "ŘADA DNÍ", money_saved: "UŠETŘENO", nicotine: "NIKOTIN", log_usage: "ZAPSAT SÁČEK", selected_pouch: "Vybráno", history: "Historie", charts_title: "Statistiky", settings: "Nastavení", quit_title: "Cesta ke svobodě", daily_max: "DENNÍ CÍL", days_label: "dní", view_all: "Zobrazit vše", hourly_heatmap: "Hodinová heatmapa", auth_title: "Synchronizace" }
+        };
+        return d[state.lang]?.[k] || d['en'][k] || k;
     };
 
-    function t(key) { return texts[state.lang]?.[key] || texts['en'][key]; }
-
-    // --- CORE LOGIC ---
     function init() {
+        if(!state.settings.packPrice) state.settings = { ...state.settings, packPrice: 150, pouchesPerPack: 20 }; // Migration fix
         renderUI();
         setupSearch();
         setupListeners();
-        // Register SW
         if('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js');
     }
 
@@ -220,207 +298,278 @@
         renderUI();
     }
 
+    // CALCULATIONS
+    function calculateLimit() {
+        if(state.settings.goal !== 'quit' || !state.settings.quitDate) return state.settings.dailyLimit;
+        const start = new Date(state.settings.startDate || new Date());
+        const end = new Date(state.settings.quitDate);
+        const now = new Date();
+        const totalDays = (end - start) / 86400000;
+        const daysLeft = (end - now) / 86400000;
+        if(daysLeft <= 0) return 0;
+        return Math.max(0, Math.ceil(state.settings.dailyLimit * (daysLeft / totalDays)));
+    }
+
+    function calcStreak() {
+        const dates = [...new Set(state.history.map(h=>h.date.slice(0,10)))];
+        let s = 0; let d = new Date();
+        for(let i=0; i<365; i++) {
+            const iso = d.toISOString().slice(0,10);
+            const count = state.history.filter(h=>h.date.startsWith(iso)).length;
+            if(i===0 && count <= state.settings.dailyLimit){} 
+            else if(count > state.settings.dailyLimit) break;
+            else if(count <= state.settings.dailyLimit && dates.includes(iso)) s++;
+            else if(!dates.includes(iso) && i>0) break;
+            d.setDate(d.getDate()-1);
+        }
+        return s;
+    }
+
+    // UI RENDERING
     function renderUI() {
-        // Stats
-        const today = new Date().toISOString().slice(0,10);
-        const count = state.history.filter(h => h.date.startsWith(today)).length;
-        document.getElementById('valToday').innerText = count;
-        document.getElementById('valLimit').innerText = `/ ${state.settings.dailyLimit}`;
-        document.getElementById('valStreak').innerText = calcStreak();
-
-        // Language & Labels
         document.querySelectorAll('[data-i18n]').forEach(el => el.innerText = t(el.dataset.i18n));
-        document.getElementById('langBtn').innerText = state.lang.toUpperCase();
+        document.getElementById('langBtn').innerText = state.lang === 'en' ? '🇺🇸' : '🇨🇿';
 
-        // Selection Display
-        const selName = document.getElementById('selectedPouchName');
-        if (state.currentSelection) {
-            selName.innerHTML = `${state.currentSelection.b} ${state.currentSelection.n} <span style="color:var(--primary); font-size:12px;">${state.currentSelection.mg}mg</span>`;
+        const today = new Date().toISOString().slice(0,10);
+        const todayEntries = state.history.filter(h => h.date.startsWith(today));
+        const limit = calculateLimit();
+        
+        // 1. Stats Grid
+        document.getElementById('valToday').innerText = todayEntries.length;
+        document.getElementById('valLimit').innerText = `/ ${limit}`;
+        document.getElementById('valStreak').innerText = calcStreak();
+        
+        const costPerPouch = state.settings.packPrice / state.settings.pouchesPerPack;
+        const saved = Math.max(0, (limit - todayEntries.length) * costPerPouch);
+        document.getElementById('valSaved').innerText = `${Math.floor(saved)} ${state.settings.currency}`;
+        document.getElementById('valCost').innerText = `Cost: ${Math.floor(todayEntries.length * costPerPouch)}`;
+        
+        const nicotine = todayEntries.reduce((s,i) => s + (i.mg || 0), 0);
+        document.getElementById('valMg').innerText = nicotine.toFixed(1);
+
+        // 2. Quit Banner
+        const banner = document.getElementById('quitBanner');
+        const healthSec = document.getElementById('healthSection');
+        if(state.settings.goal === 'quit') {
+            banner.classList.remove('hidden');
+            healthSec.classList.remove('hidden');
+            document.getElementById('quitTarget').innerText = limit;
+            const pct = Math.min(100, (todayEntries.length / limit) * 100);
+            document.getElementById('quitProgress').style.width = pct + '%';
+            document.getElementById('quitProgress').style.backgroundColor = pct > 100 ? 'var(--danger)' : 'var(--primary)';
+            renderHealth();
         } else {
-            selName.innerText = "Vyberte sáček...";
+            banner.classList.add('hidden');
+            healthSec.classList.add('hidden');
         }
 
-        // Quick Favorites (Top 3)
+        // 3. Selection
+        const selName = document.getElementById('selectedPouchName');
+        if(state.selection) {
+            selName.innerHTML = `${state.selection.b} ${state.selection.n} <span style="color:var(--primary); font-size:11px;">${state.selection.mg}mg</span>`;
+        } else {
+            selName.innerText = "Select a pouch...";
+        }
         renderFavorites();
 
-        // History List
+        // 4. History List
         const list = document.getElementById('historyList');
         list.innerHTML = state.history.slice(0, 5).map(h => 
             `<div style="display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px dashed #eee; font-size:13px;">
-                <span>${h.brand} ${h.name || ''}</span>
+                <span>${h.brand} ${h.name||''}</span>
                 <span style="color:#999">${new Date(h.date).getHours()}:${String(new Date(h.date).getMinutes()).padStart(2,'0')}</span>
              </div>`
-        ).join('') || '<div style="color:#ccc; font-size:12px; padding:10px;">Žádná historie</div>';
+        ).join('');
 
-        renderChart();
+        renderCharts();
+    }
+
+    function renderHealth() {
+        const last = state.history[0] ? new Date(state.history[0].date) : new Date();
+        const diffH = (new Date() - last) / 3600000;
+        const items = [
+            {t:2, l:"2h: Cravings peak", d: diffH>=2},
+            {t:8, l:"8h: Oxygen normal", d: diffH>=8},
+            {t:24, l:"24h: Nicotine gone", d: diffH>=24},
+            {t:48, l:"48h: Taste improves", d: diffH>=48}
+        ];
+        document.getElementById('healthList').innerHTML = items.map(i => 
+            `<div class="health-item ${i.d?'health-done':'health-locked'}"><div class="health-icon">${i.d?'✅':'🔒'}</div><div>${i.l}</div></div>`
+        ).join('');
     }
 
     function renderFavorites() {
         const counts = {};
-        state.history.forEach(h => { const k = h.brand + '|' + (h.name||''); counts[k] = (counts[k]||0)+1; });
-        const top = Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0, 4).map(e=>e[0]); // Top 4
-        
-        const container = document.getElementById('quickActions');
-        container.innerHTML = '';
-        
-        if (top.length === 0 && !state.currentSelection) {
-            container.innerHTML = '<span style="font-size:11px; color:#999; padding:4px;">Nejčastější se objeví zde.</span>';
-            return;
-        }
-
-        top.forEach(key => {
-            const [b, n] = key.split('|');
-            // Find full data to get mg
-            const full = POUCH_DB.find(p => p.b === b && p.n === n) || { b, n, mg: '?' };
-            
-            const chip = document.createElement('div');
-            chip.className = 'quick-chip';
-            chip.innerHTML = `${b} ${n}`;
-            chip.onclick = () => { selectPouch(full); addEntry(); }; // Click to ADD immediately
-            container.appendChild(chip);
+        state.history.forEach(h => { const k = h.brand+'|'+(h.name||''); counts[k] = (counts[k]||0)+1; });
+        const top = Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0,4).map(e=>e[0]);
+        const c = document.getElementById('quickActions');
+        c.innerHTML = top.map(k => {
+            const [b,n] = k.split('|');
+            return `<div class="quick-chip">${n}</div>`;
+        }).join('');
+        c.querySelectorAll('.quick-chip').forEach((el, i) => {
+            el.onclick = () => {
+                 const [b,n] = top[i].split('|');
+                 const full = POUCH_DB.find(p=>p.b===b && p.n===n) || {b,n,mg:0};
+                 selectPouch(full); addEntry();
+            };
         });
     }
 
-    // --- SEARCH LOGIC ---
+    // CHARTS
+    function renderCharts() {
+        // Trend
+        const days = {};
+        for(let i=13;i>=0;i--) { const d=new Date(); d.setDate(d.getDate()-i); days[d.toISOString().slice(0,10)]=0; }
+        state.history.forEach(h => { const k=h.date.slice(0,10); if(days[k]!==undefined) days[k]++; });
+        
+        if(window.trendChart) window.trendChart.destroy();
+        window.trendChart = new Chart(document.getElementById('trendChart'), {
+            type: 'line',
+            data: { labels: Object.keys(days).map(d=>d.slice(5)), datasets: [{ label:'Pouches', data:Object.values(days), borderColor:'#10b981', backgroundColor:'rgba(16,185,129,0.1)', fill:true, tension:0.4 }] },
+            options: { plugins:{legend:{display:false}}, scales:{y:{beginAtZero:true}} }
+        });
+
+        // Hourly
+        const hours = new Array(24).fill(0);
+        state.history.forEach(h => hours[new Date(h.date).getHours()]++);
+        if(window.hourlyChart) window.hourlyChart.destroy();
+        window.hourlyChart = new Chart(document.getElementById('hourlyChart'), {
+            type: 'bar',
+            data: { labels: hours.map((_,i)=>i), datasets: [{ data: hours, backgroundColor: '#10b981' }] },
+            options: { plugins:{legend:{display:false}}, scales:{y:{display:false}, x:{grid:{display:false}}} }
+        });
+    }
+
+    // SEARCH LOGIC
     function setupSearch() {
         const input = document.getElementById('searchInput');
         const results = document.getElementById('searchResults');
         
+        document.getElementById('openSearchBtn').onclick = () => {
+            input.value = ''; renderList(POUCH_DB.slice(0,20));
+            document.getElementById('searchModal').showModal(); input.focus();
+        };
+
         const renderList = (items) => {
-            results.innerHTML = items.map(item => `
-                <div class="search-item" data-b="${item.b}" data-n="${item.n}" data-mg="${item.mg}">
-                    <div>
-                        <strong>${item.n}</strong>
-                        <small>${item.b}</small>
-                    </div>
-                    <div class="mg-badge">${item.mg} mg</div>
+            results.innerHTML = items.map(p => `
+                <div class="search-item" onclick="window.selectAndClose('${p.b.replace(/'/g,"\\'")}','${p.n.replace(/'/g,"\\'")}','${p.mg}')">
+                    <div><strong>${p.n}</strong><br><small style="color:#999">${p.b}</small></div>
+                    <div style="background:#f1f5f9; padding:4px 8px; border-radius:6px; font-size:11px;">${p.mg}mg</div>
                 </div>
             `).join('');
-            
-            // Add click listeners to rows
-            results.querySelectorAll('.search-item').forEach(el => {
-                el.onclick = () => {
-                    const item = { 
-                        b: el.dataset.b, 
-                        n: el.dataset.n, 
-                        mg: parseFloat(el.dataset.mg) 
-                    };
-                    selectPouch(item);
-                    document.getElementById('searchModal').close();
-                };
-            });
+        };
+        
+        window.selectAndClose = (b,n,mg) => {
+            selectPouch({b,n,mg:parseFloat(mg)});
+            document.getElementById('searchModal').close();
         };
 
         input.addEventListener('input', (e) => {
-            const q = e.target.value.toLowerCase().trim();
-            if (q.length < 1) { renderList([]); return; }
-            
-            // Fast filter of 650 items
-            const filtered = POUCH_DB.filter(p => 
-                p.n.toLowerCase().includes(q) || p.b.toLowerCase().includes(q)
-            ).slice(0, 50); // Limit rendering to 50 items for speed
-            
+            const q = e.target.value.toLowerCase();
+            if(q.length<1) return renderList([]);
+            const filtered = POUCH_DB.filter(p => p.n.toLowerCase().includes(q) || p.b.toLowerCase().includes(q)).slice(0,50);
             renderList(filtered);
         });
-
-        // Show some defaults when opening empty
-        document.getElementById('openSearchBtn').onclick = () => {
-            input.value = '';
-            // Show all or top brands initially? Let's show first 20 as example
-            renderList(POUCH_DB.slice(0, 20));
-            document.getElementById('searchModal').showModal();
-            input.focus();
-        };
     }
 
-    function selectPouch(item) {
-        state.currentSelection = item;
-        localStorage.setItem('nt_last_pouch', JSON.stringify(item));
+    function selectPouch(p) {
+        state.selection = p;
+        localStorage.setItem('nt_last_pouch', JSON.stringify(p));
         renderUI();
     }
 
+    // ACTIONS
     function addEntry() {
-        if(!state.currentSelection) {
-            document.getElementById('openSearchBtn').click();
-            return;
-        }
-        const item = state.currentSelection;
-        const entry = {
-            id: Date.now().toString(),
-            brand: item.b,
-            name: item.n,
-            mg: item.mg,
-            date: new Date().toISOString()
-        };
-        state.history.unshift(entry);
+        if(!state.selection) return document.getElementById('openSearchBtn').click();
+        const rec = { id:Date.now().toString(), brand:state.selection.b, name:state.selection.n, mg:state.selection.mg, date:new Date().toISOString() };
+        state.history.unshift(rec);
         persist();
-        showToast(`✅ ${item.n} zapsán!`);
-        
-        // Firebase Sync (Simplified)
-        if(state.user) {
-             setDoc(doc(db,'users',state.user.uid,'history',entry.id), 
-             { ...entry, timestamp: Timestamp.now() });
-        }
+        showToast("Added!");
+        if(state.user) setDoc(doc(db,'users',state.user.uid,'history',rec.id), { ...rec, timestamp:Timestamp.now() });
     }
 
-    // --- HELPERS ---
-    function calcStreak() {
-        // Zjednodušená logika pro streak
-        const dates = [...new Set(state.history.map(h=>h.date.slice(0,10)))];
-        let streak = 0;
-        let d = new Date();
-        for(let i=0; i<365; i++) {
-            const iso = d.toISOString().slice(0,10);
-            const count = state.history.filter(h=>h.date.startsWith(iso)).length;
-            if (i===0 && count <= state.settings.dailyLimit) { /* today ok so far */ }
-            else if (count > state.settings.dailyLimit) break;
-            else if (count <= state.settings.dailyLimit && dates.includes(iso)) streak++;
-            else if (!dates.includes(iso) && i>0) break; 
-            d.setDate(d.getDate()-1);
-        }
-        return streak;
-    }
+    function showToast(m) { const t=document.getElementById('toast'); t.innerHTML=`<div class="toast-msg">${m}</div>`; setTimeout(()=>t.innerHTML='',2500); }
 
-    function renderChart() {
-        const ctx = document.getElementById('trendChart');
-        // Simple last 7 days chart
-        const labels = [], data = [];
-        for(let i=6; i>=0; i--) {
-            const d = new Date(); d.setDate(d.getDate()-i);
-            const iso = d.toISOString().slice(0,10);
-            labels.push(d.toLocaleDateString(state.lang, {weekday:'short'}));
-            data.push(state.history.filter(h=>h.date.startsWith(iso)).length);
-        }
-        
-        if(window.myChart) window.myChart.destroy();
-        window.myChart = new Chart(ctx, {
-            type: 'bar',
-            data: { labels, datasets: [{ label: 'Ks', data, backgroundColor: '#10b981', borderRadius:4 }] },
-            options: { plugins:{legend:{display:false}}, scales:{y:{beginAtZero:true}} }
-        });
-    }
+    // SETTINGS & LISTENERS
+    window.setGoal = (g) => { 
+        document.querySelectorAll('.selection-card').forEach(c=>c.classList.remove('active'));
+        document.getElementById(g==='track'?'goalTrack':'goalQuit').classList.add('active');
+        document.getElementById('quitSettings').classList.toggle('hidden', g!=='quit');
+    };
     
-    function showToast(msg) {
-        const t = document.getElementById('toast');
-        t.innerHTML = `<div class="toast-msg">${msg}</div>`;
-        setTimeout(() => t.innerHTML='', 2500);
-    }
+    window.saveSettings = () => {
+        state.settings.currency = document.getElementById('currencyInput').value || 'CZK';
+        state.settings.packPrice = parseFloat(document.getElementById('priceInput').value) || 0;
+        state.settings.pouchesPerPack = parseFloat(document.getElementById('piecesInput').value) || 20;
+        state.settings.dailyLimit = parseInt(document.getElementById('limitInput').value) || 10;
+        state.settings.goal = document.getElementById('goalQuit').classList.contains('active') ? 'quit' : 'track';
+        state.settings.quitDate = document.getElementById('quitDateInput').value;
+        if(state.settings.goal==='quit' && !state.settings.startDate) state.settings.startDate = new Date().toISOString();
+        
+        localStorage.setItem('nt_settings', JSON.stringify(state.settings));
+        if(state.user) setDoc(doc(db,'users',state.user.uid,'settings','profile'), state.settings);
+        document.getElementById('settingsModal').close();
+        renderUI();
+    };
 
     function setupListeners() {
         document.getElementById('addBtn').onclick = addEntry;
-        document.getElementById('langBtn').onclick = () => {
-            state.lang = state.lang === 'en' ? 'cs' : 'en';
-            localStorage.setItem('nt_lang', state.lang);
-            renderUI();
+        document.getElementById('langBtn').onclick = () => { state.lang = state.lang==='en'?'cs':'en'; localStorage.setItem('nt_lang',state.lang); renderUI(); };
+        document.getElementById('menuBtn').onclick = () => {
+            document.getElementById('currencyInput').value = state.settings.currency;
+            document.getElementById('priceInput').value = state.settings.packPrice;
+            document.getElementById('piecesInput').value = state.settings.pouchesPerPack;
+            document.getElementById('limitInput').value = state.settings.dailyLimit;
+            document.getElementById('quitDateInput').value = state.settings.quitDate || '';
+            setGoal(state.settings.goal);
+            document.getElementById('settingsModal').showModal();
         };
-        document.getElementById('menuBtn').onclick = () => document.getElementById('settingsModal').showModal();
-        document.getElementById('saveSettingsBtn').onclick = () => {
-            state.settings.dailyLimit = parseInt(document.getElementById('limitInput').value) || 10;
-            localStorage.setItem('nt_settings', JSON.stringify(state.settings));
-            document.getElementById('settingsModal').close();
-            renderUI();
+        document.getElementById('syncBtn').onclick = () => document.getElementById('authModal').showModal();
+        
+        document.getElementById('loginBtn').onclick = async () => {
+             const e=document.getElementById('emailInput').value, p=document.getElementById('passInput').value;
+             try { await signInWithEmailAndPassword(auth,e,p); document.getElementById('authModal').close(); }
+             catch { try { await createUserWithEmailAndPassword(auth,e,p); document.getElementById('authModal').close(); } catch(err){ alert(err.message); } }
+        };
+
+        document.getElementById('viewAllHistoryBtn').onclick = () => {
+            const el = document.getElementById('fullHistoryList');
+            el.innerHTML = state.history.map(h => 
+                `<div style="display:flex; justify-content:space-between; padding:10px; border-bottom:1px solid #eee;">
+                   <span>${h.brand} ${h.name||''} (${h.mg}mg)</span>
+                   <span style="color:#999; font-size:12px;">${new Date(h.date).toLocaleString()}</span>
+                   <button onclick="window.delH('${h.id}')" style="color:red; background:none; border:none;">✕</button>
+                 </div>`
+            ).join('');
+            document.getElementById('historyModal').showModal();
+        };
+
+        window.delH = async (id) => {
+            if(!confirm('Delete?')) return;
+            state.history = state.history.filter(h=>h.id!==id);
+            persist();
+            if(state.user) await deleteDoc(doc(db,'users',state.user.uid,'history',id));
+            document.getElementById('historyModal').close();
+        };
+
+        document.getElementById('exportBtn').onclick = () => {
+             let csv = "Date,Brand,Name,Mg\n" + state.history.map(h=>`${h.date},${h.brand},${h.name},${h.mg}`).join('\n');
+             const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob(["\uFEFF"+csv],{type:'text/csv'}));
+             a.download='nicotracker.csv'; a.click();
         };
     }
+
+    onAuthStateChanged(auth, async (u) => {
+        if(u) { state.user=u; document.getElementById('syncBtn').innerText = "✅"; 
+            const s = await getDoc(doc(db,'users',u.uid,'settings','profile'));
+            if(s.exists()) { state.settings = s.data(); localStorage.setItem('nt_settings',JSON.stringify(state.settings)); renderUI(); }
+            onSnapshot(query(collection(db,'users',u.uid,'history'), orderBy('timestamp','desc')), snap => {
+                const h = snap.docs.map(d => ({id:d.id, ...d.data(), date:d.data().timestamp.toDate().toISOString()}));
+                if(h.length) { state.history = h; persist(); }
+            });
+        }
+    });
 
     init();
   </script>
