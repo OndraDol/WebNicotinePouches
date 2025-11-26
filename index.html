@@ -88,7 +88,7 @@
     .toast-msg { background:#1e293b; color:white; padding:12px 20px; border-radius:10px; margin-top:10px; animation:slideUp 0.3s; }
     @keyframes slideUp { from{transform:translateY(20px);opacity:0} to{transform:translateY(0);opacity:1} }
 
-    /* --- SEARCH STYLE (CENTERED & BORDERED) --- */
+    /* --- NEW SEARCH STYLE (CENTERED & BORDERED) --- */
     .selector-btn {
       width: 100%; text-align: left; background: white; border: 1px solid var(--border);
       padding: 12px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center;
@@ -128,7 +128,7 @@
     <div style="display:flex; gap:10px;">
       <button id="installBtn" class="btn btn-primary hidden" style="padding:8px 12px; font-size:12px;">📲 Install</button>
       <button id="langBtn" class="btn btn-outline" style="padding:8px;">🇺🇸 EN</button>
-      <button id="syncBtn" class="btn btn-primary" data-i18n="auth_btn">Sync</button>
+      <button id="syncBtn" class="btn btn-primary" data-i18n="auth_btn">Login</button>
       <button id="menuBtn" class="btn btn-outline" style="font-size:18px;">⚙️</button>
     </div>
   </header>
@@ -368,7 +368,7 @@
       selection: JSON.parse(localStorage.getItem('nt_last_pouch')) || null
     };
     let wizStep = 1; let tempSettings = {};
-    let currentSearchResults = []; 
+    let currentSearchResults = []; // Fix pro 0mg error
 
     function persistHistory() {
       state.history.sort((a, b) => new Date(b.date) - new Date(a.date));
@@ -392,7 +392,7 @@
     function renderUI() {
       const today = new Date().toISOString().slice(0,10);
       const todayEntries = state.history.filter(h => h.date.startsWith(today));
-      const limit = state.settings.dailyLimit || 10; 
+      const limit = state.settings.dailyLimit || 10; // Simplified logic for stability
       
       // Favorites
       const counts = {}; state.history.forEach(h => { const k = h.brand + '|' + (h.name||''); counts[k] = (counts[k]||0)+1; });
@@ -402,7 +402,7 @@
       container.querySelectorAll('.quick-chip').forEach((el, i) => {
           el.onclick = () => {
               const [b, n] = top[i].split('|');
-              const full = POUCH_DB.find(p => p.b === b && p.n === n) || { b, n, mg: 0 }; 
+              const full = POUCH_DB.find(p => p.b === b && p.n === n) || { b, n, mg: 0 }; // Fallback
               selectPouch(full); addEntry();
           };
       });
@@ -450,6 +450,7 @@
         };
 
         window.selectByIndex = (index) => {
+             // FIX: Vybrání přes index pole = 100% spolehlivost pro čísla a data
              const item = currentSearchResults[index];
              selectPouch(item);
              document.getElementById('searchModal').close();
@@ -478,24 +479,6 @@
       renderUI(); showToast(t('added'));
     }
 
-    // --- WIZARD ---
-    window.selectGoal = (g) => { tempSettings.goal = g; document.querySelectorAll('#step1 .selection-card').forEach(c=>c.classList.remove('active')); document.querySelector(`#step1 .selection-card[data-val="${g}"]`).classList.add('active'); };
-    window.selectStrategy = (s) => { tempSettings.strategy = s; document.querySelectorAll('#step2 .selection-card').forEach(c=>c.classList.remove('active')); document.querySelector(`#step2 .selection-card[data-val="${s}"]`).classList.add('active'); };
-    window.nextStep = () => { if(wizStep===1) wizStep=(tempSettings.goal==='track')?3:2; else if(wizStep===2) wizStep=3; else { saveWizard(); return; } renderWizard(); };
-    window.prevStep = () => { wizStep=(wizStep===3 && tempSettings.goal==='track')?1:wizStep-1; renderWizard(); };
-    function openWizard() { wizStep=1; tempSettings={...state.settings}; renderWizard(); document.getElementById('settingsModal').showModal(); }
-    function renderWizard() {
-        document.querySelectorAll('.wizard-step').forEach(e=>e.classList.add('hidden')); document.getElementById(`step${wizStep}`).classList.remove('hidden');
-        document.getElementById('wizBackBtn').classList.toggle('hidden', wizStep===1);
-        document.getElementById('wizNextBtn').innerText = (wizStep===3) ? t('finish') : t('next');
-        if(wizStep===3) { document.getElementById('currencyInput').value=tempSettings.currency; document.getElementById('priceInput').value=tempSettings.packPrice; }
-    }
-    function saveWizard() {
-        state.settings = { ...tempSettings, currency: document.getElementById('currencyInput').value, packPrice: parseFloat(document.getElementById('priceInput').value)||0, pouchesPerPack: parseFloat(document.getElementById('piecesInput').value)||20, dailyLimit: parseFloat(document.getElementById('limitInput').value)||10 };
-        localStorage.setItem('nt_settings', JSON.stringify(state.settings));
-        document.getElementById('settingsModal').close(); renderUI();
-    }
-
     // --- HELPERS ---
     function showToast(m) { const t=document.getElementById('toast');t.innerHTML=`<div class="toast-msg">${m}</div>`;setTimeout(()=>t.innerHTML='',2000); }
     
@@ -515,7 +498,7 @@
     // --- LISTENERS ---
     function setupListeners() {
       document.getElementById('langBtn').onclick=()=>applyLanguage(state.lang==='en'?'cs':'en');
-      document.getElementById('menuBtn').onclick=()=>openWizard();
+      document.getElementById('menuBtn').onclick=()=>document.getElementById('settingsModal').showModal();
       document.getElementById('syncBtn').onclick=()=>document.getElementById('authModal').showModal();
       document.getElementById('addBtn').onclick=addEntry;
       document.getElementById('viewAllHistoryBtn').onclick=()=>{
