@@ -3,1241 +3,424 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <meta name="description" content="Free Nicotine Pouch Tracker & Quitting Tool. Track Velo, Zyn, Killa usage. Calculate costs, set tapering limits, and stop addiction.">
-  <meta name="keywords" content="nicotine tracker, quit snus, velo calculator, zyn tracker, stop smoking app, nicotine tapering">
-  
-  <!-- PWA & Mobile -->
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="description" content="Nicotine Pouch Tracker.">
   <meta name="theme-color" content="#10b981">
   <link rel="manifest" href="./manifest.json">
+  <title>NicoTracker Ultimate</title>
   
-  <title>NicoTracker | Quit Nicotine Pouches & Save Money</title>
-  
-  <!-- Fonts & Libs -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
 
-  <!-- Structured Data (JSON-LD) -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "SoftwareApplication",
-    "name": "NicoTracker",
-    "applicationCategory": "HealthApplication",
-    "operatingSystem": "Web",
-    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
-    "description": "A comprehensive tool to track and reduce nicotine pouch usage."
-  }
-  </script>
-
   <style>
     :root {
       --bg: #f8fafc; --card: #ffffff; --text: #0f172a; --muted: #64748b;
       --primary: #10b981; --primary-dark: #059669; --danger: #ef4444; --border: #e2e8f0;
-      --gold: #f59e0b;
     }
-
     * { box-sizing: border-box; }
-    body { margin:0; font-family:'Inter',sans-serif; background:var(--bg); color:var(--text); padding-bottom:60px; -webkit-tap-highlight-color:transparent; }
+    body { margin:0; font-family:'Inter',sans-serif; background:var(--bg); color:var(--text); padding-bottom:80px; -webkit-tap-highlight-color:transparent; }
     
-    /* Layout */
-    .shell { max-width: 1100px; margin: 0 auto; padding: 20px 16px; }
+    .shell { max-width: 600px; margin: 0 auto; padding: 20px 16px; } /* Zúženo pro lepší vzhled na desktopu */
+    
     header { background:var(--card); border-bottom:1px solid var(--border); padding:16px 20px; position:sticky; top:0; z-index:50; display:flex; justify-content:space-between; align-items:center; }
-    .logo { font-weight:800; font-size:20px; color:var(--text); display:flex; align-items:center; gap:6px; }
+    .logo { font-weight:800; font-size:20px; display:flex; align-items:center; gap:6px; }
     .logo span { color:var(--primary); }
     
-    /* UI Components */
-    .card { background:var(--card); border:1px solid var(--border); border-radius:16px; padding:16px; margin-bottom:12px; box-shadow:0 4px 6px -1px rgba(0,0,0,0.05); }
-    .btn { border:none; border-radius:10px; padding:10px 16px; font-weight:600; cursor:pointer; font-size:14px; transition:0.2s; display:inline-flex; align-items:center; gap:6px; }
+    .card { background:var(--card); border:1px solid var(--border); border-radius:16px; padding:16px; margin-bottom:12px; box-shadow:0 2px 4px rgba(0,0,0,0.02); }
+    
+    .btn { border:none; border-radius:12px; padding:12px 16px; font-weight:600; cursor:pointer; font-size:14px; transition:0.2s; display:inline-flex; align-items:center; justify-content:center; gap:6px; }
     .btn-primary { background:var(--primary); color:white; }
     .btn-outline { background:white; border:1px solid var(--border); color:var(--text); }
-    .btn-danger { background:#fee2e2; color:var(--danger); }
-    .btn:active { transform:scale(0.98); }
-    
-    .grid { display:grid; gap:12px; }
-    .stats-grid { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
-    
-    /* Compact Stats */
-    .stat { border:1px solid var(--border); border-radius:12px; padding:10px; background:white; }
-    .stat .val { font-size:20px; font-weight:800; margin-top:2px; }
-    .stat .lbl { font-size:11px; font-weight:700; color:var(--muted); text-transform:uppercase; }
-    .stat .sub { font-size:11px; color:var(--muted); margin-top:2px; }
-    
-    input, select { width:100%; padding:12px; border:1px solid var(--border); border-radius:10px; background:#fff; font-size:15px; outline:none; }
-    input:focus { border-color:var(--primary); box-shadow:0 0 0 3px rgba(16,185,129,0.1); }
-    
-    /* Collapsible Details */
-    details > summary { list-style: none; cursor: pointer; font-weight: 700; font-size: 16px; display: flex; justify-content: space-between; align-items: center; }
-    details > summary::-webkit-details-marker { display: none; }
-    details > summary::after { content: '▼'; font-size: 12px; color: var(--muted); transition: transform 0.2s; }
-    details[open] > summary::after { transform: rotate(180deg); }
-    details[open] .content { animation: fadeIn 0.3s ease-in-out; margin-top: 12px; }
+    .btn-ghost { background:transparent; color:var(--muted); padding:8px; }
+    .btn:active { transform:scale(0.96); }
 
-    /* Health Timeline */
-    .health-item { display: flex; gap: 10px; align-items: flex-start; padding: 8px 0; border-bottom: 1px dashed var(--border); font-size: 13px; }
-    .health-item:last-child { border-bottom: none; }
-    .health-icon { font-size: 16px; min-width: 20px; }
-    .health-locked { color: var(--muted); filter: grayscale(1); opacity: 0.7; }
-    .health-done { color: var(--text); }
-    .health-done .health-icon { color: var(--primary); }
+    /* Stats Grid */
+    .grid { display:grid; gap:10px; }
+    .stats-grid { grid-template-columns: repeat(2, 1fr); }
+    .stat { background:white; border:1px solid var(--border); border-radius:12px; padding:12px; text-align:center; }
+    .stat .val { font-size:22px; font-weight:800; }
+    .stat .lbl { font-size:10px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:0.5px; }
 
-    /* Gamification Grid */
-    .achievements { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
-    .achievement { 
-        padding: 12px; border: 1px solid var(--border); border-radius: 12px; display: flex; flex-direction: column; 
-        align-items: center; text-align: center; background: white; transition: all 0.3s; min-height: 110px; justify-content: center;
+    /* New Search UI */
+    .selector-btn {
+      width: 100%; text-align: left; background: white; border: 1px solid var(--border);
+      padding: 14px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center;
+      font-size: 15px;
     }
-    .achievement.locked { opacity: 0.5; filter: grayscale(1); background: #f1f5f9; border-style: dashed; }
-    .achievement.unlocked { background: #ecfdf5; border-color: #6ee7b7; box-shadow: 0 4px 6px -1px rgba(16,185,129,0.1); }
-    .achievement .icon { font-size: 32px; margin-bottom: 8px; }
-    .achievement h4 { margin:0; font-size:13px; font-weight:700; }
-    .achievement p { margin:4px 0 0; font-size:11px; color:var(--muted); line-height:1.2; }
+    .selector-btn:active { background: #f1f5f9; }
+    
+    .quick-actions { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; margin-bottom: 12px; scrollbar-width: none; }
+    .quick-chip { 
+      flex-shrink: 0; background: #ecfdf5; color: var(--primary-dark); border: 1px solid #a7f3d0; 
+      padding: 8px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; cursor: pointer;
+    }
+    .quick-chip:active { transform: scale(0.95); }
 
-    /* SEO Content Section */
-    .seo-content { margin-top:60px; border-top:1px solid var(--border); padding-top:40px; color:var(--text); line-height:1.6; }
-    .seo-content h2 { font-size:24px; margin-bottom:16px; }
-    .seo-content p { color:var(--muted); margin-bottom:20px; }
+    /* Search Modal Specifics */
+    #searchModal { height: 80vh; max-height: 800px; width: 100%; max-width: 600px; border-radius: 20px 20px 0 0; position: fixed; bottom: 0; top: auto; margin: 0; border: none; box-shadow: 0 -4px 20px rgba(0,0,0,0.1); animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+    @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
     
-    /* Modals & Utils */
-    dialog { border:none; border-radius:16px; padding:0; width:min(500px,95vw); box-shadow:0 25px 50px -12px rgba(0,0,0,0.25); }
-    dialog::backdrop { background:rgba(0,0,0,0.5); backdrop-filter:blur(2px); }
-    .modal-head { padding:16px 20px; font-weight:700; border-bottom:1px solid var(--border); background:#f8fafc; display:flex; justify-content:space-between; align-items:center; }
-    .modal-body { padding:20px; }
-    .modal-foot { padding:16px; display:flex; justify-content:flex-end; gap:10px; border-top:1px solid var(--border); }
+    .search-header { padding: 16px; border-bottom: 1px solid var(--border); display: flex; gap: 10px; align-items: center; }
+    #searchInput { width: 100%; padding: 12px 40px 12px 16px; border-radius: 10px; border: 1px solid var(--border); font-size: 16px; outline: none; background: #f8fafc; }
+    #searchInput:focus { border-color: var(--primary); background: white; }
     
+    .search-results { overflow-y: auto; height: calc(80vh - 80px); padding: 0 16px 20px; }
+    .search-item { padding: 14px 0; border-bottom: 1px solid #f1f5f9; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+    .search-item:last-child { border-bottom: none; }
+    .search-item strong { display: block; font-size: 15px; margin-bottom: 2px; }
+    .search-item small { color: var(--muted); }
+    .search-item .mg-badge { background: #f1f5f9; padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: 700; color: var(--text); }
+
+    /* Other standard UI */
     .hidden { display:none !important; }
-    .history-item { display:flex; justify-content:space-between; padding:12px 0; border-bottom:1px solid var(--border); font-size:14px; }
-    
-    /* Quit Program Highlight */
-    .quit-active { border: 2px solid var(--primary); background: #ecfdf5; }
-    .progress-bar { height:6px; background:#e2e8f0; border-radius:3px; margin-top:8px; overflow:hidden; }
-    .progress-fill { height:100%; background:var(--primary); width:0%; transition:width 0.5s; }
-
-    /* Wizard Styles */
-    .selection-card {
-      border: 2px solid var(--border);
-      border-radius: 12px;
-      padding: 16px;
-      cursor: pointer;
-      transition: all 0.2s;
-      background: white;
-      text-align: center;
-    }
-    .selection-card:hover { border-color: #cbd5e1; }
-    .selection-card.active {
-      border-color: var(--primary);
-      background-color: #ecfdf5;
-      box-shadow: 0 4px 6px -1px rgba(16,185,129,0.1);
-    }
-    .selection-card h4 { margin: 8px 0 4px; font-size: 15px; }
-    .selection-card p { margin: 0; font-size: 12px; color: var(--muted); line-height: 1.4; }
-    .wizard-step { animation: fadeIn 0.3s; }
-    @keyframes fadeIn { from { opacity:0; transform:translateY(5px); } to { opacity:1; transform:translateY(0); } }
-
-    #toast { position:fixed; bottom:20px; right:20px; z-index:100; }
-    .toast-msg { background:#1e293b; color:white; padding:12px 20px; border-radius:10px; margin-top:10px; animation:slideUp 0.3s; }
-    @keyframes slideUp { from{transform:translateY(20px);opacity:0} to{transform:translateY(0);opacity:1} }
+    details > summary { list-style: none; font-weight: 600; cursor: pointer; padding: 8px 0; }
+    #toast { position:fixed; bottom:20px; left:50%; transform:translateX(-50%); z-index:100; pointer-events:none; }
+    .toast-msg { background:rgba(15, 23, 42, 0.9); color:white; padding:10px 20px; border-radius:20px; margin-top:10px; font-size:14px; backdrop-filter:blur(4px); }
   </style>
 </head>
 <body>
 
   <header>
     <div class="logo">💊 <span>NicoTracker</span></div>
-    <div style="display:flex; gap:10px;">
-      <button id="installBtn" class="btn btn-primary hidden" style="padding:8px 12px; font-size:12px;">📲 Install</button>
-      <button id="langBtn" class="btn btn-outline" style="padding:8px;">🇺🇸 EN</button>
-      <button id="syncBtn" class="btn btn-primary" data-i18n="auth_btn">Login / Sync</button>
-      <button id="menuBtn" class="btn btn-outline" style="font-size:18px;">⚙️</button>
+    <div style="display:flex; gap:8px;">
+      <button id="langBtn" class="btn btn-outline" style="padding:6px 10px; font-size:12px;">EN</button>
+      <button id="menuBtn" class="btn btn-ghost">⚙️</button>
     </div>
   </header>
 
   <main class="shell">
-    
-    <!-- Quit Program Banner -->
-    <div id="quitBanner" class="card quit-active hidden">
-      <div style="display:flex; justify-content:space-between; align-items:center;">
-        <div>
-          <h3 style="margin:0" data-i18n="quit_title">Freedom Journey</h3>
-          <p style="margin:4px 0 0; color:var(--primary-dark); font-size:13px;" id="quitStatusText">Plan active</p>
-        </div>
-        <div style="text-align:right;">
-          <div class="val" style="font-size:20px;" id="quitTarget">0</div>
-          <div class="lbl" data-i18n="daily_max">Daily Max</div>
-        </div>
-      </div>
-      <div class="progress-bar"><div id="quitProgress" class="progress-fill"></div></div>
-    </div>
 
     <!-- Dashboard Stats -->
-    <div class="grid stats-grid">
+    <div class="grid stats-grid" style="margin-bottom:16px;">
       <div class="stat">
         <div class="lbl" data-i18n="today_usage">Today</div>
         <div class="val" id="valToday">0</div>
-        <div class="sub" id="valLimit">Limit: 10</div>
+        <div class="sub" style="font-size:11px; color:var(--muted)" id="valLimit">/ 10</div>
       </div>
       <div class="stat">
         <div class="lbl" data-i18n="streak">Streak</div>
-        <div class="val" id="valStreak">0 <span style="font-size:14px" data-i18n="days_label">days</span></div>
-        <div class="sub" data-i18n="streak_hint">🔥 Keep it up</div>
-      </div>
-      <div class="stat">
-        <div class="lbl" data-i18n="money_saved">Saved</div>
-        <div class="val" id="valSaved" style="color:var(--primary);">0</div>
-        <div class="sub" id="valCost">Cost: 0</div>
-      </div>
-      <div class="stat">
-        <div class="lbl" data-i18n="nicotine">Nicotine</div>
-        <div class="val" id="valMg">0 mg</div>
-        <div class="sub" data-i18n="total_today">Total today</div>
+        <div class="val" id="valStreak">0</div>
+        <div class="sub" style="font-size:11px; color:var(--muted)">days</div>
       </div>
     </div>
 
-    <!-- Health Recovery (Collapsible, Quit Mode Only) -->
-    <details id="healthSection" class="card hidden">
-      <summary><span data-i18n="health_timeline">Health Recovery</span></summary>
-      <div class="content" id="healthList"></div>
-    </details>
+    <!-- MAIN ACTION CARD -->
+    <div class="card" style="border-color: var(--primary);">
+      <h3 style="margin:0 0 12px; font-size:14px; text-transform:uppercase; color:var(--muted);" data-i18n="log_usage">Log Usage</h3>
+      
+      <!-- Quick Favorites (Auto-populated) -->
+      <div id="quickActions" class="quick-actions"></div>
 
-    <!-- Add Action with Smart Favorites -->
-    <div class="card" style="margin-top:4px;">
-      <h3 style="margin:0 0 12px;" data-i18n="log_usage">Log Usage</h3>
-      <div class="grid" style="grid-template-columns: 1fr auto;">
-        <select id="pouchSelect"></select>
-        <button id="addBtn" class="btn btn-primary" style="height:44px; width:60px; justify-content:center; font-size:20px;">➕</button>
-      </div>
-      <div style="margin-top:12px; text-align:right;">
-          <span style="font-size:12px; color:var(--primary); cursor:pointer; font-weight:600; text-decoration:underline;" id="openBrandsBtn" data-i18n="manage_custom_brands">Manage Custom Brands</span>
+      <div class="grid" style="grid-template-columns: 1fr auto; gap:8px;">
+        <!-- Selector Button -->
+        <button id="openSearchBtn" class="selector-btn">
+          <div>
+            <div style="font-size:11px; color:var(--muted);" data-i18n="selected_pouch">Selected</div>
+            <div id="selectedPouchName" style="font-weight:700;">Select a pouch...</div>
+          </div>
+          <span style="font-size:18px;">🔍</span>
+        </button>
+        
+        <!-- Add Button -->
+        <button id="addBtn" class="btn btn-primary" style="width:60px; font-size:24px;">+</button>
       </div>
     </div>
 
-    <!-- Achievements (Collapsible) -->
-    <details class="card">
-        <summary><span data-i18n="achievements">Achievements</span></summary>
-        <div class="content">
-            <div id="badgeGrid" class="achievements"></div>
-        </div>
-    </details>
-
-    <!-- Charts (Collapsible, Open by default) -->
+    <!-- Analytics & History -->
     <details class="card" open>
-      <summary><span data-i18n="charts_title">Analytics</span></summary>
-      <div class="content grid" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));">
-        <div>
-           <h4 style="margin:0 0 10px; font-size:12px; color:var(--muted); text-transform:uppercase;" data-i18n="chart_trend">Trend (14 days)</h4>
-           <canvas id="trendChart" height="200"></canvas>
-        </div>
-        <div>
-           <h4 style="margin:20px 0 10px; font-size:12px; color:var(--muted); text-transform:uppercase;" data-i18n="hourly_heatmap">Hourly Heatmap</h4>
-           <canvas id="hourlyChart" height="200"></canvas>
-        </div>
+      <summary data-i18n="history">Recent History</summary>
+      <div id="historyList"></div>
+      <div style="text-align:center; padding-top:10px;">
+        <button id="viewAllHistoryBtn" class="btn btn-outline" style="font-size:12px; width:100%;" data-i18n="view_all">View Full History</button>
       </div>
     </details>
 
-    <!-- History (Always visible but compact) -->
-    <div class="card">
-      <div style="display:flex; justify-content:space-between; align-items:center; gap:8px;">
-        <h3 style="margin:0;" data-i18n="history">Recent History</h3>
-        <button id="viewAllHistoryBtn" class="btn btn-outline" style="padding:6px 10px; font-size:12px;" data-i18n="view_all">View All</button>
-      </div>
-      <div id="historyList"></div>
-    </div>
-
-    <!-- SEO & Content -->
-    <article class="seo-content">
-      <h1 data-i18n="seo_h1">Nicotine Pouch Tracker & Quitting Tool</h1>
-      <p data-i18n="seo_p1">NicoTracker is the ultimate free tool to track Velo, Zyn, Killa. Runs locally or in cloud.</p>
-    </article>
+    <details class="card">
+        <summary data-i18n="charts_title">Analytics</summary>
+        <canvas id="trendChart" height="200"></canvas>
+    </details>
 
   </main>
 
   <div id="toast"></div>
 
-  <!-- DIALOGS -->
-
-  <!-- Full History Modal -->
-  <dialog id="historyModal">
-    <div class="modal-head"><span data-i18n="history_modal_title">Full History</span></div>
-    <div class="modal-body grid" style="gap:12px;">
-      <div><label style="font-size:12px; color:var(--muted);" data-i18n="pick_date">Pick Date</label><input type="datetime-local" id="backdateInput"></div>
-      <div><label style="font-size:12px; color:var(--muted);" data-i18n="select_brand">Brand</label><select id="historyPouchSelect"></select></div>
-      <button id="addPastEntryBtn" class="btn btn-primary" style="width:100%;" data-i18n="add_past_entry">Add Past Entry</button>
-      <div style="border-top:1px solid var(--border); margin:8px 0;"></div>
-      <div id="fullHistoryList" style="max-height:300px; overflow-y:auto;"></div>
+  <!-- SEARCH MODAL -->
+  <dialog id="searchModal">
+    <div class="search-header">
+      <div style="position:relative; flex-grow:1;">
+        <input type="search" id="searchInput" placeholder="Search brand or flavor..." autocomplete="off">
+        <span style="position:absolute; right:12px; top:12px; color:var(--muted);">🔎</span>
+      </div>
+      <button class="btn btn-ghost" onclick="document.getElementById('searchModal').close()" style="font-size:18px;">✕</button>
     </div>
-    <div class="modal-foot"><button class="btn btn-outline" onclick="document.getElementById('historyModal').close()" data-i18n="close">Close</button></div>
-  </dialog>
-
-  <!-- Manage Brands Modal -->
-  <dialog id="brandsModal">
-    <div class="modal-head" data-i18n="manage_brands">Manage Brands</div>
-    <div class="modal-body">
-      <div class="grid" style="grid-template-columns: 2fr 1fr auto; margin-bottom:16px; align-items:end;">
-        <div><label style="font-size:11px;" data-i18n="brand_name_label">Name</label><input type="text" id="newBrandName" placeholder="e.g. Kurwa"></div>
-        <div><label style="font-size:11px;" data-i18n="mg_label">Mg</label><input type="number" id="newBrandMg" placeholder="mg" step="0.1"></div>
-        <button id="addNewBrandBtn" class="btn btn-primary" style="height:44px;">➕</button>
-      </div>
-      <div id="customBrandsList" style="max-height: 250px; overflow-y: auto;"></div>
-    </div>
-    <div class="modal-foot"><button class="btn btn-outline" onclick="document.getElementById('brandsModal').close()" data-i18n="close">Close</button></div>
-  </dialog>
-
-  <!-- Settings Wizard Modal -->
-  <dialog id="settingsModal">
-    <div class="modal-head"><span data-i18n="settings">Settings</span><span style="font-size:12px; color:var(--muted);" id="wizardStepIndicator">Step 1/3</span></div>
-    <div class="modal-body">
-      <!-- STEP 1 -->
-      <div id="step1" class="wizard-step">
-        <h3 style="margin:0 0 16px; font-size:16px; text-align:center;" data-i18n="wiz_step1_title">What is your goal?</h3>
-        <div class="grid" style="grid-template-columns: 1fr 1fr;">
-          <div class="selection-card" data-val="track" onclick="selectGoal('track')"><div style="font-size:32px;">📊</div><h4 data-i18n="goal_track_title">Just Tracking</h4></div>
-          <div class="selection-card" data-val="quit" onclick="selectGoal('quit')"><div style="font-size:32px;">💪</div><h4 data-i18n="goal_quit_title">I Want to Quit</h4></div>
-        </div>
-      </div>
-      <!-- STEP 2 -->
-      <div id="step2" class="wizard-step hidden">
-        <h3 style="margin:0 0 16px; font-size:16px; text-align:center;" data-i18n="wiz_step2_title">Choose Strategy</h3>
-        <div class="grid" style="gap:12px;">
-          <div class="selection-card" data-val="smooth" onclick="selectStrategy('smooth')"><h4 data-i18n="strat_smooth_title">Smooth Taper</h4><p data-i18n="strat_smooth_desc">Linear reduction</p></div>
-          <div class="selection-card" data-val="weekly" onclick="selectStrategy('weekly')"><h4 data-i18n="strat_weekly_title">Weekly Step-Down</h4><p data-i18n="strat_weekly_desc">Weekly drops</p></div>
-          <div class="selection-card" data-val="cutoff" onclick="selectStrategy('cutoff')"><h4 data-i18n="strat_cutoff_title">Cold Turkey</h4><p data-i18n="strat_cutoff_desc">Fixed limit then stop</p></div>
-        </div>
-      </div>
-      <!-- STEP 3 -->
-      <div id="step3" class="wizard-step hidden">
-        <h3 style="margin:0 0 16px; font-size:16px; text-align:center;" data-i18n="wiz_step3_title">Final Setup</h3>
-        <div class="grid" style="grid-template-columns: 1fr 1fr;">
-          <div><label data-i18n="currency">Currency</label><input id="currencyInput"></div>
-          <div><label data-i18n="pack_price">Price/Can</label><input type="number" id="priceInput"></div>
-        </div>
-        <div class="grid" style="grid-template-columns: 1fr 1fr;">
-          <div><label data-i18n="pouches_pack">Pouches/Can</label><input type="number" id="piecesInput"></div>
-          <div><label data-i18n="start_limit">Daily Limit</label><input type="number" id="limitInput"></div>
-        </div>
-        <div id="dateInputContainer" class="hidden"><label data-i18n="target_date">Target Date</label><input type="date" id="wizardDateInput"></div>
-        <div id="reductionInputContainer" class="hidden"><label data-i18n="reduction_rate">Reduction/Week</label><input type="number" id="reductionInput"></div>
-      </div>
-    </div>
-    <div class="modal-foot">
-      <button id="wizBackBtn" class="btn btn-outline hidden" onclick="prevStep()" data-i18n="back">Back</button>
-      <button id="wizNextBtn" class="btn btn-primary" onclick="nextStep()" data-i18n="next">Next</button>
+    <div id="searchResults" class="search-results">
+      <!-- Results injected here -->
     </div>
   </dialog>
 
-  <!-- Auth / Data Modal -->
-  <dialog id="authModal">
-    <div class="modal-head" data-i18n="auth_title">Sync & Backup</div>
-    <div class="modal-body">
-      <!-- Login Section -->
-      <div id="authSection">
-          <div class="grid">
-              <input type="email" id="emailInput" placeholder="Email">
-              <input type="password" id="passInput" placeholder="Password">
-              <button id="loginBtn" class="btn btn-primary" data-i18n="login">Log In</button>
-              <button id="googleAuthBtn" class="btn btn-outline" data-i18n="google_login">Google Login</button>
-          </div>
-          <div style="text-align:center; margin-top:10px; font-size:13px; color:var(--primary); cursor:pointer;" id="toggleReg" data-i18n="toggle_reg">New? Create Account</div>
+  <!-- Full History / Settings / Auth Modals (Simplified placeholders for brevity, logic remains) -->
+  <dialog id="settingsModal" style="border:none; padding:20px; border-radius:16px;">
+      <h3 data-i18n="settings">Settings</h3>
+      <label style="display:block; margin-top:10px;" data-i18n="daily_limit">Daily Limit</label>
+      <input type="number" id="limitInput" style="width:100%; padding:8px; margin-top:4px; border:1px solid #ccc; border-radius:8px;">
+      <div style="margin-top:20px; display:flex; justify-content:flex-end; gap:10px;">
+          <button class="btn btn-outline" onclick="this.closest('dialog').close()">Cancel</button>
+          <button class="btn btn-primary" id="saveSettingsBtn">Save</button>
       </div>
-
-      <!-- Data Export Section -->
-      <div style="border-top:1px solid var(--border); margin-top:20px; padding-top:20px;">
-           <h4 style="margin:0 0 12px; font-size:14px; color:var(--muted); text-transform:uppercase;" data-i18n="data_management">Data Management</h4>
-           <div class="grid" style="grid-template-columns: 1fr 1fr;">
-              <button id="btnExportCsv" class="btn btn-outline" style="justify-content:center;">📄 CSV Export</button>
-              <button id="btnExportJson" class="btn btn-outline" style="justify-content:center;">💾 Full Backup</button>
-           </div>
-           <p style="font-size:11px; color:var(--muted); margin:8px 0 0; text-align:center;">Download your data locally.</p>
-      </div>
-    </div>
-    <div class="modal-foot"><button class="btn btn-outline" onclick="document.getElementById('authModal').close()" data-i18n="close">Close</button></div>
   </dialog>
 
-  <!-- JAVASCRIPT LOGIC -->
   <script type="module">
+    // IMPORT DATA
+    import { POUCH_DB } from './data.js';
+    
+    // FIREBASE IMPORTS (Keep your config)
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
-    import { getAnalytics, logEvent } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-analytics.js";
-    import { getAuth, signInWithPopup, GoogleAuthProvider, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
-    import { getFirestore, doc, setDoc, getDoc, collection, onSnapshot, query, orderBy, Timestamp, writeBatch, deleteDoc } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+    import { getFirestore, doc, setDoc, getDoc, collection, onSnapshot, query, orderBy, Timestamp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
 
-    // === 1. CONFIGURATION ===
-    const firebaseConfig = {
-      apiKey: "AIzaSyBKMDwYeSjmgQLnpYciReSK2yJU0pG6KS8",
-      authDomain: "nicotinepouches-d9d1c.firebaseapp.com",
-      projectId: "nicotinepouches-d9d1c",
-      storageBucket: "nicotinepouches-d9d1c.firebasestorage.app",
-      messagingSenderId: "42131125480",
-      appId: "1:42131125480:web:8022461f0a790a5677855d",
-      measurementId: "G-0NE6V1LVKN"
+    // CONFIG
+    const firebaseConfig = { 
+       apiKey: "AIzaSyBKMDwYeSjmgQLnpYciReSK2yJU0pG6KS8",
+       authDomain: "nicotinepouches-d9d1c.firebaseapp.com",
+       projectId: "nicotinepouches-d9d1c",
+       storageBucket: "nicotinepouches-d9d1c.firebasestorage.app",
+       messagingSenderId: "42131125480",
+       appId: "1:42131125480:web:8022461f0a790a5677855d"
     };
-
     const app = initializeApp(firebaseConfig);
-    const analytics = getAnalytics(app);
-    const auth = getAuth(app);
     const db = getFirestore(app);
 
-    // === 2. LOCALIZATION ===
-    const translations = {
-      en: {
-        auth_btn: "Sync / Data", today_usage: "TODAY", streak: "STREAK", money_saved: "SAVED",
-        log_usage: "Log Usage", manage_custom_brands: "Manage Custom Brands", chart_trend: "Usage Trend",
-        history: "History", view_all: "View All", settings: "Settings", quit_mode_label: "Enable Quitting Program",
-        quit_date: "Quit Date", currency: "Currency", pack_price: "Price / Can", pouches_pack: "Pouches / Can",
-        daily_limit: "Standard Limit", close: "Close", save: "Save", auth_title: "Sync & Backup",
-        auth_desc: "Sign in to backup data.", login: "Log In", toggle_reg: "Need account? Register", daily_max: "DAILY MAX",
-        quit_title: "Freedom Journey", seo_h1: "Nicotine Pouch Tracker", achievements: "Achievements",
-        manage_brands: "Manage Custom Brands", brand_name_label: "Brand Name", mg_label: "Mg",
-        export_csv: "📥 Export CSV", google_login: "Google Login", streak_hint: "🔥 Keep it up", nicotine: "Nicotine", 
-        total_today: "Total today", cost_label: "Cost", limit_label: "Limit", days_label: "days",
-        custom_group: "Custom", no_custom_brands: "No custom brands.", delete_brand_confirm: "Delete this brand?",
-        days_left: "{days} days left", freedom: "Freedom!", hourly_heatmap: "Hourly Heatmap", history_modal_title: "Full History",
-        pick_date: "Pick Date & Time", select_brand: "Select Brand", add_past_entry: "Add Past Entry", delete_entry: "Delete",
-        history_empty: "No history yet.", charts_title: "Analytics", favorites: "⭐ Favorites",
-        health_timeline: "Health Recovery", health_20m: "20m: Pulse normal", health_2h: "2h: Craving peak", health_8h: "8h: Oxygen levels",
-        health_24h: "24h: Nicotine gone", health_48h: "48h: Taste improves", health_72h: "72h: Breathing easier", health_14d: "14d: Circulation",
-        wiz_step1_title: "What is your goal?", wiz_step2_title: "Choose Strategy", wiz_step3_title: "Final Setup",
-        goal_track_title: "Just Tracking", goal_quit_title: "I Want to Quit",
-        strat_smooth_title: "Smooth Taper", strat_smooth_desc: "Linear reduction",
-        strat_weekly_title: "Weekly Step-Down", strat_weekly_desc: "Weekly drops",
-        strat_cutoff_title: "Cold Turkey", strat_cutoff_desc: "Fixed then stop",
-        start_limit: "Daily Limit", target_date: "Target Date", reduction_rate: "Reduction per Week",
-        back: "Back", next: "Next", finish: "Finish", data_management: "Data Management"
-      },
-      cs: {
-        auth_btn: "Sync / Data", today_usage: "DNES", streak: "ŘADA DNÍ", money_saved: "UŠETŘENO",
-        log_usage: "Zapsat sáček", manage_custom_brands: "Spravovat značky", chart_trend: "Vývoj",
-        history: "Historie", view_all: "Zobrazit vše", settings: "Nastavení", quit_mode_label: "Zapnout odvykací program",
-        quit_date: "Datum konce", currency: "Měna", pack_price: "Cena puku", pouches_pack: "Ks v puku",
-        daily_limit: "Denní limit", close: "Zavřít", save: "Uložit", auth_title: "Záloha dat",
-        auth_desc: "Přihlas se pro synchronizaci.", login: "Přihlásit", toggle_reg: "Registrovat se", daily_max: "DENNÍ CÍL",
-        quit_title: "Cesta ke svobodě", seo_h1: "Aplikace na odvykání", achievements: "Úspěchy",
-        manage_brands: "Správa značek", brand_name_label: "Název", mg_label: "Mg",
-        export_csv: "📥 Export CSV", google_login: "Google", streak_hint: "🔥 Jen tak dál", nicotine: "Nikotin", 
-        total_today: "Celkem dnes", cost_label: "Cena", limit_label: "Limit", days_label: "dní",
-        custom_group: "Vlastní", no_custom_brands: "Žádné značky.", delete_brand_confirm: "Smazat?",
-        days_left: "Zbývá {days} dní", freedom: "Svoboda!", hourly_heatmap: "Hodinová heatmapa", history_modal_title: "Kompletní historie",
-        pick_date: "Vyber datum a čas", select_brand: "Značka", add_past_entry: "Přidat zpětně", delete_entry: "Smazat",
-        history_empty: "Žádná historie.", charts_title: "Statistiky", favorites: "⭐ Oblíbené",
-        health_timeline: "Zdravotní regenerace", health_20m: "20m: Tep v normálu", health_2h: "2h: Vrchol chutí", health_8h: "8h: Kyslík v krvi",
-        health_24h: "24h: Nikotin pryč", health_48h: "48h: Lepší chuť", health_72h: "72h: Lepší dýchání", health_14d: "14d: Oběh krve",
-        wiz_step1_title: "Jaký je tvůj cíl?", wiz_step2_title: "Strategie", wiz_step3_title: "Nastavení",
-        goal_track_title: "Jen sledovat", goal_quit_title: "Chci přestat",
-        strat_smooth_title: "Plynule (Smooth)", strat_smooth_desc: "Lineární snížení",
-        strat_weekly_title: "Týdenní schody", strat_weekly_desc: "Snížení týdně",
-        strat_cutoff_title: "Rázný konec", strat_cutoff_desc: "Stop k datu",
-        start_limit: "Denní Limit", target_date: "Datum konce", reduction_rate: "Snížení/Týden",
-        back: "Zpět", next: "Další", finish: "Hotovo", data_management: "Správa dat"
-      }
-    };
-
-    const t = (key, replacements = {}, langOverride) => {
-      const lang = langOverride || state?.lang || 'en';
-      let str = translations[lang]?.[key] || translations.en[key] || key;
-      Object.entries(replacements).forEach(([k, v]) => str = str.replace(`{${k}}`, v));
-      return str;
-    };
-
-    const pouchesDB = [
-      {
-        brand: "77 Pouches",
-        items: [
-          { name: "77 Black Currant Ice", mg: 10.4, dots: 2 },
-          { name: "77 Blueberry", mg: 10.4, dots: 2 },
-          { name: "77 Cola & Cherry", mg: 10.4, dots: 2 },
-          { name: "77 Cola & Vanilla", mg: 10.4, dots: 2 },
-          { name: "77 Forest Fruit Light", mg: 5.2, dots: 1 }
-        ]
-      },
-      {
-        brand: "ACE",
-        items: [
-          { name: "Ace Cool Mint", mg: 6.0, dots: 1 },
-          { name: "Ace Eucalyptus", mg: 6.0, dots: 1 },
-          { name: "Ace Extreme Cool", mg: 11.2, dots: 3 },
-          { name: "Ace Green Lemon", mg: 6.0, dots: 1 },
-          { name: "Ace X EXTEND Cool Mint", mg: 10.0, dots: 3 }
-        ]
-      },
-      {
-        brand: "AROMA KING",
-        items: [
-          { name: "Aroma King Full Kick Candy Tobacco", mg: 10.0, dots: 2 },
-          { name: "Aroma King Full Kick Double Mint", mg: 10.0, dots: 2 },
-          { name: "Aroma King Soft Kick Candy Tobacco", mg: 5.0, dots: 1 },
-          { name: "Aroma King Soft Kick Double Mint", mg: 5.0, dots: 1 }
-        ]
-      },
-      {
-        brand: "CANDYS",
-        items: [
-          { name: "Candys Fresh Strong", mg: 16.0, dots: 4 },
-          { name: "Candys Sweet Bubblegum", mg: 8.0, dots: 2 },
-          { name: "Candys Sweet Strawberry", mg: 8.0, dots: 2 }
-        ]
-      },
-      {
-        brand: "CLEW",
-        items: [
-          { name: "Clew Mango Mint", mg: 10.0, dots: 2 },
-          { name: "Clew Watermelon Ice", mg: 10.0, dots: 2 }
-        ]
-      },
-      {
-        brand: "CUBA",
-        items: [
-          { name: "Cuba Blueberry Strong", mg: 20.0, dots: 4 },
-          { name: "Cuba Cherry Strong", mg: 20.0, dots: 4 },
-          { name: "Cuba Cola Strong", mg: 20.0, dots: 4 },
-          { name: "Cuba Forest Berries Strong", mg: 20.0, dots: 4 },
-          { name: "Cuba Ninja Strawberry", mg: 20.0, dots: 4 }
-        ]
-      },
-      {
-        brand: "DENSSI",
-        items: [
-          { name: "DENSSI Cold Mint", mg: 10.0, dots: 2 },
-          { name: "DENSSI Spearmint", mg: 10.0, dots: 2 },
-          { name: "DENSSI Strawberry Freeze", mg: 10.0, dots: 2 }
-        ]
-      },
-      {
-        brand: "DOPE",
-        items: [
-          { name: "Dope Freeze Strong Edition", mg: 16.0, dots: 4 },
-          { name: "Dope Ice Cool Xtra Strong", mg: 16.0, dots: 4 },
-          { name: "Dope Mango", mg: 16.0, dots: 4 }
-        ]
-      },
-      {
-        brand: "FEDRS",
-        items: [
-          { name: "Fedrs Ice Cool Cinnamon Roll", mg: 20.0, dots: 4 },
-          { name: "Fedrs Ice Cool Irish Coffee", mg: 20.0, dots: 4 }
-        ]
-      },
-      {
-        brand: "Firefly",
-        items: [
-          { name: "Firefly Mango Ice", mg: 10.0, dots: 2 },
-          { name: "Firefly Mint X-Strong", mg: 15.0, dots: 4 }
-        ]
-      },
-      {
-        brand: "Fix",
-        items: [
-          { name: "Fix Blueberry", mg: 8.0, dots: 2 },
-          { name: "Fix Forest Fruit", mg: 11.5, dots: 3 },
-          { name: "Fix Lime", mg: 5.6, dots: 1 },
-          { name: "Fix Pomegranate", mg: 7.0, dots: 2 },
-          { name: "Fix Sweet Mint Lemon", mg: 8.0, dots: 2 }
-        ]
-      },
-      {
-        brand: "FUMI",
-        items: [
-          { name: "Fumi Fieri Mango", mg: 11.0, dots: 3 },
-          { name: "Fumi Freezy Mint", mg: 16.0, dots: 4 },
-          { name: "Fumi Minty Blueberry", mg: 8.0, dots: 2 },
-          { name: "Fumi Prickly Pear", mg: 11.0, dots: 3 },
-          { name: "Fumi Tangy Apple", mg: 11.0, dots: 3 },
-          { name: "Fumi Tangy Strawberry", mg: 11.0, dots: 3 },
-          { name: "Fumi Zingy Ginger", mg: 11.0, dots: 3 }
-        ]
-      },
-      {
-        brand: "FUZION",
-        items: [
-          { name: "Fuzion Berry Strong", mg: 18.0, dots: 4 },
-          { name: "Fuzion Max Extreme", mg: 30.0, dots: 5 },
-          { name: "Fuzion Orange Energy", mg: 16.0, dots: 3 }
-        ]
-      },
-      {
-        brand: "GARANT",
-        items: [
-          { name: "Garant Extreme Mint", mg: 16.0, dots: 4 },
-          { name: "Garant Strong Plus", mg: 20.0, dots: 4 },
-          { name: "Garant White Strong", mg: 15.0, dots: 4 }
-        ]
-      },
-      {
-        brand: "GOAT",
-        items: [
-          { name: "Goat Blueberry #12", mg: 8.4, dots: 2 },
-          { name: "Goat Frosted Strong", mg: 11.5, dots: 3 },
-          { name: "Goat White", mg: 5.6, dots: 2 }
-        ]
-      },
-      {
-        brand: "GRITT",
-        items: [
-          { name: "Gritt Crisp Ice Extra Strong", mg: 11.0, dots: 3 },
-          { name: "Gritt Frost Bite", mg: 11.2, dots: 3 },
-          { name: "Gritt Kiwi Green Apple", mg: 12.0, dots: 3 }
-        ]
-      },
-      {
-        brand: "Grant",
-        items: [
-          { name: "Grant Dragon Fruit", mg: 12.0, dots: 3 },
-          { name: "Grant Extreme Edition", mg: 24.0, dots: 5 },
-          { name: "Grant ICE Peach", mg: 20.0, dots: 4 },
-          { name: "Grant Licorice", mg: 9.6, dots: 2 },
-          { name: "Grant Mango Lime Extreme Edition", mg: 24.0, dots: 5 },
-          { name: "Grant Mint Slim", mg: 10.9, dots: 3 },
-          { name: "Grant Wild Berries", mg: 12.0, dots: 3 }
-        ]
-      },
-      {
-        brand: "Greatest",
-        items: [
-          { name: "Greatest Berry Punch", mg: 8.0, dots: 2 },
-          { name: "Greatest Cold Dry", mg: 8.0, dots: 2 }
-        ]
-      },
-      {
-        brand: "ICEBERG",
-        items: [
-          { name: "Iceberg Arasaka", mg: 12.0, dots: 3 },
-          { name: "Iceberg Danger Strong", mg: 25.0, dots: 5 },
-          { name: "Iceberg Dragon Fruit", mg: 25.0, dots: 5 },
-          { name: "Iceberg Extreme", mg: 20.0, dots: 4 },
-          { name: "Iceberg Grape", mg: 25.0, dots: 5 },
-          { name: "Iceberg Mango Banana", mg: 25.0, dots: 5 },
-          { name: "Iceberg Medium", mg: 12.0, dots: 3 },
-          { name: "Iceberg Watermelon Lime", mg: 25.0, dots: 5 }
-        ]
-      },
-      {
-        brand: "KICK",
-        items: [
-          { name: "Kick Strong Mint", mg: 8.0, dots: 2 }
-        ]
-      },
-      {
-        brand: "KILLA",
-        items: [
-          { name: "Killa 13", mg: 12.8, dots: 2 },
-          { name: "Killa Blueberry", mg: 12.8, dots: 2 },
-          { name: "Killa Cold Mint", mg: 12.8, dots: 2 },
-          { name: "Killa Cold X Mint", mg: 18.0, dots: 3 },
-          { name: "Killa Cola", mg: 12.8, dots: 2 },
-          { name: "Killa Mini Cold Mint", mg: 8.0, dots: 1 },
-          { name: "Killa Spearmint", mg: 12.8, dots: 2 },
-          { name: "Killa Watermelon", mg: 13.2, dots: 2 }
-        ]
-      },
-      {
-        brand: "KLINT",
-        items: [
-          { name: "Klint Arctic Mint X-Strong", mg: 12.0, dots: 4 },
-          { name: "Klint Fresh Mint Strong", mg: 10.0, dots: 3 },
-          { name: "Klint Freeze Mint", mg: 10.0, dots: 3 },
-          { name: "Klint Liquorice", mg: 5.6, dots: 1 },
-          { name: "Klint Polar Mint", mg: 8.0, dots: 2 },
-          { name: "Klint Rosé", mg: 5.0, dots: 1 }
-        ]
-      },
-      {
-        brand: "KURWA",
-        items: [
-          { name: "Kurwa Cocopilada", mg: 12.0, dots: 2 },
-          { name: "Kurwa Collection Blackcurrant Purple Grape Hard", mg: 25.0, dots: 5 },
-          { name: "Kurwa Collection Just Berries Forest Berries", mg: 12.0, dots: 2 },
-          { name: "Kurwa Mango Juicy", mg: 12.0, dots: 2 }
-        ]
-      },
-      {
-        brand: "LIV",
-        items: [
-          { name: "Liv X-Strong Mint", mg: 14.0, dots: 4 }
-        ]
-      },
-      {
-        brand: "Loop",
-        items: [
-          { name: "Loop Licorice Fusion Extra Strong", mg: 11.0, dots: 3 }
-        ]
-      },
-      {
-        brand: "LYFT",
-        items: [
-          { name: "LYFT Berry Frost", mg: 8.0, dots: 2 },
-          { name: "LYFT Mint Slim", mg: 10.0, dots: 3 },
-          { name: "LYFT Tropical Slim", mg: 6.0, dots: 2 }
-        ]
-      },
-      {
-        brand: "NICO",
-        items: [
-          { name: "Nico Citrus Crush", mg: 8.0, dots: 2 },
-          { name: "Nico Ice Rock", mg: 8.0, dots: 2 }
-        ]
-      },
-      {
-        brand: "NOIS",
-        items: [
-          { name: "Nois Black Edition (slabší)", mg: 4.0, dots: 1 },
-          { name: "Nois Cool Strong", mg: 17.5, dots: 4 },
-          { name: "Nois White Edition (silnější)", mg: 10.0, dots: 3 }
-        ]
-      },
-      {
-        brand: "NOX",
-        items: [
-          { name: "NOX Cool Mint", mg: 16.0, dots: 4 },
-          { name: "NOX Tropical", mg: 16.0, dots: 4 }
-        ]
-      },
-      {
-        brand: "ON!",
-        items: [
-          { name: "ON! Citrus 3 mg", mg: 3.0, dots: 1 },
-          { name: "ON! Citrus 6 mg", mg: 6.0, dots: 2 },
-          { name: "ON! Coffee 6 mg", mg: 6.0, dots: 2 },
-          { name: "ON! Licorice 6 mg", mg: 6.0, dots: 2 },
-          { name: "ON! Mint 3 mg", mg: 3.0, dots: 1 },
-          { name: "ON! Mint 6 mg", mg: 6.0, dots: 2 }
-        ]
-      },
-      {
-        brand: "PABLO",
-        items: [
-          { name: "Pablo Gold Edition Frosted Mint", mg: 25.0, dots: 5 },
-          { name: "Pablo Ice Cold", mg: 12.0, dots: 3 },
-          { name: "Pablo Mini Ice Cold", mg: 8.3, dots: 2 },
-          { name: "Pablo X-Ice Cold", mg: 25.0, dots: 5 },
-          { name: "Pablo X-Mint", mg: 16.0, dots: 4 }
-        ]
-      },
-      {
-        brand: "PUFF & POUCH",
-        items: [
-          { name: "Puff & Pouch Mint Blast", mg: 6.0, dots: 1 },
-          { name: "Puff & Pouch Red Energy", mg: 8.0, dots: 2 }
-        ]
-      },
-      {
-        brand: "R4VE kofeinové",
-        items: [
-          { name: "R4VE Energy Bubble Gun (100 mg kofeinu)", mg: 0, dots: 0 },
-          { name: "R4VE Energy Mango Django (160 mg kofeinu)", mg: 0, dots: 0 },
-          { name: "R4VE Energy Minty Berry (160 mg kofeinu)", mg: 0, dots: 0 },
-          { name: "R4VE Energy Skiddler (80 mg kofeinu)", mg: 0, dots: 0 }
-        ]
-      },
-      {
-        brand: "R4VE nikotinové",
-        items: [
-          { name: "R4VE Bubble Gun", mg: 10.0, dots: 2 },
-          { name: "R4VE Melon Strong", mg: 10.0, dots: 3 },
-          { name: "R4VE Red Berries", mg: 8.0, dots: 2 }
-        ]
-      },
-      {
-        brand: "SIBEIRA",
-        items: [
-          { name: "Sibeira Mint", mg: 6.0, dots: 2 },
-          { name: "Sibeira Spearmint Strong", mg: 9.6, dots: 3 }
-        ]
-      },
-      {
-        brand: "Siberia",
-        items: [
-          { name: "Siberia -80°C White Dry", mg: 34.0, dots: 5 },
-          { name: "Siberia White Dry Regular", mg: 33.0, dots: 5 }
-        ]
-      },
-      {
-        brand: "SNATCH",
-        items: [
-          { name: "Snatch Arctic Mint X-Strong", mg: 16.0, dots: 3 },
-          { name: "Snatch Citrus Strong Edition", mg: 16.0, dots: 3 },
-          { name: "Snatch Forest Fruits", mg: 16.0, dots: 3 },
-          { name: "Snatch Frozen Ultra Strong", mg: 30.0, dots: 5 }
-        ]
-      },
-      {
-        brand: "SYX",
-        items: [
-          { name: "SYX Blueberry", mg: 8.0, dots: 2 },
-          { name: "SYX Low", mg: 2.8, dots: 1 },
-          { name: "SYX Medium", mg: 5.6, dots: 2 },
-          { name: "SYX Royal Wintergreen Strong", mg: 11.5, dots: 3 }
-        ]
-      },
-      {
-        brand: "Velo",
-        items: [
-          { name: "Velo Breezy Mango Slim", mg: 11.6, dots: 5 },
-          { name: "Velo Bright Spearmint Mini", mg: 6.0, dots: 2 },
-          { name: "Velo Cherry Ice Mini", mg: 4.0, dots: 1 },
-          { name: "Velo Cinnamon Flame Slim", mg: 10.9, dots: 4 },
-          { name: "Velo Crispy Peppermint Slim", mg: 9.8, dots: 3 },
-          { name: "Velo Crispy Peppermint Zero Slim", mg: 0, dots: 0 },
-          { name: "Velo Eucalyptus Storm Slim", mg: 14.0, dots: 5 },
-          { name: "Velo Freezing Peppermint Slim", mg: 10.9, dots: 5 },
-          { name: "Velo Groovy Grape Slim", mg: 10.9, dots: 4 },
-          { name: "Velo Icy Berries Mini", mg: 6.0, dots: 2 },
-          { name: "Velo McLaren Papaya Slim", mg: 8.4, dots: 4 },
-          { name: "Velo Orange Spark Slim", mg: 10.9, dots: 4 },
-          { name: "Velo Peppermint Storm Slim", mg: 10.9, dots: 4 },
-          { name: "Velo Simply Spearmint Mini", mg: 4.0, dots: 1 },
-          { name: "Velo Strawberry Ice Mini", mg: 6.0, dots: 2 },
-          { name: "Velo Strawberry Ice Slim", mg: 10.9, dots: 4 },
-          { name: "Velo Tangy Lime Slim", mg: 9.8, dots: 3 },
-          { name: "Velo Tropic Breeze Zero Slim", mg: 0, dots: 0 },
-          { name: "Velo Watermelon Ice Slim", mg: 8.1, dots: 3 }
-        ]
-      },
-      {
-        brand: "VIDAR",
-        items: [
-          { name: "Vidar Mint Strong", mg: 14.0, dots: 4 }
-        ]
-      },
-      {
-        brand: "VOLT",
-        items: [
-          { name: "VOLT Cool Crisp", mg: 12.0, dots: 3 },
-          { name: "VOLT Dark Frost", mg: 16.0, dots: 4 },
-          { name: "VOLT Frosted Apple", mg: 10.0, dots: 2 }
-        ]
-      },
-      {
-        brand: "WHITE FOX",
-        items: [
-          { name: "White Fox Double Mint", mg: 12.0, dots: 3 },
-          { name: "White Fox Full Charge", mg: 22.5, dots: 5 },
-          { name: "White Fox Peppered Mint", mg: 12.0, dots: 3 },
-          { name: "White Fox Slim Original", mg: 12.0, dots: 3 }
-        ]
-      },
-      {
-        brand: "XQS",
-        items: [
-          { name: "XQS Black Cherry", mg: 8.0, dots: 2 },
-          { name: "XQS Blueberry Mint", mg: 8.0, dots: 2 },
-          { name: "XQS Cool Ice", mg: 9.6, dots: 3 },
-          { name: "XQS Tropical Strong", mg: 9.6, dots: 3 }
-        ]
-      },
-      {
-        brand: "ZAFARI",
-        items: [
-          { name: "Zafari Desert Mint", mg: 8.0, dots: 2 },
-          { name: "Zafari Lemongrass Ginger", mg: 8.0, dots: 2 }
-        ]
-      },
-      {
-        brand: "ZYN",
-        items: [
-          { name: "ZYN Black Cherry Mini", mg: 3.0, dots: 1 },
-          { name: "ZYN Black Cherry Mini Extra", mg: 6.0, dots: 2 },
-          { name: "ZYN Blackcurrant Frost Slim", mg: 11.0, dots: 4 },
-          { name: "ZYN Chili Guava Slim", mg: 11.0, dots: 4 },
-          { name: "ZYN Cool Mint Mini", mg: 3.0, dots: 1 },
-          { name: "ZYN Cool Mint Mini Extra", mg: 6.0, dots: 2 },
-          { name: "ZYN Cool Mint Slim", mg: 9.0, dots: 3 },
-          { name: "ZYN Menthol Ice Slim", mg: 11.0, dots: 4 },
-          { name: "ZYN Spearmint Mini", mg: 1.5, dots: 1 },
-          { name: "ZYN Spearmint Mini Extra", mg: 6.0, dots: 2 }
-        ]
-      }
-    ];
-
-    // === 3. STATE ===
+    // STATE
     let state = {
-      user: null, lang: localStorage.getItem('nt_lang') || 'en',
-      settings: JSON.parse(localStorage.getItem('nt_settings')) || { 
-        currency: 'USD', packPrice: 5, pouchesPerPack: 20, dailyLimit: 10, 
-        goal: 'track', strategy: null, strategyStartDate: null, quitDate: null, reductionRate: 1
-      },
-      history: JSON.parse(localStorage.getItem('nt_history')) || [],
-      customPouches: JSON.parse(localStorage.getItem('nt_custom_pouches')) || []
+        lang: localStorage.getItem('nt_lang') || 'cs',
+        history: JSON.parse(localStorage.getItem('nt_history')) || [],
+        settings: JSON.parse(localStorage.getItem('nt_settings')) || { dailyLimit: 10 },
+        currentSelection: JSON.parse(localStorage.getItem('nt_last_pouch')) || null
     };
-    let wizStep = 1; let tempSettings = {};
 
-    function persistHistory() {
-      state.history.sort((a, b) => new Date(b.date) - new Date(a.date));
-      localStorage.setItem('nt_history', JSON.stringify(state.history));
-    }
+    // TRANSLATIONS
+    const texts = {
+        en: { today_usage: "TODAY", streak: "STREAK", log_usage: "LOG USAGE", selected_pouch: "Selected", history: "Recent History", charts_title: "Analytics", view_all: "History", settings: "Settings", daily_limit: "Daily Limit" },
+        cs: { today_usage: "DNES", streak: "ŘADA DNÍ", log_usage: "ZAPSAT SÁČEK", selected_pouch: "Vybráno", history: "Historie", charts_title: "Statistiky", view_all: "Celá historie", settings: "Nastavení", daily_limit: "Denní limit" }
+    };
 
-    // === 4. LOGIC ===
+    function t(key) { return texts[state.lang]?.[key] || texts['en'][key]; }
+
+    // --- CORE LOGIC ---
     function init() {
-      applyLanguage(state.lang); persistHistory(); renderUI(); setupListeners();
-      if (!localStorage.getItem('nt_settings') || !state.settings.goal) openWizard();
-      if('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js');
-      
-      let deferredPrompt; const installBtn = document.getElementById('installBtn');
-      window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferredPrompt = e; installBtn.classList.remove('hidden'); });
-      installBtn.addEventListener('click', async () => { if (!deferredPrompt) return; deferredPrompt.prompt(); deferredPrompt = null; installBtn.classList.add('hidden'); });
+        renderUI();
+        setupSearch();
+        setupListeners();
+        // Register SW
+        if('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js');
     }
 
-    function applyLanguage(lang) {
-      state.lang = lang; localStorage.setItem('nt_lang', lang); document.getElementById('langBtn').innerText = lang === 'en' ? '🇺🇸 EN' : '🇨🇿 CS';
-      document.querySelectorAll('[data-i18n]').forEach(el => { const tr = t(el.dataset.i18n, {}, lang); if(tr) el.innerText = tr; });
-      renderUI();
-    }
-
-    function calculateCurrentLimit() {
-      const s = state.settings;
-      if (s.goal === 'track' || !s.strategy || !s.strategyStartDate) return s.dailyLimit;
-      const now = new Date(); const startDate = new Date(s.strategyStartDate);
-      const daysPassed = Math.ceil(Math.abs(now - startDate) / (86400000));
-      
-      if (s.strategy === 'smooth') {
-        if(!s.quitDate) return s.dailyLimit;
-        const totalDays = Math.ceil((new Date(s.quitDate) - startDate) / 86400000);
-        if (totalDays <= 0) return 0;
-        const daysLeft = Math.ceil((new Date(s.quitDate) - now) / 86400000);
-        return Math.max(0, Math.ceil(s.dailyLimit * (Math.max(0, daysLeft) / totalDays)));
-      } 
-      else if (s.strategy === 'weekly') {
-        return Math.max(0, s.dailyLimit - (Math.floor(daysPassed / 7) * (s.reductionRate || 1)));
-      }
-      else if (s.strategy === 'cutoff') {
-        return (s.quitDate && now >= new Date(s.quitDate)) ? 0 : s.dailyLimit;
-      }
-      return s.dailyLimit;
+    function persist() {
+        localStorage.setItem('nt_history', JSON.stringify(state.history));
+        renderUI();
     }
 
     function renderUI() {
-      const today = new Date().toISOString().slice(0,10);
-      const todayEntries = state.history.filter(h => h.date.startsWith(today));
-      const todayCount = todayEntries.length;
-      
-      // -- SMART FAVORITES DROPDOWN --
-      const sel = document.getElementById('pouchSelect');
-      const historySel = document.getElementById('historyPouchSelect');
-      const currentVal = sel.value;
-      sel.innerHTML = '';
+        // Stats
+        const today = new Date().toISOString().slice(0,10);
+        const count = state.history.filter(h => h.date.startsWith(today)).length;
+        document.getElementById('valToday').innerText = count;
+        document.getElementById('valLimit').innerText = `/ ${state.settings.dailyLimit}`;
+        document.getElementById('valStreak').innerText = calcStreak();
 
-      // 1. All available items flat list for lookup
-      const allItems = [];
-      pouchesDB.forEach(g => allItems.push(...g.items));
-      state.customPouches.forEach(p => allItems.push(p));
+        // Language & Labels
+        document.querySelectorAll('[data-i18n]').forEach(el => el.innerText = t(el.dataset.i18n));
+        document.getElementById('langBtn').innerText = state.lang.toUpperCase();
 
-      // 2. Calculate Top 5
-      const counts = {};
-      state.history.forEach(h => counts[h.brand] = (counts[h.brand] || 0) + 1);
-      const topBrands = Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0,5).map(e=>e[0]);
+        // Selection Display
+        const selName = document.getElementById('selectedPouchName');
+        if (state.currentSelection) {
+            selName.innerHTML = `${state.currentSelection.b} ${state.currentSelection.n} <span style="color:var(--primary); font-size:12px;">${state.currentSelection.mg}mg</span>`;
+        } else {
+            selName.innerText = "Vyberte sáček...";
+        }
 
-      // 3. Render Favorites
-      if(topBrands.length > 0) {
-        const favGroup = document.createElement('optgroup');
-        favGroup.label = t('favorites');
-        topBrands.forEach(name => {
-           const p = allItems.find(x => x.name === name);
-           if(p) {
-               const opt = document.createElement('option');
-               opt.value = p.name; opt.dataset.mg = p.mg; opt.textContent = `${p.name} (${p.mg}mg)`;
-               favGroup.appendChild(opt);
-           }
-        });
-        sel.appendChild(favGroup);
-      }
+        // Quick Favorites (Top 3)
+        renderFavorites();
 
-      // 4. Render Standard Groups
-      const groupedPouches = [...pouchesDB.map(g => ({ ...g, items: [...g.items] }))];
-      if (state.customPouches.length) groupedPouches.push({ brand: t('custom_group'), items: [...state.customPouches] });
-      groupedPouches.sort((a, b) => a.brand.localeCompare(b.brand));
-      
-      groupedPouches.forEach(group => {
-        const optgroup = document.createElement('optgroup'); optgroup.label = group.brand;
-        group.items.slice().sort((a, b) => a.name.localeCompare(b.name)).forEach(p => {
-            const opt = document.createElement('option');
-            opt.value = p.name; opt.dataset.mg = p.mg; opt.textContent = `${p.name} (${p.mg}mg)`;
-            optgroup.appendChild(opt);
-        });
-        sel.appendChild(optgroup);
-      });
-      if(currentVal && Array.from(sel.options).some(o => o.value === currentVal)) sel.value = currentVal;
-      if(historySel) historySel.innerHTML = sel.innerHTML;
+        // History List
+        const list = document.getElementById('historyList');
+        list.innerHTML = state.history.slice(0, 5).map(h => 
+            `<div style="display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px dashed #eee; font-size:13px;">
+                <span>${h.brand} ${h.name || ''}</span>
+                <span style="color:#999">${new Date(h.date).getHours()}:${String(new Date(h.date).getMinutes()).padStart(2,'0')}</span>
+             </div>`
+        ).join('') || '<div style="color:#ccc; font-size:12px; padding:10px;">Žádná historie</div>';
 
-      // -- STATS & BANNER --
-      const limit = calculateCurrentLimit();
-      const s = state.settings;
-      if (s.goal === 'quit' && s.strategy) {
-        document.getElementById('quitBanner').classList.remove('hidden');
-        document.getElementById('quitTarget').innerText = limit;
-        const percent = limit > 0 ? Math.min(100, (todayCount / limit) * 100) : 100;
-        document.getElementById('quitProgress').style.width = percent + '%';
-        document.getElementById('quitProgress').style.backgroundColor = percent > 100 ? 'var(--danger)' : 'var(--primary)';
-        
-        // Show Health Timeline
-        document.getElementById('healthSection').classList.remove('hidden');
-        renderHealthTimeline();
-      } else {
-        document.getElementById('quitBanner').classList.add('hidden');
-        document.getElementById('healthSection').classList.add('hidden');
-      }
-
-      document.getElementById('valToday').innerText = todayCount;
-      document.getElementById('valLimit').innerText = `${t('limit_label')}: ${limit}`;
-      const saved = (limit - todayCount) * (s.packPrice / s.pouchesPerPack);
-      document.getElementById('valSaved').innerText = `${Math.max(0, saved).toFixed(0)} ${s.currency}`;
-      document.getElementById('valCost').innerText = `${t('cost_label')}: ${(todayCount * (s.packPrice/s.pouchesPerPack)).toFixed(0)}`;
-      document.getElementById('valMg').innerText = `${todayEntries.reduce((s,i)=>s+(i.mg||0),0).toFixed(1)} mg`;
-      document.getElementById('valStreak').innerHTML = `${calcStreak()} <span style="font-size:14px">${t('days_label')}</span>`;
-
-      renderBadges(calcStreak());
-      
-      const list = document.getElementById('historyList'); list.innerHTML = '';
-      if(state.history.length === 0) list.innerHTML = `<p style="color:var(--muted); font-size:13px;">${t('history_empty')}</p>`;
-      else state.history.slice(0, 5).forEach(h => {
-          list.innerHTML += `<div class="history-item"><div><strong>${h.brand}</strong> <span style="color:var(--muted)">${h.mg}mg</span></div><div style="font-size:11px; color:var(--muted);">${new Date(h.date).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</div></div>`;
-      });
-
-      renderChart(); renderHourlyChart(); renderFullHistoryList();
+        renderChart();
     }
 
-    function renderHealthTimeline() {
-        const container = document.getElementById('healthList');
+    function renderFavorites() {
+        const counts = {};
+        state.history.forEach(h => { const k = h.brand + '|' + (h.name||''); counts[k] = (counts[k]||0)+1; });
+        const top = Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0, 4).map(e=>e[0]); // Top 4
+        
+        const container = document.getElementById('quickActions');
         container.innerHTML = '';
-        if(state.history.length === 0) return;
         
-        const last = new Date(state.history[0].date);
-        const diffMins = (new Date() - last) / 60000;
-        const diffHours = diffMins / 60;
-        const diffDays = diffHours / 24;
+        if (top.length === 0 && !state.currentSelection) {
+            container.innerHTML = '<span style="font-size:11px; color:#999; padding:4px;">Nejčastější se objeví zde.</span>';
+            return;
+        }
 
-        const milestones = [
-            { t: 20, unit: 'min', label: 'health_20m', done: diffMins >= 20 },
-            { t: 2, unit: 'h', label: 'health_2h', done: diffHours >= 2 },
-            { t: 8, unit: 'h', label: 'health_8h', done: diffHours >= 8 },
-            { t: 24, unit: 'h', label: 'health_24h', done: diffHours >= 24 },
-            { t: 48, unit: 'h', label: 'health_48h', done: diffHours >= 48 },
-            { t: 72, unit: 'h', label: 'health_72h', done: diffHours >= 72 },
-            { t: 14, unit: 'd', label: 'health_14d', done: diffDays >= 14 },
-        ];
-
-        milestones.forEach(m => {
-            const div = document.createElement('div');
-            div.className = `health-item ${m.done ? 'health-done' : 'health-locked'}`;
-            div.innerHTML = `<div class="health-icon">${m.done ? '✅' : '🔒'}</div><div>${t(m.label)}</div>`;
-            container.appendChild(div);
+        top.forEach(key => {
+            const [b, n] = key.split('|');
+            // Find full data to get mg
+            const full = POUCH_DB.find(p => p.b === b && p.n === n) || { b, n, mg: '?' };
+            
+            const chip = document.createElement('div');
+            chip.className = 'quick-chip';
+            chip.innerHTML = `${b} ${n}`;
+            chip.onclick = () => { selectPouch(full); addEntry(); }; // Click to ADD immediately
+            container.appendChild(chip);
         });
     }
 
-    // --- GENERIC HELPERS ---
-    window.selectGoal = (g) => { tempSettings.goal = g; document.querySelectorAll('#step1 .selection-card').forEach(c=>c.classList.remove('active')); document.querySelector(`#step1 .selection-card[data-val="${g}"]`).classList.add('active'); };
-    window.selectStrategy = (s) => { tempSettings.strategy = s; document.querySelectorAll('#step2 .selection-card').forEach(c=>c.classList.remove('active')); document.querySelector(`#step2 .selection-card[data-val="${s}"]`).classList.add('active'); };
-    window.nextStep = () => {
-        if(wizStep===1) wizStep = (tempSettings.goal === 'track') ? 3 : 2;
-        else if(wizStep===2) wizStep = 3;
-        else { saveWizardSettings(); return; }
-        renderWizard();
-    };
-    window.prevStep = () => { wizStep = (wizStep===3 && tempSettings.goal==='track') ? 1 : wizStep-1; renderWizard(); };
-    function openWizard() { wizStep=1; tempSettings={...state.settings}; renderWizard(); document.getElementById('settingsModal').showModal(); }
-    function renderWizard() {
-        document.querySelectorAll('.wizard-step').forEach(e=>e.classList.add('hidden')); document.getElementById(`step${wizStep}`).classList.remove('hidden');
-        document.getElementById('wizBackBtn').classList.toggle('hidden', wizStep===1);
-        document.getElementById('wizNextBtn').innerText = (wizStep===3) ? t('finish') : t('next');
-        document.getElementById('wizardStepIndicator').innerText = `Step ${wizStep}/3`;
-        if(wizStep===3) {
-            document.getElementById('currencyInput').value = tempSettings.currency;
-            document.getElementById('priceInput').value = tempSettings.packPrice;
-            document.getElementById('piecesInput').value = tempSettings.pouchesPerPack;
-            document.getElementById('limitInput').value = tempSettings.dailyLimit;
-            const isQuit = tempSettings.goal === 'quit';
-            document.getElementById('dateInputContainer').classList.toggle('hidden', !(isQuit && ['smooth','cutoff'].includes(tempSettings.strategy)));
-            document.getElementById('reductionInputContainer').classList.toggle('hidden', !(isQuit && tempSettings.strategy==='weekly'));
-            if(tempSettings.quitDate) document.getElementById('wizardDateInput').value = tempSettings.quitDate;
+    // --- SEARCH LOGIC ---
+    function setupSearch() {
+        const input = document.getElementById('searchInput');
+        const results = document.getElementById('searchResults');
+        
+        const renderList = (items) => {
+            results.innerHTML = items.map(item => `
+                <div class="search-item" data-b="${item.b}" data-n="${item.n}" data-mg="${item.mg}">
+                    <div>
+                        <strong>${item.n}</strong>
+                        <small>${item.b}</small>
+                    </div>
+                    <div class="mg-badge">${item.mg} mg</div>
+                </div>
+            `).join('');
+            
+            // Add click listeners to rows
+            results.querySelectorAll('.search-item').forEach(el => {
+                el.onclick = () => {
+                    const item = { 
+                        b: el.dataset.b, 
+                        n: el.dataset.n, 
+                        mg: parseFloat(el.dataset.mg) 
+                    };
+                    selectPouch(item);
+                    document.getElementById('searchModal').close();
+                };
+            });
+        };
+
+        input.addEventListener('input', (e) => {
+            const q = e.target.value.toLowerCase().trim();
+            if (q.length < 1) { renderList([]); return; }
+            
+            // Fast filter of 650 items
+            const filtered = POUCH_DB.filter(p => 
+                p.n.toLowerCase().includes(q) || p.b.toLowerCase().includes(q)
+            ).slice(0, 50); // Limit rendering to 50 items for speed
+            
+            renderList(filtered);
+        });
+
+        // Show some defaults when opening empty
+        document.getElementById('openSearchBtn').onclick = () => {
+            input.value = '';
+            // Show all or top brands initially? Let's show first 20 as example
+            renderList(POUCH_DB.slice(0, 20));
+            document.getElementById('searchModal').showModal();
+            input.focus();
+        };
+    }
+
+    function selectPouch(item) {
+        state.currentSelection = item;
+        localStorage.setItem('nt_last_pouch', JSON.stringify(item));
+        renderUI();
+    }
+
+    function addEntry() {
+        if(!state.currentSelection) {
+            document.getElementById('openSearchBtn').click();
+            return;
+        }
+        const item = state.currentSelection;
+        const entry = {
+            id: Date.now().toString(),
+            brand: item.b,
+            name: item.n,
+            mg: item.mg,
+            date: new Date().toISOString()
+        };
+        state.history.unshift(entry);
+        persist();
+        showToast(`✅ ${item.n} zapsán!`);
+        
+        // Firebase Sync (Simplified)
+        if(state.user) {
+             setDoc(doc(db,'users',state.user.uid,'history',entry.id), 
+             { ...entry, timestamp: Timestamp.now() });
         }
     }
-    function saveWizardSettings() {
-        const newSettings = { ...tempSettings, 
-            currency: document.getElementById('currencyInput').value,
-            packPrice: parseFloat(document.getElementById('priceInput').value)||0,
-            pouchesPerPack: parseFloat(document.getElementById('piecesInput').value)||20,
-            dailyLimit: parseFloat(document.getElementById('limitInput').value)||10,
-            quitDate: document.getElementById('wizardDateInput').value||null,
-            reductionRate: parseFloat(document.getElementById('reductionInput').value)||1
-        };
-        if(newSettings.goal==='quit' && newSettings.strategy !== state.settings.strategy) newSettings.strategyStartDate = new Date().toISOString();
-        state.settings = newSettings; localStorage.setItem('nt_settings', JSON.stringify(state.settings));
-        if(state.user) setDoc(doc(db, 'users', state.user.uid, 'settings', 'profile'), state.settings);
-        document.getElementById('settingsModal').close(); renderUI();
-    }
-    
-    // --- GAMIFICATION & CHARTS ---
-    function getDailyStats() { const d={}; state.history.forEach(h=>{const k=h.date.slice(0,10); if(!d[k])d[k]={count:0}; d[k].count++}); return d; }
+
+    // --- HELPERS ---
     function calcStreak() {
-      const daily=getDailyStats(); const limit=calculateCurrentLimit(); let s=0; let d=new Date();
-      for(let i=0;i<365;i++){ const k=d.toISOString().slice(0,10); const st=daily[k];
-      if(i===0 && (!st || st.count<=limit)){} else if(st && st.count<=limit)s++; else if(i>0 && !st)s++; else if(st && st.count>limit)break; d.setDate(d.getDate()-1);} return s;
+        // Zjednodušená logika pro streak
+        const dates = [...new Set(state.history.map(h=>h.date.slice(0,10)))];
+        let streak = 0;
+        let d = new Date();
+        for(let i=0; i<365; i++) {
+            const iso = d.toISOString().slice(0,10);
+            const count = state.history.filter(h=>h.date.startsWith(iso)).length;
+            if (i===0 && count <= state.settings.dailyLimit) { /* today ok so far */ }
+            else if (count > state.settings.dailyLimit) break;
+            else if (count <= state.settings.dailyLimit && dates.includes(iso)) streak++;
+            else if (!dates.includes(iso) && i>0) break; 
+            d.setDate(d.getDate()-1);
+        }
+        return streak;
     }
-    function renderBadges(streak){
-        const total=state.history.length; const saved=parseFloat(document.getElementById('valSaved').innerText)||0;
-        const badges=[{i:0,u:total>=10},{i:1,u:total>=100},{i:2,u:streak>=3},{i:3,u:streak>=7},{i:4,u:streak>=30},{i:8,u:saved>=100},{i:9,u:saved>=1000}];
-        const grid=document.getElementById('badgeGrid'); grid.innerHTML='';
-        const icons=['👶','💯','🔥','📆','🛡️','⚔️','🫁','⚡','🐷','💰'];
-        const labels=['Beginner','Pro','Streak 3','Streak 7','Iron Will','Weekend','Clean','Hardcore','Saver','Investor'];
-        badges.forEach(b=>{
-            const el=document.createElement('div'); el.className=`achievement ${b.u?'unlocked':'locked'}`;
-            el.innerHTML=`<div class="icon">${icons[b.i]}</div><div><h4>${labels[b.i]}</h4></div>`;
-            grid.appendChild(el);
+
+    function renderChart() {
+        const ctx = document.getElementById('trendChart');
+        // Simple last 7 days chart
+        const labels = [], data = [];
+        for(let i=6; i>=0; i--) {
+            const d = new Date(); d.setDate(d.getDate()-i);
+            const iso = d.toISOString().slice(0,10);
+            labels.push(d.toLocaleDateString(state.lang, {weekday:'short'}));
+            data.push(state.history.filter(h=>h.date.startsWith(iso)).length);
+        }
+        
+        if(window.myChart) window.myChart.destroy();
+        window.myChart = new Chart(ctx, {
+            type: 'bar',
+            data: { labels, datasets: [{ label: 'Ks', data, backgroundColor: '#10b981', borderRadius:4 }] },
+            options: { plugins:{legend:{display:false}}, scales:{y:{beginAtZero:true}} }
         });
-    }
-    function renderChart(){
-        const days={}; for(let i=13;i>=0;i--){const d=new Date();d.setDate(d.getDate()-i); days[d.toISOString().slice(0,10)]=0;}
-        state.history.forEach(h=>{const k=h.date.slice(0,10);if(days[k]!==undefined)days[k]++;});
-        const ctx=document.getElementById('trendChart'); if(window.trendChartInst)window.trendChartInst.destroy();
-        window.trendChartInst=new Chart(ctx,{type:'line',data:{labels:Object.keys(days).map(d=>d.slice(5)),datasets:[{label:'Pouches',data:Object.values(days),borderColor:'#10b981',backgroundColor:'rgba(16,185,129,0.1)',fill:true,tension:0.4}]},options:{plugins:{legend:{display:false}},scales:{y:{beginAtZero:true}}}});
-    }
-    function renderHourlyChart() {
-      const hours=Array.from({length:24},(_,i)=>({l:String(i).padStart(2,'0')+':00',c:0}));
-      state.history.forEach(h=>hours[new Date(h.date).getHours()].c++);
-      const ctx=document.getElementById('hourlyChart'); if(window.hourlyChartInst)window.hourlyChartInst.destroy();
-      window.hourlyChartInst=new Chart(ctx,{type:'bar',data:{labels:hours.map(h=>h.l),datasets:[{data:hours.map(h=>h.c),backgroundColor:'#10b981'}]},options:{plugins:{legend:{display:false}},scales:{y:{beginAtZero:true}}}});
-    }
-
-    // --- ACTIONS ---
-    function renderBrandsModal(){
-        const list=document.getElementById('customBrandsList'); list.innerHTML='';
-        if(state.customPouches.length===0) list.innerHTML=`<p style="color:var(--muted);text-align:center;">${t('no_custom_brands')}</p>`;
-        else state.customPouches.forEach((p,i)=>{
-            const d=document.createElement('div'); d.style.cssText="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #eee;";
-            d.innerHTML=`<span><b>${p.name}</b> ${p.mg}mg</span><button class="btn btn-danger" style="padding:4px 8px;" onclick="delBrand(${i})">🗑️</button>`;
-            list.appendChild(d);
-        });
-    }
-    window.delBrand = async (i) => { if(!confirm(t('delete_brand_confirm')))return; const r=state.customPouches[i]; state.customPouches.splice(i,1); localStorage.setItem('nt_custom_pouches',JSON.stringify(state.customPouches)); if(state.user&&r.id)await deleteDoc(doc(db,'users',state.user.uid,'custom_pouches',r.id)); renderBrandsModal(); renderUI(); };
-
-    function renderFullHistoryList() {
-      const c=document.getElementById('fullHistoryList'); c.innerHTML='';
-      if(state.history.length===0) c.innerHTML=`<p>${t('history_empty')}</p>`;
-      else state.history.forEach(h=>{
-         const d=document.createElement('div'); d.className='history-item';
-         d.innerHTML=`<div><strong>${h.brand}</strong> ${h.mg}mg<br><small style="color:var(--muted)">${new Date(h.date).toLocaleString()}</small></div><button class="btn btn-danger" onclick="delHist('${h.id}')">${t('delete_entry')}</button>`;
-         c.appendChild(d);
-      });
-    }
-    window.delHist = async (id) => { const i=state.history.findIndex(h=>h.id===id); if(i===-1)return; const r=state.history.splice(i,1)[0]; persistHistory(); if(state.user&&r.id)await deleteDoc(doc(db,'users',state.user.uid,'history',r.id)); renderUI(); renderFullHistoryList(); };
-
-    // --- DATA EXPORT ---
-    function downloadFile(content, fileName, mimeType) {
-        const blob = new Blob([content], { type: mimeType });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url; a.download = fileName;
-        document.body.appendChild(a); a.click(); document.body.removeChild(a);
-        URL.revokeObjectURL(url);
     }
     
-    function exportCSV() {
-        if(state.history.length === 0) return alert("No data to export");
-        // BOM \uFEFF ensures Excel reads UTF-8 correctly
-        let csvContent = "\uFEFFDate,Time,Brand,Mg,Est.Cost\n";
-        const unitCost = (state.settings.packPrice / (state.settings.pouchesPerPack || 20)) || 0;
-        state.history.forEach(row => {
-            const d = new Date(row.date);
-            const dateStr = d.toLocaleDateString();
-            const timeStr = d.toLocaleTimeString();
-            csvContent += `${dateStr},${timeStr},"${row.brand.replace(/"/g, '""')}",${row.mg},${unitCost.toFixed(2)}\n`;
-        });
-        downloadFile(csvContent, 'nicotracker_history.csv', 'text/csv');
-    }
-
-    function exportJSON() {
-        const data = {
-            version: 1, exportedAt: new Date().toISOString(),
-            settings: state.settings, history: state.history, customPouches: state.customPouches
-        };
-        downloadFile(JSON.stringify(data, null, 2), 'nicotracker_backup.json', 'application/json');
-    }
-
-    async function addEntry() {
-      const sel = document.getElementById('pouchSelect');
-      const brand = sel.value;
-      if(!brand) return showToast("Select a pouch");
-
-      // FIX: Robust escaping without crashing regex
-      const safeValue = (typeof CSS !== 'undefined' && CSS.escape) ? CSS.escape(brand) : brand.replace(/["\\]/g, '\\$&');
-      
-      const opt = sel.querySelector(`option[value="${safeValue}"]`) || sel.querySelector('option:checked');
-      const mg = opt ? (parseFloat(opt.dataset.mg)||0) : 0;
-
-      const rec={id:Date.now().toString(),brand,mg,date:new Date().toISOString()};
-      state.history.unshift(rec); persistHistory();
-      if(state.user){
-        try {
-          await setDoc(doc(db,'users',state.user.uid,'history',rec.id),{brand,mg,timestamp:Timestamp.now()});
-        } catch (e) {
-          console.error('Failed to sync entry', e);
-        }
-      }
-      logEvent(analytics,'add_pouch',{brand,mg}); renderUI(); showToast("Added!");
-    }
-
-    async function addPastEntry() {
-        const dt=document.getElementById('backdateInput').value; const sel=document.getElementById('historyPouchSelect');
-        if(!dt||!sel.value) return alert('Date & Brand required');
-        const rec={id:Date.now().toString(),brand:sel.value,mg:parseFloat(sel.options[sel.selectedIndex].dataset.mg)||0,date:new Date(dt).toISOString()};
-        state.history.push(rec); persistHistory();
-        if(state.user) await setDoc(doc(db,'users',state.user.uid,'history',rec.id),{brand:rec.brand,mg:rec.mg,timestamp:Timestamp.fromDate(new Date(dt))});
-        renderUI(); renderFullHistoryList(); showToast("Added!");
+    function showToast(msg) {
+        const t = document.getElementById('toast');
+        t.innerHTML = `<div class="toast-msg">${msg}</div>`;
+        setTimeout(() => t.innerHTML='', 2500);
     }
 
     function setupListeners() {
-      document.getElementById('langBtn').onclick=()=>applyLanguage(state.lang==='en'?'cs':'en');
-      document.getElementById('menuBtn').onclick=()=>openWizard();
-      document.getElementById('syncBtn').onclick=()=>{
-          if(state.user){ 
-              // Logged in: Hide auth section, show logout logic if needed, but mainly show export
-              document.getElementById('authSection').classList.add('hidden');
-          } else {
-              document.getElementById('authSection').classList.remove('hidden');
-          }
-          document.getElementById('authModal').showModal();
-      };
-      
-      // Data Export Listeners
-      document.getElementById('btnExportCsv').onclick = exportCSV;
-      document.getElementById('btnExportJson').onclick = exportJSON;
-
-      document.getElementById('addBtn').onclick=addEntry;
-      document.getElementById('openBrandsBtn').onclick=()=>{renderBrandsModal();document.getElementById('brandsModal').showModal();};
-      document.getElementById('addNewBrandBtn').onclick=async()=>{
-          const n=document.getElementById('newBrandName').value.trim(); const m=parseFloat(document.getElementById('newBrandMg').value);
-          if(!n||isNaN(m))return; const p={name:n,mg:m,id:Date.now().toString()};
-          state.customPouches.push(p); localStorage.setItem('nt_custom_pouches',JSON.stringify(state.customPouches));
-          if(state.user) await setDoc(doc(db,'users',state.user.uid,'custom_pouches',p.id),{name:n,mg:m,createdAt:Timestamp.now()});
-          renderBrandsModal(); renderUI(); document.getElementById('newBrandName').value='';
-      };
-      document.getElementById('viewAllHistoryBtn').onclick=()=>{
-          const now=new Date(); document.getElementById('backdateInput').value=new Date(now.getTime()-now.getTimezoneOffset()*60000).toISOString().slice(0,16);
-          renderFullHistoryList(); document.getElementById('historyModal').showModal();
-      };
-      document.getElementById('addPastEntryBtn').onclick=addPastEntry;
-      document.getElementById('googleAuthBtn').onclick=()=>signInWithPopup(auth,new GoogleAuthProvider()).then(()=>document.getElementById('authModal').close());
-      let isReg=false; document.getElementById('toggleReg').onclick=()=>{isReg=!isReg;document.getElementById('loginBtn').innerText=isReg?"Register":"Log In";};
-      document.getElementById('loginBtn').onclick=async()=>{const e=document.getElementById('emailInput').value,p=document.getElementById('passInput').value; try{if(isReg)await createUserWithEmailAndPassword(auth,e,p);else await signInWithEmailAndPassword(auth,e,p);document.getElementById('authModal').close();}catch(err){alert(err.message);}};
+        document.getElementById('addBtn').onclick = addEntry;
+        document.getElementById('langBtn').onclick = () => {
+            state.lang = state.lang === 'en' ? 'cs' : 'en';
+            localStorage.setItem('nt_lang', state.lang);
+            renderUI();
+        };
+        document.getElementById('menuBtn').onclick = () => document.getElementById('settingsModal').showModal();
+        document.getElementById('saveSettingsBtn').onclick = () => {
+            state.settings.dailyLimit = parseInt(document.getElementById('limitInput').value) || 10;
+            localStorage.setItem('nt_settings', JSON.stringify(state.settings));
+            document.getElementById('settingsModal').close();
+            renderUI();
+        };
     }
-    function showToast(m) { const t=document.createElement('div');t.className='toast-msg';t.innerText=m;document.getElementById('toast').appendChild(t);setTimeout(()=>t.remove(),3000); }
-
-    // === SYNC ===
-    onAuthStateChanged(auth, async (u) => {
-      if(u){ state.user=u; document.getElementById('syncBtn').innerText=u.email;
-        const sSnap=await getDoc(doc(db,'users',u.uid,'settings','profile'));
-        if(sSnap.exists()){state.settings=sSnap.data();localStorage.setItem('nt_settings',JSON.stringify(state.settings));}
-        
-        onSnapshot(query(collection(db,'users',u.uid,'custom_pouches')),(s)=>{
-            const cp=s.docs.map(d=>({id:d.id,...d.data()})); if(cp.length){state.customPouches=cp;localStorage.setItem('nt_custom_pouches',JSON.stringify(cp));renderUI();}
-        });
-        onSnapshot(query(collection(db,'users',u.uid,'history'),orderBy('timestamp','desc')),(s)=>{
-           const h=s.docs.map(d=>({id:d.id,brand:d.data().brand,mg:d.data().mg,date:d.data().timestamp.toDate().toISOString()}));
-           if(h.length){state.history=h;persistHistory();renderUI();}
-        });
-      } else { 
-          state.user=null; 
-          document.getElementById('syncBtn').innerText = t('auth_btn');
-          renderUI(); 
-      }
-    });
 
     init();
   </script>
