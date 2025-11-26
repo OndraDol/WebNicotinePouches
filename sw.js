@@ -1,5 +1,10 @@
-const CACHE_NAME = 'nicotracker-ultimate-v2';
-const APP_SHELL = ['./', './index.html', './manifest.json'];
+const CACHE_NAME = 'nicotracker-v2.1';
+const APP_SHELL = [
+  './',
+  './index.html',
+  './data.js',    // <--- PŘIDÁNO: Nový datový soubor
+  './manifest.json'
+];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(APP_SHELL)));
@@ -8,31 +13,25 @@ self.addEventListener('install', (event) => {
 
 self.addEventListener('activate', (event) => {
   event.waitUntil(
-    caches.keys().then((keys) => Promise.all(keys.filter((key) => key !== CACHE_NAME).map((key) => caches.delete(key))))
+    caches.keys().then((keys) => Promise.all(keys.filter((k) => k !== CACHE_NAME).map((k) => caches.delete(k))))
   );
   self.clients.claim();
 });
 
 self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
-  const url = event.request.url;
-  if (!url.startsWith('http://') && !url.startsWith('https://')) return;
-  event.respondWith(networkFirst(event.request));
+  if (!event.request.url.startsWith('http')) return;
+  
+  event.respondWith(
+    caches.match(event.request).then((cached) => {
+      // Cache-First strategie pro statické soubory (rychlejší start)
+      // ale Network-First pro API (pokud bys nějaké měl)
+      return cached || fetch(event.request).then(response => {
+         return caches.open(CACHE_NAME).then(cache => {
+             cache.put(event.request, response.clone());
+             return response;
+         });
+      });
+    })
+  );
 });
-
-async function networkFirst(request) {
-  try {
-    const response = await fetch(request);
-    const cache = await caches.open(CACHE_NAME);
-    cache.put(request, response.clone());
-    return response;
-  } catch (err) {
-    const cached = await caches.match(request);
-    if (cached) return cached;
-    if (request.mode === 'navigate') {
-      const fallback = await caches.match('./index.html');
-      if (fallback) return fallback;
-    }
-    throw err;
-  }
-}
