@@ -487,11 +487,18 @@
             localStorage.setItem('nt_settings', JSON.stringify(state.settings));
         }
 
+        const isFutureDate = (date) => date.getTime() > Date.now();
+
         // --- STATS CALCULATION ---
         function calculateStats() {
             const days = {}; state.history.forEach(h => { const d = h.date.slice(0,10); days[d] = (days[d] || 0) + 1; });
             const limit = state.settings.dailyLimit || 10;
-            
+
+            const today = new Date();
+            const sunday = new Date(today); sunday.setHours(0,0,0,0); sunday.setDate(sunday.getDate() - sunday.getDay());
+            const saturday = new Date(sunday); saturday.setDate(saturday.getDate() - 1);
+            const cleanWeekend = (days[saturday.toISOString().slice(0,10)] || 0) <= limit && (days[sunday.toISOString().slice(0,10)] || 0) <= limit && state.history.length > 0;
+
             let streak = 0; let checkDate = new Date(); checkDate.setDate(checkDate.getDate() - 1);
             while (true) {
                 const dStr = checkDate.toISOString().slice(0,10);
@@ -508,7 +515,7 @@
             const yesterdaySuccess = (days[yDate.toISOString().slice(0,10)] || 0) <= limit;
             const dailyAvg = state.history.length / (Object.keys(days).length || 1);
 
-            return { streak, savedTotal, yesterdaySuccess, dailyAvg, cleanWeekend: false };
+            return { streak, savedTotal, yesterdaySuccess, dailyAvg, cleanWeekend };
         }
 
         function calculateDynamicLimit() {
@@ -719,7 +726,7 @@
             }
         };
         window.nextStep = () => {
-            if(wizStep === 1 && !tempSettings.goal) { alert("Please select a goal."); return; }
+            if(wizStep === 1 && !tempSettings.goal) { showToast("Please select a goal."); return; }
             
             if(wizStep===1 && tempSettings.goal==='track') {
                 wizStep = 3; // Skip strat for tracking
@@ -772,10 +779,16 @@
                     try {
                         const data = JSON.parse(ev.target.result);
                         if(data.history && data.settings) {
-                            state.history = data.history; state.settings = data.settings;
-                            persistHistory(); renderUI(); alert(t('restore_success')); location.reload();
-                        } else alert("Invalid backup format.");
-                    } catch(e) { alert("Error: "+e.message); }
+                            const now = Date.now();
+                            const cleanedHistory = data.history.filter(item => {
+                                const parsed = new Date(item.date);
+                                return item.date && !isNaN(parsed) && parsed.getTime() <= now;
+                            });
+                            if(cleanedHistory.length !== data.history.length) showToast('Skipped future or invalid entries');
+                            state.history = cleanedHistory; state.settings = data.settings;
+                            persistHistory(); renderUI(); showToast(t('restore_success')); location.reload();
+                        } else showToast("Invalid backup format.");
+                    } catch(e) { showToast("Error: "+e.message); }
                 };
                 reader.readAsText(file);
             };
@@ -819,19 +832,21 @@
             
             document.getElementById('addPastEntryBtn').onclick = () => {
                 const dateVal = document.getElementById('backdateInput').value;
-                if(!dateVal || !state.selection) return alert("Select pouch and date first");
-                const rec = { id: Date.now().toString(), brand: state.selection.b, name: state.selection.n, mg: state.selection.mg, date: new Date(dateVal).toISOString() };
+                const parsedDate = new Date(dateVal);
+                if(!dateVal || !state.selection) return showToast("Select pouch and date first");
+                if(isNaN(parsedDate) || isFutureDate(parsedDate)) return showToast('Date must not be in the future');
+                const rec = { id: Date.now().toString(), brand: state.selection.b, name: state.selection.n, mg: state.selection.mg, date: parsedDate.toISOString() };
                 state.history.push(rec); persistHistory(); renderUI(); document.getElementById('historyModal').close(); showToast(t('added'));
             };
 
             window.delHist = (id) => { state.history=state.history.filter(h=>h.id!==id); persistHistory(); renderUI(); document.getElementById('historyModal').close(); };
             
             document.getElementById('loginBtn').onclick=async()=>{
-                const e=document.getElementById('emailInput').value,p=document.getElementById('passInput').value; 
+                const e=document.getElementById('emailInput').value,p=document.getElementById('passInput').value;
                 try {
                     if (isRegistering) { await createUserWithEmailAndPassword(auth,e,p); } else { await signInWithEmailAndPassword(auth,e,p); }
                     document.getElementById('authModal').close();
-                } catch(err) { alert(err.message); }
+                } catch(err) { showToast(err.message); }
             };
             document.getElementById('googleAuthBtn').onclick=()=>signInWithPopup(auth,new GoogleAuthProvider()).then(()=>document.getElementById('authModal').close());
             onAuthStateChanged(auth, async (u) => { if(u){ state.user=u; document.getElementById('syncBtn').innerText="✅"; 

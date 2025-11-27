@@ -1,9 +1,16 @@
-const CACHE_NAME = 'nicotracker-v3.2';
+const CACHE_NAME = 'nicotracker-v3.3';
 const APP_SHELL = [
   './',
   './index.html',
   './data.js',
-  './manifest.json'
+  './manifest.json',
+  'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js',
+  'https://www.gstatic.com/firebasejs/10.12.2/firebase-analytics.js',
+  'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js',
+  'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js',
+  'https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js',
+  'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap',
+  'https://fonts.gstatic.com'
 ];
 
 self.addEventListener('install', (event) => {
