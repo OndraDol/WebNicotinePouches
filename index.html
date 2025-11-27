@@ -98,6 +98,7 @@
         .selection-card { border: 2px solid var(--border); border-radius: 12px; padding: 16px; cursor: pointer; text-align: center; transition: 0.2s; }
         .selection-card:hover { border-color: #cbd5e1; }
         .selection-card.active { border-color: var(--primary); background-color: #ecfdf5; }
+        .selection-card p { margin: 6px 0 0; color: var(--muted); font-size: 13px; line-height: 1.4; }
         .wizard-step { animation: fadeIn 0.3s; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
@@ -291,9 +292,18 @@
             <div id="step2" class="wizard-step hidden">
                 <h3 style="margin:0 0 16px; font-size:16px; text-align:center;" data-i18n="wiz_step2_title">Strategy</h3>
                 <div class="grid" style="gap:12px;">
-                    <div class="selection-card" id="stratSmooth" onclick="window.setWizOption('strategy', 'smooth')"><h4 data-i18n="strat_smooth_title">Smooth</h4></div>
-                    <div class="selection-card" id="stratWeekly" onclick="window.setWizOption('strategy', 'weekly')"><h4 data-i18n="strat_weekly_title">Weekly</h4></div>
-                    <div class="selection-card" id="stratCutoff" onclick="window.setWizOption('strategy', 'cutoff')"><h4 data-i18n="strat_cutoff_title">Cutoff</h4></div>
+                    <div class="selection-card" id="stratSmooth" onclick="window.setWizOption('strategy', 'smooth')">
+                        <h4 data-i18n="strat_smooth_title">Smooth</h4>
+                        <p data-i18n="strat_smooth_desc">Denně mírně snižujeme limit, aby byl přechod co nejplynulejší.</p>
+                    </div>
+                    <div class="selection-card" id="stratWeekly" onclick="window.setWizOption('strategy', 'weekly')">
+                        <h4 data-i18n="strat_weekly_title">Weekly</h4>
+                        <p data-i18n="strat_weekly_desc">Každý týden ubereš 1 sáček z denního limitu a držíš tempo.</p>
+                    </div>
+                    <div class="selection-card" id="stratCutoff" onclick="window.setWizOption('strategy', 'cutoff')">
+                        <h4 data-i18n="strat_cutoff_title">Cutoff</h4>
+                        <p data-i18n="strat_cutoff_desc">Držíš aktuální limit až do data D a pak přestaneš úplně.</p>
+                    </div>
                 </div>
             </div>
             <!-- Step 3: Setup -->
@@ -405,7 +415,9 @@
                 history_modal_title: "Full History", pick_date: "Pick Date", add_past_entry: "Add Past Entry", charts_title: "Analytics",
                 health_timeline: "Health Recovery", wiz_step1_title: "Goal?", wiz_step2_title: "Strategy", wiz_step3_title: "Setup",
                 goal_track_title: "Just Track", goal_quit_title: "I Want to Quit", strat_smooth_title: "Smooth", strat_weekly_title: "Weekly",
-                strat_cutoff_title: "Cold Turkey", start_limit: "Daily Limit", target_date: "Target Date", back: "Back", next: "Next", finish: "Finish", 
+                strat_cutoff_title: "Cold Turkey", strat_smooth_desc: "Gradually taper your daily limit to the quit date for a gentle landing.",
+                strat_weekly_desc: "Reduce your daily cap by one pouch every week to build momentum.", strat_cutoff_desc: "Stay on your current limit until the target date, then stop completely.",
+                start_limit: "Daily Limit", target_date: "Target Date", back: "Back", next: "Next", finish: "Finish",
                 data_management: "Data Management", selected_pouch: "Selected", search_placeholder: "Search brand or flavor...", 
                 select_placeholder: "Select a pouch...", past_entry_help: "To add past entry, first select a pouch on dashboard.",
                 quit_status_active: "Plan active", auth_btn: "Sync / Data", auth_title: "Sync & Backup", login: "Log In", register: "Register", toggle_reg: "Need account? Register", toggle_log: "Have account? Login",
@@ -423,7 +435,10 @@
                 history_modal_title: "Kompletní historie", pick_date: "Vyber datum", add_past_entry: "Přidat zpětně", charts_title: "Statistiky",
                 health_timeline: "Zdravotní regenerace", wiz_step1_title: "Jaký je cíl?", wiz_step2_title: "Strategie", wiz_step3_title: "Nastavení",
                 goal_track_title: "Sledovat", goal_quit_title: "Přestat", strat_smooth_title: "Plynule", strat_weekly_title: "Týdně",
-                strat_cutoff_title: "Rázně", start_limit: "Denní Limit", target_date: "Datum konce", back: "Zpět", next: "Další", finish: "Hotovo", 
+                strat_cutoff_title: "Rázně", strat_smooth_desc: "Denně lehce snižuješ limit a dojdeš k nule plynule.",
+                strat_weekly_desc: "Každý týden ubereš 1 sáček z denního limitu, aby se návyk lámal postupně.",
+                strat_cutoff_desc: "Držíš současný limit až do cílového dne a pak skončíš úplně.",
+                start_limit: "Denní Limit", target_date: "Datum konce", back: "Zpět", next: "Další", finish: "Hotovo",
                 data_management: "Správa dat", selected_pouch: "Vybráno", search_placeholder: "Hledat značku nebo příchuť...", 
                 select_placeholder: "Vyberte sáček...", past_entry_help: "Pro zpětné vložení nejdřív vyberte sáček na hl. stránce.",
                 quit_status_active: "Plán aktivní", auth_btn: "Sync / Data", auth_title: "Záloha dat", login: "Přihlásit", register: "Registrovat", toggle_reg: "Registrovat se", toggle_log: "Mám účet",
