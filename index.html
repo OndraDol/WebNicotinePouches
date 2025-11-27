@@ -12,7 +12,7 @@
     <meta name="theme-color" content="#10b981">
     <link rel="manifest" href="./manifest.json">
     <link rel="icon"
-        href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💊</text></svg>">
+        href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧂</text></svg>">
 
     <title>NicoTracker | Quit Nicotine Pouches</title>
 
@@ -130,7 +130,7 @@
 <body>
 
     <header>
-        <div class="logo">💊 <span>NicoTracker</span> <span style="font-size:10px; color:#a0aec0; font-weight:400; margin-left:4px;">v1.0.1</span></div>
+        <div class="logo">🧂 <span>NicoTracker</span> <span style="font-size:10px; color:#a0aec0; font-weight:400; margin-left:4px;">v1.0.1</span></div>
         <div style="display:flex; gap:10px;">
             <button id="installBtn" class="btn btn-primary hidden" style="padding:8px 12px; font-size:12px;">📲 Install</button>
             <button id="langBtn" class="btn btn-outline" style="padding:8px;">🇺🇸 EN</button>
@@ -161,16 +161,18 @@
             <div class="stat">
                 <div class="lbl" data-i18n="today_usage">Today</div>
                 <div class="val" id="valToday">0</div>
+                <div class="sub" id="valTodayNote" data-i18n="pouches_used">pouches used</div>
                 <div class="sub" id="valLimit">Limit: 10</div>
             </div>
             <div class="stat">
                 <div class="lbl" data-i18n="streak">Streak</div>
-                <div class="val" id="valStreak">0 <span style="font-size:14px" data-i18n="days_label">days</span></div>
+                <div class="val" id="valStreak">0 <span style="font-size:14px">days recorded</span></div>
                 <div class="sub" data-i18n="streak_hint">🔥 Keep it up</div>
             </div>
-            <div class="stat">
+            <div class="stat" id="savedStat">
                 <div class="lbl" data-i18n="money_saved">Saved</div>
                 <div class="val" id="valSaved" style="color:var(--primary);">0</div>
+                <div class="sub" id="valSavedNote" data-i18n="saved_compare">vs typical use</div>
                 <div class="sub" id="valCost">Cost: 0</div>
             </div>
             <div class="stat">
@@ -179,12 +181,6 @@
                 <div class="sub" data-i18n="total_today">Total today</div>
             </div>
         </div>
-
-        <!-- Health Recovery -->
-        <details id="healthSection" class="card" open>
-            <summary><span data-i18n="health_timeline">Health Recovery</span></summary>
-            <div class="content" id="healthList" style="margin-top:8px;"></div>
-        </details>
 
         <!-- LOG USAGE -->
         <div class="card" style="margin-top:4px;">
@@ -198,7 +194,21 @@
                     </div>
                     <span style="font-size:18px;">🔍</span>
                 </button>
-                <button id="addBtn" class="btn btn-primary" style="height:50px; width:60px; justify-content:center; font-size:24px;">➕</button>
+                <button id="addBtn" class="btn btn-outline" style="height:50px; width:60px; justify-content:center; font-size:24px; background:white;">➕</button>
+            </div>
+        </div>
+
+        <!-- Analytics -->
+        <div class="card">
+            <h3 style="margin:0 0 12px;" data-i18n="charts_title">Analytics</h3>
+            <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));">
+                <div>
+                    <canvas id="trendChart" height="200"></canvas>
+                </div>
+                <div>
+                    <h4 style="margin:0 0 10px; font-size:12px; color:var(--muted); text-transform:uppercase;" data-i18n="hourly_heatmap">Hourly Heatmap</h4>
+                    <canvas id="hourlyChart" height="200"></canvas>
+                </div>
             </div>
         </div>
 
@@ -208,19 +218,10 @@
             <div class="content"><div id="badgeGrid" class="achievements"></div></div>
         </details>
 
-        <!-- Charts -->
-        <details class="card">
-            <summary><span data-i18n="charts_title">Analytics</span></summary>
-            <div class="content grid" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));">
-                <div>
-                    <h4 style="margin:10px 0; font-size:12px; color:var(--muted); text-transform:uppercase;" data-i18n="chart_trend">Trend (14 days)</h4>
-                    <canvas id="trendChart" height="200"></canvas>
-                </div>
-                <div>
-                    <h4 style="margin:20px 0 10px; font-size:12px; color:var(--muted); text-transform:uppercase;" data-i18n="hourly_heatmap">Hourly Heatmap</h4>
-                    <canvas id="hourlyChart" height="200"></canvas>
-                </div>
-            </div>
+        <!-- Health Recovery -->
+        <details id="healthSection" class="card" open>
+            <summary><span data-i18n="health_timeline">Health Recovery</span></summary>
+            <div class="content" id="healthList" style="margin-top:8px;"></div>
         </details>
 
         <!-- History -->
@@ -408,11 +409,11 @@
 
         const translations = {
             en: {
-                today_usage: "TODAY", streak: "STREAK", money_saved: "SAVED", log_usage: "Log Usage", history: "History", view_all: "View All", 
+                today_usage: "TODAY", streak: "STREAK", money_saved: "SAVED", log_usage: "Log Usage", history: "History", view_all: "View All",
                 settings: "Settings", quit_title: "Freedom Journey", achievements: "Achievements",
-                export_csv: "📄 CSV Export", export_json: "💾 Backup", import_json: "📂 Restore", google_login: "Google Login", streak_hint: "🔥 Keep it up", nicotine: "Nicotine", 
-                total_today: "Total today", cost_label: "Cost", limit_label: "Limit", days_label: "days", daily_max: "DAILY MAX",
-                history_modal_title: "Full History", pick_date: "Pick Date", add_past_entry: "Add Past Entry", charts_title: "Analytics",
+                export_csv: "📄 CSV Export", export_json: "💾 Backup", import_json: "📂 Restore", google_login: "Google Login", streak_hint: "🔥 Keep it up", nicotine: "Nicotine",
+                total_today: "Total today", cost_label: "Cost", limit_label: "Limit", days_label: "days", daily_max: "DAILY MAX", pouches_used: "pouches used", days_recorded: "days recorded",
+                history_modal_title: "Full History", pick_date: "Pick Date", add_past_entry: "Add Past Entry", charts_title: "Analytics", saved_compare: "vs typical use", hourly_heatmap: "Hourly Heatmap",
                 health_timeline: "Health Recovery", wiz_step1_title: "Goal?", wiz_step2_title: "Strategy", wiz_step3_title: "Setup",
                 goal_track_title: "Just Track", goal_quit_title: "I Want to Quit", strat_smooth_title: "Smooth", strat_weekly_title: "Weekly",
                 strat_cutoff_title: "Cold Turkey", strat_smooth_desc: "Gradually taper your daily limit to the quit date for a gentle landing.",
@@ -428,11 +429,11 @@
                 promo_cta: "Launch quit program"
             },
             cs: {
-                today_usage: "DNES", streak: "ŘADA DNÍ", money_saved: "UŠETŘENO", log_usage: "Zapsat sáček", history: "Historie", view_all: "Zobrazit vše", 
+                today_usage: "DNES", streak: "ŘADA DNÍ", money_saved: "UŠETŘENO", log_usage: "Zapsat sáček", history: "Historie", view_all: "Zobrazit vše",
                 settings: "Nastavení", quit_title: "Cesta ke svobodě", achievements: "Úspěchy",
-                export_csv: "📄 Export CSV", export_json: "💾 Záloha", import_json: "📂 Nahrát zálohu", google_login: "Google", streak_hint: "🔥 Jen tak dál", nicotine: "Nikotin", 
-                total_today: "Celkem dnes", cost_label: "Cena", limit_label: "Limit", days_label: "dní", daily_max: "DENNÍ CÍL",
-                history_modal_title: "Kompletní historie", pick_date: "Vyber datum", add_past_entry: "Přidat zpětně", charts_title: "Statistiky",
+                export_csv: "📄 Export CSV", export_json: "💾 Záloha", import_json: "📂 Nahrát zálohu", google_login: "Google", streak_hint: "🔥 Jen tak dál", nicotine: "Nikotin",
+                total_today: "Celkem dnes", cost_label: "Cena", limit_label: "Limit", days_label: "dní", daily_max: "DENNÍ CÍL", pouches_used: "zapsané sáčky", days_recorded: "dnů zaznamenáno",
+                history_modal_title: "Kompletní historie", pick_date: "Vyber datum", add_past_entry: "Přidat zpětně", charts_title: "Statistiky", saved_compare: "v porovnání se standardní spotřebou", hourly_heatmap: "Hodinová mapa",
                 health_timeline: "Zdravotní regenerace", wiz_step1_title: "Jaký je cíl?", wiz_step2_title: "Strategie", wiz_step3_title: "Nastavení",
                 goal_track_title: "Sledovat", goal_quit_title: "Přestat", strat_smooth_title: "Plynule", strat_weekly_title: "Týdně",
                 strat_cutoff_title: "Rázně", strat_smooth_desc: "Denně lehce snižuješ limit a dojdeš k nule plynule.",
@@ -563,10 +564,17 @@
 
             // Stats Dashboard
             document.getElementById('valToday').innerText = todayEntries.length;
+            document.getElementById('valTodayNote').innerText = t('pouches_used');
             document.getElementById('valLimit').innerText = `${t('limit_label')}: ${limit}`;
-            document.getElementById('valStreak').innerHTML = `${stats.streak} <span style="font-size:14px" data-i18n="days_label">${t('days_label')}</span>`;
-            document.getElementById('valSaved').innerText = `${Math.max(0, stats.savedTotal).toFixed(0)} ${state.settings.currency}`;
-            
+            document.getElementById('valStreak').innerHTML = `${stats.streak} <span style="font-size:14px">${t('days_recorded')}</span>`;
+
+            const savedVisible = state.settings.goal === 'quit';
+            document.getElementById('savedStat').classList.toggle('hidden', !savedVisible);
+            document.getElementById('valSavedNote').innerText = t('saved_compare');
+            if (savedVisible) {
+                document.getElementById('valSaved').innerText = `${Math.max(0, stats.savedTotal).toFixed(0)} ${state.settings.currency}`;
+            }
+
             const costToday = todayEntries.length * (state.settings.packPrice / state.settings.pouchesPerPack);
             document.getElementById('valCost').innerText = `${t('cost_label')}: ${costToday.toFixed(0)}`;
             document.getElementById('valMg').innerText = `${todayEntries.reduce((s,i)=>s+(i.mg||0),0).toFixed(1)} mg`;
