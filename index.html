@@ -70,6 +70,17 @@
         .achievement.unlocked { background: #ecfdf5; border-color: #6ee7b7; color: var(--text); }
         .achievement.locked { background: #f8fafc; border-style: dashed; opacity: 0.7; filter: grayscale(1); }
 
+        .promo-banner { display: flex; align-items: center; gap: 14px; background: linear-gradient(120deg, #ecfdf5, #d1fae5); border: 1px solid #a7f3d0; }
+        .promo-badge { background: #0f172a; color: white; padding: 6px 10px; border-radius: 999px; font-size: 12px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; }
+        .promo-banner h3 { margin: 4px 0 6px; }
+        .promo-banner p { margin: 0; color: var(--primary-dark); font-size: 14px; line-height: 1.4; }
+        .promo-actions { flex-shrink: 0; }
+        @media (max-width: 600px) {
+            .promo-banner { flex-direction: column; align-items: flex-start; }
+            .promo-actions { width: 100%; }
+            .promo-actions .btn { width: 100%; justify-content: center; }
+        }
+
         /* Modals */
         dialog { border: none; border-radius: 16px; padding: 0; width: min(500px, 95vw); box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); }
         dialog::backdrop { background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(2px); }
@@ -219,7 +230,18 @@
             </div>
             <div id="historyList"></div>
         </div>
-        
+
+        <div id="quitPromo" class="card promo-banner hidden">
+            <div class="promo-badge" data-i18n="promo_kicker">Just Track</div>
+            <div style="flex:1;">
+                <h3 style="margin:0;" data-i18n="promo_title">Připraveni přestat?</h3>
+                <p data-i18n="promo_desc">Přepněte z režimu „Just Track“ do vedeného odvykacího plánu s cílovým datem a milníky.</p>
+            </div>
+            <div class="promo-actions">
+                <button id="promoBtn" class="btn btn-primary" data-i18n="promo_cta">Spustit plán odvykání</button>
+            </div>
+        </div>
+
         <footer style="text-align: center; margin-top: 40px; padding: 20px; color: #7f8c8d; font-size: 0.9em; max-width: 800px; margin-left: auto; margin-right: auto;">
             <p><strong>NicoTracker Cloud</strong> je moderní online nástroj pro sledování a správu užívání nikotinových sáčků.</p>
         </footer>
@@ -389,7 +411,9 @@
                 quit_status_active: "Plan active", auth_btn: "Sync / Data", auth_title: "Sync & Backup", login: "Log In", register: "Register", toggle_reg: "Need account? Register", toggle_log: "Have account? Login",
                 currency: "Currency", pack_price: "Price/Can", pouches_pack: "Pcs/Can", close: "Close", delete_entry: "Delete", added: "Added!",
                 just_now: "Just now", hours_ago: "h ago", mins_ago: "m ago",
-                restore_confirm: "This will overwrite your current data. Continue?", restore_success: "Data restored successfully!"
+                restore_confirm: "This will overwrite your current data. Continue?", restore_success: "Data restored successfully!",
+                promo_kicker: "Just Track", promo_title: "Ready to quit?", promo_desc: "You are in Just Track mode. Jump into a guided quit plan with milestones and a target date.",
+                promo_cta: "Launch quit program"
             },
             cs: {
                 today_usage: "DNES", streak: "ŘADA DNÍ", money_saved: "UŠETŘENO", log_usage: "Zapsat sáček", history: "Historie", view_all: "Zobrazit vše", 
@@ -405,7 +429,9 @@
                 quit_status_active: "Plán aktivní", auth_btn: "Sync / Data", auth_title: "Záloha dat", login: "Přihlásit", register: "Registrovat", toggle_reg: "Registrovat se", toggle_log: "Mám účet",
                 currency: "Měna", pack_price: "Cena/Puk", pouches_pack: "Ks/Puk", close: "Zavřít", delete_entry: "Smazat", added: "Přidáno!",
                 just_now: "Právě teď", hours_ago: "h zpět", mins_ago: "m zpět",
-                restore_confirm: "Tato akce přepíše současná data. Pokračovat?", restore_success: "Data úspěšně obnovena!"
+                restore_confirm: "Tato akce přepíše současná data. Pokračovat?", restore_success: "Data úspěšně obnovena!",
+                promo_kicker: "Just Track", promo_title: "Připraveni přestat?", promo_desc: "Jste v režimu „Just Track“. Přepněte se do vedeného odvykacího programu s cílovým datem a milníky.",
+                promo_cta: "Spustit odvykací program"
             }
         };
         const t = (key) => { const lang = state?.lang || 'en'; return translations[lang]?.[key] || translations.en[key] || key; };
@@ -540,6 +566,8 @@
             } else {
                 document.getElementById('quitBanner').classList.add('hidden');
             }
+
+            document.getElementById('quitPromo').classList.toggle('hidden', state.settings.goal !== 'track');
 
             // History List
             const list = document.getElementById('historyList'); list.innerHTML = '';
@@ -741,6 +769,7 @@
             document.getElementById('menuBtn').onclick=window.openWizard;
             document.getElementById('syncBtn').onclick=()=>document.getElementById('authModal').showModal();
             document.getElementById('addBtn').onclick=addEntry;
+            document.getElementById('promoBtn').onclick=()=>{ openWizard(); window.setWizOption('goal','quit'); wizStep=2; showStep(2); };
             
             document.getElementById('installBtn').onclick = async () => {
                 if(installPrompt) { installPrompt.prompt(); const { outcome } = await installPrompt.userChoice; if(outcome==='accepted') document.getElementById('installBtn').classList.add('hidden'); }
