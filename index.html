@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="description" content="Free Nicotine Pouch Tracker & Quitting Tool.">
+
+    <!-- PWA & Mobile -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#10b981">
+    <link rel="manifest" href="./manifest.json">
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💊</text></svg>">
+
+    <title>NicoTracker | Quit Nicotine Pouches</title>
+
+    <!-- Fonts & Libs -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+
+    <style>
+        :root {
+            --bg: #f8fafc; --card: #ffffff; --text: #0f172a; --muted: #64748b;
+            --primary: #10b981; --primary-dark: #059669; --danger: #ef4444; --border: #e2e8f0;
+        }
+
+        * { box-sizing: border-box; }
+        body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); padding-bottom: 80px; -webkit-tap-highlight-color: transparent; }
+        .shell { max-width: 1100px; margin: 0 auto; padding: 20px 16px; }
+
+        header { background: var(--card); border-bottom: 1px solid var(--border); padding: 16px 20px; position: sticky; top: 0; z-index: 50; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-weight: 800; font-size: 20px; color: var(--text); display: flex; align-items: center; gap: 6px; }
+        .logo span { color: var(--primary); }
+
+        /* UI Components */
+        .card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 16px; margin-bottom: 12px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); }
+        .btn { border: none; border-radius: 10px; padding: 10px 16px; font-weight: 600; cursor: pointer; font-size: 14px; transition: 0.2s; display: inline-flex; align-items: center; gap: 6px; }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-outline { background: white; border: 1px solid var(--border); color: var(--text); }
+        .btn-danger { background: #fee2e2; color: var(--danger); border: 1px solid #fecaca; }
+        .btn:active { transform: scale(0.98); }
+
+        .grid { display: grid; gap: 12px; }
+        .stats-grid { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
+
+        .stat { border: 1px solid var(--border); border-radius: 12px; padding: 10px; background: white; }
+        .stat .val { font-size: 20px; font-weight: 800; margin-top: 2px; }
+        .stat .lbl { font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; }
+        .stat .sub { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+        input, select { width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 10px; background: #fff; font-size: 15px; outline: none; }
+        input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1); }
+
+        details>summary { list-style: none; cursor: pointer; font-weight: 700; font-size: 16px; display: flex; justify-content: space-between; align-items: center; padding: 4px 0; }
+        details>summary::after { content: '▼'; font-size: 12px; color: var(--muted); transition: transform 0.2s; }
+        details[open]>summary::after { transform: rotate(180deg); }
+
+        .health-item { display: flex; gap: 12px; align-items: center; padding: 12px 0; border-bottom: 1px dashed var(--border); font-size: 14px; }
+        .health-time { font-weight: 700; width: 60px; font-size: 12px; color: var(--muted); }
+        .health-done { color: var(--text); opacity: 1; text-decoration: none; }
+        .health-done .health-icon { color: var(--primary); }
+        .health-locked { color: var(--muted); opacity: 0.6; filter: grayscale(1); }
+
+        .achievements { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 10px; margin-top: 10px; }
+        .achievement { padding: 10px; border: 1px solid var(--border); border-radius: 12px; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100px; transition: 0.3s; }
+        .achievement.unlocked { background: #ecfdf5; border-color: #6ee7b7; color: var(--text); }
+        .achievement.locked { background: #f8fafc; border-style: dashed; opacity: 0.7; filter: grayscale(1); }
+
+        /* Modals */
+        dialog { border: none; border-radius: 16px; padding: 0; width: min(500px, 95vw); box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); }
+        dialog::backdrop { background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(2px); }
+        .modal-head { padding: 16px 20px; font-weight: 700; border-bottom: 1px solid var(--border); background: #f8fafc; display: flex; justify-content: space-between; align-items: center; }
+        .modal-body { padding: 20px; }
+        .modal-foot { padding: 16px; display: flex; justify-content: flex-end; gap: 10px; border-top: 1px solid var(--border); }
+        .hidden { display: none !important; }
+
+        .history-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--border); font-size: 14px; }
+        .quit-active { border: 2px solid var(--primary); background: #ecfdf5; }
+        .progress-bar { height: 6px; background: #e2e8f0; border-radius: 3px; margin-top: 8px; overflow: hidden; }
+        .progress-fill { height: 100%; background: var(--primary); width: 0%; transition: width 0.5s; }
+
+        /* Wizard */
+        .selection-card { border: 2px solid var(--border); border-radius: 12px; padding: 16px; cursor: pointer; text-align: center; transition: 0.2s; }
+        .selection-card:hover { border-color: #cbd5e1; }
+        .selection-card.active { border-color: var(--primary); background-color: #ecfdf5; }
+        .wizard-step { animation: fadeIn 0.3s; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        #toast { position: fixed; bottom: 20px; right: 20px; z-index: 100; pointer-events: none; }
+        .toast-msg { background: #1e293b; color: white; padding: 12px 20px; border-radius: 10px; margin-top: 10px; animation: slideUp 0.3s; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
+        @keyframes slideUp { from { transform: translateY(20px); opacity: 0 } to { transform: translateY(0); opacity: 1 } }
+
+        /* Search & Selector */
+        .selector-btn { width: 100%; text-align: left; background: white; border: 1px solid var(--border); padding: 12px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; font-family: inherit; font-size: 14px; color: var(--text); cursor: pointer; }
+        .selector-btn:active { background: #f8fafc; }
+        .quick-actions { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; margin-bottom: 12px; scrollbar-width: none; }
+        .quick-chip { flex-shrink: 0; background: #ecfdf5; color: var(--primary-dark); border: 1px solid #a7f3d0; padding: 8px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; cursor: pointer; user-select: none; }
+
+        #searchModal { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); margin: 0; bottom: auto; height: 80vh; max-height: 600px; width: min(500px, 90vw); border-radius: 16px; border: 2px solid var(--primary); box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2); animation: popIn 0.2s ease-out; }
+        @keyframes popIn { from { opacity: 0; transform: translate(-50%, -45%) scale(0.95); } to { opacity: 1; transform: translate(-50%, -50%) scale(1); } }
+
+        .search-header { padding: 16px; border-bottom: 1px solid var(--border); display: flex; gap: 10px; align-items: center; background: white; }
+        #searchInput { width: 100%; padding: 12px 16px; border-radius: 10px; border: 1px solid var(--border); font-size: 16px; outline: none; background: #f8fafc; }
+        #searchInput:focus { border-color: var(--primary); background: white; }
+        .search-results { overflow-y: auto; height: calc(100% - 70px); padding: 0 16px 20px; background: white; }
+        .search-item { padding: 12px 0; border-bottom: 1px solid #f1f5f9; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+        .search-item:hover { background: #f8fafc; }
+        .search-item strong { display: block; font-size: 14px; margin-bottom: 2px; }
+        .search-item small { color: var(--muted); font-size: 12px; }
+        .mg-badge { background: #f1f5f9; padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: 700; color: var(--text); }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="logo">💊 <span>NicoTracker</span> <span style="font-size:10px; color:#a0aec0; font-weight:400; margin-left:4px;">v1.0.1</span></div>
+        <div style="display:flex; gap:10px;">
+            <button id="installBtn" class="btn btn-primary hidden" style="padding:8px 12px; font-size:12px;">📲 Install</button>
+            <button id="langBtn" class="btn btn-outline" style="padding:8px;">🇺🇸 EN</button>
+            <button id="syncBtn" class="btn btn-primary" data-i18n="auth_btn">Login</button>
+            <button id="menuBtn" class="btn btn-outline" style="font-size:18px;">⚙️</button>
+        </div>
+    </header>
+
+    <main class="shell">
+
+        <!-- Quit Program Banner -->
+        <div id="quitBanner" class="card hidden">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <div>
+                    <h3 style="margin:0" data-i18n="quit_title">Freedom Journey</h3>
+                    <p style="margin:4px 0 0; color:var(--primary-dark); font-size:13px;" id="quitStatusText">Plan active</p>
+                </div>
+                <div style="text-align:right;">
+                    <div class="val" style="font-size:20px;" id="quitTarget">0</div>
+                    <div class="lbl" data-i18n="daily_max">Daily Max</div>
+                </div>
+            </div>
+            <div class="progress-bar"><div id="quitProgress" class="progress-fill"></div></div>
+        </div>
+
+        <!-- Dashboard Stats -->
+        <div class="grid stats-grid">
+            <div class="stat">
+                <div class="lbl" data-i18n="today_usage">Today</div>
+                <div class="val" id="valToday">0</div>
+                <div class="sub" id="valLimit">Limit: 10</div>
+            </div>
+            <div class="stat">
+                <div class="lbl" data-i18n="streak">Streak</div>
+                <div class="val" id="valStreak">0 <span style="font-size:14px" data-i18n="days_label">days</span></div>
+                <div class="sub" data-i18n="streak_hint">🔥 Keep it up</div>
+            </div>
+            <div class="stat">
+                <div class="lbl" data-i18n="money_saved">Saved</div>
+                <div class="val" id="valSaved" style="color:var(--primary);">0</div>
+                <div class="sub" id="valCost">Cost: 0</div>
+            </div>
+            <div class="stat">
+                <div class="lbl" data-i18n="nicotine">Nicotine</div>
+                <div class="val" id="valMg">0 mg</div>
+                <div class="sub" data-i18n="total_today">Total today</div>
+            </div>
+        </div>
+
+        <!-- Health Recovery -->
+        <details id="healthSection" class="card" open>
+            <summary><span data-i18n="health_timeline">Health Recovery</span></summary>
+            <div class="content" id="healthList" style="margin-top:8px;"></div>
+        </details>
+
+        <!-- LOG USAGE -->
+        <div class="card" style="margin-top:4px;">
+            <h3 style="margin:0 0 12px;" data-i18n="log_usage">Log Usage</h3>
+            <div id="quickActions" class="quick-actions"></div>
+            <div class="grid" style="grid-template-columns: 1fr auto;">
+                <button id="openSearchBtn" class="selector-btn">
+                    <div>
+                        <div style="font-size:11px; color:var(--muted);" data-i18n="selected_pouch">Selected</div>
+                        <div id="selectedPouchName" style="font-weight:700;">...</div>
+                    </div>
+                    <span style="font-size:18px;">🔍</span>
+                </button>
+                <button id="addBtn" class="btn btn-primary" style="height:50px; width:60px; justify-content:center; font-size:24px;">➕</button>
+            </div>
+        </div>
+
+        <!-- Achievements -->
+        <details class="card">
+            <summary><span data-i18n="achievements">Achievements</span></summary>
+            <div class="content"><div id="badgeGrid" class="achievements"></div></div>
+        </details>
+
+        <!-- Charts -->
+        <details class="card">
+            <summary><span data-i18n="charts_title">Analytics</span></summary>
+            <div class="content grid" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));">
+                <div>
+                    <h4 style="margin:10px 0; font-size:12px; color:var(--muted); text-transform:uppercase;" data-i18n="chart_trend">Trend (14 days)</h4>
+                    <canvas id="trendChart" height="200"></canvas>
+                </div>
+                <div>
+                    <h4 style="margin:20px 0 10px; font-size:12px; color:var(--muted); text-transform:uppercase;" data-i18n="hourly_heatmap">Hourly Heatmap</h4>
+                    <canvas id="hourlyChart" height="200"></canvas>
+                </div>
+            </div>
+        </details>
+
+        <!-- History -->
+        <div class="card">
+            <div style="display:flex; justify-content:space-between; align-items:center; gap:8px;">
+                <h3 style="margin:0;" data-i18n="history">Recent History</h3>
+                <button id="viewAllHistoryBtn" class="btn btn-outline" style="padding:6px 10px; font-size:12px;" data-i18n="view_all">View All</button>
+            </div>
+            <div id="historyList"></div>
+        </div>
+        
+        <footer style="text-align: center; margin-top: 40px; padding: 20px; color: #7f8c8d; font-size: 0.9em; max-width: 800px; margin-left: auto; margin-right: auto;">
+            <p><strong>NicoTracker Cloud</strong> je moderní online nástroj pro sledování a správu užívání nikotinových sáčků.</p>
+        </footer>
+    </main>
+
+    <div id="toast"></div>
+
+    <!-- SEARCH MODAL -->
+    <dialog id="searchModal">
+        <div class="search-header">
+            <input type="search" id="searchInput" placeholder="..." autocomplete="off">
+            <button class="btn btn-outline" style="border:none; font-size:20px; padding:0 8px;" onclick="document.getElementById('searchModal').close()">✕</button>
+        </div>
+        <div id="searchResults" class="search-results"></div>
+    </dialog>
+
+    <!-- Full History Modal -->
+    <dialog id="historyModal">
+        <div class="modal-head"><span data-i18n="history_modal_title">Full History</span></div>
+        <div class="modal-body grid" style="gap:12px;">
+            <div><label style="font-size:12px; color:var(--muted);" data-i18n="pick_date">Pick Date</label><input type="datetime-local" id="backdateInput"></div>
+            <div style="font-size:12px; color:var(--muted);" data-i18n="past_entry_help">Hint</div>
+            <button id="addPastEntryBtn" class="btn btn-primary" style="width:100%;" data-i18n="add_past_entry">Add</button>
+            <div style="border-top:1px solid var(--border); margin:8px 0;"></div>
+            <div id="fullHistoryList" style="max-height:300px; overflow-y:auto;"></div>
+        </div>
+        <div class="modal-foot"><button class="btn btn-outline" onclick="document.getElementById('historyModal').close()" data-i18n="close">Close</button></div>
+    </dialog>
+
+    <!-- Settings Wizard Modal -->
+    <dialog id="settingsModal">
+        <div class="modal-head"><span data-i18n="settings">Settings</span><span style="font-size:12px; color:var(--muted);" id="wizardStepIndicator">Step 1/3</span></div>
+        <div class="modal-body">
+            <!-- Step 1: Goal -->
+            <div id="step1" class="wizard-step">
+                <h3 style="margin:0 0 16px; font-size:16px; text-align:center;" data-i18n="wiz_step1_title">Goal?</h3>
+                <div class="grid" style="grid-template-columns: 1fr 1fr;">
+                    <div class="selection-card" id="goalTrack" onclick="window.setWizOption('goal', 'track')">
+                        <div style="font-size:32px;">📊</div><h4 data-i18n="goal_track_title">Track</h4>
+                    </div>
+                    <div class="selection-card" id="goalQuit" onclick="window.setWizOption('goal', 'quit')">
+                        <div style="font-size:32px;">💪</div><h4 data-i18n="goal_quit_title">Quit</h4>
+                    </div>
+                </div>
+            </div>
+            <!-- Step 2: Strategy -->
+            <div id="step2" class="wizard-step hidden">
+                <h3 style="margin:0 0 16px; font-size:16px; text-align:center;" data-i18n="wiz_step2_title">Strategy</h3>
+                <div class="grid" style="gap:12px;">
+                    <div class="selection-card" id="stratSmooth" onclick="window.setWizOption('strategy', 'smooth')"><h4 data-i18n="strat_smooth_title">Smooth</h4></div>
+                    <div class="selection-card" id="stratWeekly" onclick="window.setWizOption('strategy', 'weekly')"><h4 data-i18n="strat_weekly_title">Weekly</h4></div>
+                    <div class="selection-card" id="stratCutoff" onclick="window.setWizOption('strategy', 'cutoff')"><h4 data-i18n="strat_cutoff_title">Cutoff</h4></div>
+                </div>
+            </div>
+            <!-- Step 3: Setup -->
+            <div id="step3" class="wizard-step hidden">
+                <h3 style="margin:0 0 16px; font-size:16px; text-align:center;" data-i18n="wiz_step3_title">Setup</h3>
+                <div class="grid" style="grid-template-columns: 1fr 1fr;">
+                    <div><label data-i18n="currency">Curr</label><input id="currencyInput"></div>
+                    <div><label data-i18n="pack_price">Price</label><input type="number" id="priceInput"></div>
+                </div>
+                <div class="grid" style="grid-template-columns: 1fr 1fr;">
+                    <div><label data-i18n="pouches_pack">Pcs</label><input type="number" id="piecesInput"></div>
+                    <div><label data-i18n="start_limit">Limit</label><input type="number" id="limitInput"></div>
+                </div>
+                <div id="dateInputContainer" class="hidden" style="margin-top:10px;">
+                    <label data-i18n="target_date">Target Date</label>
+                    <input type="date" id="wizardDateInput">
+                </div>
+            </div>
+        </div>
+        <div class="modal-foot">
+            <button id="wizBackBtn" class="btn btn-outline hidden" onclick="window.prevStep()" data-i18n="back">Back</button>
+            <button id="wizNextBtn" class="btn btn-primary" onclick="window.nextStep()" data-i18n="next">Next</button>
+        </div>
+    </dialog>
+
+    <!-- Auth Modal -->
+    <dialog id="authModal">
+        <div class="modal-head" id="authTitle" data-i18n="auth_title">Sync</div>
+        <div class="modal-body">
+            <div id="authSection">
+                <div class="grid">
+                    <input type="email" id="emailInput" placeholder="Email">
+                    <input type="password" id="passInput" placeholder="Password">
+                    <button id="loginBtn" class="btn btn-primary" data-i18n="login">Log In</button>
+                    <button id="googleAuthBtn" class="btn btn-outline" data-i18n="google_login">Google</button>
+                </div>
+                <div style="text-align:center; margin-top:10px; font-size:13px; color:var(--primary); cursor:pointer;" id="toggleReg" data-i18n="toggle_reg">Register</div>
+            </div>
+            <div style="border-top:1px solid var(--border); margin-top:20px; padding-top:20px;">
+                <h4 style="margin:0 0 12px; font-size:14px; color:var(--muted); text-transform:uppercase;" data-i18n="data_management">Data</h4>
+                <div class="grid" style="grid-template-columns: 1fr 1fr;">
+                    <button id="btnExportJson" class="btn btn-outline" style="justify-content:center;" data-i18n="export_json">Backup</button>
+                    <button id="btnImportJson" class="btn btn-outline" style="justify-content:center;" data-i18n="import_json">Restore</button>
+                </div>
+                <div style="margin-top:10px;">
+                    <button id="btnExportCsv" class="btn btn-outline" style="width:100%;" data-i18n="export_csv">CSV</button>
+                </div>
+                <input type="file" id="importInput" accept=".json" style="display:none">
+            </div>
+        </div>
+        <div class="modal-foot"><button class="btn btn-outline" onclick="document.getElementById('authModal').close()" data-i18n="close">Close</button></div>
+    </dialog>
+
+    <script type="module">
+        import { POUCH_DB } from './data.js';
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-analytics.js";
+        import { getAuth, signInWithPopup, GoogleAuthProvider, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+        import { getFirestore, doc, setDoc, getDoc, collection, onSnapshot, query, orderBy, Timestamp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+
+        // --- RESTORED API CONFIG ---
+        const firebaseConfig = { 
+            apiKey: "AIzaSyBKMDwYeSjmgQLnpYciReSK2yJU0pG6KS8", 
+            authDomain: "nicotinepouches-d9d1c.firebaseapp.com", 
+            projectId: "nicotinepouches-d9d1c", 
+            storageBucket: "nicotinepouches-d9d1c.firebasestorage.app", 
+            messagingSenderId: "42131125480", 
+            appId: "1:42131125480:web:8022461f0a790a5677855d" 
+        };
+        const app = initializeApp(firebaseConfig); 
+        const analytics = getAnalytics(app); 
+        const auth = getAuth(app); 
+        const db = getFirestore(app);
+
+        const BADGES_DEF = [
+            { id: 'b1', icon: '👶', en: 'First Step', cs: 'První krok', desc_en: 'Log first pouch', desc_cs: 'První záznam', condition: (s, h, stats) => h.length > 0 },
+            { id: 'b2', icon: '🔥', en: 'Heating Up', cs: 'Zahříváme se', desc_en: '3 day streak', desc_cs: '3 dny v řadě', condition: (s, h, stats) => stats.streak >= 3 },
+            { id: 'b3', icon: '🚀', en: 'On Fire', cs: 'V ráži', desc_en: '7 day streak', desc_cs: '7 dní v řadě', condition: (s, h, stats) => stats.streak >= 7 },
+            { id: 'b4', icon: '⚔️', en: 'Warrior', cs: 'Bojovník', desc_en: '14 day streak', desc_cs: '14 dní v řadě', condition: (s, h, stats) => stats.streak >= 14 },
+            { id: 'b5', icon: '💎', en: 'Diamond Will', cs: 'Diamantová vůle', desc_en: '30 day streak', desc_cs: '30 dní v řadě', condition: (s, h, stats) => stats.streak >= 30 },
+            { id: 'b6', icon: '💰', en: 'Saver', cs: 'Spořič', desc_en: 'Save 500', desc_cs: 'Ušetři 500', condition: (s, h, stats) => stats.savedTotal >= 500 },
+            { id: 'b7', icon: '🏦', en: 'Investor', cs: 'Investor', desc_en: 'Save 2000', desc_cs: 'Ušetři 2000', condition: (s, h, stats) => stats.savedTotal >= 2000 },
+            { id: 'b8', icon: '🏖️', en: 'Weekend Hero', cs: 'Víkendový hrdina', desc_en: 'Clean weekend', desc_cs: 'Čistý víkend', condition: (s, h, stats) => stats.cleanWeekend },
+            { id: 'b9', icon: '📉', en: 'Tapering', cs: 'Snižování', desc_en: 'Avg < 5', desc_cs: 'Průměr < 5', condition: (s, h, stats) => stats.dailyAvg > 0 && stats.dailyAvg < 5 },
+            { id: 'b10', icon: '🎯', en: 'Discipline', cs: 'Disciplína', desc_en: 'Success yesterday', desc_cs: 'Úspěch včera', condition: (s, h, stats) => stats.yesterdaySuccess },
+            { id: 'b11', icon: '🎩', en: 'Tycoon', cs: 'Magnát', desc_en: 'Save 5000', desc_cs: 'Ušetři 5000', condition: (s, h, stats) => stats.savedTotal >= 5000 },
+            { id: 'b12', icon: '🗿', en: 'Titan', cs: 'Titán', desc_en: '60 day streak', desc_cs: '60 dní v řadě', condition: (s, h, stats) => stats.streak >= 60 },
+            { id: 'b13', icon: '👑', en: 'Legend', cs: 'Legenda', desc_en: '90 day streak', desc_cs: '90 dní v řadě', condition: (s, h, stats) => stats.streak >= 90 },
+            { id: 'b14', icon: '🪶', en: 'Lightweight', cs: 'Muší váha', desc_en: 'Avg < 3', desc_cs: 'Průměr < 3', condition: (s, h, stats) => stats.dailyAvg > 0 && stats.dailyAvg < 3 },
+            { id: 'b15', icon: '📅', en: 'Dedicated', cs: 'Odhodlaný', desc_en: '50 entries', desc_cs: '50 záznamů', condition: (s, h, stats) => h.length >= 50 },
+            { id: 'b16', icon: '🎖️', en: 'Veteran', cs: 'Veterán', desc_en: '100 entries', desc_cs: '100 záznamů', condition: (s, h, stats) => h.length >= 100 }
+        ];
+
+        const HEALTH_TIMELINE = [
+            { minutes: 20, en: "Pulse & BP return to normal", cs: "Tep a tlak v normálu" },
+            { minutes: 120, en: "Nicotine levels drop by 50%", cs: "Nikotin klesá o 50%" },
+            { minutes: 480, en: "Oxygen levels normalize", cs: "Kyslík v normálu" },
+            { minutes: 1440, en: "Nicotine out of system", cs: "Nikotin je z těla pryč" },
+            { minutes: 2880, en: "Taste & smell improve", cs: "Chuť a čich se zlepšuje" },
+            { minutes: 4320, en: "Breathing becomes easier", cs: "Dýchání je snazší" }
+        ];
+
+        const translations = {
+            en: {
+                today_usage: "TODAY", streak: "STREAK", money_saved: "SAVED", log_usage: "Log Usage", history: "History", view_all: "View All", 
+                settings: "Settings", quit_title: "Freedom Journey", achievements: "Achievements",
+                export_csv: "📄 CSV Export", export_json: "💾 Backup", import_json: "📂 Restore", google_login: "Google Login", streak_hint: "🔥 Keep it up", nicotine: "Nicotine", 
+                total_today: "Total today", cost_label: "Cost", limit_label: "Limit", days_label: "days", daily_max: "DAILY MAX",
+                history_modal_title: "Full History", pick_date: "Pick Date", add_past_entry: "Add Past Entry", charts_title: "Analytics",
+                health_timeline: "Health Recovery", wiz_step1_title: "Goal?", wiz_step2_title: "Strategy", wiz_step3_title: "Setup",
+                goal_track_title: "Just Track", goal_quit_title: "I Want to Quit", strat_smooth_title: "Smooth", strat_weekly_title: "Weekly",
+                strat_cutoff_title: "Cold Turkey", start_limit: "Daily Limit", target_date: "Target Date", back: "Back", next: "Next", finish: "Finish", 
+                data_management: "Data Management", selected_pouch: "Selected", search_placeholder: "Search brand or flavor...", 
+                select_placeholder: "Select a pouch...", past_entry_help: "To add past entry, first select a pouch on dashboard.",
+                quit_status_active: "Plan active", auth_btn: "Sync / Data", auth_title: "Sync & Backup", login: "Log In", register: "Register", toggle_reg: "Need account? Register", toggle_log: "Have account? Login",
+                currency: "Currency", pack_price: "Price/Can", pouches_pack: "Pcs/Can", close: "Close", delete_entry: "Delete", added: "Added!",
+                just_now: "Just now", hours_ago: "h ago", mins_ago: "m ago",
+                restore_confirm: "This will overwrite your current data. Continue?", restore_success: "Data restored successfully!"
+            },
+            cs: {
+                today_usage: "DNES", streak: "ŘADA DNÍ", money_saved: "UŠETŘENO", log_usage: "Zapsat sáček", history: "Historie", view_all: "Zobrazit vše", 
+                settings: "Nastavení", quit_title: "Cesta ke svobodě", achievements: "Úspěchy",
+                export_csv: "📄 Export CSV", export_json: "💾 Záloha", import_json: "📂 Nahrát zálohu", google_login: "Google", streak_hint: "🔥 Jen tak dál", nicotine: "Nikotin", 
+                total_today: "Celkem dnes", cost_label: "Cena", limit_label: "Limit", days_label: "dní", daily_max: "DENNÍ CÍL",
+                history_modal_title: "Kompletní historie", pick_date: "Vyber datum", add_past_entry: "Přidat zpětně", charts_title: "Statistiky",
+                health_timeline: "Zdravotní regenerace", wiz_step1_title: "Jaký je cíl?", wiz_step2_title: "Strategie", wiz_step3_title: "Nastavení",
+                goal_track_title: "Sledovat", goal_quit_title: "Přestat", strat_smooth_title: "Plynule", strat_weekly_title: "Týdně",
+                strat_cutoff_title: "Rázně", start_limit: "Denní Limit", target_date: "Datum konce", back: "Zpět", next: "Další", finish: "Hotovo", 
+                data_management: "Správa dat", selected_pouch: "Vybráno", search_placeholder: "Hledat značku nebo příchuť...", 
+                select_placeholder: "Vyberte sáček...", past_entry_help: "Pro zpětné vložení nejdřív vyberte sáček na hl. stránce.",
+                quit_status_active: "Plán aktivní", auth_btn: "Sync / Data", auth_title: "Záloha dat", login: "Přihlásit", register: "Registrovat", toggle_reg: "Registrovat se", toggle_log: "Mám účet",
+                currency: "Měna", pack_price: "Cena/Puk", pouches_pack: "Ks/Puk", close: "Zavřít", delete_entry: "Smazat", added: "Přidáno!",
+                just_now: "Právě teď", hours_ago: "h zpět", mins_ago: "m zpět",
+                restore_confirm: "Tato akce přepíše současná data. Pokračovat?", restore_success: "Data úspěšně obnovena!"
+            }
+        };
+        const t = (key) => { const lang = state?.lang || 'en'; return translations[lang]?.[key] || translations.en[key] || key; };
+
+        // --- STATE ---
+        let state = {
+            user: null, lang: localStorage.getItem('nt_lang') || 'en',
+            settings: JSON.parse(localStorage.getItem('nt_settings')) || { currency: 'CZK', packPrice: 150, pouchesPerPack: 20, dailyLimit: 10, goal: 'track', createdAt: Date.now() },
+            history: JSON.parse(localStorage.getItem('nt_history')) || [],
+            selection: JSON.parse(localStorage.getItem('nt_last_pouch')) || null
+        };
+        let wizStep = 1; let tempSettings = {}; let currentSearchResults = []; let isRegistering = false;
+        let installPrompt = null;
+
+        // --- MAIN LOGIC ---
+        function init() {
+            applyLanguage(state.lang); persistHistory(); renderUI(); setupSearch(); setupListeners();
+            if (!localStorage.getItem('nt_settings')) openWizard();
+            if('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js');
+            
+            window.addEventListener('beforeinstallprompt', (e) => {
+                e.preventDefault(); installPrompt = e;
+                document.getElementById('installBtn').classList.remove('hidden');
+            });
+        }
+
+        function applyLanguage(lang) {
+            state.lang = lang; localStorage.setItem('nt_lang', lang); document.getElementById('langBtn').innerText = lang === 'en' ? '🇺🇸 EN' : '🇨🇿 CS';
+            document.querySelectorAll('[data-i18n]').forEach(el => el.innerText = t(el.dataset.i18n));
+            document.getElementById('searchInput').placeholder = t('search_placeholder');
+            renderUI();
+        }
+
+        function persistHistory() {
+            state.history.sort((a, b) => new Date(b.date) - new Date(a.date));
+            localStorage.setItem('nt_history', JSON.stringify(state.history));
+            localStorage.setItem('nt_settings', JSON.stringify(state.settings));
+        }
+
+        // --- STATS CALCULATION ---
+        function calculateStats() {
+            const days = {}; state.history.forEach(h => { const d = h.date.slice(0,10); days[d] = (days[d] || 0) + 1; });
+            const limit = state.settings.dailyLimit || 10;
+            
+            let streak = 0; let checkDate = new Date(); checkDate.setDate(checkDate.getDate() - 1);
+            while (true) {
+                const dStr = checkDate.toISOString().slice(0,10);
+                if (state.history.length === 0) break;
+                const firstLog = new Date(state.history[state.history.length-1].date);
+                if (checkDate < firstLog && streak > 0) break;
+                if ((days[dStr] || 0) <= limit) { streak++; checkDate.setDate(checkDate.getDate() - 1); } else break;
+            }
+            
+            let savedTotal = 0; const unitPrice = state.settings.packPrice / state.settings.pouchesPerPack;
+            Object.keys(days).forEach(d => { if(days[d] < limit) savedTotal += (limit - days[d]) * unitPrice; });
+            
+            const yDate = new Date(); yDate.setDate(yDate.getDate()-1);
+            const yesterdaySuccess = (days[yDate.toISOString().slice(0,10)] || 0) <= limit;
+            const dailyAvg = state.history.length / (Object.keys(days).length || 1);
+
+            return { streak, savedTotal, yesterdaySuccess, dailyAvg, cleanWeekend: false };
+        }
+
+        function calculateDynamicLimit() {
+            if (state.settings.goal !== 'quit') return state.settings.dailyLimit;
+            
+            const start = new Date(state.settings.createdAt || Date.now());
+            const end = new Date(state.settings.targetDate || Date.now());
+            const now = new Date();
+            
+            const totalDays = (end - start) / (1000 * 60 * 60 * 24);
+            const daysPassed = (now - start) / (1000 * 60 * 60 * 24);
+            const startLimit = state.settings.dailyLimit;
+            
+            if (daysPassed >= totalDays) return 0;
+            if (daysPassed <= 0) return startLimit;
+            
+            let calculated = startLimit;
+            if (state.settings.strategy === 'smooth') {
+                calculated = startLimit - (daysPassed * (startLimit / totalDays));
+            } else if (state.settings.strategy === 'weekly') {
+                const weeksPassed = Math.floor(daysPassed / 7);
+                calculated = Math.max(0, startLimit - weeksPassed);
+            } else if (state.settings.strategy === 'cutoff') {
+                calculated = startLimit;
+            }
+            return Math.floor(calculated);
+        }
+
+        // --- RENDERERS ---
+        function renderUI() {
+            const today = new Date().toISOString().slice(0,10);
+            const todayEntries = state.history.filter(h => h.date.startsWith(today));
+            const limit = calculateDynamicLimit();
+            const stats = calculateStats();
+            
+            // Quick Actions
+            const counts = {}; state.history.forEach(h => { const k = h.brand + '|' + (h.name||''); counts[k] = (counts[k]||0)+1; });
+            const top = Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0, 3).map(e=>e[0]);
+            const qaContainer = document.getElementById('quickActions');
+            qaContainer.innerHTML = top.map(k => { const [b, n] = k.split('|'); return `<div class="quick-chip">${n || b}</div>`; }).join('');
+            qaContainer.querySelectorAll('.quick-chip').forEach((el, i) => {
+                el.onclick = () => {
+                    const [b, n] = top[i].split('|');
+                    const full = POUCH_DB.find(p => p.b === b && p.n === n) || { b, n, mg: 0 };
+                    selectPouch(full); addEntry();
+                };
+            });
+
+            // Selection
+            const selName = document.getElementById('selectedPouchName');
+            if (state.selection) selName.innerHTML = `${state.selection.n} <span style="color:var(--primary); font-size:11px;">${state.selection.mg}mg</span>`;
+            else selName.innerText = t('select_placeholder');
+
+            // Stats Dashboard
+            document.getElementById('valToday').innerText = todayEntries.length;
+            document.getElementById('valLimit').innerText = `${t('limit_label')}: ${limit}`;
+            document.getElementById('valStreak').innerHTML = `${stats.streak} <span style="font-size:14px" data-i18n="days_label">${t('days_label')}</span>`;
+            document.getElementById('valSaved').innerText = `${Math.max(0, stats.savedTotal).toFixed(0)} ${state.settings.currency}`;
+            
+            const costToday = todayEntries.length * (state.settings.packPrice / state.settings.pouchesPerPack);
+            document.getElementById('valCost').innerText = `${t('cost_label')}: ${costToday.toFixed(0)}`;
+            document.getElementById('valMg').innerText = `${todayEntries.reduce((s,i)=>s+(i.mg||0),0).toFixed(1)} mg`;
+            
+            // Quit Banner
+            if (state.settings.goal === 'quit') {
+                document.getElementById('quitBanner').classList.remove('hidden');
+                document.getElementById('quitTarget').innerText = limit;
+                const pct = Math.min(100, (todayEntries.length / limit) * 100);
+                document.getElementById('quitProgress').style.width = pct + '%';
+                document.getElementById('quitProgress').style.background = pct > 100 ? 'var(--danger)' : 'var(--primary)';
+            } else {
+                document.getElementById('quitBanner').classList.add('hidden');
+            }
+
+            // History List
+            const list = document.getElementById('historyList'); list.innerHTML = '';
+            state.history.slice(0, 5).forEach(h => {
+                list.innerHTML += `<div class="history-item"><div><strong>${h.name || h.brand}</strong> <span style="color:var(--muted)">${h.mg}mg</span></div><div style="font-size:11px; color:var(--muted);">${new Date(h.date).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</div></div>`;
+            });
+
+            renderBadges(stats);
+            renderHealth();
+            renderChart(); 
+            renderHourlyChart();
+        }
+
+        function renderBadges(stats) {
+            const container = document.getElementById('badgeGrid'); container.innerHTML = '';
+            try {
+                BADGES_DEF.forEach(b => {
+                    const unlocked = b.condition(state.settings, state.history, stats || {});
+                    const title = state.lang === 'cs' ? b.cs : b.en;
+                    const desc = state.lang === 'cs' ? b.desc_cs : b.desc_en;
+                    const div = document.createElement('div');
+                    div.className = `achievement ${unlocked ? 'unlocked' : 'locked'}`;
+                    div.innerHTML = `<div style="font-size:24px; margin-bottom:6px;">${b.icon}</div><div style="font-weight:700; font-size:12px; line-height:1.2;">${title}</div><div style="font-size:9px; margin-top:4px;">${desc}</div>`;
+                    container.appendChild(div);
+                });
+            } catch (e) { console.error("Badge render error", e); }
+        }
+
+        function renderHealth() {
+            const container = document.getElementById('healthList'); container.innerHTML = '';
+            if (state.history.length === 0) { container.innerHTML = `<div style="padding:10px; color:var(--muted); text-align:center;">No data</div>`; return; }
+            
+            const lastDate = new Date(state.history[0].date);
+            const diffMins = (new Date() - lastDate) / 1000 / 60;
+            
+            HEALTH_TIMELINE.forEach(m => {
+                const unlocked = diffMins >= m.minutes;
+                const text = state.lang === 'cs' ? m.cs : m.en;
+                let timeLbl = m.minutes < 60 ? `${m.minutes}m` : (m.minutes < 1440 ? `${m.minutes/60}h` : `${m.minutes/1440}d`);
+                
+                container.innerHTML += `
+                <div class="health-item ${unlocked ? 'health-done' : 'health-locked'}">
+                    <div class="health-time">${timeLbl}</div>
+                    <div style="flex:1;">${text}</div>
+                    ${unlocked ? '<div class="health-icon">✔</div>' : ''}
+                </div>`;
+            });
+        }
+
+        // --- CHART & SEARCH ---
+        function renderChart(){
+            const days={}; for(let i=13;i>=0;i--){const d=new Date();d.setDate(d.getDate()-i); days[d.toISOString().slice(0,10)]=0;}
+            state.history.forEach(h=>{const k=h.date.slice(0,10);if(days[k]!==undefined)days[k]++;});
+            const ctx=document.getElementById('trendChart'); if(window.trendChartInst)window.trendChartInst.destroy();
+            window.trendChartInst=new Chart(ctx,{type:'line',data:{labels:Object.keys(days).map(d=>d.slice(5)),datasets:[{label:'Pcs',data:Object.values(days),borderColor:'#10b981',backgroundColor:'rgba(16,185,129,0.1)',fill:true,tension:0.4}]},options:{plugins:{legend:{display:false}},scales:{y:{beginAtZero:true}}}});
+        }
+        function renderHourlyChart() {
+            const hours=Array.from({length:24},(_,i)=>({l:i,c:0}));
+            state.history.forEach(h=>hours[new Date(h.date).getHours()].c++);
+            const ctx=document.getElementById('hourlyChart'); if(window.hourlyChartInst)window.hourlyChartInst.destroy();
+            window.hourlyChartInst=new Chart(ctx,{type:'bar',data:{labels:hours.map(h=>h.l),datasets:[{data:hours.map(h=>h.c),backgroundColor:'#10b981'}]},options:{plugins:{legend:{display:false}},scales:{y:{display:false},x:{grid:{display:false}}}}});
+        }
+
+        function setupSearch() {
+            const input = document.getElementById('searchInput');
+            const results = document.getElementById('searchResults');
+            
+            document.getElementById('openSearchBtn').onclick = () => {
+                input.value = ''; currentSearchResults = POUCH_DB.slice(0, 30); renderList(currentSearchResults);
+                document.getElementById('searchModal').showModal(); input.focus();
+            };
+
+            const renderList = (items) => {
+                results.innerHTML = items.map((item, index) => `
+                    <div class="search-item" onclick="window.selectByIndex(${index})">
+                        <div><strong>${item.n}</strong><small>${item.b}</small></div>
+                        <div class="mg-badge">${item.mg} mg</div>
+                    </div>
+                `).join('');
+            };
+
+            window.selectByIndex = (index) => { selectPouch(currentSearchResults[index]); document.getElementById('searchModal').close(); };
+            input.addEventListener('input', (e) => {
+                const q = e.target.value.toLowerCase().trim();
+                currentSearchResults = q.length < 1 ? [] : POUCH_DB.filter(p => p.n.toLowerCase().includes(q) || p.b.toLowerCase().includes(q)).slice(0, 50);
+                renderList(currentSearchResults);
+            });
+        }
+
+        function selectPouch(item) { state.selection = item; localStorage.setItem('nt_last_pouch', JSON.stringify(item)); renderUI(); }
+
+        async function addEntry() {
+            if(!state.selection) return document.getElementById('openSearchBtn').click();
+            const rec = { id: Date.now().toString(), brand: state.selection.b, name: state.selection.n, mg: state.selection.mg, date: new Date().toISOString() };
+            state.history.unshift(rec); persistHistory(); renderUI(); showToast(t('added'));
+            if(state.user) setDoc(doc(db,'users',state.user.uid,'history',rec.id),{ ...rec, timestamp:Timestamp.now() });
+        }
+
+        // --- WIZARD LOGIC ---
+        window.openWizard = () => { wizStep = 1; tempSettings = { ...state.settings, goal: undefined }; showStep(1); document.getElementById('settingsModal').showModal(); };
+        window.setWizOption = (key, val) => {
+            tempSettings[key] = val;
+            document.querySelectorAll(`#step${wizStep} .selection-card`).forEach(el => el.classList.remove('active'));
+            if(key==='goal') document.getElementById(val==='track'?'goalTrack':'goalQuit').classList.add('active');
+            if(key==='strategy') document.getElementById('strat'+val.charAt(0).toUpperCase()+val.slice(1)).classList.add('active');
+        };
+        window.showStep = (s) => {
+            [1,2,3].forEach(i => document.getElementById(`step${i}`).classList.add('hidden'));
+            document.getElementById(`step${s}`).classList.remove('hidden');
+            document.getElementById('wizardStepIndicator').innerText = `Step ${s}/3`;
+            document.getElementById('wizBackBtn').classList.toggle('hidden', s===1);
+            document.getElementById('wizNextBtn').innerText = s === 3 ? t('finish') : t('next');
+            
+            // Init values on step 3
+            if(s === 3) {
+                document.getElementById('currencyInput').value = tempSettings.currency || 'CZK';
+                document.getElementById('priceInput').value = tempSettings.packPrice || 150;
+                document.getElementById('piecesInput').value = tempSettings.pouchesPerPack || 20;
+                document.getElementById('limitInput').value = tempSettings.dailyLimit || 10;
+                if(tempSettings.goal === 'quit') {
+                    document.getElementById('dateInputContainer').classList.remove('hidden');
+                    document.getElementById('wizardDateInput').value = tempSettings.targetDate || '';
+                } else {
+                    document.getElementById('dateInputContainer').classList.add('hidden');
+                }
+            }
+        };
+        window.nextStep = () => {
+            if(wizStep === 1 && !tempSettings.goal) { alert("Please select a goal."); return; }
+            
+            if(wizStep===1 && tempSettings.goal==='track') {
+                wizStep = 3; // Skip strat for tracking
+            } else if(wizStep===3) {
+                // Save
+                tempSettings.currency = document.getElementById('currencyInput').value;
+                tempSettings.packPrice = Number(document.getElementById('priceInput').value);
+                tempSettings.pouchesPerPack = Number(document.getElementById('piecesInput').value);
+                tempSettings.dailyLimit = Number(document.getElementById('limitInput').value);
+                tempSettings.targetDate = document.getElementById('wizardDateInput').value;
+                tempSettings.onboarded = true;
+                tempSettings.createdAt = Date.now();
+                state.settings = tempSettings; persistHistory(); renderUI();
+                document.getElementById('settingsModal').close();
+                if(state.user) setDoc(doc(db,'users',state.user.uid,'settings','profile'), state.settings);
+                return;
+            } else {
+                wizStep++;
+            }
+            showStep(wizStep);
+        };
+        window.prevStep = () => {
+            if(wizStep===3 && tempSettings.goal==='track') wizStep=1;
+            else wizStep--;
+            showStep(wizStep);
+        };
+
+        // --- IMPORT / EXPORT & HELPERS ---
+        function showToast(m) { const t=document.getElementById('toast');t.innerHTML=`<div class="toast-msg">${m}</div>`;setTimeout(()=>t.innerHTML='',2000); }
+        
+        function exportCSV() {
+            let csv = "Date,Time,Brand,Name,Mg\n";
+            state.history.forEach(h => {
+                const d = new Date(h.date);
+                csv += `${d.toISOString().slice(0,10)},${d.toLocaleTimeString()},"${h.brand}","${h.name}",${h.mg}\n`;
+            });
+            downloadFile(csv, 'nicotracker_export.csv', 'text/csv');
+        }
+        function exportJSON() {
+            const data = JSON.stringify({ settings: state.settings, history: state.history }, null, 2);
+            downloadFile(data, 'nicotracker_backup.json', 'application/json');
+        }
+        function setupImport() {
+            const fileInput = document.getElementById('importInput');
+            document.getElementById('btnImportJson').onclick = () => { if(confirm(t('restore_confirm'))) fileInput.click(); };
+            fileInput.onchange = (e) => {
+                const file = e.target.files[0]; if(!file) return;
+                const reader = new FileReader();
+                reader.onload = (ev) => {
+                    try {
+                        const data = JSON.parse(ev.target.result);
+                        if(data.history && data.settings) {
+                            state.history = data.history; state.settings = data.settings;
+                            persistHistory(); renderUI(); alert(t('restore_success')); location.reload();
+                        } else alert("Invalid backup format.");
+                    } catch(e) { alert("Error: "+e.message); }
+                };
+                reader.readAsText(file);
+            };
+        }
+        function downloadFile(content, fileName, mimeType) {
+            const blob = new Blob([content], { type: mimeType });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a'); a.href = url; a.download = fileName; a.click();
+        }
+
+        // --- LISTENERS ---
+        function setupListeners() {
+            document.getElementById('langBtn').onclick=()=>applyLanguage(state.lang==='en'?'cs':'en');
+            document.getElementById('menuBtn').onclick=window.openWizard;
+            document.getElementById('syncBtn').onclick=()=>document.getElementById('authModal').showModal();
+            document.getElementById('addBtn').onclick=addEntry;
+            
+            document.getElementById('installBtn').onclick = async () => {
+                if(installPrompt) { installPrompt.prompt(); const { outcome } = await installPrompt.userChoice; if(outcome==='accepted') document.getElementById('installBtn').classList.add('hidden'); }
+            };
+
+            document.getElementById('btnExportCsv').onclick = exportCSV;
+            document.getElementById('btnExportJson').onclick = exportJSON;
+            setupImport();
+            
+            document.getElementById('toggleReg').onclick = () => {
+                isRegistering = !isRegistering;
+                document.getElementById('toggleReg').innerText = isRegistering ? t('toggle_log') : t('toggle_reg');
+                document.getElementById('loginBtn').innerText = isRegistering ? t('register') : t('login');
+                document.getElementById('authTitle').innerText = isRegistering ? "Register" : "Sync";
+            };
+
+            document.getElementById('viewAllHistoryBtn').onclick=()=>{
+                const c=document.getElementById('fullHistoryList'); c.innerHTML='';
+                state.history.forEach(h=>{
+                    c.innerHTML+=`<div class="history-item"><div>${h.name} (${h.mg}mg)<br><small>${new Date(h.date).toLocaleString()}</small></div><button class="btn btn-danger" onclick="window.delHist('${h.id}')">${t('delete_entry')}</button></div>`;
+                });
+                document.getElementById('historyModal').showModal();
+            };
+            
+            document.getElementById('addPastEntryBtn').onclick = () => {
+                const dateVal = document.getElementById('backdateInput').value;
+                if(!dateVal || !state.selection) return alert("Select pouch and date first");
+                const rec = { id: Date.now().toString(), brand: state.selection.b, name: state.selection.n, mg: state.selection.mg, date: new Date(dateVal).toISOString() };
+                state.history.push(rec); persistHistory(); renderUI(); document.getElementById('historyModal').close(); showToast(t('added'));
+            };
+
+            window.delHist = (id) => { state.history=state.history.filter(h=>h.id!==id); persistHistory(); renderUI(); document.getElementById('historyModal').close(); };
+            
+            document.getElementById('loginBtn').onclick=async()=>{
+                const e=document.getElementById('emailInput').value,p=document.getElementById('passInput').value; 
+                try {
+                    if (isRegistering) { await createUserWithEmailAndPassword(auth,e,p); } else { await signInWithEmailAndPassword(auth,e,p); }
+                    document.getElementById('authModal').close();
+                } catch(err) { alert(err.message); }
+            };
+            document.getElementById('googleAuthBtn').onclick=()=>signInWithPopup(auth,new GoogleAuthProvider()).then(()=>document.getElementById('authModal').close());
+            onAuthStateChanged(auth, async (u) => { if(u){ state.user=u; document.getElementById('syncBtn').innerText="✅"; 
+                onSnapshot(query(collection(db,'users',u.uid,'history'),orderBy('timestamp','desc')),(s)=>{const h=s.docs.map(d=>({id:d.id, brand:d.data().brand, name:d.data().name||d.data().brand, mg:d.data().mg, date:d.data().timestamp.toDate().toISOString()})); if(h.length){state.history=h;persistHistory();renderUI();}});
+                getDoc(doc(db,'users',u.uid,'settings','profile')).then(d => { if(d.exists()) { state.settings = d.data(); persistHistory(); }});
+            }});
+        }
+
+        init();
+    </script>
+</body>
+
+</html>
