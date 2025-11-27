@@ -534,7 +534,8 @@
 <body>
 
     <header>
-        <div class="logo">💊 <span>NicoTracker</span></div>
+        <div class="logo">💊 <span>NicoTracker</span> <span
+                style="font-size:10px; color:#a0aec0; font-weight:400; margin-left:4px;">v1.0.0</span></div>
         <div style="display:flex; gap:10px;">
             <button id="installBtn" class="btn btn-primary hidden" style="padding:8px 12px; font-size:12px;">📲
                 Install</button>
@@ -934,11 +935,11 @@
                 (daysPassed >= totalDays) return 0;
             if (daysPassed <= 0) return startLimit; let calculated = startLimit; if
                 (state.settings.strategy === 'smooth') {
-                    calculated = startLimit - (daysPassed * (startLimit /
-                        totalDays));
+                calculated = startLimit - (daysPassed * (startLimit /
+                    totalDays));
             } else if (state.settings.strategy === 'weekly') {
                 const
-                weeksPassed = Math.floor(daysPassed / 7); calculated = Math.max(0, startLimit - weeksPassed);
+                    weeksPassed = Math.floor(daysPassed / 7); calculated = Math.max(0, startLimit - weeksPassed);
             } else
                 if (state.settings.strategy === 'cutoff') { calculated = startLimit; } return
             Math.floor(calculated);
