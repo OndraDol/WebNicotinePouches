@@ -1,9 +1,14 @@
-const CACHE_NAME = 'nicotracker-v3.3';
+const CACHE_NAME = 'nicotracker-v3.4';
 const APP_SHELL = [
   './',
   './index.html',
   './data.js',
   './manifest.json',
+  './favicon.ico',
+  './apple-touch-icon.png',
+  './icon-192.png',
+  './icon-512.png',
+  './maskable-icon.png',
   'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js',
   'https://www.gstatic.com/firebasejs/10.12.2/firebase-analytics.js',
   'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js',
