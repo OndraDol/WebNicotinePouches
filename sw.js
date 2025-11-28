@@ -50,3 +50,16 @@ self.addEventListener('fetch', (event) => {
     })
   );
 });
+
+self.addEventListener('notificationclick', (event) => {
+  event.notification.close();
+  event.waitUntil(
+    clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
+      const client = clientList.find((c) => c.visibilityState === 'visible');
+      if (client) {
+        return client.focus();
+      }
+      return clients.openWindow('./');
+    })
+  );
+});

@@ -24,8 +24,22 @@
 
     <style>
         :root {
-            --bg: #f8fafc; --card: #ffffff; --text: #0f172a; --muted: #64748b;
-            --primary: #10b981; --primary-dark: #059669; --danger: #ef4444; --border: #e2e8f0;
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --text: #0f172a;
+            --muted: #64748b;
+            --primary: #10b981;
+            --primary-dark: #059669;
+            --danger: #ef4444;
+            --border: #e2e8f0;
+        }
+
+        :root[data-theme="dark"] {
+            --bg: #0f172a;
+            --card: #1e293b;
+            --text: #f8fafc;
+            --muted: #94a3b8;
+            --border: #334155;
         }
 
         * { box-sizing: border-box; }
@@ -40,7 +54,7 @@
         .card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 16px; margin-bottom: 12px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); }
         .btn { border: none; border-radius: 10px; padding: 10px 16px; font-weight: 600; cursor: pointer; font-size: 14px; transition: 0.2s; display: inline-flex; align-items: center; gap: 6px; }
         .btn-primary { background: var(--primary); color: white; }
-        .btn-outline { background: white; border: 1px solid var(--border); color: var(--text); }
+        .btn-outline { background: var(--card); border: 1px solid var(--border); color: var(--text); }
         .btn-danger { background: #fee2e2; color: var(--danger); border: 1px solid #fecaca; }
         .btn:active { transform: scale(0.98); }
         .btn-add { height: 50px; width: 60px; justify-content: center; font-size: 24px; background: var(--primary); color: white; box-shadow: 0 8px 16px -8px rgba(16,185,129,0.6); }
@@ -48,7 +62,7 @@
         .grid { display: grid; gap: 12px; }
         .stats-grid { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
 
-        .stat { border: 1px solid var(--border); border-radius: 12px; padding: 10px; background: white; }
+        .stat { border: 1px solid var(--border); border-radius: 12px; padding: 10px; background: var(--card); }
         .stat .val { font-size: 20px; font-weight: 800; margin-top: 2px; }
         .stat .lbl { font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; }
         .stat .sub { font-size: 11px; color: var(--muted); margin-top: 2px; }
@@ -85,7 +99,7 @@
         /* Modals */
         dialog { border: none; border-radius: 16px; padding: 0; width: min(500px, 95vw); box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); }
         dialog::backdrop { background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(2px); }
-        .modal-head { padding: 16px 20px; font-weight: 700; border-bottom: 1px solid var(--border); background: #f8fafc; display: flex; justify-content: space-between; align-items: center; }
+        .modal-head { padding: 16px 20px; font-weight: 700; border-bottom: 1px solid var(--border); background: var(--bg); display: flex; justify-content: space-between; align-items: center; }
         .modal-body { padding: 20px; }
         .modal-foot { padding: 16px; display: flex; justify-content: flex-end; gap: 10px; border-top: 1px solid var(--border); }
         .hidden { display: none !important; }
@@ -123,18 +137,28 @@
             .log-actions-cta #toggleBackdateBtn { font-size: 13px; }
         }
 
-        #searchModal { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); margin: 0; bottom: auto; height: 80vh; max-height: 600px; width: min(500px, 90vw); border-radius: 16px; border: 2px solid var(--primary); box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2); animation: popIn 0.2s ease-out; }
+        #searchModal { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); margin: 0; bottom: auto; height: 80vh; max-height: 600px; width: min(500px, 90vw); border-radius: 16px; border: 2px solid var(--primary); box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2); animation: popIn 0.2s ease-out; display:flex; flex-direction:column; }
         @keyframes popIn { from { opacity: 0; transform: translate(-50%, -45%) scale(0.95); } to { opacity: 1; transform: translate(-50%, -50%) scale(1); } }
 
-        .search-header { padding: 16px; border-bottom: 1px solid var(--border); display: flex; gap: 10px; align-items: center; background: white; }
-        #searchInput { width: 100%; padding: 12px 16px; border-radius: 10px; border: 1px solid var(--border); font-size: 16px; outline: none; background: #f8fafc; }
-        #searchInput:focus { border-color: var(--primary); background: white; }
-        .search-results { overflow-y: auto; height: calc(100% - 70px); padding: 0 16px 20px; background: white; }
+        .search-header { padding: 16px; border-bottom: 1px solid var(--border); display: flex; gap: 10px; align-items: center; background: var(--card); }
+        #searchInput { width: 100%; padding: 12px 16px; border-radius: 10px; border: 1px solid var(--border); font-size: 16px; outline: none; background: var(--bg); color: var(--text); }
+        #searchInput:focus { border-color: var(--primary); background: var(--card); }
+        .search-results { overflow-y: auto; flex: 1; padding: 0 16px 20px; background: var(--card); }
         .search-item { padding: 12px 0; border-bottom: 1px solid #f1f5f9; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
-        .search-item:hover { background: #f8fafc; }
+        .search-item:hover { background: var(--bg); }
         .search-item strong { display: block; font-size: 14px; margin-bottom: 2px; }
         .search-item small { color: var(--muted); font-size: 12px; }
         .mg-badge { background: #f1f5f9; padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: 700; color: var(--text); }
+
+        .benchmark-card { border: 1px solid var(--border); border-radius: 12px; padding: 12px; background: var(--card); margin-top: 12px; }
+        .benchmark-sub { color: var(--muted); font-size: 12px; margin: 4px 0; }
+        .benchmark-progress { height: 8px; background: #e2e8f0; border-radius: 6px; overflow: hidden; }
+        .benchmark-fill { height: 100%; background: linear-gradient(90deg, #22c55e, #fbbf24, #ef4444); width: 0%; transition: width 0.3s ease; }
+        .badge-custom { background: #fef3c7; color: #b45309; padding: 2px 6px; border-radius: 8px; font-size: 11px; margin-left: 6px; }
+        .custom-form { padding: 12px 16px; border-top: 1px dashed var(--border); background: var(--bg); }
+        .custom-form h4 { margin: 0 0 8px; }
+        .custom-form .grid { grid-template-columns: 1fr 1fr; }
+        .custom-helper { font-size: 12px; color: var(--muted); margin: 8px 0 0; }
     </style>
 </head>
 
@@ -146,6 +170,7 @@
             <button id="installBtn" class="btn btn-primary hidden" style="padding:8px 12px; font-size:12px;">📲 Install</button>
             <button id="langBtn" class="btn btn-outline" style="padding:8px;">🇺🇸 EN</button>
             <button id="syncBtn" class="btn btn-primary" data-i18n="auth_btn">Login</button>
+            <button id="themeToggle" class="btn btn-outline" style="padding:8px;">🌙</button>
             <button id="menuBtn" class="btn btn-outline" style="font-size:18px;">⚙️</button>
         </div>
     </header>
@@ -233,6 +258,19 @@
                     <canvas id="hourlyChart" height="200"></canvas>
                 </div>
             </div>
+            <div id="benchmarkCard" class="benchmark-card">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <div>
+                        <strong>Tvůj profil: <span id="benchmarkLabel">-</span></strong>
+                        <div id="benchmarkMsg" class="benchmark-sub"></div>
+                    </div>
+                    <div id="benchmarkPercentile" class="benchmark-sub" style="font-weight:700;"></div>
+                </div>
+                <div class="benchmark-progress" style="margin-top:10px;">
+                    <div id="benchmarkProgress" class="benchmark-fill"></div>
+                </div>
+                <div id="benchmarkHint" class="benchmark-sub"></div>
+            </div>
         </div>
 
         <!-- Achievements -->
@@ -254,6 +292,9 @@
                 <button id="viewAllHistoryBtn" class="btn btn-outline" style="padding:6px 10px; font-size:12px;" data-i18n="view_all">View All</button>
             </div>
             <div id="historyList"></div>
+            <div style="text-align:center; margin-top:10px;">
+                <button id="loadMoreHistoryBtn" class="btn btn-outline hidden" style="padding:8px 12px;">Načíst starší</button>
+            </div>
         </div>
 
         <div id="quitPromo" class="card promo-banner hidden">
@@ -279,6 +320,23 @@
         <div class="search-header">
             <input type="search" id="searchInput" placeholder="..." autocomplete="off">
             <button class="btn btn-outline" style="border:none; font-size:20px; padding:0 8px;" onclick="document.getElementById('searchModal').close()">✕</button>
+        </div>
+        <div style="padding:12px 16px; border-bottom:1px dashed var(--border); background:var(--card); display:flex; justify-content:space-between; align-items:center; gap:8px;">
+            <div style="font-size:13px; color:var(--muted);">Nenašli jste? Vytvořit vlastní</div>
+            <button id="openCustomFormBtn" class="btn btn-outline" style="padding:8px 12px;">✏️</button>
+        </div>
+        <div id="customPouchForm" class="custom-form hidden">
+            <h4>Vlastní sáček</h4>
+            <div class="grid">
+                <div><label style="font-size:12px; color:var(--muted);">Značka</label><input id="customBrandInput" placeholder="Značka"></div>
+                <div><label style="font-size:12px; color:var(--muted);">Název</label><input id="customNameInput" placeholder="Název"></div>
+            </div>
+            <div style="margin-top:8px;"><label style="font-size:12px; color:var(--muted);">Síla (mg)</label><input type="number" id="customMgInput" placeholder="mg"></div>
+            <div class="custom-helper">Uloženo do zařízení a cloudu po přihlášení.</div>
+            <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:10px;">
+                <button id="cancelCustomPouchBtn" class="btn btn-outline" style="padding:8px 12px;">Zrušit</button>
+                <button id="saveCustomPouchBtn" class="btn btn-primary" style="padding:8px 14px;">Uložit</button>
+            </div>
         </div>
         <div id="searchResults" class="search-results"></div>
     </dialog>
@@ -393,7 +451,7 @@
     </dialog>
 
     <script type="module">
-        import { POUCH_DB } from './data.js';
+        import { POUCH_DB, USER_BENCHMARKS } from './data.js';
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
         import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-analytics.js";
         import { getAuth, signInWithPopup, GoogleAuthProvider, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
@@ -492,18 +550,29 @@
         };
         const t = (key) => { const lang = state?.lang || 'en'; return translations[lang]?.[key] || translations.en[key] || key; };
 
+        const getInitialTheme = () => {
+            const stored = localStorage.getItem('nt_theme');
+            if (stored) return stored;
+            return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        };
+
         // --- STATE ---
         let state = {
-            user: null, lang: localStorage.getItem('nt_lang') || 'en',
+            user: null,
+            lang: localStorage.getItem('nt_lang') || 'en',
             settings: JSON.parse(localStorage.getItem('nt_settings')) || { currency: 'CZK', packPrice: 150, pouchesPerPack: 20, dailyLimit: 10, goal: 'track', createdAt: Date.now() },
             history: JSON.parse(localStorage.getItem('nt_history')) || [],
-            selection: JSON.parse(localStorage.getItem('nt_last_pouch')) || null
+            selection: JSON.parse(localStorage.getItem('nt_last_pouch')) || null,
+            customPouches: JSON.parse(localStorage.getItem('nt_custom_pouches')) || [],
+            historyVisible: 20,
+            theme: getInitialTheme()
         };
         let wizStep = 1; let tempSettings = {}; let currentSearchResults = []; let isRegistering = false;
         let installPrompt = null;
 
         // --- MAIN LOGIC ---
         function init() {
+            applyTheme(state.theme);
             applyLanguage(state.lang); persistHistory(); renderUI(); setupSearch(); setupListeners();
             if (!localStorage.getItem('nt_settings')) openWizard();
             if('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js');
@@ -525,9 +594,59 @@
             state.history.sort((a, b) => new Date(b.date) - new Date(a.date));
             localStorage.setItem('nt_history', JSON.stringify(state.history));
             localStorage.setItem('nt_settings', JSON.stringify(state.settings));
+            localStorage.setItem('nt_custom_pouches', JSON.stringify(state.customPouches));
+            localStorage.setItem('nt_theme', state.theme);
         }
 
         const isFutureDate = (date) => date.getTime() > Date.now();
+
+        const getAllPouches = () => [...state.customPouches, ...POUCH_DB];
+
+        function applyTheme(theme) {
+            state.theme = theme === 'dark' ? 'dark' : 'light';
+            if (state.theme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            } else {
+                document.documentElement.removeAttribute('data-theme');
+            }
+            const toggle = document.getElementById('themeToggle');
+            if (toggle) toggle.innerText = state.theme === 'dark' ? '☀️' : '🌙';
+            persistHistory();
+        }
+
+        function vibrateDevice(pattern = 40) {
+            if (navigator.vibrate) navigator.vibrate(pattern);
+        }
+
+        function ensureNotificationPermission() {
+            if (!('Notification' in window)) return;
+            const asked = localStorage.getItem('nt_notif_prompted');
+            if (asked) return;
+            Notification.requestPermission().finally(() => localStorage.setItem('nt_notif_prompted', '1'));
+        }
+
+        function sendLocalNotification(title, body) {
+            if (!('Notification' in window)) return;
+            if (Notification.permission !== 'granted') return;
+            if (navigator.serviceWorker && navigator.serviceWorker.ready) {
+                navigator.serviceWorker.ready.then((reg) => {
+                    if (reg.showNotification) { reg.showNotification(title, { body }); return; }
+                    new Notification(title, { body });
+                });
+            } else {
+                new Notification(title, { body });
+            }
+        }
+
+        function maybeNotifyLimit(todayCount, limit) {
+            if (!limit) return;
+            const pct = todayCount / limit;
+            if (pct >= 1) {
+                sendLocalNotification('⚠️ Limit dosažen', `Dnes jsi na ${todayCount}/${limit}. Zvaž pauzu.`);
+            } else if (pct >= 0.8) {
+                sendLocalNotification('⚠️ Pozor!', `⚠️ Pozor: Blížíš se k dennímu limitu (${todayCount}/${limit})!`);
+            }
+        }
 
         // --- STATS CALCULATION ---
         function calculateStats() {
@@ -554,8 +673,17 @@
             const yDate = new Date(); yDate.setDate(yDate.getDate()-1);
             const yesterdaySuccess = (days[yDate.toISOString().slice(0,10)] || 0) <= limit;
             const dailyAvg = state.history.length / (Object.keys(days).length || 1);
+            const benchmark = USER_BENCHMARKS.find(b => dailyAvg <= b.max) || USER_BENCHMARKS[USER_BENCHMARKS.length - 1];
 
-            return { streak, savedTotal, yesterdaySuccess, dailyAvg, cleanWeekend };
+            const streakMilestones = [7, 14, 30, 60, 90];
+            const reached = streakMilestones.filter(m => streak >= m).pop();
+            const lastNotified = Number(localStorage.getItem('nt_last_streak_notif') || 0);
+            if (reached && reached > lastNotified && typeof Notification !== 'undefined' && Notification.permission === 'granted') {
+                sendLocalNotification('🔥 Skvělá práce!', `🔥 Skvělá práce! ${reached} dní v řadě jsi dodržel limit.`);
+                localStorage.setItem('nt_last_streak_notif', reached.toString());
+            }
+
+            return { streak, savedTotal, yesterdaySuccess, dailyAvg, cleanWeekend, benchmark };
         }
 
         function calculateDynamicLimit() {
@@ -599,7 +727,7 @@
             qaContainer.querySelectorAll('.quick-chip').forEach((el, i) => {
                 el.onclick = () => {
                     const [b, n] = top[i].split('|');
-                    const full = POUCH_DB.find(p => p.b === b && p.n === n) || { b, n, mg: 0 };
+                    const full = getAllPouches().find(p => p.b === b && p.n === n) || { b, n, mg: 0 };
                     selectPouch(full); addEntry();
                 };
             });
@@ -641,13 +769,18 @@
 
             // History List
             const list = document.getElementById('historyList'); list.innerHTML = '';
-            state.history.slice(0, 5).forEach(h => {
+            const visibleCount = Math.min(state.historyVisible, state.history.length);
+            const visibleHistory = state.history.slice(0, visibleCount);
+            visibleHistory.forEach(h => {
                 list.innerHTML += `<div class="history-item"><div><strong>${h.name || h.brand}</strong> <span style="color:var(--muted)">${h.mg}mg</span></div><div style="font-size:11px; color:var(--muted);">${new Date(h.date).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</div></div>`;
             });
+            const loadMoreBtn = document.getElementById('loadMoreHistoryBtn');
+            loadMoreBtn.classList.toggle('hidden', state.history.length <= visibleCount);
 
             renderBadges(stats);
             renderHealth();
-            renderChart(); 
+            renderBenchmark(stats);
+            renderChart();
             renderHourlyChart();
         }
 
@@ -687,6 +820,19 @@
             });
         }
 
+        function renderBenchmark(stats) {
+            const card = document.getElementById('benchmarkCard');
+            if (!stats || !stats.benchmark) { card.classList.add('hidden'); return; }
+
+            const { benchmark, dailyAvg } = stats;
+            card.classList.remove('hidden');
+            document.getElementById('benchmarkLabel').innerText = benchmark.label;
+            document.getElementById('benchmarkMsg').innerText = benchmark.msg;
+            document.getElementById('benchmarkPercentile').innerText = `${benchmark.percentile}. percentil`;
+            document.getElementById('benchmarkHint').innerText = `Denní průměr: ${dailyAvg.toFixed(1)} sáčků (škála 0-20).`;
+            document.getElementById('benchmarkProgress').style.width = `${Math.min(100, (Math.min(dailyAvg, 20) / 20) * 100)}%`;
+        }
+
         // --- CHART & SEARCH ---
         function renderChart(){
             const days={}; for(let i=13;i>=0;i--){const d=new Date();d.setDate(d.getDate()-i); days[d.toISOString().slice(0,10)]=0;}
@@ -704,35 +850,72 @@
         function setupSearch() {
             const input = document.getElementById('searchInput');
             const results = document.getElementById('searchResults');
-            
-            document.getElementById('openSearchBtn').onclick = () => {
-                input.value = ''; currentSearchResults = POUCH_DB.slice(0, 30); renderList(currentSearchResults);
-                document.getElementById('searchModal').showModal(); input.focus();
+            const toggleCustomForm = (show) => {
+                document.getElementById('customPouchForm').classList.toggle('hidden', show === false);
             };
 
             const renderList = (items) => {
                 results.innerHTML = items.map((item, index) => `
                     <div class="search-item" onclick="window.selectByIndex(${index})">
-                        <div><strong>${item.n}</strong><small>${item.b}</small></div>
+                        <div><strong>${item.n}</strong><small>${item.b}${item.isCustom ? '<span class="badge-custom">✏️ Custom</span>' : ''}</small></div>
                         <div class="mg-badge">${item.mg} mg</div>
                     </div>
                 `).join('');
             };
 
+            document.getElementById('openSearchBtn').onclick = () => {
+                input.value = '';
+                toggleCustomForm(false);
+                currentSearchResults = getAllPouches().slice(0, 30);
+                renderList(currentSearchResults);
+                document.getElementById('searchModal').showModal();
+                vibrateDevice(25);
+                input.focus();
+            };
+
             window.selectByIndex = (index) => { selectPouch(currentSearchResults[index]); document.getElementById('searchModal').close(); };
             input.addEventListener('input', (e) => {
                 const q = e.target.value.toLowerCase().trim();
-                currentSearchResults = q.length < 1 ? [] : POUCH_DB.filter(p => p.n.toLowerCase().includes(q) || p.b.toLowerCase().includes(q)).slice(0, 50);
+                currentSearchResults = q.length < 1 ? [] : getAllPouches().filter(p => p.n.toLowerCase().includes(q) || p.b.toLowerCase().includes(q)).slice(0, 50);
                 renderList(currentSearchResults);
             });
+
+            document.getElementById('openCustomFormBtn').onclick = () => { toggleCustomForm(); vibrateDevice(20); };
+            document.getElementById('cancelCustomPouchBtn').onclick = () => toggleCustomForm(false);
+            document.getElementById('saveCustomPouchBtn').onclick = async () => {
+                const brand = document.getElementById('customBrandInput').value.trim();
+                const name = document.getElementById('customNameInput').value.trim();
+                const mg = Number(document.getElementById('customMgInput').value);
+                if (!brand || !name || mg < 0 || Number.isNaN(mg)) return showToast('Vyplňte značku, název i sílu.');
+
+                const pouch = { id: Date.now().toString(), b: brand, n: name, mg, isCustom: true };
+                state.customPouches.unshift(pouch);
+                persistHistory();
+                selectPouch(pouch);
+                currentSearchResults = getAllPouches().slice(0, 50);
+                renderList(currentSearchResults);
+                toggleCustomForm(false);
+                document.getElementById('customBrandInput').value = '';
+                document.getElementById('customNameInput').value = '';
+                document.getElementById('customMgInput').value = '';
+                vibrateDevice(30);
+                showToast('Vlastní sáček uložen');
+
+                if(state.user) await setDoc(doc(db,'users',state.user.uid,'custom_pouches',pouch.id),{ ...pouch, createdAt: Timestamp.now() });
+            };
         }
 
         function selectPouch(item) { state.selection = item; localStorage.setItem('nt_last_pouch', JSON.stringify(item)); renderUI(); }
 
         async function addEntry() {
             if(!state.selection) return document.getElementById('openSearchBtn').click();
+            ensureNotificationPermission();
             const rec = { id: Date.now().toString(), brand: state.selection.b, name: state.selection.n, mg: state.selection.mg, date: new Date().toISOString() };
             state.history.unshift(rec); persistHistory(); renderUI(); showToast(t('added'));
+            vibrateDevice(50);
+            const today = new Date().toISOString().slice(0,10);
+            const todayCount = state.history.filter(h => h.date.startsWith(today)).length;
+            maybeNotifyLimit(todayCount, calculateDynamicLimit());
             if(state.user) setDoc(doc(db,'users',state.user.uid,'history',rec.id),{ ...rec, timestamp:Timestamp.now() });
         }
 
@@ -755,8 +938,15 @@
             if(!dateVal || !state.selection) return showToast("Select pouch and date first");
             const parsedDate = new Date(`${dateVal}T${timeVal}`);
             if(isNaN(parsedDate) || isFutureDate(parsedDate)) return showToast('Date must not be in the future');
+            ensureNotificationPermission();
             const rec = { id: Date.now().toString(), brand: state.selection.b, name: state.selection.n, mg: state.selection.mg, date: parsedDate.toISOString() };
             state.history.push(rec); persistHistory(); renderUI(); showToast(t('added'));
+            vibrateDevice(50);
+            const todayStr = new Date().toISOString().slice(0,10);
+            if (rec.date.startsWith(todayStr)) {
+                const todayCount = state.history.filter(h => h.date.startsWith(todayStr)).length;
+                maybeNotifyLimit(todayCount, calculateDynamicLimit());
+            }
             document.getElementById('backdatePanel').classList.add('hidden');
             if(state.user) await setDoc(doc(db,'users',state.user.uid,'history',rec.id),{ ...rec, timestamp:Timestamp.fromDate(parsedDate) });
         }
@@ -766,13 +956,15 @@
             modal.dataset.step = step.toString();
             document.getElementById('deleteConfirmText').innerText = t(step === 1 ? 'delete_history_confirm1' : 'delete_history_confirm2');
             document.getElementById('confirmDeleteNextBtn').innerText = t(step === 1 ? 'next' : 'delete_all_history');
+            vibrateDevice(25);
             modal.showModal();
         }
 
         async function clearHistory() {
-            state.history = []; persistHistory(); renderUI();
+            state.history = []; state.historyVisible = 20; persistHistory(); renderUI();
             document.getElementById('historyModal').close();
             showToast(t('history_cleared'));
+            vibrateDevice([40, 40, 40]);
 
             if(state.user) {
                 try {
@@ -783,7 +975,7 @@
         }
 
         // --- WIZARD LOGIC ---
-        window.openWizard = () => { wizStep = 1; tempSettings = { ...state.settings, goal: undefined }; showStep(1); document.getElementById('settingsModal').showModal(); };
+        window.openWizard = () => { wizStep = 1; tempSettings = { ...state.settings, goal: undefined }; showStep(1); document.getElementById('settingsModal').showModal(); vibrateDevice(20); };
         window.setWizOption = (key, val) => {
             tempSettings[key] = val;
             document.querySelectorAll(`#step${wizStep} .selection-card`).forEach(el => el.classList.remove('active'));
@@ -889,10 +1081,12 @@
         function setupListeners() {
             document.getElementById('langBtn').onclick=()=>applyLanguage(state.lang==='en'?'cs':'en');
             document.getElementById('menuBtn').onclick=window.openWizard;
-            document.getElementById('syncBtn').onclick=()=>document.getElementById('authModal').showModal();
+            document.getElementById('themeToggle').onclick=()=>applyTheme(state.theme === 'dark' ? 'light' : 'dark');
+            document.getElementById('syncBtn').onclick=()=>{ document.getElementById('authModal').showModal(); vibrateDevice(20); };
             document.getElementById('addBtn').onclick=addEntry;
-            document.getElementById('toggleBackdateBtn').onclick=toggleBackdatePanel;
+            document.getElementById('toggleBackdateBtn').onclick=()=>{ toggleBackdatePanel(); vibrateDevice(15); };
             document.getElementById('confirmBackdateBtn').onclick=addPastEntry;
+            document.getElementById('loadMoreHistoryBtn').onclick=()=>{ state.historyVisible += 20; renderUI(); vibrateDevice(15); };
             document.getElementById('promoBtn').onclick=()=>{ openWizard(); window.setWizOption('goal','quit'); wizStep=2; showStep(2); };
             
             document.getElementById('installBtn').onclick = async () => {
@@ -916,6 +1110,7 @@
                     c.innerHTML+=`<div class="history-item"><div>${h.name} (${h.mg}mg)<br><small>${new Date(h.date).toLocaleString()}</small></div><button class="btn btn-danger" onclick="window.delHist('${h.id}')">${t('delete_entry')}</button></div>`;
                 });
                 document.getElementById('historyModal').showModal();
+                vibrateDevice(20);
             };
 
             document.getElementById('deleteAllHistoryBtn').onclick = () => {
@@ -933,7 +1128,7 @@
 
             document.getElementById('cancelDeleteHistoryBtn').onclick = () => document.getElementById('confirmDeleteModal').close();
 
-            window.delHist = (id) => { state.history=state.history.filter(h=>h.id!==id); persistHistory(); renderUI(); document.getElementById('historyModal').close(); };
+            window.delHist = (id) => { state.history=state.history.filter(h=>h.id!==id); persistHistory(); renderUI(); vibrateDevice([40,30,40]); document.getElementById('historyModal').close(); };
             
             document.getElementById('loginBtn').onclick=async()=>{
                 const e=document.getElementById('emailInput').value,p=document.getElementById('passInput').value;
@@ -943,9 +1138,20 @@
                 } catch(err) { showToast(err.message); }
             };
             document.getElementById('googleAuthBtn').onclick=()=>signInWithPopup(auth,new GoogleAuthProvider()).then(()=>document.getElementById('authModal').close());
-            onAuthStateChanged(auth, async (u) => { if(u){ state.user=u; document.getElementById('syncBtn').innerText="✅"; 
+            onAuthStateChanged(auth, async (u) => { if(u){ state.user=u; document.getElementById('syncBtn').innerText="✅";
                 onSnapshot(query(collection(db,'users',u.uid,'history'),orderBy('timestamp','desc')),(s)=>{const h=s.docs.map(d=>({id:d.id, brand:d.data().brand, name:d.data().name||d.data().brand, mg:d.data().mg, date:d.data().timestamp.toDate().toISOString()})); if(h.length){state.history=h;persistHistory();renderUI();}});
                 getDoc(doc(db,'users',u.uid,'settings','profile')).then(d => { if(d.exists()) { state.settings = d.data(); persistHistory(); }});
+                getDocs(collection(db,'users',u.uid,'custom_pouches')).then((snap)=>{
+                    const remote = snap.docs.map(docSnap => ({ id: docSnap.id, ...docSnap.data(), isCustom: true }));
+                    if(remote.length){
+                        const existingIds = new Set(state.customPouches.map(p => p.id || `${p.b}-${p.n}-${p.mg}`));
+                        remote.forEach(item => {
+                            const key = item.id || `${item.b}-${item.n}-${item.mg}`;
+                            if(!existingIds.has(key)) { state.customPouches.push(item); existingIds.add(key); }
+                        });
+                        persistHistory();
+                    }
+                });
             }});
         }
 
