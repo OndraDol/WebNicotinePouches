@@ -653,3 +653,10 @@ export const POUCH_DB = [
   { b: "White Fox", n: "White Fox Full Charge", mg: 16.5 },
   { b: "White Fox", n: "White Fox Black Edition", mg: 12.0 }
 ];
+
+export const USER_BENCHMARKS = [
+  { max: 3, label: "Top 10% (Casual)", percentile: 90, msg: "Jsi elita! Minimální závislost." },
+  { max: 8, label: "Průměr (Average)", percentile: 50, msg: "Jsi v průměru. Pozor na zvyšování." },
+  { max: 15, label: "Nadprůměr (Heavy)", percentile: 20, msg: "Vysoká spotřeba. Zvaž omezení." },
+  { max: 999, label: "Extrém (Ultra)", percentile: 5, msg: "Kritická zóna. Doporučujeme plán odvykání." }
+];
