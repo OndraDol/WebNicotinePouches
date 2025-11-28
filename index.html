@@ -99,6 +99,7 @@
         /* Modals */
         dialog { border: none; border-radius: 16px; padding: 0; width: min(500px, 95vw); box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); }
         dialog::backdrop { background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(2px); }
+        dialog:not([open]) { display: none; }
         .modal-head { padding: 16px 20px; font-weight: 700; border-bottom: 1px solid var(--border); background: var(--bg); display: flex; justify-content: space-between; align-items: center; }
         .modal-body { padding: 20px; }
         .modal-foot { padding: 16px; display: flex; justify-content: flex-end; gap: 10px; border-top: 1px solid var(--border); }
@@ -137,7 +138,8 @@
             .log-actions-cta #toggleBackdateBtn { font-size: 13px; }
         }
 
-        #searchModal { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); margin: 0; bottom: auto; height: 80vh; max-height: 600px; width: min(500px, 90vw); border-radius: 16px; border: 2px solid var(--primary); box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2); animation: popIn 0.2s ease-out; display:flex; flex-direction:column; }
+        #searchModal { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); margin: 0; bottom: auto; height: 80vh; max-height: 600px; width: min(500px, 90vw); border-radius: 16px; border: 2px solid var(--primary); box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2); animation: popIn 0.2s ease-out; flex-direction:column; }
+        #searchModal[open] { display: flex; }
         @keyframes popIn { from { opacity: 0; transform: translate(-50%, -45%) scale(0.95); } to { opacity: 1; transform: translate(-50%, -50%) scale(1); } }
 
         .search-header { padding: 16px; border-bottom: 1px solid var(--border); display: flex; gap: 10px; align-items: center; background: var(--card); }
