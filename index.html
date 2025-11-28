@@ -197,7 +197,7 @@
         <div class="card" style="margin-top:4px;">
             <h3 style="margin:0 0 12px;" data-i18n="log_usage">Log Usage</h3>
             <div id="quickActions" class="quick-actions"></div>
-            <div class="grid log-actions">
+            <div class="grid" style="grid-template-columns: 1fr auto auto; align-items: stretch;">
                 <button id="openSearchBtn" class="selector-btn">
                     <div>
                         <div style="font-size:11px; color:var(--muted);" data-i18n="selected_pouch">Selected</div>
@@ -205,10 +205,8 @@
                     </div>
                     <span style="font-size:18px;">🔍</span>
                 </button>
-                <div class="log-actions-cta">
-                    <button id="addBtn" class="btn btn-primary btn-add">➕</button>
-                    <button id="toggleBackdateBtn" class="btn btn-outline" style="white-space:nowrap;" data-i18n="add_past_entry">Add Past Entry</button>
-                </div>
+                <button id="addBtn" class="btn btn-primary btn-add">➕</button>
+                <button id="toggleBackdateBtn" class="btn btn-outline" style="height:50px; white-space:nowrap;" data-i18n="add_past_entry">Add Past Entry</button>
             </div>
             <div id="backdatePanel" class="grid hidden" style="grid-template-columns: 1fr 1fr auto; gap:10px; margin-top:10px; align-items:end;">
                 <div>
