@@ -68,6 +68,7 @@
         .btn-danger { background: #fee2e2; color: var(--danger); border: 1px solid #fecaca; }
         .btn:active { transform: scale(0.98); }
         .btn-add { height: 50px; width: 60px; justify-content: center; font-size: 24px; background: linear-gradient(135deg, #16a34a, #0f9f6e); color: #ffffff; box-shadow: 0 8px 16px -8px rgba(16,185,129,0.6); border: 1px solid #0f9f6e; }
+        .btn-add svg { width: 26px; height: 26px; stroke: #ffffff; stroke-width: 3; fill: none; stroke-linecap: round; stroke-linejoin: round; display: block; }
 
         .grid { display: grid; gap: 12px; }
         .stats-grid { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
@@ -242,7 +243,11 @@
                     </div>
                     <span style="font-size:18px;">🔍</span>
                 </button>
-                <button id="addBtn" class="btn btn-primary btn-add">➕</button>
+                <button id="addBtn" class="btn btn-primary btn-add" aria-label="Přidat záznam" title="Přidat záznam">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M12 5v14M5 12h14" />
+                    </svg>
+                </button>
                 <button id="toggleBackdateBtn" class="btn btn-outline" style="height:50px; white-space:nowrap;" data-i18n="add_past_entry">Add Past Entry</button>
             </div>
             <div id="backdatePanel" class="grid hidden" style="grid-template-columns: 1fr 1fr auto; gap:10px; margin-top:10px; align-items:end;">
