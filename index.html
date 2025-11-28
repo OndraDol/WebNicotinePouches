@@ -479,8 +479,14 @@
             messagingSenderId: "42131125480", 
             appId: "1:42131125480:web:8022461f0a790a5677855d" 
         };
-        const app = initializeApp(firebaseConfig); 
-        const analytics = getAnalytics(app); 
+        const app = initializeApp(firebaseConfig);
+        // Analytics can fail to initialize if Measurement ID isn't available (e.g. in localhost or blocked envs)
+        let analytics;
+        try {
+            analytics = getAnalytics(app);
+        } catch (err) {
+            console.warn('Analytics disabled', err?.message || err);
+        }
         const auth = getAuth(app); 
         const db = getFirestore(app);
 
@@ -848,12 +854,14 @@
 
         // --- CHART & SEARCH ---
         function renderChart(){
+            if (typeof Chart === 'undefined') return;
             const days={}; for(let i=13;i>=0;i--){const d=new Date();d.setDate(d.getDate()-i); days[d.toISOString().slice(0,10)]=0;}
             state.history.forEach(h=>{const k=h.date.slice(0,10);if(days[k]!==undefined)days[k]++;});
             const ctx=document.getElementById('trendChart'); if(window.trendChartInst)window.trendChartInst.destroy();
             window.trendChartInst=new Chart(ctx,{type:'line',data:{labels:Object.keys(days).map(d=>d.slice(5)),datasets:[{label:'Pcs',data:Object.values(days),borderColor:'#10b981',backgroundColor:'rgba(16,185,129,0.1)',fill:true,tension:0.4}]},options:{plugins:{legend:{display:false}},scales:{y:{beginAtZero:true}}}});
         }
         function renderHourlyChart() {
+            if (typeof Chart === 'undefined') return;
             const hours=Array.from({length:24},(_,i)=>({l:i,c:0}));
             state.history.forEach(h=>hours[new Date(h.date).getHours()].c++);
             const ctx=document.getElementById('hourlyChart'); if(window.hourlyChartInst)window.hourlyChartInst.destroy();
