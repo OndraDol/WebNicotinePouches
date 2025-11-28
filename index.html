@@ -47,7 +47,7 @@
         .shell { max-width: 1100px; margin: 0 auto; padding: 20px 16px; }
 
         header { background: var(--card); border-bottom: 1px solid var(--border); padding: 16px 20px; position: sticky; top: 0; z-index: 50; display: flex; justify-content: space-between; align-items: center; }
-        .logo { font-weight: 800; font-size: 20px; color: var(--text); display: flex; align-items: center; gap: 6px; }
+        .logo { font-weight: 800; font-size: 20px; color: var(--text); display: flex; align-items: center; gap: 6px; text-decoration: none; }
         .logo span { color: var(--primary); }
 
         /* UI Components */
@@ -167,7 +167,7 @@
 <body>
 
     <header>
-        <div class="logo">🧂 <span>NicoTracker</span> <span style="font-size:10px; color:#a0aec0; font-weight:400; margin-left:4px;">v1.0.1</span></div>
+        <a href="/" class="logo" aria-label="NicoTracker home">🧂 <span>NicoTracker</span> <span style="font-size:10px; color:#a0aec0; font-weight:400; margin-left:4px;">v1.0.1</span></a>
         <div style="display:flex; gap:10px;">
             <button id="installBtn" class="btn btn-primary hidden" style="padding:8px 12px; font-size:12px;">📲 Install</button>
             <button id="langBtn" class="btn btn-outline" style="padding:8px;">🇺🇸 EN</button>
@@ -668,9 +668,42 @@
         }
 
         // --- STATS CALCULATION ---
+        const DAY_MS = 1000 * 60 * 60 * 24;
+
+        function getDynamicLimitForDate(dateInput = new Date()) {
+            const baseLimit = Number(state.settings.dailyLimit) || 0;
+            if (state.settings.goal !== 'quit') return baseLimit;
+
+            const date = new Date(dateInput);
+            const start = new Date(state.settings.createdAt || Date.now());
+            const end = new Date(state.settings.targetDate || start);
+            const strategy = state.settings.strategy || 'smooth';
+
+            if (!isFinite(end.getTime())) return baseLimit;
+
+            const totalDays = (end - start) / DAY_MS;
+            const daysPassed = (date - start) / DAY_MS;
+
+            if (!isFinite(totalDays) || totalDays <= 0) return baseLimit;
+            if (daysPassed >= totalDays) return 0;
+            if (daysPassed <= 0) return baseLimit;
+
+            let calculated = baseLimit;
+            if (strategy === 'smooth') {
+                calculated = baseLimit - (daysPassed * (baseLimit / totalDays));
+            } else if (strategy === 'weekly') {
+                const weeksPassed = Math.floor(daysPassed / 7);
+                calculated = baseLimit - weeksPassed;
+            } else if (strategy === 'cutoff') {
+                calculated = baseLimit;
+            }
+
+            return Math.max(0, Math.floor(calculated));
+        }
+
         function calculateStats() {
             const days = {}; state.history.forEach(h => { const d = h.date.slice(0,10); days[d] = (days[d] || 0) + 1; });
-            const limit = state.settings.dailyLimit || 10;
+            const limit = getDynamicLimitForDate();
 
             const today = new Date();
             const sunday = new Date(today); sunday.setHours(0,0,0,0); sunday.setDate(sunday.getDate() - sunday.getDay());
@@ -686,8 +719,11 @@
                 if ((days[dStr] || 0) <= limit) { streak++; checkDate.setDate(checkDate.getDate() - 1); } else break;
             }
             
-            let savedTotal = 0; const unitPrice = state.settings.packPrice / state.settings.pouchesPerPack;
-            Object.keys(days).forEach(d => { if(days[d] < limit) savedTotal += (limit - days[d]) * unitPrice; });
+            let savedTotal = 0; const unitPrice = state.settings.pouchesPerPack ? state.settings.packPrice / state.settings.pouchesPerPack : 0;
+            Object.keys(days).forEach(d => {
+                const dayLimit = getDynamicLimitForDate(new Date(d));
+                if (days[d] < dayLimit) savedTotal += (dayLimit - days[d]) * unitPrice;
+            });
             
             const yDate = new Date(); yDate.setDate(yDate.getDate()-1);
             const yesterdaySuccess = (days[yDate.toISOString().slice(0,10)] || 0) <= limit;
@@ -705,31 +741,7 @@
             return { streak, savedTotal, yesterdaySuccess, dailyAvg, cleanWeekend, benchmark };
         }
 
-        function calculateDynamicLimit() {
-            if (state.settings.goal !== 'quit') return state.settings.dailyLimit;
-            
-            const start = new Date(state.settings.createdAt || Date.now());
-            const end = new Date(state.settings.targetDate || Date.now());
-            const now = new Date();
-            
-            const totalDays = (end - start) / (1000 * 60 * 60 * 24);
-            const daysPassed = (now - start) / (1000 * 60 * 60 * 24);
-            const startLimit = state.settings.dailyLimit;
-            
-            if (daysPassed >= totalDays) return 0;
-            if (daysPassed <= 0) return startLimit;
-            
-            let calculated = startLimit;
-            if (state.settings.strategy === 'smooth') {
-                calculated = startLimit - (daysPassed * (startLimit / totalDays));
-            } else if (state.settings.strategy === 'weekly') {
-                const weeksPassed = Math.floor(daysPassed / 7);
-                calculated = Math.max(0, startLimit - weeksPassed);
-            } else if (state.settings.strategy === 'cutoff') {
-                calculated = startLimit;
-            }
-            return Math.floor(calculated);
-        }
+        function calculateDynamicLimit() { return getDynamicLimitForDate(new Date()); }
 
         // --- RENDERERS ---
         function renderUI() {
@@ -759,7 +771,7 @@
             // Stats Dashboard
             document.getElementById('valToday').innerText = todayEntries.length;
             document.getElementById('valTodayNote').innerText = t('pouches_used');
-            document.getElementById('valLimit').innerText = `${t('limit_label')}: ${limit}`;
+            document.getElementById('valLimit').innerText = `${t('limit_label')}: ${limit ?? 0}`;
             document.getElementById('valStreak').innerHTML = `${stats.streak} <span style="font-size:14px">${t('days_recorded')}</span>`;
 
             const savedVisible = state.settings.goal === 'quit';
@@ -776,8 +788,8 @@
             // Quit Banner
             if (state.settings.goal === 'quit') {
                 document.getElementById('quitBanner').classList.remove('hidden');
-                document.getElementById('quitTarget').innerText = limit;
-                const pct = Math.min(100, (todayEntries.length / limit) * 100);
+                document.getElementById('quitTarget').innerText = limit ?? 0;
+                const pct = limit <= 0 ? (todayEntries.length > 0 ? 100 : 0) : Math.min(100, (todayEntries.length / limit) * 100);
                 document.getElementById('quitProgress').style.width = pct + '%';
                 document.getElementById('quitProgress').style.background = pct > 100 ? 'var(--danger)' : 'var(--primary)';
             } else {
