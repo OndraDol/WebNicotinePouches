@@ -43,6 +43,7 @@
         .btn-outline { background: white; border: 1px solid var(--border); color: var(--text); }
         .btn-danger { background: #fee2e2; color: var(--danger); border: 1px solid #fecaca; }
         .btn:active { transform: scale(0.98); }
+        .btn-add { height: 50px; width: 60px; justify-content: center; font-size: 24px; background: var(--primary); color: white; box-shadow: 0 8px 16px -8px rgba(16,185,129,0.6); }
 
         .grid { display: grid; gap: 12px; }
         .stats-grid { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
@@ -111,6 +112,16 @@
         .selector-btn:active { background: #f8fafc; }
         .quick-actions { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; margin-bottom: 12px; scrollbar-width: none; }
         .quick-chip { flex-shrink: 0; background: #ecfdf5; color: var(--primary-dark); border: 1px solid #a7f3d0; padding: 8px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; cursor: pointer; user-select: none; }
+
+        .log-actions { grid-template-columns: 1fr 0.85fr; align-items: start; }
+        .log-actions-cta { display: flex; flex-direction: column; gap: 8px; align-items: center; justify-content: center; }
+        .log-actions-cta #addBtn { align-self: center; }
+        .log-actions-cta #toggleBackdateBtn { width: 100%; height: 42px; font-size: 12px; padding: 8px 12px; color: var(--muted); border-color: #e2e8f0; background: #f8fafc; }
+        @media (max-width: 640px) {
+            .log-actions { grid-template-columns: 1fr; }
+            .log-actions-cta { width: 100%; }
+            .log-actions-cta #toggleBackdateBtn { font-size: 13px; }
+        }
 
         #searchModal { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); margin: 0; bottom: auto; height: 80vh; max-height: 600px; width: min(500px, 90vw); border-radius: 16px; border: 2px solid var(--primary); box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2); animation: popIn 0.2s ease-out; }
         @keyframes popIn { from { opacity: 0; transform: translate(-50%, -45%) scale(0.95); } to { opacity: 1; transform: translate(-50%, -50%) scale(1); } }
@@ -186,7 +197,7 @@
         <div class="card" style="margin-top:4px;">
             <h3 style="margin:0 0 12px;" data-i18n="log_usage">Log Usage</h3>
             <div id="quickActions" class="quick-actions"></div>
-            <div class="grid" style="grid-template-columns: 1fr auto;">
+            <div class="grid log-actions">
                 <button id="openSearchBtn" class="selector-btn">
                     <div>
                         <div style="font-size:11px; color:var(--muted);" data-i18n="selected_pouch">Selected</div>
@@ -194,7 +205,21 @@
                     </div>
                     <span style="font-size:18px;">🔍</span>
                 </button>
-                <button id="addBtn" class="btn btn-outline" style="height:50px; width:60px; justify-content:center; font-size:24px; background:white;">➕</button>
+                <div class="log-actions-cta">
+                    <button id="addBtn" class="btn btn-primary btn-add">➕</button>
+                    <button id="toggleBackdateBtn" class="btn btn-outline" style="white-space:nowrap;" data-i18n="add_past_entry">Add Past Entry</button>
+                </div>
+            </div>
+            <div id="backdatePanel" class="grid hidden" style="grid-template-columns: 1fr 1fr auto; gap:10px; margin-top:10px; align-items:end;">
+                <div>
+                    <label style="font-size:12px; color:var(--muted);" data-i18n="backdate_date">Date</label>
+                    <input type="date" id="backdateDate">
+                </div>
+                <div>
+                    <label style="font-size:12px; color:var(--muted);" data-i18n="backdate_time">Time</label>
+                    <input type="time" id="backdateTime">
+                </div>
+                <button id="confirmBackdateBtn" class="btn btn-primary" style="height:48px; align-self:flex-end;" data-i18n="add_past_entry">Add Past Entry</button>
             </div>
         </div>
 
@@ -263,14 +288,25 @@
     <!-- Full History Modal -->
     <dialog id="historyModal">
         <div class="modal-head"><span data-i18n="history_modal_title">Full History</span></div>
-        <div class="modal-body grid" style="gap:12px;">
-            <div><label style="font-size:12px; color:var(--muted);" data-i18n="pick_date">Pick Date</label><input type="datetime-local" id="backdateInput"></div>
-            <div style="font-size:12px; color:var(--muted);" data-i18n="past_entry_help">Hint</div>
-            <button id="addPastEntryBtn" class="btn btn-primary" style="width:100%;" data-i18n="add_past_entry">Add</button>
-            <div style="border-top:1px solid var(--border); margin:8px 0;"></div>
+        <div class="modal-body">
             <div id="fullHistoryList" style="max-height:300px; overflow-y:auto;"></div>
         </div>
-        <div class="modal-foot"><button class="btn btn-outline" onclick="document.getElementById('historyModal').close()" data-i18n="close">Close</button></div>
+        <div class="modal-foot" style="justify-content: space-between;">
+            <button id="deleteAllHistoryBtn" class="btn btn-danger" data-i18n="delete_all_history">Delete All</button>
+            <button class="btn btn-outline" onclick="document.getElementById('historyModal').close()" data-i18n="close">Close</button>
+        </div>
+    </dialog>
+
+    <!-- Delete History Confirm Modal -->
+    <dialog id="confirmDeleteModal">
+        <div class="modal-head"><span data-i18n="delete_all_history">Delete All</span></div>
+        <div class="modal-body">
+            <p id="deleteConfirmText" style="margin:0; font-weight:600; color:var(--text);"></p>
+        </div>
+        <div class="modal-foot" style="justify-content: space-between;">
+            <button id="cancelDeleteHistoryBtn" class="btn btn-outline" data-i18n="close">Close</button>
+            <button id="confirmDeleteNextBtn" class="btn btn-danger">OK</button>
+        </div>
     </dialog>
 
     <!-- Settings Wizard Modal -->
@@ -363,7 +399,7 @@
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
         import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-analytics.js";
         import { getAuth, signInWithPopup, GoogleAuthProvider, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
-        import { getFirestore, doc, setDoc, getDoc, collection, onSnapshot, query, orderBy, Timestamp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+        import { getFirestore, doc, setDoc, getDoc, collection, onSnapshot, query, orderBy, Timestamp, deleteDoc, getDocs } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
 
         // --- RESTORED API CONFIG ---
         const firebaseConfig = { 
@@ -419,8 +455,11 @@
                 strat_cutoff_title: "Cold Turkey", strat_smooth_desc: "Gradually taper your daily limit to the quit date for a gentle landing.",
                 strat_weekly_desc: "Reduce your daily cap by one pouch every week to build momentum.", strat_cutoff_desc: "Stay on your current limit until the target date, then stop completely.",
                 start_limit: "Daily Limit", target_date: "Target Date", back: "Back", next: "Next", finish: "Finish",
-                data_management: "Data Management", selected_pouch: "Selected", search_placeholder: "Search brand or flavor...", 
+                data_management: "Data Management", selected_pouch: "Selected", search_placeholder: "Search brand or flavor...",
                 select_placeholder: "Select a pouch...", past_entry_help: "To add past entry, first select a pouch on dashboard.",
+                backdate_date: "Date", backdate_time: "Time", delete_all_history: "Delete All",
+                delete_history_confirm1: "Delete entire history?", delete_history_confirm2: "This cannot be undone. Proceed?",
+                history_cleared: "History cleared", history_empty: "History is already empty",
                 quit_status_active: "Plan active", auth_btn: "Sync / Data", auth_title: "Sync & Backup", login: "Log In", register: "Register", toggle_reg: "Need account? Register", toggle_log: "Have account? Login",
                 currency: "Currency", pack_price: "Price/Can", pouches_pack: "Pcs/Can", close: "Close", delete_entry: "Delete", added: "Added!",
                 just_now: "Just now", hours_ago: "h ago", mins_ago: "m ago",
@@ -440,8 +479,11 @@
                 strat_weekly_desc: "Každý týden ubereš 1 sáček z denního limitu, aby se návyk lámal postupně.",
                 strat_cutoff_desc: "Držíš současný limit až do cílového dne a pak skončíš úplně.",
                 start_limit: "Denní Limit", target_date: "Datum konce", back: "Zpět", next: "Další", finish: "Hotovo",
-                data_management: "Správa dat", selected_pouch: "Vybráno", search_placeholder: "Hledat značku nebo příchuť...", 
+                data_management: "Správa dat", selected_pouch: "Vybráno", search_placeholder: "Hledat značku nebo příchuť...",
                 select_placeholder: "Vyberte sáček...", past_entry_help: "Pro zpětné vložení nejdřív vyberte sáček na hl. stránce.",
+                backdate_date: "Datum", backdate_time: "Čas", delete_all_history: "Smazat vše",
+                delete_history_confirm1: "Smazat celou historii?", delete_history_confirm2: "Opravdu to chcete udělat?", history_cleared: "Historie smazána",
+                history_empty: "Historie je prázdná",
                 quit_status_active: "Plán aktivní", auth_btn: "Sync / Data", auth_title: "Záloha dat", login: "Přihlásit", register: "Registrovat", toggle_reg: "Registrovat se", toggle_log: "Mám účet",
                 currency: "Měna", pack_price: "Cena/Puk", pouches_pack: "Ks/Puk", close: "Zavřít", delete_entry: "Smazat", added: "Přidáno!",
                 just_now: "Právě teď", hours_ago: "h zpět", mins_ago: "m zpět",
@@ -696,6 +738,52 @@
             if(state.user) setDoc(doc(db,'users',state.user.uid,'history',rec.id),{ ...rec, timestamp:Timestamp.now() });
         }
 
+        function setBackdateDefaults() {
+            const now = new Date();
+            document.getElementById('backdateDate').value = now.toISOString().slice(0,10);
+            document.getElementById('backdateTime').value = now.toISOString().slice(11,16);
+        }
+
+        function toggleBackdatePanel() {
+            const panel = document.getElementById('backdatePanel');
+            const isHidden = panel.classList.contains('hidden');
+            if(isHidden) setBackdateDefaults();
+            panel.classList.toggle('hidden');
+        }
+
+        async function addPastEntry() {
+            const dateVal = document.getElementById('backdateDate').value;
+            const timeVal = document.getElementById('backdateTime').value || '00:00';
+            if(!dateVal || !state.selection) return showToast("Select pouch and date first");
+            const parsedDate = new Date(`${dateVal}T${timeVal}`);
+            if(isNaN(parsedDate) || isFutureDate(parsedDate)) return showToast('Date must not be in the future');
+            const rec = { id: Date.now().toString(), brand: state.selection.b, name: state.selection.n, mg: state.selection.mg, date: parsedDate.toISOString() };
+            state.history.push(rec); persistHistory(); renderUI(); showToast(t('added'));
+            document.getElementById('backdatePanel').classList.add('hidden');
+            if(state.user) await setDoc(doc(db,'users',state.user.uid,'history',rec.id),{ ...rec, timestamp:Timestamp.fromDate(parsedDate) });
+        }
+
+        function openDeleteConfirm(step = 1) {
+            const modal = document.getElementById('confirmDeleteModal');
+            modal.dataset.step = step.toString();
+            document.getElementById('deleteConfirmText').innerText = t(step === 1 ? 'delete_history_confirm1' : 'delete_history_confirm2');
+            document.getElementById('confirmDeleteNextBtn').innerText = t(step === 1 ? 'next' : 'delete_all_history');
+            modal.showModal();
+        }
+
+        async function clearHistory() {
+            state.history = []; persistHistory(); renderUI();
+            document.getElementById('historyModal').close();
+            showToast(t('history_cleared'));
+
+            if(state.user) {
+                try {
+                    const snap = await getDocs(collection(db,'users',state.user.uid,'history'));
+                    await Promise.all(snap.docs.map(d => deleteDoc(d.ref)));
+                } catch(err) { console.error('Failed to clear remote history', err); }
+            }
+        }
+
         // --- WIZARD LOGIC ---
         window.openWizard = () => { wizStep = 1; tempSettings = { ...state.settings, goal: undefined }; showStep(1); document.getElementById('settingsModal').showModal(); };
         window.setWizOption = (key, val) => {
@@ -805,6 +893,8 @@
             document.getElementById('menuBtn').onclick=window.openWizard;
             document.getElementById('syncBtn').onclick=()=>document.getElementById('authModal').showModal();
             document.getElementById('addBtn').onclick=addEntry;
+            document.getElementById('toggleBackdateBtn').onclick=toggleBackdatePanel;
+            document.getElementById('confirmBackdateBtn').onclick=addPastEntry;
             document.getElementById('promoBtn').onclick=()=>{ openWizard(); window.setWizOption('goal','quit'); wizStep=2; showStep(2); };
             
             document.getElementById('installBtn').onclick = async () => {
@@ -829,15 +919,21 @@
                 });
                 document.getElementById('historyModal').showModal();
             };
-            
-            document.getElementById('addPastEntryBtn').onclick = () => {
-                const dateVal = document.getElementById('backdateInput').value;
-                const parsedDate = new Date(dateVal);
-                if(!dateVal || !state.selection) return showToast("Select pouch and date first");
-                if(isNaN(parsedDate) || isFutureDate(parsedDate)) return showToast('Date must not be in the future');
-                const rec = { id: Date.now().toString(), brand: state.selection.b, name: state.selection.n, mg: state.selection.mg, date: parsedDate.toISOString() };
-                state.history.push(rec); persistHistory(); renderUI(); document.getElementById('historyModal').close(); showToast(t('added'));
+
+            document.getElementById('deleteAllHistoryBtn').onclick = () => {
+                if(!state.history.length) return showToast(t('history_empty'));
+                openDeleteConfirm(1);
             };
+
+            document.getElementById('confirmDeleteNextBtn').onclick = () => {
+                const modal = document.getElementById('confirmDeleteModal');
+                const step = modal.dataset.step === '2' ? 2 : 1;
+                if(step === 1) return openDeleteConfirm(2);
+                modal.close();
+                clearHistory();
+            };
+
+            document.getElementById('cancelDeleteHistoryBtn').onclick = () => document.getElementById('confirmDeleteModal').close();
 
             window.delHist = (id) => { state.history=state.history.filter(h=>h.id!==id); persistHistory(); renderUI(); document.getElementById('historyModal').close(); };
             
