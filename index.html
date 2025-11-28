@@ -57,7 +57,7 @@
         .btn-outline { background: var(--card); border: 1px solid var(--border); color: var(--text); }
         .btn-danger { background: #fee2e2; color: var(--danger); border: 1px solid #fecaca; }
         .btn:active { transform: scale(0.98); }
-        .btn-add { height: 50px; width: 60px; justify-content: center; font-size: 24px; background: var(--primary); color: white; box-shadow: 0 8px 16px -8px rgba(16,185,129,0.6); }
+        .btn-add { height: 50px; width: 60px; justify-content: center; font-size: 24px; background: linear-gradient(135deg, #16a34a, #0f9f6e); color: #ffffff; box-shadow: 0 8px 16px -8px rgba(16,185,129,0.6); border: 1px solid #0f9f6e; }
 
         .grid { display: grid; gap: 12px; }
         .stats-grid { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
@@ -347,21 +347,32 @@
         <div class="modal-body">
             <div id="fullHistoryList" style="max-height:300px; overflow-y:auto;"></div>
         </div>
-        <div class="modal-foot" style="justify-content: space-between;">
-            <button id="deleteAllHistoryBtn" class="btn btn-danger" data-i18n="delete_all_history">Delete All</button>
+        <div class="modal-foot" style="justify-content: flex-end; gap: 10px;">
             <button class="btn btn-outline" onclick="document.getElementById('historyModal').close()" data-i18n="close">Close</button>
+            <button id="deleteAllHistoryBtn" class="btn btn-danger" data-i18n="delete_all_history">Delete All</button>
         </div>
     </dialog>
 
-    <!-- Delete History Confirm Modal -->
-    <dialog id="confirmDeleteModal">
+    <!-- Delete History Confirm Modals -->
+    <dialog id="confirmDeleteModalStep1">
         <div class="modal-head"><span data-i18n="delete_all_history">Delete All</span></div>
         <div class="modal-body">
-            <p id="deleteConfirmText" style="margin:0; font-weight:600; color:var(--text);"></p>
+            <p id="deleteConfirmText1" style="margin:0; font-weight:600; color:var(--text);"></p>
         </div>
-        <div class="modal-foot" style="justify-content: space-between;">
-            <button id="cancelDeleteHistoryBtn" class="btn btn-outline" data-i18n="close">Close</button>
-            <button id="confirmDeleteNextBtn" class="btn btn-danger">OK</button>
+        <div class="modal-foot" style="justify-content: flex-end; gap: 10px;">
+            <button id="cancelDeleteHistoryBtn1" class="btn btn-outline" data-i18n="close">Close</button>
+            <button id="confirmDeleteNextBtn1" class="btn btn-danger">OK</button>
+        </div>
+    </dialog>
+
+    <dialog id="confirmDeleteModalStep2">
+        <div class="modal-head"><span data-i18n="delete_all_history">Delete All</span></div>
+        <div class="modal-body">
+            <p id="deleteConfirmText2" style="margin:0; font-weight:600; color:var(--text);"></p>
+        </div>
+        <div class="modal-foot" style="justify-content: flex-end; gap: 10px;">
+            <button id="cancelDeleteHistoryBtn2" class="btn btn-outline" data-i18n="close">Close</button>
+            <button id="confirmDeleteNextBtn2" class="btn btn-danger">OK</button>
         </div>
     </dialog>
 
@@ -951,11 +962,16 @@
             if(state.user) await setDoc(doc(db,'users',state.user.uid,'history',rec.id),{ ...rec, timestamp:Timestamp.fromDate(parsedDate) });
         }
 
-        function openDeleteConfirm(step = 1) {
-            const modal = document.getElementById('confirmDeleteModal');
-            modal.dataset.step = step.toString();
-            document.getElementById('deleteConfirmText').innerText = t(step === 1 ? 'delete_history_confirm1' : 'delete_history_confirm2');
-            document.getElementById('confirmDeleteNextBtn').innerText = t(step === 1 ? 'next' : 'delete_all_history');
+        function openDeleteConfirmStep1() {
+            const modal = document.getElementById('confirmDeleteModalStep1');
+            document.getElementById('deleteConfirmText1').innerText = t('delete_history_confirm1');
+            vibrateDevice(25);
+            modal.showModal();
+        }
+
+        function openDeleteConfirmStep2() {
+            const modal = document.getElementById('confirmDeleteModalStep2');
+            document.getElementById('deleteConfirmText2').innerText = t('delete_history_confirm2');
             vibrateDevice(25);
             modal.showModal();
         }
@@ -1115,18 +1131,21 @@
 
             document.getElementById('deleteAllHistoryBtn').onclick = () => {
                 if(!state.history.length) return showToast(t('history_empty'));
-                openDeleteConfirm(1);
+                openDeleteConfirmStep1();
             };
 
-            document.getElementById('confirmDeleteNextBtn').onclick = () => {
-                const modal = document.getElementById('confirmDeleteModal');
-                const step = modal.dataset.step === '2' ? 2 : 1;
-                if(step === 1) return openDeleteConfirm(2);
-                modal.close();
+            document.getElementById('confirmDeleteNextBtn1').onclick = () => {
+                document.getElementById('confirmDeleteModalStep1').close();
+                openDeleteConfirmStep2();
+            };
+
+            document.getElementById('confirmDeleteNextBtn2').onclick = () => {
+                document.getElementById('confirmDeleteModalStep2').close();
                 clearHistory();
             };
 
-            document.getElementById('cancelDeleteHistoryBtn').onclick = () => document.getElementById('confirmDeleteModal').close();
+            document.getElementById('cancelDeleteHistoryBtn1').onclick = () => document.getElementById('confirmDeleteModalStep1').close();
+            document.getElementById('cancelDeleteHistoryBtn2').onclick = () => document.getElementById('confirmDeleteModalStep2').close();
 
             window.delHist = (id) => { state.history=state.history.filter(h=>h.id!==id); persistHistory(); renderUI(); vibrateDevice([40,30,40]); document.getElementById('historyModal').close(); };
             
