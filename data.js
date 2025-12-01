@@ -655,8 +655,8 @@ export const POUCH_DB = [
 ];
 
 export const USER_BENCHMARKS = [
-  { max: 3, label: "Top 10% (Casual)", percentile: 90, msg: "Jsi elita! Minimální závislost." },
-  { max: 8, label: "Průměr (Average)", percentile: 50, msg: "Jsi v průměru. Pozor na zvyšování." },
-  { max: 15, label: "Nadprůměr (Heavy)", percentile: 20, msg: "Vysoká spotřeba. Zvaž omezení." },
-  { max: 999, label: "Extrém (Ultra)", percentile: 5, msg: "Kritická zóna. Doporučujeme plán odvykání." }
+  { max: 3, label_en: "Top 10% (Casual)", label_cs: "Top 10% (Rekreační)", percentile: 90, msg_en: "You're elite! Minimal dependence.", msg_cs: "Jsi elita! Minimální závislost." },
+  { max: 8, label_en: "Average", label_cs: "Průměr (Average)", percentile: 50, msg_en: "You are in the average range. Watch for increases.", msg_cs: "Jsi v průměru. Pozor na zvyšování." },
+  { max: 15, label_en: "Heavy", label_cs: "Nadprůměr (Heavy)", percentile: 20, msg_en: "High use. Consider reducing.", msg_cs: "Vysoká spotřeba. Zvaž omezení." },
+  { max: 999, label_en: "Ultra", label_cs: "Extrém (Ultra)", percentile: 5, msg_en: "Critical zone. A quit plan is recommended.", msg_cs: "Kritická zóna. Doporučujeme plán odvykání." }
 ];

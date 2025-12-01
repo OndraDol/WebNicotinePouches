@@ -1,6 +1,6 @@
 {
-  "name": "NicoTracker",
-  "short_name": "NicoTracker",
+  "name": "PouchLog",
+  "short_name": "PouchLog",
   "start_url": "./index.html",
   "display": "standalone",
   "theme_color": "#10b981",
