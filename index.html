@@ -50,16 +50,29 @@
         }
 
         :root[data-theme="dark"] {
-            --bg: #0b1220;
-            --card: #111827;
-            --text: #e2e8f0;
-            --muted: #cbd5e1;
-            --border: #1f2937;
-            --surface-muted: #0f172a;
-            --surface-contrast: #1f2937;
-            --input-bg: #0f172a;
-            --chip-border: #1f8375;
-            --badge-bg: #1f2937;
+            /* Hlavní pozadí - Hluboká břidlicová (Slate 950) */
+            --bg: #020617;
+            /* Karty - O něco světlejší (Slate 900/800) pro hloubku */
+            --card: #0f172a;
+            /* Text - Téměř bílá, ne úplně (Slate 50) */
+            --text: #f8fafc;
+            /* Vedlejší text - Dobře čitelná šedá (Slate 400) */
+            --muted: #94a3b8;
+            
+            /* UI Prvky */
+            --primary: #10b981;       /* Emerald 500 - Zůstává stejná */
+            --primary-dark: #34d399;  /* Emerald 400 - Světlejší pro text na tmavém pozadí */
+            --danger: #f87171;        /* Red 400 - Jemnější červená */
+            
+            /* Okraje a oddělovače */
+            --border: #1e293b;        /* Slate 800 */
+            
+            /* Specifické povrchy */
+            --surface-muted: #1e293b; /* Pozadí pro sekundární prvky */
+            --surface-contrast: #334155; /* Hover stavy */
+            --input-bg: #020617;      /* Pozadí inputů */
+            --chip-border: #1e293b;
+            --badge-bg: #1e293b;
         }
 
         * { box-sizing: border-box; }
@@ -197,6 +210,100 @@
         .custom-form h4 { margin: 0 0 8px; }
         .custom-form .grid { grid-template-columns: 1fr 1fr; }
         .custom-helper { font-size: 12px; color: var(--muted); margin: 8px 0 0; }
+
+        /* --- DARK MODE OPRAVY (Overrides) --- */
+
+        /* 1. Oprava bannerů (Promo a Quit) - aby nebyly svítivě zelené */
+        :root[data-theme="dark"] .promo-banner,
+        :root[data-theme="dark"] .quit-active {
+            background: linear-gradient(135deg, #064e3b 0%, #022c22 100%); /* Tmavě smaragdová */
+            border-color: #059669;
+        }
+        :root[data-theme="dark"] .promo-banner p,
+        :root[data-theme="dark"] #quitStatusText {
+            color: #6ee7b7; /* Světlejší zelená pro text */
+        }
+        :root[data-theme="dark"] .promo-badge {
+            background: #020617;
+            color: #34d399;
+        }
+
+        /* 2. Oprava MG odznaků (ty malé čtverečky u sáčků) */
+        :root[data-theme="dark"] .mg-badge {
+            background: #1e293b; /* Tmavá karta */
+            border-color: #334155;
+            color: #34d399;
+            box-shadow: none;
+        }
+        :root[data-theme="dark"] .mg-badge span {
+            color: #94a3b8;
+        }
+
+        /* 3. Oprava vyhledávání a inputů */
+        :root[data-theme="dark"] .search-item {
+            border-bottom-color: #1e293b;
+        }
+        :root[data-theme="dark"] .search-item:hover {
+            background-color: #1e293b;
+        }
+        :root[data-theme="dark"] .pouch-brand {
+            background-color: #1e293b;
+            border-color: #334155;
+            color: #cbd5e1;
+        }
+        :root[data-theme="dark"] input, 
+        :root[data-theme="dark"] select {
+            color: #f8fafc;
+            border-color: #334155;
+        }
+        :root[data-theme="dark"] input::placeholder {
+            color: #475569;
+        }
+
+        /* 4. Oprava Wizardu (výběrové karty) */
+        :root[data-theme="dark"] .selection-card {
+            border-color: #334155;
+        }
+        :root[data-theme="dark"] .selection-card:hover {
+            background-color: #1e293b;
+            border-color: #10b981;
+        }
+        :root[data-theme="dark"] .selection-card.active {
+            background-color: #064e3b; /* Velmi tmavá zelená */
+            border-color: #10b981;
+        }
+
+        /* 5. Oprava Modálů a Backdropu */
+        :root[data-theme="dark"] dialog {
+            background: #0f172a;
+            border: 1px solid #1e293b;
+        }
+        :root[data-theme="dark"] dialog::backdrop {
+            background: rgba(0, 0, 0, 0.85); /* Tmavší pozadí za oknem */
+        }
+        :root[data-theme="dark"] .modal-head {
+            background: #0f172a;
+            border-bottom-color: #1e293b;
+        }
+        :root[data-theme="dark"] .modal-foot {
+            border-top-color: #1e293b;
+        }
+
+        /* 6. Oprava tlačítek (Outline) */
+        :root[data-theme="dark"] .btn-outline {
+            background: transparent;
+            border-color: #334155;
+            color: #e2e8f0;
+        }
+        :root[data-theme="dark"] .btn-outline:active {
+            background: #1e293b;
+        }
+
+        /* 7. Oprava grafů (Chart.js) - aby mřížka nebyla tak výrazná */
+        :root[data-theme="dark"] .card h3, 
+        :root[data-theme="dark"] .card h4 {
+            color: #e2e8f0;
+        }
     </style>
 </head>
 
@@ -1139,6 +1246,9 @@
         // --- CHART & SEARCH ---
         function renderChart(){
             if (typeof Chart === 'undefined') return;
+            const isDark = state.theme === 'dark';
+            const gridColor = isDark ? '#334155' : '#e2e8f0';
+            const textColor = isDark ? '#94a3b8' : '#64748b';
             const days={}; for(let i=13;i>=0;i--){const d=new Date();d.setHours(0,0,0,0);d.setDate(d.getDate()-i); days[getLocalISODate(d)]=0;}
             state.history.forEach(h=>{const k=getEntryLocalDate(h);if(days[k]!==undefined)days[k]++;});
             const labels = Object.keys(days).map(d=>d.slice(5));
@@ -1147,13 +1257,20 @@
             if(window.trendChartInst){
                 window.trendChartInst.data.labels = labels;
                 window.trendChartInst.data.datasets[0].data = dataPoints;
+                window.trendChartInst.options.scales = {
+                    y: { beginAtZero: true, grid: { color: gridColor }, ticks: { color: textColor } },
+                    x: { grid: { color: gridColor }, ticks: { color: textColor } }
+                };
                 window.trendChartInst.update();
                 return;
             }
-            window.trendChartInst=new Chart(ctx,{type:'line',data:{labels,datasets:[{label:'Pcs',data:dataPoints,borderColor:'#10b981',backgroundColor:'rgba(16,185,129,0.1)',fill:true,tension:0.4}]},options:{plugins:{legend:{display:false}},scales:{y:{beginAtZero:true}}}});
+            window.trendChartInst=new Chart(ctx,{type:'line',data:{labels,datasets:[{label:'Pcs',data:dataPoints,borderColor:'#10b981',backgroundColor:'rgba(16,185,129,0.1)',fill:true,tension:0.4}]},options:{plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,grid:{color:gridColor},ticks:{color:textColor}},x:{grid:{color:gridColor},ticks:{color:textColor}}}}});
         }
         function renderHourlyChart() {
             if (typeof Chart === 'undefined') return;
+            const isDark = state.theme === 'dark';
+            const gridColor = isDark ? '#334155' : '#e2e8f0';
+            const textColor = isDark ? '#94a3b8' : '#64748b';
             const hours=Array.from({length:24},(_,i)=>({l:i,c:0}));
             state.history.forEach(h=>hours[new Date(h.date).getHours()].c++);
             const labels = hours.map(h=>h.l);
@@ -1162,10 +1279,14 @@
             if(window.hourlyChartInst){
                 window.hourlyChartInst.data.labels = labels;
                 window.hourlyChartInst.data.datasets[0].data = dataPoints;
+                window.hourlyChartInst.options.scales = {
+                    y: { beginAtZero: true, grid: { color: gridColor }, ticks: { color: textColor } },
+                    x: { grid: { color: gridColor }, ticks: { color: textColor } }
+                };
                 window.hourlyChartInst.update();
                 return;
             }
-            window.hourlyChartInst=new Chart(ctx,{type:'bar',data:{labels,datasets:[{data:dataPoints,backgroundColor:'#10b981'}]},options:{plugins:{legend:{display:false}},scales:{y:{display:false},x:{grid:{display:false}}}}});
+            window.hourlyChartInst=new Chart(ctx,{type:'bar',data:{labels,datasets:[{data:dataPoints,backgroundColor:'#10b981'}]},options:{plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,grid:{color:gridColor},ticks:{color:textColor}},x:{grid:{color:gridColor},ticks:{color:textColor}}}}});
         }
 
         function setupSearch() {
