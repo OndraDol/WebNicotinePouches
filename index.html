@@ -137,6 +137,10 @@
         .toast-msg { background: #1e293b; color: white; padding: 12px 20px; border-radius: 10px; margin-top: 10px; animation: slideUp 0.3s; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
         @keyframes slideUp { from { transform: translateY(20px); opacity: 0 } to { transform: translateY(0); opacity: 1 } }
 
+        .install-steps { margin: 8px 0 0; padding-left: 18px; color: var(--text); line-height: 1.5; }
+        .install-steps li { margin-bottom: 6px; font-size: 14px; }
+        .install-note { font-size: 13px; color: var(--muted); margin: 6px 0 0; }
+
         /* Search & Selector */
         .selector-btn { width: 100%; text-align: left; background: white; border: 1px solid var(--border); padding: 12px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; font-family: inherit; font-size: 14px; color: var(--text); cursor: pointer; }
         .selector-btn:active { background: #f8fafc; }
@@ -340,6 +344,34 @@
     </main>
 
     <div id="toast"></div>
+
+    <dialog id="installHelpModal">
+        <div class="modal-head">
+            <span data-i18n="install_help_title">Instalovat jako aplikaci</span>
+            <button id="closeInstallHelpX" class="btn btn-outline" style="padding:6px 10px;" aria-label="Zavřít">✕</button>
+        </div>
+        <div class="modal-body install-help">
+            <div id="installHelpIos">
+                <h4 style="margin:0 0 8px;" data-i18n="install_help_ios_title">Na iPhone/iPad</h4>
+                <ol class="install-steps">
+                    <li data-i18n="install_help_ios_step_share">Klepněte na Sdílet (ikona se šipkou).</li>
+                    <li data-i18n="install_help_ios_step_add">Vyberte „Přidat na plochu“.</li>
+                </ol>
+                <p class="install-note" data-i18n="install_help_ios_note">PouchLog pak poběží na celou obrazovku bez lišty prohlížeče.</p>
+            </div>
+            <div id="installHelpAndroid" class="hidden">
+                <h4 style="margin:0 0 8px;" data-i18n="install_help_android_title">Na Androidu</h4>
+                <ol class="install-steps">
+                    <li data-i18n="install_help_android_step_menu">Otevřete menu ⋮ v prohlížeči.</li>
+                    <li data-i18n="install_help_android_step_add">Zvolte „Instalovat aplikaci“ nebo „Přidat na plochu“.</li>
+                </ol>
+                <p class="install-note" data-i18n="install_help_android_note">Po instalaci najdete PouchLog přímo mezi aplikacemi.</p>
+            </div>
+        </div>
+        <div class="modal-foot" style="justify-content:flex-end;">
+            <button id="closeInstallHelpBtn" class="btn btn-outline" data-i18n="close">Zavřít</button>
+        </div>
+    </dialog>
 
     <!-- Add Confirmation Modal -->
     <dialog id="addConfirmModal">
@@ -592,7 +624,7 @@
 
         const translations = {
             en: {
-                install_prompt: "📱 Install on phone", load_more: "Load older", custom_prompt: "Can't find it? Create your own", custom_form_title: "Custom pouch", custom_brand_label: "Brand", custom_name_label: "Name", custom_strength_label: "Strength (mg)",
+                install_prompt: "📱 Install on phone", install_help_title: "Install PouchLog", install_help_ios_title: "On iPhone/iPad", install_help_ios_step_share: "Tap Share (arrow icon).", install_help_ios_step_add: "Choose ‘Add to Home Screen’.", install_help_ios_note: "PouchLog runs full-screen without browser chrome.", install_help_android_title: "On Android", install_help_android_step_menu: "Open the ⋮ menu in the browser.", install_help_android_step_add: "Pick ‘Install app’ or ‘Add to Home screen’.", install_help_android_note: "After install you'll find PouchLog in your apps.", load_more: "Load older", custom_prompt: "Can't find it? Create your own", custom_form_title: "Custom pouch", custom_brand_label: "Brand", custom_name_label: "Name", custom_strength_label: "Strength (mg)",
                 custom_helper: "Stored on device and in cloud after sign-in.", cancel: "Cancel", save: "Save", custom_brand_placeholder: "Brand", custom_name_placeholder: "Name", custom_strength_placeholder: "mg", custom_badge: "Custom",
                 custom_missing_fields: "Fill brand, name, and strength.", custom_saved: "Custom pouch saved", date_future_error: "Date must not be in the future.", select_pouch_first: "Select pouch and date first", goal_missing: "Please select a goal.",
                 import_skipped: "Skipped future or invalid entries", invalid_backup: "Invalid backup format.", error_prefix: "Error:", health_empty: "No data yet", wizard_step_label: "Step", benchmark_percentile_label: "Percentile",
@@ -623,7 +655,7 @@
                 promo_cta: "Launch quit program"
             },
             cs: {
-                install_prompt: "📱 Instalovat na telefon", load_more: "Načíst starší", custom_prompt: "Nenašli jste? Vytvořit vlastní", custom_form_title: "Vlastní sáček", custom_brand_label: "Značka", custom_name_label: "Název", custom_strength_label: "Síla (mg)",
+                install_prompt: "📱 Instalovat na telefon", install_help_title: "Instalovat PouchLog", install_help_ios_title: "Na iPhone/iPad", install_help_ios_step_share: "Klepněte na Sdílet (ikona se šipkou).", install_help_ios_step_add: "Vyberte „Přidat na plochu“.", install_help_ios_note: "PouchLog pak poběží na celou obrazovku bez lišty prohlížeče.", install_help_android_title: "Na Androidu", install_help_android_step_menu: "Otevřete menu ⋮ v prohlížeči.", install_help_android_step_add: "Zvolte „Instalovat aplikaci“ nebo „Přidat na plochu“.", install_help_android_note: "Po instalaci najdete PouchLog přímo mezi aplikacemi.", load_more: "Načíst starší", custom_prompt: "Nenašli jste? Vytvořit vlastní", custom_form_title: "Vlastní sáček", custom_brand_label: "Značka", custom_name_label: "Název", custom_strength_label: "Síla (mg)",
                 custom_helper: "Uloženo do zařízení a cloudu po přihlášení.", cancel: "Zrušit", save: "Uložit", custom_brand_placeholder: "Značka", custom_name_placeholder: "Název", custom_strength_placeholder: "mg", custom_badge: "Vlastní",
                 custom_missing_fields: "Vyplňte značku, název i sílu.", custom_saved: "Vlastní sáček uložen", date_future_error: "Datum nesmí být v budoucnu.", select_pouch_first: "Nejprve zvolte sáček i datum", goal_missing: "Vyberte prosím cíl.",
                 import_skipped: "Přeskočeny budoucí nebo neplatné záznamy", invalid_backup: "Neplatný formát zálohy.", error_prefix: "Chyba:", health_empty: "Zatím žádná data", wizard_step_label: "Krok", benchmark_percentile_label: "Percentil",
@@ -704,11 +736,7 @@
             applyLanguage(state.lang); setupSearch(); setupListeners();
             if (!localStorage.getItem('nt_settings')) openWizard();
             if('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js');
-            
-            window.addEventListener('beforeinstallprompt', (e) => {
-                e.preventDefault(); installPrompt = e;
-                document.getElementById('installBtn').classList.remove('hidden');
-            });
+            setupInstallPrompt();
         }
 
         function applyLanguage(lang) {
@@ -752,6 +780,56 @@
 
         function vibrateDevice(pattern = 40) {
             if (navigator.vibrate) navigator.vibrate(pattern);
+        }
+
+        const isStandalone = () => window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+
+        const isMobileDevice = () => /android|iphone|ipad|ipod/i.test(navigator.userAgent.toLowerCase());
+
+        function showInstallHelp() {
+            const modal = document.getElementById('installHelpModal');
+            if (!modal) return;
+            const iosSection = document.getElementById('installHelpIos');
+            const androidSection = document.getElementById('installHelpAndroid');
+            const isiOS = /iphone|ipad|ipod/i.test(navigator.userAgent.toLowerCase());
+            if (iosSection && androidSection) {
+                iosSection.classList.toggle('hidden', !isiOS);
+                androidSection.classList.toggle('hidden', isiOS);
+            }
+            modal.showModal();
+            vibrateDevice(10);
+        }
+
+        async function handleInstallClick() {
+            const btn = document.getElementById('installBtn');
+            if (installPrompt) {
+                installPrompt.prompt();
+                const { outcome } = await installPrompt.userChoice;
+                if (outcome === 'accepted' && btn) btn.classList.add('hidden');
+                installPrompt = null;
+                return;
+            }
+            showInstallHelp();
+        }
+
+        function setupInstallPrompt() {
+            const installBtn = document.getElementById('installBtn');
+            if (!installBtn) return;
+            installBtn.onclick = handleInstallClick;
+
+            if (isStandalone()) {
+                installBtn.classList.add('hidden');
+                return;
+            }
+
+            if (isMobileDevice()) installBtn.classList.remove('hidden');
+
+            window.addEventListener('beforeinstallprompt', (e) => {
+                e.preventDefault(); installPrompt = e;
+                installBtn.classList.remove('hidden');
+            });
+
+            window.addEventListener('appinstalled', () => installBtn.classList.add('hidden'));
         }
 
         function ensureNotificationPermission() {
@@ -1372,10 +1450,8 @@
             document.getElementById('confirmBackdateBtn').onclick=addPastEntry;
             document.getElementById('loadMoreHistoryBtn').onclick=()=>{ state.historyVisible += 20; renderUI(); vibrateDevice(15); };
             document.getElementById('promoBtn').onclick=()=>{ openWizard(); window.setWizOption('goal','quit'); wizStep=2; showStep(2); };
-            
-            document.getElementById('installBtn').onclick = async () => {
-                if(installPrompt) { installPrompt.prompt(); const { outcome } = await installPrompt.userChoice; if(outcome==='accepted') document.getElementById('installBtn').classList.add('hidden'); }
-            };
+            document.getElementById('closeInstallHelpBtn').onclick = () => document.getElementById('installHelpModal').close();
+            document.getElementById('closeInstallHelpX').onclick = () => document.getElementById('installHelpModal').close();
 
             document.getElementById('btnExportCsv').onclick = exportCSV;
             document.getElementById('btnExportJson').onclick = exportJSON;
