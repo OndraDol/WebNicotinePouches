@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="cs">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
@@ -12,19 +12,19 @@
     <link rel="manifest" href="./manifest.json">
 
     <!-- Icons & PWA -->
-    <link rel="icon" type="image/png" href="./favicon.ico">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2220%22 fill=%22%2310b981%22/><circle cx=%2250%22 cy=%2250%22 r=%2225%22 stroke=%22white%22 stroke-width=%228%22 fill=%22none%22/></svg>">
     <link rel="apple-touch-icon" href="./apple-touch-icon.png">
     <meta name="theme-color" content="#0f172a" media="(prefers-color-scheme: dark)">
     <meta name="theme-color" content="#10b981" media="(prefers-color-scheme: light)">
 
     <!-- Social Sharing (Open Graph) -->
-    <meta property="og:title" content="PouchLog | Quit Nicotine Pouches">
+    <meta property="og:title" content="PouchLog | Track Nicotine Pouches">
     <meta property="og:description" content="PouchLog helps you track usage, save money, and regain control. The #1 free tool for quitting nicotine pouches.">
     <meta property="og:image" content="./og-image.jpg">
     <meta property="og:url" content="https://nicotinepouches-d9d1c.firebaseapp.com/">
     <meta property="og:type" content="website">
 
-    <title>PouchLog | Quit Nicotine Pouches</title>
+    <title>PouchLog | Track Nicotine Pouches</title>
 
     <!-- Fonts & Libs -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -188,7 +188,7 @@
     <header>
         <a href="/" class="logo" aria-label="PouchLog home">📝
             <div class="logo-stack">
-                <div class="logo-row"><span>PouchLog</span><span class="logo-version">v1.0.1</span></div>
+                <div class="logo-row"><span>PouchLog</span></div>
                 <span class="logo-tagline">Know your numbers.</span>
             </div>
         </a>
@@ -484,7 +484,13 @@
 
     <!-- Settings Wizard Modal -->
     <dialog id="settingsModal">
-        <div class="modal-head"><span data-i18n="settings">Settings</span><span style="font-size:12px; color:var(--muted);" id="wizardStepIndicator">Step 1/3</span></div>
+        <div class="modal-head">
+            <span data-i18n="settings">Settings</span>
+            <div style="display:flex; align-items:center; gap:8px;">
+                <span style="font-size:12px; color:var(--muted);" id="wizardStepIndicator">Step 1/3</span>
+                <button id="closeSettingsBtn" class="btn btn-outline" style="padding:6px 10px;" aria-label="Close settings">✕</button>
+            </div>
+        </div>
         <div class="modal-body">
             <!-- Step 1: Goal -->
             <div id="step1" class="wizard-step">
@@ -645,7 +651,7 @@
                 health_timeline: "Health Recovery", wiz_step1_title: "Goal?", wiz_step2_title: "Strategy", wiz_step3_title: "Setup",
                 goal_track_title: "Just Track", goal_quit_title: "I Want to Quit", strat_smooth_title: "Smooth", strat_weekly_title: "Weekly",
                 strat_cutoff_title: "Cold Turkey", strat_smooth_desc: "Gradually taper your daily limit to the quit date for a gentle landing. We trim a tiny bit each day so the drop feels softer.",
-                strat_weekly_desc: "Reduce your daily cap by one pouch every week to build momentum. Weekly checkpoints keep the pace steady even if one day slips.", strat_cutoff_desc: "Stay on your current limit until the target date, then stop completely. A clear countdown with reminders as the day approaches.",
+                strat_weekly_desc: "Step down your daily cap evenly each week so you land on zero by the target date. Weekly checkpoints keep the pace steady even if one day slips.", strat_cutoff_desc: "Stay on your current limit until the target date, then stop completely. A clear countdown with reminders as the day approaches.",
                 start_limit: "Daily Limit", target_date: "Target Date", back: "Back", next: "Next", finish: "Finish",
                 data_management: "Data Management", selected_pouch: "Selected", search_placeholder: "Search brand or flavor...",
                 select_placeholder: "Select a pouch...", past_entry_help: "To add past entry, first select a pouch on dashboard.",
@@ -676,7 +682,7 @@
                 health_timeline: "Zdravotní regenerace", wiz_step1_title: "Jaký je cíl?", wiz_step2_title: "Strategie", wiz_step3_title: "Nastavení",
                 goal_track_title: "Sledovat", goal_quit_title: "Přestat", strat_smooth_title: "Plynule", strat_weekly_title: "Týdně",
                 strat_cutoff_title: "Rázně", strat_smooth_desc: "Denně lehce snižuješ limit a dojdeš k nule plynule. Každý den ubereš malý kousek, aby byl přechod co nejjemnější.",
-                strat_weekly_desc: "Každý týden ubereš 1 sáček z denního limitu, aby se návyk lámal postupně. Týdenní milníky drží tempo i když některý den ujede.",
+                strat_weekly_desc: "Každý týden snížíme denní limit o stejný díl, aby ses k datu cíle dostal na nulu. Týdenní milníky drží tempo, i když některý den ujede.",
                 strat_cutoff_desc: "Držíš současný limit až do cílového dne a pak skončíš úplně. Jasné odpočítávání s připomínkou, jak se datum blíží.",
                 start_limit: "Denní Limit", target_date: "Datum konce", back: "Zpět", next: "Další", finish: "Hotovo",
                 data_management: "Správa dat", selected_pouch: "Vybráno", search_placeholder: "Hledat značku nebo příchuť...",
@@ -725,7 +731,7 @@
         // --- STATE ---
         let state = {
             user: null,
-            lang: localStorage.getItem('nt_lang') || 'cs',
+            lang: localStorage.getItem('nt_lang') || 'en',
             settings: JSON.parse(localStorage.getItem('nt_settings')) || { currency: 'CZK', packPrice: 150, pouchesPerPack: 20, dailyLimit: 10, goal: 'track', createdAt: Date.now() },
             history: JSON.parse(localStorage.getItem('nt_history')) || [],
             selection: JSON.parse(localStorage.getItem('nt_last_pouch')) || null,
@@ -883,33 +889,56 @@
         }
 
         // --- STATS CALCULATION ---
-        const DAY_MS = 1000 * 60 * 60 * 24;
-
         function getDynamicLimitForDate(dateInput = new Date()) {
             const baseLimit = Number(state.settings.dailyLimit) || 0;
+            
+            // Pokud není cílem "quit" (přestat), vracíme fixní limit
             if (state.settings.goal !== 'quit') return baseLimit;
 
             const date = new Date(dateInput);
+            // Oříznutí času pro přesný výpočet dní
+            date.setHours(0,0,0,0);
+            
             const start = new Date(state.settings.createdAt || Date.now());
+            start.setHours(0,0,0,0);
+            
             const end = new Date(state.settings.targetDate || start);
+            end.setHours(0,0,0,0);
+
             const strategy = state.settings.strategy || 'smooth';
 
+            // Ochrana proti neplatným datům
             if (!isFinite(end.getTime())) return baseLimit;
 
-            const totalDays = (end - start) / DAY_MS;
-            const daysPassed = (date - start) / DAY_MS;
+            const totalDays = (end - start) / (1000 * 60 * 60 * 24);
+            const daysPassed = (date - start) / (1000 * 60 * 60 * 24);
 
-            if (!isFinite(totalDays) || totalDays <= 0) return baseLimit;
+            // Pokud už je po datu, limit je 0 (Hotovo!)
             if (daysPassed >= totalDays) return 0;
+            // Pokud jsme před začátkem, platí plný limit
             if (daysPassed <= 0) return baseLimit;
 
             let calculated = baseLimit;
+
             if (strategy === 'smooth') {
+                // Lineární pokles: Každý den ubereme přesnou část
+                // Příklad: 10 ks na 10 dní -> den 5 = 5 ks
                 calculated = baseLimit - (daysPassed * (baseLimit / totalDays));
+            
             } else if (strategy === 'weekly') {
+                // OPRAVENÁ LOGIKA:
+                // Spočítáme, kolik týdnů celkem plán trvá
+                const totalWeeks = Math.max(1, totalDays / 7);
+                // Spočítáme, o kolik musíme snížit limit týdně, abychom došli k nule
+                const dropPerWeek = baseLimit / totalWeeks;
+                // Kolik týdnů už uběhlo
                 const weeksPassed = Math.floor(daysPassed / 7);
-                calculated = baseLimit - weeksPassed;
+                
+                // Aplikujeme "schodovitý" pokles
+                calculated = baseLimit - (weeksPassed * dropPerWeek);
+
             } else if (strategy === 'cutoff') {
+                // Držíme limit až do konce
                 calculated = baseLimit;
             }
 
@@ -1466,6 +1495,7 @@
             document.getElementById('promoBtn').onclick=()=>{ openWizard(); window.setWizOption('goal','quit'); wizStep=2; showStep(2); };
             document.getElementById('closeInstallHelpBtn').onclick = () => document.getElementById('installHelpModal').close();
             document.getElementById('closeInstallHelpX').onclick = () => document.getElementById('installHelpModal').close();
+            document.getElementById('closeSettingsBtn').onclick = () => document.getElementById('settingsModal').close();
 
             document.getElementById('btnExportCsv').onclick = exportCSV;
             document.getElementById('btnExportJson').onclick = exportJSON;
