@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="description" content="Free Nicotine Pouch Tracker & Quitting Tool.">
+    <meta name="description" content="PouchLog: Free Nicotine Pouch Tracker & Quitting Tool.">
 
     <!-- PWA & Mobile -->
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -19,7 +19,7 @@
 
     <!-- Social Sharing (Open Graph) -->
     <meta property="og:title" content="PouchLog | Quit Nicotine Pouches">
-    <meta property="og:description" content="Track your usage, save money, and regain control. The #1 free tool for quitting nicotine pouches.">
+    <meta property="og:description" content="PouchLog helps you track usage, save money, and regain control. The #1 free tool for quitting nicotine pouches.">
     <meta property="og:image" content="./og-image.jpg">
     <meta property="og:url" content="https://nicotinepouches-d9d1c.firebaseapp.com/">
     <meta property="og:type" content="website">
@@ -513,8 +513,8 @@
         <div class="modal-body">
             <div id="authSection">
                 <div class="grid">
-                    <input type="email" id="emailInput" placeholder="Email" data-i18n-placeholder="email_placeholder">
-                    <input type="password" id="passInput" placeholder="Password" data-i18n-placeholder="password_placeholder">
+                    <input type="email" id="emailInput" placeholder="Email" data-i18n-placeholder="email_placeholder" autocomplete="username">
+                    <input type="password" id="passInput" placeholder="Password" data-i18n-placeholder="password_placeholder" autocomplete="current-password">
                     <button id="loginBtn" class="btn btn-primary" data-i18n="login">Log In</button>
                     <button id="googleAuthBtn" class="btn btn-outline" data-i18n="google_login">Google</button>
                 </div>
@@ -657,6 +657,26 @@
         };
         const t = (key) => { const lang = state?.lang || 'en'; return translations[lang]?.[key] || translations.en[key] || key; };
 
+        const getLocalISODate = (dateObj = new Date()) => {
+            const date = dateObj instanceof Date ? dateObj : new Date(dateObj);
+            if (Number.isNaN(date.getTime())) return '';
+            return date.toLocaleDateString('sv-SE');
+        };
+
+        const getEntryLocalDate = (entry) => {
+            if (!entry) return '';
+            if (entry.localDate) return entry.localDate;
+            const localDate = getLocalISODate(entry.date ? new Date(entry.date) : new Date());
+            entry.localDate = localDate;
+            return localDate;
+        };
+
+        const normalizeHistory = (history = []) => history.map((item) => {
+            const dateObj = item.date ? new Date(item.date) : new Date();
+            const validDate = Number.isNaN(dateObj.getTime()) ? new Date() : dateObj;
+            return { ...item, date: validDate.toISOString(), localDate: item.localDate || getLocalISODate(validDate) };
+        });
+
         const getInitialTheme = () => {
             const stored = localStorage.getItem('nt_theme');
             if (stored) return stored;
@@ -674,13 +694,14 @@
             historyVisible: 20,
             theme: getInitialTheme()
         };
+        state.history = normalizeHistory(state.history);
         let wizStep = 1; let tempSettings = {}; let currentSearchResults = []; let isRegistering = false;
         let installPrompt = null; let editingEntryId = null;
 
         // --- MAIN LOGIC ---
         function init() {
             applyTheme(state.theme);
-            applyLanguage(state.lang); persistHistory(); renderUI(); setupSearch(); setupListeners();
+            applyLanguage(state.lang); setupSearch(); setupListeners();
             if (!localStorage.getItem('nt_settings')) openWizard();
             if('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js');
             
@@ -804,31 +825,39 @@
         }
 
         function calculateStats() {
-            const days = {}; state.history.forEach(h => { const d = h.date.slice(0,10); days[d] = (days[d] || 0) + 1; });
+            const days = {}; state.history.forEach(h => { const d = getEntryLocalDate(h); if (!d) return; days[d] = (days[d] || 0) + 1; });
             const limit = getDynamicLimitForDate();
 
-            const today = new Date();
-            const sunday = new Date(today); sunday.setHours(0,0,0,0); sunday.setDate(sunday.getDate() - sunday.getDay());
+            const today = new Date(); today.setHours(0,0,0,0);
+            const sunday = new Date(today); sunday.setDate(sunday.getDate() - sunday.getDay());
             const saturday = new Date(sunday); saturday.setDate(saturday.getDate() - 1);
-            const cleanWeekend = (days[saturday.toISOString().slice(0,10)] || 0) <= limit && (days[sunday.toISOString().slice(0,10)] || 0) <= limit && state.history.length > 0;
+            const saturdayLimit = getDynamicLimitForDate(saturday);
+            const sundayLimit = getDynamicLimitForDate(sunday);
+            const cleanWeekend = (days[getLocalISODate(saturday)] || 0) <= saturdayLimit && (days[getLocalISODate(sunday)] || 0) <= sundayLimit && state.history.length > 0;
 
-            let streak = 0; let checkDate = new Date(); checkDate.setDate(checkDate.getDate() - 1);
+            let streak = 0; let checkDate = new Date(today); checkDate.setDate(checkDate.getDate() - 1);
+            const firstLogDay = state.history.length ? getEntryLocalDate(state.history[state.history.length-1]) : null;
             while (true) {
-                const dStr = checkDate.toISOString().slice(0,10);
+                const dStr = getLocalISODate(checkDate);
                 if (state.history.length === 0) break;
-                const firstLog = new Date(state.history[state.history.length-1].date);
-                if (checkDate < firstLog && streak > 0) break;
-                if ((days[dStr] || 0) <= limit) { streak++; checkDate.setDate(checkDate.getDate() - 1); } else break;
+                if (firstLogDay && dStr < firstLogDay && streak > 0) break;
+                const dayLimit = getDynamicLimitForDate(checkDate);
+                if ((days[dStr] || 0) <= dayLimit) { streak++; checkDate.setDate(checkDate.getDate() - 1); } else break;
             }
             
             let savedTotal = 0; const unitPrice = state.settings.pouchesPerPack ? state.settings.packPrice / state.settings.pouchesPerPack : 0;
+            const toDateFromLocalISO = (isoStr) => {
+                const [year, month, day] = (isoStr || '').split('-').map(Number);
+                return new Date(year || 0, (month || 1) - 1, day || 1);
+            };
+
             Object.keys(days).forEach(d => {
-                const dayLimit = getDynamicLimitForDate(new Date(d));
+                const dayLimit = getDynamicLimitForDate(toDateFromLocalISO(d));
                 if (days[d] < dayLimit) savedTotal += (dayLimit - days[d]) * unitPrice;
             });
-            
-            const yDate = new Date(); yDate.setDate(yDate.getDate()-1);
-            const yesterdaySuccess = (days[yDate.toISOString().slice(0,10)] || 0) <= limit;
+
+            const yDate = new Date(today); yDate.setDate(yDate.getDate()-1);
+            const yesterdaySuccess = (days[getLocalISODate(yDate)] || 0) <= getDynamicLimitForDate(yDate);
             const dailyAvg = state.history.length / (Object.keys(days).length || 1);
             const benchmark = USER_BENCHMARKS.find(b => dailyAvg <= b.max) || USER_BENCHMARKS[USER_BENCHMARKS.length - 1];
 
@@ -847,8 +876,8 @@
 
         // --- RENDERERS ---
         function renderUI() {
-            const today = new Date().toISOString().slice(0,10);
-            const todayEntries = state.history.filter(h => h.date.startsWith(today));
+            const today = getLocalISODate();
+            const todayEntries = state.history.filter(h => getEntryLocalDate(h) === today);
             const limit = calculateDynamicLimit();
             const stats = calculateStats();
             
@@ -972,17 +1001,33 @@
         // --- CHART & SEARCH ---
         function renderChart(){
             if (typeof Chart === 'undefined') return;
-            const days={}; for(let i=13;i>=0;i--){const d=new Date();d.setDate(d.getDate()-i); days[d.toISOString().slice(0,10)]=0;}
-            state.history.forEach(h=>{const k=h.date.slice(0,10);if(days[k]!==undefined)days[k]++;});
-            const ctx=document.getElementById('trendChart'); if(window.trendChartInst)window.trendChartInst.destroy();
-            window.trendChartInst=new Chart(ctx,{type:'line',data:{labels:Object.keys(days).map(d=>d.slice(5)),datasets:[{label:'Pcs',data:Object.values(days),borderColor:'#10b981',backgroundColor:'rgba(16,185,129,0.1)',fill:true,tension:0.4}]},options:{plugins:{legend:{display:false}},scales:{y:{beginAtZero:true}}}});
+            const days={}; for(let i=13;i>=0;i--){const d=new Date();d.setHours(0,0,0,0);d.setDate(d.getDate()-i); days[getLocalISODate(d)]=0;}
+            state.history.forEach(h=>{const k=getEntryLocalDate(h);if(days[k]!==undefined)days[k]++;});
+            const labels = Object.keys(days).map(d=>d.slice(5));
+            const dataPoints = Object.values(days);
+            const ctx=document.getElementById('trendChart');
+            if(window.trendChartInst){
+                window.trendChartInst.data.labels = labels;
+                window.trendChartInst.data.datasets[0].data = dataPoints;
+                window.trendChartInst.update();
+                return;
+            }
+            window.trendChartInst=new Chart(ctx,{type:'line',data:{labels,datasets:[{label:'Pcs',data:dataPoints,borderColor:'#10b981',backgroundColor:'rgba(16,185,129,0.1)',fill:true,tension:0.4}]},options:{plugins:{legend:{display:false}},scales:{y:{beginAtZero:true}}}});
         }
         function renderHourlyChart() {
             if (typeof Chart === 'undefined') return;
             const hours=Array.from({length:24},(_,i)=>({l:i,c:0}));
             state.history.forEach(h=>hours[new Date(h.date).getHours()].c++);
-            const ctx=document.getElementById('hourlyChart'); if(window.hourlyChartInst)window.hourlyChartInst.destroy();
-            window.hourlyChartInst=new Chart(ctx,{type:'bar',data:{labels:hours.map(h=>h.l),datasets:[{data:hours.map(h=>h.c),backgroundColor:'#10b981'}]},options:{plugins:{legend:{display:false}},scales:{y:{display:false},x:{grid:{display:false}}}}});
+            const labels = hours.map(h=>h.l);
+            const dataPoints = hours.map(h=>h.c);
+            const ctx=document.getElementById('hourlyChart');
+            if(window.hourlyChartInst){
+                window.hourlyChartInst.data.labels = labels;
+                window.hourlyChartInst.data.datasets[0].data = dataPoints;
+                window.hourlyChartInst.update();
+                return;
+            }
+            window.hourlyChartInst=new Chart(ctx,{type:'bar',data:{labels,datasets:[{data:dataPoints,backgroundColor:'#10b981'}]},options:{plugins:{legend:{display:false}},scales:{y:{display:false},x:{grid:{display:false}}}}});
         }
 
         function setupSearch() {
@@ -1023,8 +1068,9 @@
             document.getElementById('saveCustomPouchBtn').onclick = async () => {
                 const brand = document.getElementById('customBrandInput').value.trim();
                 const name = document.getElementById('customNameInput').value.trim();
-                const mg = Number(document.getElementById('customMgInput').value);
-                if (!brand || !name || mg < 0 || Number.isNaN(mg)) return showToast(t('custom_missing_fields'));
+                const mgInput = document.getElementById('customMgInput').value.trim();
+                const mg = Number(mgInput);
+                if (!brand || !name || mgInput === '' || mg < 0 || Number.isNaN(mg)) return showToast(t('custom_missing_fields'));
 
                 const pouch = { id: Date.now().toString(), b: brand, n: name, mg, isCustom: true };
                 state.customPouches.unshift(pouch);
@@ -1085,6 +1131,7 @@
             if (idx === -1) return;
 
             state.history[idx].date = parsedDate.toISOString();
+            state.history[idx].localDate = getLocalISODate(parsedDate);
             persistHistory(); renderUI(); renderFullHistoryList();
             document.getElementById('editEntryModal').close();
             editingEntryId = null;
@@ -1137,11 +1184,12 @@
             if(!state.selection) return document.getElementById('openSearchBtn').click();
             ensureNotificationPermission();
             const limit = calculateDynamicLimit();
-            const rec = { id: Date.now().toString(), brand: state.selection.b, name: state.selection.n, mg: state.selection.mg, date: new Date().toISOString() };
+            const now = new Date();
+            const rec = { id: Date.now().toString(), brand: state.selection.b, name: state.selection.n, mg: state.selection.mg, date: now.toISOString(), localDate: getLocalISODate(now) };
             state.history.unshift(rec); persistHistory(); renderUI(); showToast(t('added'));
             vibrateDevice(50);
-            const today = new Date().toISOString().slice(0,10);
-            const todayCount = state.history.filter(h => h.date.startsWith(today)).length;
+            const today = getLocalISODate(now);
+            const todayCount = state.history.filter(h => getEntryLocalDate(h) === today).length;
             maybeNotifyLimit(todayCount, limit);
             showAddConfirmDialog(todayCount, limit);
             if(state.user) setDoc(doc(db,'users',state.user.uid,'history',rec.id),{ ...rec, timestamp:Timestamp.now() });
@@ -1149,8 +1197,8 @@
 
         function setBackdateDefaults() {
             const now = new Date();
-            document.getElementById('backdateDate').value = now.toISOString().slice(0,10);
-            document.getElementById('backdateTime').value = now.toISOString().slice(11,16);
+            document.getElementById('backdateDate').value = getLocalISODate(now);
+            document.getElementById('backdateTime').value = now.toLocaleTimeString('sv-SE', { hour: '2-digit', minute: '2-digit' });
         }
 
         function toggleBackdatePanel() {
@@ -1168,12 +1216,12 @@
             if(isNaN(parsedDate) || isFutureDate(parsedDate)) return showToast(t('date_future_error'));
             ensureNotificationPermission();
             const limit = calculateDynamicLimit();
-            const rec = { id: Date.now().toString(), brand: state.selection.b, name: state.selection.n, mg: state.selection.mg, date: parsedDate.toISOString() };
+            const rec = { id: Date.now().toString(), brand: state.selection.b, name: state.selection.n, mg: state.selection.mg, date: parsedDate.toISOString(), localDate: getLocalISODate(parsedDate) };
             state.history.push(rec); persistHistory(); renderUI(); showToast(t('added'));
             vibrateDevice(50);
-            const todayStr = new Date().toISOString().slice(0,10);
-            if (rec.date.startsWith(todayStr)) {
-                const todayCount = state.history.filter(h => h.date.startsWith(todayStr)).length;
+            const todayStr = getLocalISODate();
+            if (rec.localDate === todayStr) {
+                const todayCount = state.history.filter(h => getEntryLocalDate(h) === todayStr).length;
                 maybeNotifyLimit(todayCount, limit);
                 showAddConfirmDialog(todayCount, limit);
             }
@@ -1274,13 +1322,13 @@
             let csv = "Date,Time,Brand,Name,Mg\n";
             state.history.forEach(h => {
                 const d = new Date(h.date);
-                csv += `${d.toISOString().slice(0,10)},${d.toLocaleTimeString()},"${h.brand}","${h.name}",${h.mg}\n`;
+                csv += `${getLocalISODate(d)},${d.toLocaleTimeString()},"${h.brand}","${h.name}",${h.mg}\n`;
             });
-            downloadFile(csv, 'nicotracker_export.csv', 'text/csv');
+            downloadFile(csv, 'pouchlog_export.csv', 'text/csv');
         }
         function exportJSON() {
             const data = JSON.stringify({ settings: state.settings, history: state.history }, null, 2);
-            downloadFile(data, 'nicotracker_backup.json', 'application/json');
+            downloadFile(data, 'pouchlog_backup.json', 'application/json');
         }
         function setupImport() {
             const fileInput = document.getElementById('importInput');
@@ -1298,7 +1346,7 @@
                                 return item.date && !isNaN(parsed) && parsed.getTime() <= now;
                             });
                             if(cleanedHistory.length !== data.history.length) showToast(t('import_skipped'));
-                            state.history = cleanedHistory; state.settings = data.settings;
+                            state.history = normalizeHistory(cleanedHistory); state.settings = data.settings;
                             persistHistory(); renderUI(); showToast(t('restore_success')); location.reload();
                         } else showToast(t('invalid_backup'));
                     } catch(e) { showToast(`${t('error_prefix')} ${e.message}`); }
@@ -1378,7 +1426,7 @@
             };
             document.getElementById('googleAuthBtn').onclick=()=>signInWithPopup(auth,new GoogleAuthProvider()).then(()=>document.getElementById('authModal').close());
             onAuthStateChanged(auth, async (u) => { if(u){ state.user=u; document.getElementById('syncBtn').innerText="✅";
-                onSnapshot(query(collection(db,'users',u.uid,'history'),orderBy('timestamp','desc')),(s)=>{const h=s.docs.map(d=>({id:d.id, brand:d.data().brand, name:d.data().name||d.data().brand, mg:d.data().mg, date:d.data().timestamp.toDate().toISOString()})); if(h.length){state.history=h;persistHistory();renderUI();}});
+                onSnapshot(query(collection(db,'users',u.uid,'history'),orderBy('timestamp','desc')),(s)=>{const h=s.docs.map(d=>{const ts=d.data().timestamp?.toDate?.()||new Date(); return {id:d.id, brand:d.data().brand, name:d.data().name||d.data().brand, mg:d.data().mg, date:ts.toISOString(), localDate:getLocalISODate(ts)};}); if(h.length){state.history=normalizeHistory(h);persistHistory();renderUI();}});
                 getDoc(doc(db,'users',u.uid,'settings','profile')).then(d => { if(d.exists()) { state.settings = d.data(); persistHistory(); }});
                 getDocs(collection(db,'users',u.uid,'custom_pouches')).then((snap)=>{
                     const remote = snap.docs.map(docSnap => ({ id: docSnap.id, ...docSnap.data(), isCustom: true }));
