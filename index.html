@@ -388,6 +388,36 @@
         </div>
     </dialog>
 
+    <dialog id="entryDeletedModal">
+        <div class="modal-head"><span data-i18n="entry_deleted_title">Záznam smazán</span></div>
+        <div class="modal-body">
+            <p style="margin:0;" data-i18n="entry_deleted_msg">Záznam byl úspěšně odstraněn.</p>
+        </div>
+        <div class="modal-foot" style="justify-content:flex-end; gap:10px;">
+            <button class="btn btn-primary" onclick="document.getElementById('entryDeletedModal').close()" data-i18n="close">Zavřít</button>
+        </div>
+    </dialog>
+
+    <dialog id="editEntryModal">
+        <div class="modal-head"><span data-i18n="edit_entry">Editovat</span></div>
+        <div class="modal-body">
+            <div class="grid" style="grid-template-columns:1fr 1fr; gap:10px;">
+                <div>
+                    <label style="font-size:12px; color:var(--muted);" data-i18n="backdate_date">Datum</label>
+                    <input type="date" id="editDateInput">
+                </div>
+                <div>
+                    <label style="font-size:12px; color:var(--muted);" data-i18n="backdate_time">Čas</label>
+                    <input type="time" id="editTimeInput">
+                </div>
+            </div>
+        </div>
+        <div class="modal-foot" style="justify-content:flex-end; gap:10px;">
+            <button class="btn btn-outline" onclick="document.getElementById('editEntryModal').close()" data-i18n="close">Zavřít</button>
+            <button id="saveEditedEntryBtn" class="btn btn-primary" data-i18n="save_changes">Uložit změny</button>
+        </div>
+    </dialog>
+
     <!-- Delete History Confirm Modals -->
     <dialog id="confirmDeleteModalStep1">
         <div class="modal-head"><span data-i18n="delete_all_history">Delete All</span></div>
@@ -567,7 +597,8 @@
                 select_placeholder: "Select a pouch...", past_entry_help: "To add past entry, first select a pouch on dashboard.",
                 backdate_date: "Date", backdate_time: "Time", delete_all_history: "Delete All",
                 delete_history_confirm1: "Delete entire history?", delete_history_confirm2: "This cannot be undone. Proceed?",
-                history_cleared: "History cleared", history_empty: "History is already empty",
+                history_cleared: "History cleared", history_empty: "History is already empty", entry_deleted_title: "Entry deleted",
+                entry_deleted_msg: "The entry was removed from history.", edit_entry: "Edit", save_changes: "Save changes", entry_updated: "Entry updated",
                 quit_status_active: "Plan active", auth_btn: "Sync / Data", auth_title: "Sync & Backup", login: "Log In", register: "Register", toggle_reg: "Need account? Register", toggle_log: "Have account? Login",
                 currency: "Currency", pack_price: "Price/Can", pouches_pack: "Pcs/Can", close: "Close", delete_entry: "Delete", added: "Added!",
                 add_confirm_title: "Pouch added", add_confirm_msg: "Saved to today's log.", add_confirm_left: "Remaining to limit", add_confirm_over: "Over limit by", add_confirm_no_limit: "No daily limit set.", add_confirm_progress: "Today",
@@ -592,7 +623,8 @@
                 select_placeholder: "Vyberte sáček...", past_entry_help: "Pro zpětné vložení nejdřív vyberte sáček na hl. stránce.",
                 backdate_date: "Datum", backdate_time: "Čas", delete_all_history: "Smazat vše",
                 delete_history_confirm1: "Smazat celou historii?", delete_history_confirm2: "Opravdu to chcete udělat?", history_cleared: "Historie smazána",
-                history_empty: "Historie je prázdná",
+                history_empty: "Historie je prázdná", entry_deleted_title: "Záznam smazán", entry_deleted_msg: "Záznam byl úspěšně odstraněn.",
+                edit_entry: "Editovat", save_changes: "Uložit změny", entry_updated: "Záznam upraven",
                 quit_status_active: "Plán aktivní", auth_btn: "Sync / Data", auth_title: "Záloha dat", login: "Přihlásit", register: "Registrovat", toggle_reg: "Registrovat se", toggle_log: "Mám účet",
                 currency: "Měna", pack_price: "Cena/Puk", pouches_pack: "Ks/Puk", close: "Zavřít", delete_entry: "Smazat", added: "Přidáno!",
                 add_confirm_title: "Sáček přidán", add_confirm_msg: "Záznam byl uložen do dneška.", add_confirm_left: "Do limitu zbývá", add_confirm_over: "Limit překročen o", add_confirm_no_limit: "Denní limit není nastaven.", add_confirm_progress: "Dnes",
@@ -622,7 +654,7 @@
             theme: getInitialTheme()
         };
         let wizStep = 1; let tempSettings = {}; let currentSearchResults = []; let isRegistering = false;
-        let installPrompt = null;
+        let installPrompt = null; let editingEntryId = null;
 
         // --- MAIN LOGIC ---
         function init() {
@@ -794,7 +826,8 @@
                 el.onclick = () => {
                     const [b, n] = top[i].split('|');
                     const full = getAllPouches().find(p => p.b === b && p.n === n) || { b, n, mg: 0 };
-                    selectPouch(full); addEntry();
+                    selectPouch(full);
+                    vibrateDevice(15);
                 };
             });
 
@@ -974,6 +1007,65 @@
         }
 
         function selectPouch(item) { state.selection = item; localStorage.setItem('nt_last_pouch', JSON.stringify(item)); renderUI(); }
+
+        function renderFullHistoryList() {
+            const c = document.getElementById('fullHistoryList');
+            if (!c) return;
+
+            c.innerHTML = '';
+            state.history.forEach(h => {
+                const dateStr = new Date(h.date).toLocaleString();
+                c.innerHTML += `<div class="history-item"><div>${h.name || h.brand} (${h.mg}mg)<br><small>${dateStr}</small></div><div style="display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end;"><button class="btn btn-outline" onclick="window.openEditEntry('${h.id}')">${t('edit_entry')}</button><button class="btn btn-danger" onclick="window.delHist('${h.id}')">${t('delete_entry')}</button></div></div>`;
+            });
+        }
+
+        function showEntryDeletedModal() {
+            const modal = document.getElementById('entryDeletedModal');
+            if (modal.open) modal.close();
+            modal.showModal();
+        }
+
+        window.openEditEntry = (id) => {
+            const entry = state.history.find(h => h.id === id);
+            if (!entry) return;
+
+            editingEntryId = id;
+            document.getElementById('editDateInput').value = entry.date.slice(0, 10);
+            document.getElementById('editTimeInput').value = entry.date.slice(11, 16);
+            document.getElementById('editEntryModal').showModal();
+            vibrateDevice(15);
+        };
+
+        async function saveEditedEntry() {
+            if (!editingEntryId) return;
+
+            const dateVal = document.getElementById('editDateInput').value;
+            const timeVal = document.getElementById('editTimeInput').value || '00:00';
+            const parsedDate = new Date(`${dateVal}T${timeVal}`);
+            if (!dateVal || isNaN(parsedDate) || isFutureDate(parsedDate)) return showToast('Datum nesmí být v budoucnu.');
+
+            const idx = state.history.findIndex(h => h.id === editingEntryId);
+            if (idx === -1) return;
+
+            state.history[idx].date = parsedDate.toISOString();
+            persistHistory(); renderUI(); renderFullHistoryList();
+            document.getElementById('editEntryModal').close();
+            editingEntryId = null;
+            vibrateDevice(20);
+            showToast(t('entry_updated'));
+
+            if(state.user) await setDoc(doc(db,'users',state.user.uid,'history',state.history[idx].id), { ...state.history[idx], timestamp: Timestamp.fromDate(parsedDate) }, { merge: true });
+        }
+
+        async function deleteHistoryEntry(id) {
+            const target = state.history.find(h => h.id === id);
+            state.history = state.history.filter(h => h.id !== id);
+            persistHistory(); renderUI(); renderFullHistoryList();
+            vibrateDevice([40,30,40]);
+            showEntryDeletedModal();
+
+            if(state.user && target) { await deleteDoc(doc(db,'users',state.user.uid,'history',target.id)).catch(()=>{}); }
+        }
 
         function showAddConfirmDialog(todayCount, limit) {
             const modal = document.getElementById('addConfirmModal');
@@ -1212,13 +1304,13 @@
             };
 
             document.getElementById('viewAllHistoryBtn').onclick=()=>{
-                const c=document.getElementById('fullHistoryList'); c.innerHTML='';
-                state.history.forEach(h=>{
-                    c.innerHTML+=`<div class="history-item"><div>${h.name} (${h.mg}mg)<br><small>${new Date(h.date).toLocaleString()}</small></div><button class="btn btn-danger" onclick="window.delHist('${h.id}')">${t('delete_entry')}</button></div>`;
-                });
+                renderFullHistoryList();
                 document.getElementById('historyModal').showModal();
                 vibrateDevice(20);
             };
+
+            document.getElementById('saveEditedEntryBtn').onclick = saveEditedEntry;
+            document.getElementById('editEntryModal').addEventListener('close', () => { editingEntryId = null; });
 
             document.getElementById('deleteAllHistoryBtn').onclick = () => {
                 if(!state.history.length) return showToast(t('history_empty'));
@@ -1238,7 +1330,7 @@
             document.getElementById('cancelDeleteHistoryBtn1').onclick = () => document.getElementById('confirmDeleteModalStep1').close();
             document.getElementById('cancelDeleteHistoryBtn2').onclick = () => document.getElementById('confirmDeleteModalStep2').close();
 
-            window.delHist = (id) => { state.history=state.history.filter(h=>h.id!==id); persistHistory(); renderUI(); vibrateDevice([40,30,40]); document.getElementById('historyModal').close(); };
+            window.delHist = (id) => { deleteHistoryEntry(id); };
             
             document.getElementById('loginBtn').onclick=async()=>{
                 const e=document.getElementById('emailInput').value,p=document.getElementById('passInput').value;
