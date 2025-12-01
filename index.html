@@ -134,6 +134,18 @@
             .promo-actions .btn { width: 100%; justify-content: center; }
         }
 
+        .onboarding-banner { display: flex; gap: 14px; align-items: flex-start; background: linear-gradient(115deg, #ecfdf5, #e0f2fe); border: 1px solid #a7f3d0; }
+        .onboarding-pill { display: inline-flex; align-items: center; gap: 6px; background: #0f172a; color: #d1fae5; padding: 4px 10px; border-radius: 999px; font-size: 12px; font-weight: 700; letter-spacing: 0.3px; text-transform: uppercase; }
+        .onboarding-banner h3 { margin: 6px 0 6px; }
+        .onboarding-banner p { margin: 0; color: var(--primary-dark); font-size: 14px; line-height: 1.5; }
+        .onboarding-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+        .onboarding-actions .btn { padding: 10px 14px; }
+        @media (max-width: 720px) {
+            .onboarding-banner { flex-direction: column; }
+            .onboarding-actions { width: 100%; }
+            .onboarding-actions .btn { flex: 1; justify-content: center; }
+        }
+
         /* Modals */
         dialog { border: none; border-radius: 16px; padding: 0; width: min(500px, 95vw); box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); }
         dialog::backdrop { background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(2px); }
@@ -326,6 +338,18 @@
     </header>
 
     <main class="shell">
+
+        <div id="onboardingNotice" class="card onboarding-banner hidden" role="status" aria-live="polite">
+            <div style="flex:1;">
+                <div class="onboarding-pill" data-i18n="onboard_chip">Doporučujeme</div>
+                <h3 style="margin:6px 0 8px;" data-i18n="onboard_title">Vyladíme tvůj profil?</h3>
+                <p data-i18n="onboard_body">Krátké nastavení ti spočítá cenu sáčku, limit a zálohujeme vše po registraci.</p>
+            </div>
+            <div class="onboarding-actions">
+                <button id="onboardingSettingsBtn" class="btn btn-primary" data-i18n="onboard_settings_cta">Vyplnit nastavení</button>
+                <button id="onboardingAuthBtn" class="btn btn-outline" data-i18n="onboard_auth_cta">Přihlásit a zálohovat</button>
+            </div>
+        </div>
 
         <!-- Quit Program Banner -->
         <div id="quitBanner" class="card hidden">
@@ -789,7 +813,12 @@
                 just_now: "Just now", hours_ago: "h ago", mins_ago: "m ago",
                 restore_confirm: "This will overwrite your current data. Continue?", restore_success: "Data restored successfully!",
                 promo_kicker: "Just Track", promo_title: "Ready to quit?", promo_desc: "You are in Just Track mode. Jump into a guided quit plan with milestones and a target date.",
-                promo_cta: "Launch quit program"
+                promo_cta: "Launch quit program",
+                onboard_chip: "Recommended",
+                onboard_title: "Tune your profile?",
+                onboard_body: "A 1-minute setup tailors prices, limits, and syncs everything once you sign up.",
+                onboard_settings_cta: "Open setup",
+                onboard_auth_cta: "Register & backup"
             },
             cs: {
                 install_prompt: "📱 Instalovat na telefon", install_help_title: "Instalovat PouchLog", install_help_ios_title: "Na iPhone/iPad", install_help_ios_step_share: "Klepněte na Sdílet (ikona se šipkou).", install_help_ios_step_add: "Vyberte „Přidat na plochu“.", install_help_ios_note: "PouchLog pak poběží na celou obrazovku bez lišty prohlížeče.", install_help_android_title: "Na Androidu", install_help_android_step_menu: "Otevřete menu ⋮ v prohlížeči.", install_help_android_step_add: "Zvolte „Instalovat aplikaci“ nebo „Přidat na plochu“.", install_help_android_note: "Po instalaci najdete PouchLog přímo mezi aplikacemi.", load_more: "Načíst starší", custom_prompt: "Nenašli jste? Vytvořit vlastní", custom_form_title: "Vlastní sáček", custom_brand_label: "Značka", custom_name_label: "Název", custom_strength_label: "Síla (mg)",
@@ -821,7 +850,12 @@
                 just_now: "Právě teď", hours_ago: "h zpět", mins_ago: "m zpět",
                 restore_confirm: "Tato akce přepíše současná data. Pokračovat?", restore_success: "Data úspěšně obnovena!",
                 promo_kicker: "Just Track", promo_title: "Připraveni přestat?", promo_desc: "Jste v režimu „Just Track“. Přepněte se do vedeného odvykacího programu s cílovým datem a milníky.",
-                promo_cta: "Spustit odvykací program"
+                promo_cta: "Spustit odvykací program",
+                onboard_chip: "Doporučujeme",
+                onboard_title: "Vyplň krátké nastavení",
+                onboard_body: "Díky profilu spočítáme cenu sáčků, limity a po registraci vše bezpečně zálohujeme.",
+                onboard_settings_cta: "Otevřít nastavení",
+                onboard_auth_cta: "Registrovat a zálohovat"
             }
         };
         const t = (key) => { const lang = state?.lang || 'en'; return translations[lang]?.[key] || translations.en[key] || key; };
@@ -852,17 +886,20 @@
             return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
         };
 
+        const storedSettings = JSON.parse(localStorage.getItem('nt_settings')) || null;
+
         // --- STATE ---
         let state = {
             user: null,
             lang: localStorage.getItem('nt_lang') || 'en',
-            settings: JSON.parse(localStorage.getItem('nt_settings')) || { currency: 'CZK', packPrice: 150, pouchesPerPack: 20, dailyLimit: 10, goal: 'track', createdAt: Date.now() },
+            settings: storedSettings || { currency: 'CZK', packPrice: 150, pouchesPerPack: 20, dailyLimit: 10, goal: 'track', createdAt: Date.now(), onboarded: false },
             history: JSON.parse(localStorage.getItem('nt_history')) || [],
             selection: JSON.parse(localStorage.getItem('nt_last_pouch')) || null,
             customPouches: JSON.parse(localStorage.getItem('nt_custom_pouches')) || [],
             historyVisible: 20,
             theme: getInitialTheme()
         };
+        state.settings.onboarded = storedSettings?.onboarded ?? state.settings.onboarded ?? false;
         state.history = normalizeHistory(state.history);
         let wizStep = 1; let tempSettings = {}; let currentSearchResults = []; let isRegistering = false;
         let installPrompt = null; let editingEntryId = null;
@@ -1125,7 +1162,13 @@
             const todayEntries = state.history.filter(h => getEntryLocalDate(h) === today);
             const limit = calculateDynamicLimit();
             const stats = calculateStats();
-            
+
+            const onboardingNotice = document.getElementById('onboardingNotice');
+            if (onboardingNotice) {
+                const hideNotice = Boolean(state.user) || Boolean(state.settings?.onboarded);
+                onboardingNotice.classList.toggle('hidden', hideNotice);
+            }
+
             // Quick Actions
             const counts = {}; state.history.forEach(h => { const k = h.brand + '|' + (h.name||''); counts[k] = (counts[k]||0)+1; });
             const top = Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0, 3).map(e=>e[0]);
@@ -1639,6 +1682,10 @@
             document.getElementById('confirmBackdateBtn').onclick=addPastEntry;
             document.getElementById('loadMoreHistoryBtn').onclick=()=>{ state.historyVisible += 20; renderUI(); vibrateDevice(15); };
             document.getElementById('promoBtn').onclick=()=>{ openWizard(); window.setWizOption('goal','quit'); wizStep=2; showStep(2); };
+            const onboardingSettingsBtn = document.getElementById('onboardingSettingsBtn');
+            if (onboardingSettingsBtn) onboardingSettingsBtn.onclick = () => { openWizard(); };
+            const onboardingAuthBtn = document.getElementById('onboardingAuthBtn');
+            if (onboardingAuthBtn) onboardingAuthBtn.onclick = () => { document.getElementById('authModal').showModal(); vibrateDevice(15); };
             document.getElementById('closeInstallHelpBtn').onclick = () => document.getElementById('installHelpModal').close();
             document.getElementById('closeInstallHelpX').onclick = () => document.getElementById('installHelpModal').close();
             document.getElementById('closeSettingsBtn').onclick = () => document.getElementById('settingsModal').close();
@@ -1710,7 +1757,16 @@
                     authStatusMsg.innerText = providerId.includes('google') ? t('signed_in_google') : t('signed_in_generic');
                     if (logoutBtn) logoutBtn.classList.remove('hidden');
                     onSnapshot(query(collection(db,'users',u.uid,'history'),orderBy('timestamp','desc')),(s)=>{const h=s.docs.map(d=>{const ts=d.data().timestamp?.toDate?.()||new Date(); return {id:d.id, brand:d.data().brand, name:d.data().name||d.data().brand, mg:d.data().mg, date:ts.toISOString(), localDate:getLocalISODate(ts)};}); if(h.length){state.history=normalizeHistory(h);persistHistory();renderUI();}});
-                    getDoc(doc(db,'users',u.uid,'settings','profile')).then(d => { if(d.exists()) { state.settings = d.data(); persistHistory(); }});
+                    getDoc(doc(db,'users',u.uid,'settings','profile')).then(d => {
+                        if(d.exists()) {
+                            const profile = d.data();
+                            const mergedSettings = { ...state.settings, ...profile };
+                            mergedSettings.onboarded = profile.onboarded === undefined ? true : profile.onboarded;
+                            state.settings = mergedSettings;
+                            persistHistory();
+                            renderUI();
+                        }
+                    });
                     getDocs(collection(db,'users',u.uid,'custom_pouches')).then((snap)=>{
                         const remote = snap.docs.map(docSnap => ({ id: docSnap.id, ...docSnap.data(), isCustom: true }));
                         if(remote.length){
@@ -1730,6 +1786,7 @@
                     authStatusMsg.innerText = '';
                     if (logoutBtn) logoutBtn.classList.add('hidden');
                 }
+                renderUI();
             });
         }
 
