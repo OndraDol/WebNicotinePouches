@@ -1,4 +1,4 @@
-const CACHE_NAME = 'nicotracker-v3.4';
+const CACHE_NAME = 'pouchlog-v1.0';
 const APP_SHELL = [
   './',
   './index.html',
@@ -14,8 +14,7 @@ const APP_SHELL = [
   'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js',
   'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js',
   'https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js',
-  'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap',
-  'https://fonts.gstatic.com'
+  'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap'
 ];
 
 self.addEventListener('install', (event) => {
