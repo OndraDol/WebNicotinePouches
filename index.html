@@ -175,11 +175,18 @@
         #searchInput { width: 100%; padding: 12px 16px; border-radius: 10px; border: 1px solid var(--border); font-size: 16px; outline: none; background: var(--bg); color: var(--text); }
         #searchInput:focus { border-color: var(--primary); background: var(--card); }
         .search-results { overflow-y: auto; flex: 1; padding: 0 16px 20px; background: var(--card); }
-        .search-item { padding: 12px 0; border-bottom: 1px solid var(--surface-contrast); cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+        .search-item { padding: 12px 0; border-bottom: 1px solid var(--surface-contrast); cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 10px; color: var(--text); }
         .search-item:hover { background: var(--surface-muted); }
-        .search-item strong { display: block; font-size: 14px; margin-bottom: 2px; }
-        .search-item small { color: var(--muted); font-size: 12px; }
-        .mg-badge { background: var(--badge-bg); padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: 700; color: var(--text); }
+        .search-text { display: flex; flex-direction: column; gap: 4px; max-width: calc(100% - 90px); }
+        .pouch-title { display: block; font-size: 16px; font-weight: 800; letter-spacing: -0.01em; line-height: 1.25; color: var(--text); }
+        .pouch-meta { display: inline-flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 700; letter-spacing: 0.04em; color: var(--muted); text-transform: uppercase; }
+        .pouch-brand { padding: 4px 8px; background: var(--surface-muted); border-radius: 999px; border: 1px solid var(--surface-contrast); color: var(--text); }
+        .pouch-strength { display: flex; align-items: center; justify-content: center; }
+        .mg-badge { background: linear-gradient(135deg, #ecfdf5, #d1fae5); padding: 8px 12px; border-radius: 12px; font-size: 13px; font-weight: 800; color: var(--primary-dark); border: 1px solid #bbf7d0; min-width: 64px; text-align: center; box-shadow: inset 0 1px 0 rgba(255,255,255,0.4); }
+        .mg-badge span { font-size: 11px; color: var(--muted); margin-left: 2px; font-weight: 700; letter-spacing: 0.03em; }
+
+        :root[data-theme="dark"] .pouch-brand { background: var(--surface-muted); border-color: var(--surface-contrast); color: var(--text); }
+        :root[data-theme="dark"] .mg-badge { background: linear-gradient(135deg, #0b3a2d, #0e4f3d); color: #d1fae5; border-color: #0f9f6e; box-shadow: inset 0 1px 0 rgba(255,255,255,0.06); }
 
         .benchmark-card { border: 1px solid var(--border); border-radius: 12px; padding: 12px; background: var(--card); margin-top: 12px; }
         .benchmark-sub { color: var(--muted); font-size: 12px; margin: 4px 0; }
@@ -1171,8 +1178,16 @@
             const renderList = (items) => {
                 results.innerHTML = items.map((item, index) => `
                     <div class="search-item" onclick="window.selectByIndex(${index})">
-                        <div><strong>${item.n}</strong><small>${item.b}${item.isCustom ? `<span class="badge-custom">✏️ ${t('custom_badge')}</span>` : ''}</small></div>
-                        <div class="mg-badge">${item.mg} mg</div>
+                        <div class="search-text">
+                            <span class="pouch-title">${item.n}</span>
+                            <div class="pouch-meta">
+                                <span class="pouch-brand">${item.b}</span>
+                                ${item.isCustom ? `<span class="badge-custom">✏️ ${t('custom_badge')}</span>` : ''}
+                            </div>
+                        </div>
+                        <div class="pouch-strength">
+                            <div class="mg-badge">${item.mg}<span>mg</span></div>
+                        </div>
                     </div>
                 `).join('');
             };
