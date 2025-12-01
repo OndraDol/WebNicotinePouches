@@ -1,4 +1,5 @@
-const CACHE_NAME = 'pouchlog-v1.0';
+const CACHE_NAME = 'pouchlog-v1.1';
+
 const APP_SHELL = [
   './',
   './index.html',
@@ -24,33 +25,44 @@ self.addEventListener('install', (event) => {
 
 self.addEventListener('activate', (event) => {
   event.waitUntil(
-    caches.keys().then((keys) => Promise.all(keys.filter((k) => k !== CACHE_NAME).map((k) => caches.delete(k))))
+    caches
+      .keys()
+      .then((keys) => Promise.all(keys.filter((key) => key !== CACHE_NAME).map((key) => caches.delete(key))))
   );
   self.clients.claim();
 });
 
+const isDocumentRequest = (request) =>
+  request.mode === 'navigate' || request.destination === 'document' || request.headers.get('accept')?.includes('text/html');
+
 self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
   if (!event.request.url.startsWith('http')) return;
-  
+
+  if (isDocumentRequest(event.request)) {
+    event.respondWith(
+      fetch(event.request)
+        .then((response) => {
+          const clone = response.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put(event.request, clone));
+          return response;
+        })
+        .catch(() => caches.match(event.request).then((cached) => cached || caches.match('./index.html')))
+    );
+    return;
+  }
+
   event.respondWith(
     caches.match(event.request).then((cached) => {
-      // Network-first pro index.html (aby se změny projevily hned)
-      if (event.request.url.includes('index.html')) {
-         return fetch(event.request)
-            .then(response => {
-                const resClone = response.clone();
-                caches.open(CACHE_NAME).then(cache => cache.put(event.request, resClone));
-                return response;
-            })
-            .catch(() => cached);
-      }
-      return cached || fetch(event.request).then(response => {
-         return caches.open(CACHE_NAME).then(cache => {
-             cache.put(event.request, response.clone());
-             return response;
-         });
-      });
+      if (cached) return cached;
+
+      return fetch(event.request)
+        .then((response) => {
+          const clone = response.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put(event.request, clone));
+          return response;
+        })
+        .catch(() => cached);
     })
   );
 });
