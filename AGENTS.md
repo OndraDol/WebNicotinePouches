@@ -1,6 +1,6 @@
-# Průvodce pro AI agenty a vývojáře NicoTracker
+# Průvodce pro AI agenty a vývojáře PouchLog
 
-Tento dokument popisuje požadavky na kód, procesy a UI pro aplikaci NicoTracker (SPA/PWA pro sledování užívání nikotinových sáčků). Dodržujte jej při každé úpravě kódu v tomto repozitáři.
+Tento dokument popisuje požadavky na kód, procesy a UI pro aplikaci PouchLog (SPA/PWA pro sledování užívání nikotinových sáčků). Dodržujte jej při každé úpravě kódu v tomto repozitáři.
 
 ## 1) Přehled projektu
 - **Typ aplikace:** Webová SPA + PWA.
