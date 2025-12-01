@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="cs">
 
 <head>
     <meta charset="UTF-8">
@@ -18,13 +18,13 @@
     <meta name="theme-color" content="#10b981" media="(prefers-color-scheme: light)">
 
     <!-- Social Sharing (Open Graph) -->
-    <meta property="og:title" content="NicoTracker | Quit Nicotine Pouches">
+    <meta property="og:title" content="PouchLog | Quit Nicotine Pouches">
     <meta property="og:description" content="Track your usage, save money, and regain control. The #1 free tool for quitting nicotine pouches.">
     <meta property="og:image" content="./og-image.jpg">
     <meta property="og:url" content="https://nicotinepouches-d9d1c.firebaseapp.com/">
     <meta property="og:type" content="website">
 
-    <title>NicoTracker | Quit Nicotine Pouches</title>
+    <title>PouchLog | Quit Nicotine Pouches</title>
 
     <!-- Fonts & Libs -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -57,8 +57,12 @@
         .shell { max-width: 1100px; margin: 0 auto; padding: 20px 16px; }
 
         header { background: var(--card); border-bottom: 1px solid var(--border); padding: 16px 20px; position: sticky; top: 0; z-index: 50; display: flex; justify-content: space-between; align-items: center; }
-        .logo { font-weight: 800; font-size: 20px; color: var(--text); display: flex; align-items: center; gap: 6px; text-decoration: none; }
+        .logo { font-weight: 800; font-size: 20px; color: var(--text); display: flex; align-items: center; gap: 8px; text-decoration: none; }
         .logo span { color: var(--primary); }
+        .logo-stack { display: flex; flex-direction: column; gap: 2px; line-height: 1.1; }
+        .logo-row { display: flex; align-items: baseline; gap: 6px; }
+        .logo-version { font-size:10px; color:#a0aec0; font-weight:400; }
+        .logo-tagline { font-size: 11px; color: var(--muted); font-weight: 600; letter-spacing: 0.1px; text-transform: none; }
 
         /* UI Components */
         .card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 16px; margin-bottom: 12px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); }
@@ -178,9 +182,14 @@
 <body>
 
     <header>
-        <a href="/" class="logo" aria-label="NicoTracker home">🧂 <span>NicoTracker</span> <span style="font-size:10px; color:#a0aec0; font-weight:400; margin-left:4px;">v1.0.1</span></a>
+        <a href="/" class="logo" aria-label="PouchLog home">📝
+            <div class="logo-stack">
+                <div class="logo-row"><span>PouchLog</span><span class="logo-version">v1.0.1</span></div>
+                <span class="logo-tagline">Know your numbers.</span>
+            </div>
+        </a>
         <div style="display:flex; gap:10px;">
-            <button id="installBtn" class="btn btn-primary hidden" style="padding:8px 12px; font-size:12px;">📱 Instalovat na telefon</button>
+            <button id="installBtn" class="btn btn-primary hidden" style="padding:8px 12px; font-size:12px;" data-i18n="install_prompt">📱 Instalovat na telefon</button>
             <button id="langBtn" class="btn btn-outline" style="padding:8px;">🇺🇸 EN</button>
             <button id="syncBtn" class="btn btn-primary" data-i18n="auth_btn">Login</button>
             <button id="themeToggle" class="btn btn-outline" style="padding:8px;">🌙</button>
@@ -195,7 +204,7 @@
             <div style="display:flex; justify-content:space-between; align-items:center;">
                 <div>
                     <h3 style="margin:0" data-i18n="quit_title">Freedom Journey</h3>
-                    <p style="margin:4px 0 0; color:var(--primary-dark); font-size:13px;" id="quitStatusText">Plan active</p>
+                    <p style="margin:4px 0 0; color:var(--primary-dark); font-size:13px;" id="quitStatusText" data-i18n="quit_status_active">Plan active</p>
                 </div>
                 <div style="text-align:right;">
                     <div class="val" style="font-size:20px;" id="quitTarget">0</div>
@@ -310,7 +319,7 @@
             </div>
             <div id="historyList"></div>
             <div style="text-align:center; margin-top:10px;">
-                <button id="loadMoreHistoryBtn" class="btn btn-outline hidden" style="padding:8px 12px;">Načíst starší</button>
+                <button id="loadMoreHistoryBtn" class="btn btn-outline hidden" style="padding:8px 12px;" data-i18n="load_more">Načíst starší</button>
             </div>
         </div>
 
@@ -326,7 +335,7 @@
         </div>
 
         <footer style="text-align: center; margin-top: 40px; padding: 20px; color: #7f8c8d; font-size: 0.9em; max-width: 800px; margin-left: auto; margin-right: auto;">
-            <p><strong>NicoTracker Cloud</strong> je moderní online nástroj pro sledování a správu užívání nikotinových sáčků.</p>
+            <p><strong>PouchLog Cloud</strong> <span data-i18n="footer_note">je moderní online nástroj pro sledování a správu užívání nikotinových sáčků.</span></p>
         </footer>
     </main>
 
@@ -357,20 +366,20 @@
             <button class="btn btn-outline" style="border:none; font-size:20px; padding:0 8px;" onclick="document.getElementById('searchModal').close()">✕</button>
         </div>
         <div style="padding:12px 16px; border-bottom:1px dashed var(--border); background:var(--card); display:flex; justify-content:space-between; align-items:center; gap:8px;">
-            <div style="font-size:13px; color:var(--muted);">Nenašli jste? Vytvořit vlastní</div>
+            <div style="font-size:13px; color:var(--muted);" data-i18n="custom_prompt">Nenašli jste? Vytvořit vlastní</div>
             <button id="openCustomFormBtn" class="btn btn-outline" style="padding:8px 12px;">✏️</button>
         </div>
         <div id="customPouchForm" class="custom-form hidden">
-            <h4>Vlastní sáček</h4>
+            <h4 data-i18n="custom_form_title">Vlastní sáček</h4>
             <div class="grid">
-                <div><label style="font-size:12px; color:var(--muted);">Značka</label><input id="customBrandInput" placeholder="Značka"></div>
-                <div><label style="font-size:12px; color:var(--muted);">Název</label><input id="customNameInput" placeholder="Název"></div>
+                <div><label style="font-size:12px; color:var(--muted);" data-i18n="custom_brand_label">Značka</label><input id="customBrandInput" placeholder="Značka" data-i18n-placeholder="custom_brand_placeholder"></div>
+                <div><label style="font-size:12px; color:var(--muted);" data-i18n="custom_name_label">Název</label><input id="customNameInput" placeholder="Název" data-i18n-placeholder="custom_name_placeholder"></div>
             </div>
-            <div style="margin-top:8px;"><label style="font-size:12px; color:var(--muted);">Síla (mg)</label><input type="number" id="customMgInput" placeholder="mg"></div>
-            <div class="custom-helper">Uloženo do zařízení a cloudu po přihlášení.</div>
+            <div style="margin-top:8px;"><label style="font-size:12px; color:var(--muted);" data-i18n="custom_strength_label">Síla (mg)</label><input type="number" id="customMgInput" placeholder="mg" data-i18n-placeholder="custom_strength_placeholder"></div>
+            <div class="custom-helper" data-i18n="custom_helper">Uloženo do zařízení a cloudu po přihlášení.</div>
             <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:10px;">
-                <button id="cancelCustomPouchBtn" class="btn btn-outline" style="padding:8px 12px;">Zrušit</button>
-                <button id="saveCustomPouchBtn" class="btn btn-primary" style="padding:8px 14px;">Uložit</button>
+                <button id="cancelCustomPouchBtn" class="btn btn-outline" style="padding:8px 12px;" data-i18n="cancel">Zrušit</button>
+                <button id="saveCustomPouchBtn" class="btn btn-primary" style="padding:8px 14px;" data-i18n="save">Uložit</button>
             </div>
         </div>
         <div id="searchResults" class="search-results"></div>
@@ -504,8 +513,8 @@
         <div class="modal-body">
             <div id="authSection">
                 <div class="grid">
-                    <input type="email" id="emailInput" placeholder="Email">
-                    <input type="password" id="passInput" placeholder="Password">
+                    <input type="email" id="emailInput" placeholder="Email" data-i18n-placeholder="email_placeholder">
+                    <input type="password" id="passInput" placeholder="Password" data-i18n-placeholder="password_placeholder">
                     <button id="loginBtn" class="btn btn-primary" data-i18n="login">Log In</button>
                     <button id="googleAuthBtn" class="btn btn-outline" data-i18n="google_login">Google</button>
                 </div>
@@ -583,6 +592,12 @@
 
         const translations = {
             en: {
+                install_prompt: "📱 Install on phone", load_more: "Load older", custom_prompt: "Can't find it? Create your own", custom_form_title: "Custom pouch", custom_brand_label: "Brand", custom_name_label: "Name", custom_strength_label: "Strength (mg)",
+                custom_helper: "Stored on device and in cloud after sign-in.", cancel: "Cancel", save: "Save", custom_brand_placeholder: "Brand", custom_name_placeholder: "Name", custom_strength_placeholder: "mg", custom_badge: "Custom",
+                custom_missing_fields: "Fill brand, name, and strength.", custom_saved: "Custom pouch saved", date_future_error: "Date must not be in the future.", select_pouch_first: "Select pouch and date first", goal_missing: "Please select a goal.",
+                import_skipped: "Skipped future or invalid entries", invalid_backup: "Invalid backup format.", error_prefix: "Error:", health_empty: "No data yet", wizard_step_label: "Step", benchmark_percentile_label: "Percentile",
+                daily_average_label: "Daily average", range_note: "(scale 0-20)", pouch_unit_label: "pouches", limit_reached_title: "⚠️ Limit reached", limit_reached_body: (today, limit) => `Today you are at ${today}/${limit}. Consider a break.`,
+                limit_warning_title: "⚠️ Heads up!", limit_warning_body: (today, limit) => `⚠️ Warning: You're nearing the daily limit (${today}/${limit})!`, email_placeholder: "Email", password_placeholder: "Password", footer_note: "is a modern online tool for tracking and managing nicotine pouch use.",
                 today_usage: "TODAY", streak: "STREAK", money_saved: "SAVED", log_usage: "Log Usage", history: "History", view_all: "View All",
                 settings: "Settings", quit_title: "Freedom Journey", achievements: "Achievements",
                 export_csv: "📄 CSV Export", export_json: "💾 Backup", import_json: "📂 Restore", google_login: "Google Login", streak_hint: "🔥 Keep it up", nicotine: "Nicotine",
@@ -608,6 +623,12 @@
                 promo_cta: "Launch quit program"
             },
             cs: {
+                install_prompt: "📱 Instalovat na telefon", load_more: "Načíst starší", custom_prompt: "Nenašli jste? Vytvořit vlastní", custom_form_title: "Vlastní sáček", custom_brand_label: "Značka", custom_name_label: "Název", custom_strength_label: "Síla (mg)",
+                custom_helper: "Uloženo do zařízení a cloudu po přihlášení.", cancel: "Zrušit", save: "Uložit", custom_brand_placeholder: "Značka", custom_name_placeholder: "Název", custom_strength_placeholder: "mg", custom_badge: "Vlastní",
+                custom_missing_fields: "Vyplňte značku, název i sílu.", custom_saved: "Vlastní sáček uložen", date_future_error: "Datum nesmí být v budoucnu.", select_pouch_first: "Nejprve zvolte sáček i datum", goal_missing: "Vyberte prosím cíl.",
+                import_skipped: "Přeskočeny budoucí nebo neplatné záznamy", invalid_backup: "Neplatný formát zálohy.", error_prefix: "Chyba:", health_empty: "Zatím žádná data", wizard_step_label: "Krok", benchmark_percentile_label: "Percentil",
+                daily_average_label: "Denní průměr", range_note: "(škála 0-20)", pouch_unit_label: "sáčků", limit_reached_title: "⚠️ Limit dosažen", limit_reached_body: (today, limit) => `Dnes jsi na ${today}/${limit}. Zvaž pauzu.`,
+                limit_warning_title: "⚠️ Pozor!", limit_warning_body: (today, limit) => `⚠️ Blížíš se k dennímu limitu (${today}/${limit})!`, email_placeholder: "E-mail", password_placeholder: "Heslo", footer_note: "je moderní online nástroj pro sledování a správu užívání nikotinových sáčků.",
                 today_usage: "DNES", streak: "ŘADA DNÍ", money_saved: "UŠETŘENO", log_usage: "Zapsat sáček", history: "Historie", view_all: "Zobrazit vše",
                 settings: "Nastavení", quit_title: "Cesta ke svobodě", achievements: "Úspěchy",
                 export_csv: "📄 Export CSV", export_json: "💾 Záloha", import_json: "📂 Nahrát zálohu", google_login: "Google", streak_hint: "🔥 Jen tak dál", nicotine: "Nikotin",
@@ -645,7 +666,7 @@
         // --- STATE ---
         let state = {
             user: null,
-            lang: localStorage.getItem('nt_lang') || 'en',
+            lang: localStorage.getItem('nt_lang') || 'cs',
             settings: JSON.parse(localStorage.getItem('nt_settings')) || { currency: 'CZK', packPrice: 150, pouchesPerPack: 20, dailyLimit: 10, goal: 'track', createdAt: Date.now() },
             history: JSON.parse(localStorage.getItem('nt_history')) || [],
             selection: JSON.parse(localStorage.getItem('nt_last_pouch')) || null,
@@ -670,8 +691,16 @@
         }
 
         function applyLanguage(lang) {
-            state.lang = lang; localStorage.setItem('nt_lang', lang); document.getElementById('langBtn').innerText = lang === 'en' ? '🇺🇸 EN' : '🇨🇿 CS';
-            document.querySelectorAll('[data-i18n]').forEach(el => el.innerText = t(el.dataset.i18n));
+            state.lang = lang; localStorage.setItem('nt_lang', lang); document.documentElement.lang = lang;
+            document.getElementById('langBtn').innerText = lang === 'en' ? '🇺🇸 EN' : '🇨🇿 CS';
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const value = t(el.dataset.i18n);
+                el.innerText = typeof value === 'function' ? '' : value;
+            });
+            document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+                const value = t(el.dataset.i18nPlaceholder);
+                el.placeholder = typeof value === 'function' ? '' : value;
+            });
             document.getElementById('searchInput').placeholder = t('search_placeholder');
             renderUI();
         }
@@ -727,10 +756,16 @@
         function maybeNotifyLimit(todayCount, limit) {
             if (!limit) return;
             const pct = todayCount / limit;
+            const limitReachedTitle = t('limit_reached_title');
+            const limitReachedBody = t('limit_reached_body');
+            const limitWarningTitle = t('limit_warning_title');
+            const limitWarningBody = t('limit_warning_body');
             if (pct >= 1) {
-                sendLocalNotification('⚠️ Limit dosažen', `Dnes jsi na ${todayCount}/${limit}. Zvaž pauzu.`);
+                const body = typeof limitReachedBody === 'function' ? limitReachedBody(todayCount, limit) : limitReachedBody;
+                sendLocalNotification(limitReachedTitle, body);
             } else if (pct >= 0.8) {
-                sendLocalNotification('⚠️ Pozor!', `⚠️ Pozor: Blížíš se k dennímu limitu (${todayCount}/${limit})!`);
+                const body = typeof limitWarningBody === 'function' ? limitWarningBody(todayCount, limit) : limitWarningBody;
+                sendLocalNotification(limitWarningTitle, body);
             }
         }
 
@@ -900,7 +935,7 @@
 
         function renderHealth() {
             const container = document.getElementById('healthList'); container.innerHTML = '';
-            if (state.history.length === 0) { container.innerHTML = `<div style="padding:10px; color:var(--muted); text-align:center;">No data</div>`; return; }
+            if (state.history.length === 0) { container.innerHTML = `<div style="padding:10px; color:var(--muted); text-align:center;">${t('health_empty')}</div>`; return; }
             
             const lastDate = new Date(state.history[0].date);
             const diffMins = (new Date() - lastDate) / 1000 / 60;
@@ -925,10 +960,12 @@
 
             const { benchmark, dailyAvg } = stats;
             card.classList.remove('hidden');
-            document.getElementById('benchmarkLabel').innerText = benchmark.label;
-            document.getElementById('benchmarkMsg').innerText = benchmark.msg;
-            document.getElementById('benchmarkPercentile').innerText = `${benchmark.percentile}. percentil`;
-            document.getElementById('benchmarkHint').innerText = `Denní průměr: ${dailyAvg.toFixed(1)} sáčků (škála 0-20).`;
+            const bLabel = state.lang === 'cs' ? benchmark.label_cs : benchmark.label_en;
+            const bMsg = state.lang === 'cs' ? benchmark.msg_cs : benchmark.msg_en;
+            document.getElementById('benchmarkLabel').innerText = bLabel;
+            document.getElementById('benchmarkMsg').innerText = bMsg;
+            document.getElementById('benchmarkPercentile').innerText = `${t('benchmark_percentile_label')}: ${benchmark.percentile}`;
+            document.getElementById('benchmarkHint').innerText = `${t('daily_average_label')}: ${dailyAvg.toFixed(1)} ${t('pouch_unit_label')} ${t('range_note')}`;
             document.getElementById('benchmarkProgress').style.width = `${Math.min(100, (Math.min(dailyAvg, 20) / 20) * 100)}%`;
         }
 
@@ -958,7 +995,7 @@
             const renderList = (items) => {
                 results.innerHTML = items.map((item, index) => `
                     <div class="search-item" onclick="window.selectByIndex(${index})">
-                        <div><strong>${item.n}</strong><small>${item.b}${item.isCustom ? '<span class="badge-custom">✏️ Custom</span>' : ''}</small></div>
+                        <div><strong>${item.n}</strong><small>${item.b}${item.isCustom ? `<span class="badge-custom">✏️ ${t('custom_badge')}</span>` : ''}</small></div>
                         <div class="mg-badge">${item.mg} mg</div>
                     </div>
                 `).join('');
@@ -987,7 +1024,7 @@
                 const brand = document.getElementById('customBrandInput').value.trim();
                 const name = document.getElementById('customNameInput').value.trim();
                 const mg = Number(document.getElementById('customMgInput').value);
-                if (!brand || !name || mg < 0 || Number.isNaN(mg)) return showToast('Vyplňte značku, název i sílu.');
+                if (!brand || !name || mg < 0 || Number.isNaN(mg)) return showToast(t('custom_missing_fields'));
 
                 const pouch = { id: Date.now().toString(), b: brand, n: name, mg, isCustom: true };
                 state.customPouches.unshift(pouch);
@@ -1000,7 +1037,7 @@
                 document.getElementById('customNameInput').value = '';
                 document.getElementById('customMgInput').value = '';
                 vibrateDevice(30);
-                showToast('Vlastní sáček uložen');
+                showToast(t('custom_saved'));
 
                 if(state.user) await setDoc(doc(db,'users',state.user.uid,'custom_pouches',pouch.id),{ ...pouch, createdAt: Timestamp.now() });
             };
@@ -1042,7 +1079,7 @@
             const dateVal = document.getElementById('editDateInput').value;
             const timeVal = document.getElementById('editTimeInput').value || '00:00';
             const parsedDate = new Date(`${dateVal}T${timeVal}`);
-            if (!dateVal || isNaN(parsedDate) || isFutureDate(parsedDate)) return showToast('Datum nesmí být v budoucnu.');
+            if (!dateVal || isNaN(parsedDate) || isFutureDate(parsedDate)) return showToast(t('date_future_error'));
 
             const idx = state.history.findIndex(h => h.id === editingEntryId);
             if (idx === -1) return;
@@ -1126,9 +1163,9 @@
         async function addPastEntry() {
             const dateVal = document.getElementById('backdateDate').value;
             const timeVal = document.getElementById('backdateTime').value || '00:00';
-            if(!dateVal || !state.selection) return showToast("Select pouch and date first");
+            if(!dateVal || !state.selection) return showToast(t('select_pouch_first'));
             const parsedDate = new Date(`${dateVal}T${timeVal}`);
-            if(isNaN(parsedDate) || isFutureDate(parsedDate)) return showToast('Date must not be in the future');
+            if(isNaN(parsedDate) || isFutureDate(parsedDate)) return showToast(t('date_future_error'));
             ensureNotificationPermission();
             const limit = calculateDynamicLimit();
             const rec = { id: Date.now().toString(), brand: state.selection.b, name: state.selection.n, mg: state.selection.mg, date: parsedDate.toISOString() };
@@ -1183,7 +1220,7 @@
         window.showStep = (s) => {
             [1,2,3].forEach(i => document.getElementById(`step${i}`).classList.add('hidden'));
             document.getElementById(`step${s}`).classList.remove('hidden');
-            document.getElementById('wizardStepIndicator').innerText = `Step ${s}/3`;
+            document.getElementById('wizardStepIndicator').innerText = `${t('wizard_step_label')} ${s}/3`;
             document.getElementById('wizBackBtn').classList.toggle('hidden', s===1);
             document.getElementById('wizNextBtn').innerText = s === 3 ? t('finish') : t('next');
             
@@ -1202,7 +1239,7 @@
             }
         };
         window.nextStep = () => {
-            if(wizStep === 1 && !tempSettings.goal) { showToast("Please select a goal."); return; }
+            if(wizStep === 1 && !tempSettings.goal) { showToast(t('goal_missing')); return; }
             
             if(wizStep===1 && tempSettings.goal==='track') {
                 wizStep = 3; // Skip strat for tracking
@@ -1260,11 +1297,11 @@
                                 const parsed = new Date(item.date);
                                 return item.date && !isNaN(parsed) && parsed.getTime() <= now;
                             });
-                            if(cleanedHistory.length !== data.history.length) showToast('Skipped future or invalid entries');
+                            if(cleanedHistory.length !== data.history.length) showToast(t('import_skipped'));
                             state.history = cleanedHistory; state.settings = data.settings;
                             persistHistory(); renderUI(); showToast(t('restore_success')); location.reload();
-                        } else showToast("Invalid backup format.");
-                    } catch(e) { showToast("Error: "+e.message); }
+                        } else showToast(t('invalid_backup'));
+                    } catch(e) { showToast(`${t('error_prefix')} ${e.message}`); }
                 };
                 reader.readAsText(file);
             };
