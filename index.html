@@ -552,6 +552,10 @@
                 </div>
                 <div style="text-align:center; margin-top:10px; font-size:13px; color:var(--primary); cursor:pointer;" id="toggleReg" data-i18n="toggle_reg">Register</div>
             </div>
+            <div id="authStatus" class="hidden" style="text-align:center; padding:16px 0;">
+                <div style="font-size:26px;">✅</div>
+                <div id="authStatusMsg" style="margin-top:6px; font-weight:700; color:var(--primary);"></div>
+            </div>
             <div style="border-top:1px solid var(--border); margin-top:20px; padding-top:20px;">
                 <h4 style="margin:0 0 12px; font-size:14px; color:var(--muted); text-transform:uppercase;" data-i18n="data_management">Data</h4>
                 <div class="grid" style="grid-template-columns: 1fr 1fr;">
@@ -632,7 +636,7 @@
                 limit_warning_title: "⚠️ Heads up!", limit_warning_body: (today, limit) => `⚠️ Warning: You're nearing the daily limit (${today}/${limit})!`, email_placeholder: "Email", password_placeholder: "Password", footer_note: "is a modern online tool for tracking and managing nicotine pouch use.",
                 today_usage: "TODAY", streak: "STREAK", money_saved: "SAVED", log_usage: "Log Usage", history: "History", view_all: "View All",
                 settings: "Settings", quit_title: "Freedom Journey", achievements: "Achievements",
-                export_csv: "📄 CSV Export", export_json: "💾 Backup", import_json: "📂 Restore", google_login: "Google Login", streak_hint: "🔥 Keep it up", nicotine: "Nicotine",
+                export_csv: "📄 CSV Export", export_json: "💾 Backup", import_json: "📂 Restore", google_login: "Google Login", signed_in_google: "Signed in with Google", signed_in_generic: "You are signed in", streak_hint: "🔥 Keep it up", nicotine: "Nicotine",
                 total_today: "Total today", cost_label: "Cost", limit_label: "Limit", days_label: "days", daily_max: "DAILY MAX", pouches_used: "pouches used", days_recorded: "days recorded",
                 history_modal_title: "Full History", pick_date: "Pick Date", add_past_entry: "Add Past Entry", charts_title: "Analytics", saved_compare: "vs typical use", hourly_heatmap: "Hourly Heatmap",
                 health_timeline: "Health Recovery", wiz_step1_title: "Goal?", wiz_step2_title: "Strategy", wiz_step3_title: "Setup",
@@ -663,7 +667,7 @@
                 limit_warning_title: "⚠️ Pozor!", limit_warning_body: (today, limit) => `⚠️ Blížíš se k dennímu limitu (${today}/${limit})!`, email_placeholder: "E-mail", password_placeholder: "Heslo", footer_note: "je moderní online nástroj pro sledování a správu užívání nikotinových sáčků.",
                 today_usage: "DNES", streak: "ŘADA DNÍ", money_saved: "UŠETŘENO", log_usage: "Zapsat sáček", history: "Historie", view_all: "Zobrazit vše",
                 settings: "Nastavení", quit_title: "Cesta ke svobodě", achievements: "Úspěchy",
-                export_csv: "📄 Export CSV", export_json: "💾 Záloha", import_json: "📂 Nahrát zálohu", google_login: "Google", streak_hint: "🔥 Jen tak dál", nicotine: "Nikotin",
+                export_csv: "📄 Export CSV", export_json: "💾 Záloha", import_json: "📂 Nahrát zálohu", google_login: "Google", signed_in_google: "Přihlášeno přes Google", signed_in_generic: "Jste přihlášeni", streak_hint: "🔥 Jen tak dál", nicotine: "Nikotin",
                 total_today: "Celkem dnes", cost_label: "Cena", limit_label: "Limit", days_label: "dní", daily_max: "DENNÍ CÍL", pouches_used: "zapsané sáčky", days_recorded: "dnů zaznamenáno",
                 history_modal_title: "Kompletní historie", pick_date: "Vyber datum", add_past_entry: "Přidat zpětně", charts_title: "Statistiky", saved_compare: "v porovnání se standardní spotřebou", hourly_heatmap: "Hodinová mapa",
                 health_timeline: "Zdravotní regenerace", wiz_step1_title: "Jaký je cíl?", wiz_step2_title: "Strategie", wiz_step3_title: "Nastavení",
@@ -751,6 +755,13 @@
                 el.placeholder = typeof value === 'function' ? '' : value;
             });
             document.getElementById('searchInput').placeholder = t('search_placeholder');
+            const syncBtn = document.getElementById('syncBtn');
+            if (syncBtn) syncBtn.innerText = state.user ? '✅' : t('auth_btn');
+            if (state.user) {
+                const providerId = state.user.providerData?.[0]?.providerId || '';
+                const authStatusMsg = document.getElementById('authStatusMsg');
+                if (authStatusMsg) authStatusMsg.innerText = providerId.includes('google') ? t('signed_in_google') : t('signed_in_generic');
+            }
             renderUI();
         }
 
@@ -1501,21 +1512,36 @@
                 } catch(err) { showToast(err.message); }
             };
             document.getElementById('googleAuthBtn').onclick=()=>signInWithPopup(auth,new GoogleAuthProvider()).then(()=>document.getElementById('authModal').close());
-            onAuthStateChanged(auth, async (u) => { if(u){ state.user=u; document.getElementById('syncBtn').innerText="✅";
-                onSnapshot(query(collection(db,'users',u.uid,'history'),orderBy('timestamp','desc')),(s)=>{const h=s.docs.map(d=>{const ts=d.data().timestamp?.toDate?.()||new Date(); return {id:d.id, brand:d.data().brand, name:d.data().name||d.data().brand, mg:d.data().mg, date:ts.toISOString(), localDate:getLocalISODate(ts)};}); if(h.length){state.history=normalizeHistory(h);persistHistory();renderUI();}});
-                getDoc(doc(db,'users',u.uid,'settings','profile')).then(d => { if(d.exists()) { state.settings = d.data(); persistHistory(); }});
-                getDocs(collection(db,'users',u.uid,'custom_pouches')).then((snap)=>{
-                    const remote = snap.docs.map(docSnap => ({ id: docSnap.id, ...docSnap.data(), isCustom: true }));
-                    if(remote.length){
-                        const existingIds = new Set(state.customPouches.map(p => p.id || `${p.b}-${p.n}-${p.mg}`));
-                        remote.forEach(item => {
-                            const key = item.id || `${item.b}-${item.n}-${item.mg}`;
-                            if(!existingIds.has(key)) { state.customPouches.push(item); existingIds.add(key); }
-                        });
-                        persistHistory();
-                    }
-                });
-            }});
+            onAuthStateChanged(auth, async (u) => {
+                const authSection = document.getElementById('authSection');
+                const authStatus = document.getElementById('authStatus');
+                const authStatusMsg = document.getElementById('authStatusMsg');
+                if(u){ state.user=u; document.getElementById('syncBtn').innerText="✅";
+                    const providerId = u.providerData?.[0]?.providerId || '';
+                    authSection.classList.add('hidden');
+                    authStatus.classList.remove('hidden');
+                    authStatusMsg.innerText = providerId.includes('google') ? t('signed_in_google') : t('signed_in_generic');
+                    onSnapshot(query(collection(db,'users',u.uid,'history'),orderBy('timestamp','desc')),(s)=>{const h=s.docs.map(d=>{const ts=d.data().timestamp?.toDate?.()||new Date(); return {id:d.id, brand:d.data().brand, name:d.data().name||d.data().brand, mg:d.data().mg, date:ts.toISOString(), localDate:getLocalISODate(ts)};}); if(h.length){state.history=normalizeHistory(h);persistHistory();renderUI();}});
+                    getDoc(doc(db,'users',u.uid,'settings','profile')).then(d => { if(d.exists()) { state.settings = d.data(); persistHistory(); }});
+                    getDocs(collection(db,'users',u.uid,'custom_pouches')).then((snap)=>{
+                        const remote = snap.docs.map(docSnap => ({ id: docSnap.id, ...docSnap.data(), isCustom: true }));
+                        if(remote.length){
+                            const existingIds = new Set(state.customPouches.map(p => p.id || `${p.b}-${p.n}-${p.mg}`));
+                            remote.forEach(item => {
+                                const key = item.id || `${item.b}-${item.n}-${item.mg}`;
+                                if(!existingIds.has(key)) { state.customPouches.push(item); existingIds.add(key); }
+                            });
+                            persistHistory();
+                        }
+                    });
+                } else {
+                    state.user=null;
+                    document.getElementById('syncBtn').innerText=t('auth_btn');
+                    authSection.classList.remove('hidden');
+                    authStatus.classList.add('hidden');
+                    authStatusMsg.innerText = '';
+                }
+            });
         }
 
         init();
