@@ -14,8 +14,7 @@
     <!-- Icons & PWA -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2220%22 fill=%22%2310b981%22/><circle cx=%2250%22 cy=%2250%22 r=%2225%22 stroke=%22white%22 stroke-width=%228%22 fill=%22none%22/></svg>">
     <link rel="apple-touch-icon" href="./apple-touch-icon.png">
-    <meta name="theme-color" content="#f8fafc" media="(prefers-color-scheme: light)">
-    <meta name="theme-color" content="#020617" media="(prefers-color-scheme: dark)">
+    <meta name="theme-color" content="#f8fafc">
 
     <!-- Social Sharing (Open Graph) -->
     <meta property="og:title" content="PouchLog | Track Nicotine Pouches">
@@ -31,6 +30,20 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+
+    <!-- ANTI-FLICKER SCRIPT -->
+    <script>
+        (function() {
+            try {
+                const stored = localStorage.getItem('nt_theme');
+                const system = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+                const theme = stored || system;
+                document.documentElement.setAttribute('data-theme', theme);
+                const metaColor = document.querySelector('meta[name="theme-color"]');
+                if(metaColor) metaColor.setAttribute('content', theme === 'dark' ? '#020617' : '#f8fafc');
+            } catch (e) {}
+        })();
+    </script>
 
     <style>
         /* --- CLEAN COLOR SYSTEM --- */
@@ -103,10 +116,10 @@
         }
 
         * { box-sizing: border-box; }
-        body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); padding-bottom: 80px; -webkit-tap-highlight-color: transparent; transition: background 0.3s, color 0.3s; }
+        body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); padding-bottom: 80px; -webkit-tap-highlight-color: transparent; }
         .shell { max-width: 1100px; margin: 0 auto; padding: 20px 16px; }
 
-        header { background: var(--card); border-bottom: 1px solid var(--border); padding: 16px 20px; position: sticky; top: 0; z-index: 50; display: flex; justify-content: space-between; align-items: center; transition: background 0.3s, border-color 0.3s; }
+        header { background: var(--card); border-bottom: 1px solid var(--border); padding: 16px 20px; position: sticky; top: 0; z-index: 50; display: flex; justify-content: space-between; align-items: center; }
         .logo { font-weight: 800; font-size: 20px; color: var(--text); display: flex; align-items: center; gap: 8px; text-decoration: none; }
         .logo span { color: var(--primary); }
         .logo-stack { display: flex; flex-direction: column; gap: 2px; line-height: 1.1; }
@@ -115,7 +128,7 @@
         .logo-tagline { font-size: 11px; color: var(--muted); font-weight: 600; letter-spacing: 0.1px; text-transform: none; }
 
         /* UI Components */
-        .card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 16px; margin-bottom: 12px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); transition: background 0.3s, border-color 0.3s; }
+        .card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 16px; margin-bottom: 12px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); }
         
         .btn { border: none; border-radius: 10px; padding: 10px 16px; font-weight: 600; cursor: pointer; font-size: 14px; transition: 0.2s; display: inline-flex; align-items: center; gap: 6px; }
         .btn-primary { background: var(--primary); color: var(--primary-fg); }
@@ -134,7 +147,7 @@
         .stat .lbl { font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; }
         .stat .sub { font-size: 11px; color: var(--muted); margin-top: 2px; }
 
-        input, select { width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 10px; background: var(--input-bg); font-size: 15px; outline: none; color: var(--text); transition: border-color 0.3s, background 0.3s; }
+        input, select { width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 10px; background: var(--input-bg); font-size: 15px; outline: none; color: var(--text); }
         input:focus { border-color: var(--primary); }
         input::placeholder { color: var(--muted); opacity: 0.6; }
 
