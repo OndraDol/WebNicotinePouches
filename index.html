@@ -118,7 +118,7 @@
         body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); padding-bottom: 80px; -webkit-tap-highlight-color: transparent; overflow-x: hidden; }
         .shell { max-width: 1100px; margin: 0 auto; padding: 20px 16px; }
 
-        header { background: var(--card); border-bottom: 1px solid var(--border); padding: 16px 20px; position: sticky; top: 0; z-index: 50; display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+        header { background: var(--card); border-bottom: 1px solid var(--border); padding: 10px 16px; position: sticky; top: 0; z-index: 50; display: flex; justify-content: space-between; align-items: center; gap: 10px; }
         .logo { font-weight: 800; font-size: 20px; color: var(--text); display: flex; align-items: center; gap: 8px; text-decoration: none; }
         .logo span { color: var(--primary); }
         .logo-stack { display: flex; flex-direction: column; gap: 2px; line-height: 1.1; }
@@ -126,7 +126,7 @@
         .logo-version { font-size:10px; color:var(--muted); font-weight:400; opacity: 0.7; }
         .logo-tagline { font-size: 11px; color: var(--muted); font-weight: 600; letter-spacing: 0.1px; text-transform: none; }
 
-        .header-actions { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; justify-content: flex-end; }
+        .header-actions { display: flex; gap: 8px; align-items: center; flex-wrap: nowrap; justify-content: flex-end; }
         .hide-mobile { display: inline-flex; }
 
         /* UI Components */
@@ -192,8 +192,9 @@
             .onboarding-actions .btn { flex: 1; justify-content: center; }
         }
         @media (max-width: 640px) {
-            header { align-items: flex-start; }
-            .header-actions { justify-content: flex-start; }
+            header { align-items: center; padding: 10px 12px; }
+            .header-actions { justify-content: flex-end; gap: 6px; }
+            .header-actions .btn { padding: 6px 10px; font-size: 12px; }
             .hide-mobile { display: none !important; }
         }
 
@@ -588,7 +589,8 @@
     <dialog id="settingsModal">
         <div class="modal-head">
             <span data-i18n="settings">Settings</span>
-            <div style="display:flex; align-items:center; gap:8px;">
+            <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap; justify-content:flex-end;">
+                <button id="settingsLangBtn" class="btn btn-outline" style="padding:6px 10px;" aria-label="Přepnout jazyk">🇺🇸 EN</button>
                 <span style="font-size:12px; color:var(--muted);" id="wizardStepIndicator">Step 1/3</span>
                 <button id="closeSettingsBtn" class="btn btn-outline" style="padding:6px 10px;" aria-label="Close settings">✕</button>
             </div>
@@ -869,7 +871,10 @@
 
         function applyLanguage(lang) {
             state.lang = lang; localStorage.setItem('nt_lang', lang); document.documentElement.lang = lang;
-            document.getElementById('langBtn').innerText = lang === 'en' ? '🇺🇸 EN' : '🇨🇿 CS';
+            const langLabel = lang === 'en' ? '🇺🇸 EN' : '🇨🇿 CS';
+            document.getElementById('langBtn').innerText = langLabel;
+            const settingsLangBtn = document.getElementById('settingsLangBtn');
+            if (settingsLangBtn) settingsLangBtn.innerText = langLabel;
             document.querySelectorAll('[data-i18n]').forEach(el => {
                 const value = t(el.dataset.i18n);
                 el.innerText = typeof value === 'function' ? '' : value;
@@ -1627,6 +1632,7 @@
         // --- LISTENERS ---
         function setupListeners() {
             document.getElementById('langBtn').onclick=()=>applyLanguage(state.lang==='en'?'cs':'en');
+            document.getElementById('settingsLangBtn').onclick=()=>applyLanguage(state.lang==='en'?'cs':'en');
             document.getElementById('menuBtn').onclick=window.openWizard;
             document.getElementById('themeToggle').onclick=()=>applyTheme(state.theme === 'dark' ? 'light' : 'dark');
             document.getElementById('syncBtn').onclick=()=>{ document.getElementById('authModal').showModal(); vibrateDevice(20); };
