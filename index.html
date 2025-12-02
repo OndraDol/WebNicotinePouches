@@ -285,7 +285,6 @@
         </a>
         <div class="header-actions">
             <button id="installBtn" class="btn btn-primary hidden" style="padding:8px 12px; font-size:12px;" data-i18n="install_prompt">📱 Instalovat na telefon</button>
-            <button id="langBtn" class="btn btn-outline" style="padding:8px;">🇺🇸 EN</button>
             <button id="syncBtn" class="btn btn-primary" data-i18n="auth_btn">Login</button>
             <button id="themeToggle" class="btn btn-outline hide-mobile" style="padding:8px;">🌙</button>
             <button id="menuBtn" class="btn btn-outline" style="font-size:18px;">⚙️</button>
@@ -872,7 +871,6 @@
         function applyLanguage(lang) {
             state.lang = lang; localStorage.setItem('nt_lang', lang); document.documentElement.lang = lang;
             const langLabel = lang === 'en' ? '🇺🇸 EN' : '🇨🇿 CS';
-            document.getElementById('langBtn').innerText = langLabel;
             const settingsLangBtn = document.getElementById('settingsLangBtn');
             if (settingsLangBtn) settingsLangBtn.innerText = langLabel;
             document.querySelectorAll('[data-i18n]').forEach(el => {
@@ -1631,8 +1629,7 @@
 
         // --- LISTENERS ---
         function setupListeners() {
-            document.getElementById('langBtn').onclick=()=>applyLanguage(state.lang==='en'?'cs':'en');
-            document.getElementById('settingsLangBtn').onclick=()=>applyLanguage(state.lang==='en'?'cs':'en');
+        document.getElementById('settingsLangBtn').onclick=()=>applyLanguage(state.lang==='en'?'cs':'en');
             document.getElementById('menuBtn').onclick=window.openWizard;
             document.getElementById('themeToggle').onclick=()=>applyTheme(state.theme === 'dark' ? 'light' : 'dark');
             document.getElementById('syncBtn').onclick=()=>{ document.getElementById('authModal').showModal(); vibrateDevice(20); };
