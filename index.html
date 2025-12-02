@@ -36,11 +36,10 @@
         (function() {
             try {
                 const stored = localStorage.getItem('nt_theme');
-                const system = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-                const theme = stored || system;
+                const theme = stored || 'light';
                 document.documentElement.setAttribute('data-theme', theme);
                 const metaColor = document.querySelector('meta[name="theme-color"]');
-                if(metaColor) metaColor.setAttribute('content', theme === 'dark' ? '#020617' : '#f8fafc');
+                if (metaColor) metaColor.setAttribute('content', theme === 'dark' ? '#020617' : '#f8fafc');
             } catch (e) {}
         })();
     </script>
@@ -116,16 +115,19 @@
         }
 
         * { box-sizing: border-box; }
-        body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); padding-bottom: 80px; -webkit-tap-highlight-color: transparent; }
+        body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); padding-bottom: 80px; -webkit-tap-highlight-color: transparent; overflow-x: hidden; }
         .shell { max-width: 1100px; margin: 0 auto; padding: 20px 16px; }
 
-        header { background: var(--card); border-bottom: 1px solid var(--border); padding: 16px 20px; position: sticky; top: 0; z-index: 50; display: flex; justify-content: space-between; align-items: center; }
+        header { background: var(--card); border-bottom: 1px solid var(--border); padding: 16px 20px; position: sticky; top: 0; z-index: 50; display: flex; justify-content: space-between; align-items: center; gap: 12px; }
         .logo { font-weight: 800; font-size: 20px; color: var(--text); display: flex; align-items: center; gap: 8px; text-decoration: none; }
         .logo span { color: var(--primary); }
         .logo-stack { display: flex; flex-direction: column; gap: 2px; line-height: 1.1; }
         .logo-row { display: flex; align-items: baseline; gap: 6px; }
         .logo-version { font-size:10px; color:var(--muted); font-weight:400; opacity: 0.7; }
         .logo-tagline { font-size: 11px; color: var(--muted); font-weight: 600; letter-spacing: 0.1px; text-transform: none; }
+
+        .header-actions { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; justify-content: flex-end; }
+        .hide-mobile { display: inline-flex; }
 
         /* UI Components */
         .card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 16px; margin-bottom: 12px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); }
@@ -183,10 +185,16 @@
         .onboarding-banner p { margin: 0; color: var(--text); opacity: 0.8; font-size: 14px; line-height: 1.5; }
         .onboarding-actions { display: flex; gap: 8px; flex-wrap: wrap; }
         .onboarding-actions .btn { padding: 10px 14px; }
+        .analytics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; }
         @media (max-width: 720px) {
             .onboarding-banner { flex-direction: column; }
             .onboarding-actions { width: 100%; }
             .onboarding-actions .btn { flex: 1; justify-content: center; }
+        }
+        @media (max-width: 640px) {
+            header { align-items: flex-start; }
+            .header-actions { justify-content: flex-start; }
+            .hide-mobile { display: none !important; }
         }
 
         /* Modals */
@@ -274,11 +282,11 @@
                 <span class="logo-tagline">Know your numbers.</span>
             </div>
         </a>
-        <div style="display:flex; gap:10px;">
+        <div class="header-actions">
             <button id="installBtn" class="btn btn-primary hidden" style="padding:8px 12px; font-size:12px;" data-i18n="install_prompt">📱 Instalovat na telefon</button>
             <button id="langBtn" class="btn btn-outline" style="padding:8px;">🇺🇸 EN</button>
             <button id="syncBtn" class="btn btn-primary" data-i18n="auth_btn">Login</button>
-            <button id="themeToggle" class="btn btn-outline" style="padding:8px;">🌙</button>
+            <button id="themeToggle" class="btn btn-outline hide-mobile" style="padding:8px;">🌙</button>
             <button id="menuBtn" class="btn btn-outline" style="font-size:18px;">⚙️</button>
         </div>
     </header>
@@ -373,7 +381,7 @@
         <!-- Analytics -->
         <div class="card">
             <h3 style="margin:0 0 12px;" data-i18n="charts_title">Analytics</h3>
-            <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));">
+            <div class="analytics-grid">
                 <div>
                     <canvas id="trendChart" height="200"></canvas>
                 </div>
@@ -829,7 +837,7 @@
         const getInitialTheme = () => {
             const stored = localStorage.getItem('nt_theme');
             if (stored) return stored;
-            return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+            return 'light';
         };
 
         const storedSettings = JSON.parse(localStorage.getItem('nt_settings')) || null;
