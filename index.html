@@ -333,11 +333,15 @@
                 <div class="val" id="valStreak">0 <span style="font-size:14px">days recorded</span></div>
                 <div class="sub" data-i18n="streak_hint">🔥 Keep it up</div>
             </div>
+            <div class="stat">
+                <div class="lbl" data-i18n="cost_label">Today spent</div>
+                <div class="val" id="valSpent">0</div>
+                <div class="sub" id="valSpentNote" data-i18n="cost_note">on pouches</div>
+            </div>
             <div class="stat" id="savedStat">
                 <div class="lbl" data-i18n="money_saved">Saved</div>
                 <div class="val" id="valSaved" style="color:var(--primary);">0</div>
                 <div class="sub" id="valSavedNote" data-i18n="saved_compare">vs typical use</div>
-                <div class="sub" id="valCost">Cost: 0</div>
             </div>
             <div class="stat">
                 <div class="lbl" data-i18n="nicotine">Nicotine</div>
@@ -393,7 +397,7 @@
             <div id="benchmarkCard" class="benchmark-card">
                 <div style="display:flex; justify-content:space-between; align-items:center;">
                     <div>
-                        <strong>Tvůj profil: <span id="benchmarkLabel">-</span></strong>
+                        <strong><span data-i18n="benchmark_profile_label">Your profile</span>: <span id="benchmarkLabel">-</span></strong>
                         <div id="benchmarkMsg" class="benchmark-sub"></div>
                     </div>
                     <div id="benchmarkPercentile" class="benchmark-sub" style="font-weight:700;"></div>
@@ -412,7 +416,7 @@
         </details>
 
         <!-- Health Recovery -->
-        <details id="healthSection" class="card" open>
+        <details id="healthSection" class="card">
             <summary><span data-i18n="health_timeline">Health Recovery</span></summary>
             <div class="content" id="healthList" style="margin-top:8px;"></div>
         </details>
@@ -748,13 +752,13 @@
                 install_prompt: "📱 Install on phone", install_help_title: "Install PouchLog", install_help_ios_title: "On iPhone/iPad", install_help_ios_step_share: "Tap Share (arrow icon).", install_help_ios_step_add: "Choose ‘Add to Home Screen’.", install_help_ios_note: "PouchLog runs full-screen without browser chrome.", install_help_android_title: "On Android", install_help_android_step_menu: "Open the ⋮ menu in the browser.", install_help_android_step_add: "Pick ‘Install app’ or ‘Add to Home screen’.", install_help_android_note: "After install you'll find PouchLog in your apps.", load_more: "Load older", custom_prompt: "Can't find it? Create your own", custom_form_title: "Custom pouch", custom_brand_label: "Brand", custom_name_label: "Name", custom_strength_label: "Strength (mg)",
                 custom_helper: "Stored on device and in cloud after sign-in.", cancel: "Cancel", save: "Save", custom_brand_placeholder: "Brand", custom_name_placeholder: "Name", custom_strength_placeholder: "mg", custom_badge: "Custom",
                 custom_missing_fields: "Fill brand, name, and strength.", custom_saved: "Custom pouch saved", date_future_error: "Date must not be in the future.", select_pouch_first: "Select pouch and date first", goal_missing: "Please select a goal.",
-                import_skipped: "Skipped future or invalid entries", invalid_backup: "Invalid backup format.", error_prefix: "Error:", health_empty: "No data yet", wizard_step_label: "Step", benchmark_percentile_label: "Percentile",
-                daily_average_label: "Daily average", range_note: "(scale 0-20)", pouch_unit_label: "pouches", limit_reached_title: "⚠️ Limit reached", limit_reached_body: (today, limit) => `Today you are at ${today}/${limit}. Consider a break.`,
-                limit_warning_title: "⚠️ Heads up!", limit_warning_body: (today, limit) => `⚠️ Warning: You're nearing the daily limit (${today}/${limit})!`, email_placeholder: "Email", password_placeholder: "Password", footer_note: "is a modern online tool for tracking and managing nicotine pouch use.", footer_privacy: "Privacy Policy", footer_github: "GitHub (Open Source)",
+                  import_skipped: "Skipped future or invalid entries", invalid_backup: "Invalid backup format.", error_prefix: "Error:", health_empty: "No data yet", wizard_step_label: "Step", benchmark_percentile_label: "Percentile", benchmark_profile_label: "Your profile",
+                  daily_average_label: "Daily average", range_note: "(scale 0-20)", pouch_unit_label: "pouches", limit_reached_title: "⚠️ Limit reached", limit_reached_body: (today, limit) => `Today you are at ${today}/${limit}. Consider a break.`,
+                  limit_warning_title: "⚠️ Heads up!", limit_warning_body: (today, limit) => `⚠️ Warning: You're nearing the daily limit (${today}/${limit})!`, email_placeholder: "Email", password_placeholder: "Password", footer_note: "is a modern online tool for tracking and managing nicotine pouch use.", footer_privacy: "Privacy Policy", footer_github: "GitHub (Open Source)",
                 today_usage: "TODAY", streak: "STREAK", money_saved: "SAVED", log_usage: "Log Usage", history: "History", view_all: "View All",
                 settings: "Settings", quit_title: "Freedom Journey", achievements: "Achievements",
                 export_csv: "📄 CSV Export", export_json: "💾 Backup", import_json: "📂 Restore", google_login: "Google Login", signed_in_google: "Signed in with Google", signed_in_generic: "You are signed in", streak_hint: "🔥 Keep it up", nicotine: "Nicotine",
-                total_today: "Total today", cost_label: "Today spent", limit_label: "Limit", days_label: "days", daily_max: "DAILY MAX", pouches_used: "pouches used", days_recorded: "days recorded",
+                  total_today: "Total today", cost_label: "Today spent", cost_note: "on pouches", limit_label: "Limit", days_label: "days", daily_max: "DAILY MAX", pouches_used: "pouches used", days_recorded: "days recorded",
                 history_modal_title: "Full History", pick_date: "Pick Date", add_past_entry: "Add Past Entry", charts_title: "Analytics", saved_compare: "vs typical use", hourly_heatmap: "Hourly Heatmap",
                 health_timeline: "Health Recovery", wiz_step1_title: "Goal?", wiz_step2_title: "Strategy", wiz_step3_title: "Setup",
                 goal_track_title: "Just Track", goal_quit_title: "I Want to Quit", strat_smooth_title: "Smooth", strat_weekly_title: "Weekly",
@@ -784,13 +788,13 @@
                 install_prompt: "📱 Instalovat na telefon", install_help_title: "Instalovat PouchLog", install_help_ios_title: "Na iPhone/iPad", install_help_ios_step_share: "Klepněte na Sdílet (ikona se šipkou).", install_help_ios_step_add: "Vyberte „Přidat na plochu“.", install_help_ios_note: "PouchLog pak poběží na celou obrazovku bez lišty prohlížeče.", install_help_android_title: "Na Androidu", install_help_android_step_menu: "Otevřete menu ⋮ v prohlížeči.", install_help_android_step_add: "Zvolte „Instalovat aplikaci“ nebo „Přidat na plochu“.", install_help_android_note: "Po instalaci najdete PouchLog přímo mezi aplikacemi.", load_more: "Načíst starší", custom_prompt: "Nenašli jste? Vytvořit vlastní", custom_form_title: "Vlastní sáček", custom_brand_label: "Značka", custom_name_label: "Název", custom_strength_label: "Síla (mg)",
                 custom_helper: "Uloženo do zařízení a cloudu po přihlášení.", cancel: "Zrušit", save: "Uložit", custom_brand_placeholder: "Značka", custom_name_placeholder: "Název", custom_strength_placeholder: "mg", custom_badge: "Vlastní",
                 custom_missing_fields: "Vyplňte značku, název i sílu.", custom_saved: "Vlastní sáček uložen", date_future_error: "Datum nesmí být v budoucnu.", select_pouch_first: "Nejprve zvolte sáček i datum", goal_missing: "Vyberte prosím cíl.",
-                import_skipped: "Přeskočeny budoucí nebo neplatné záznamy", invalid_backup: "Neplatný formát zálohy.", error_prefix: "Chyba:", health_empty: "Zatím žádná data", wizard_step_label: "Krok", benchmark_percentile_label: "Percentil",
-                daily_average_label: "Denní průměr", range_note: "(škála 0-20)", pouch_unit_label: "sáčků", limit_reached_title: "⚠️ Limit dosažen", limit_reached_body: (today, limit) => `Dnes jsi na ${today}/${limit}. Zvaž pauzu.`,
-                limit_warning_title: "⚠️ Pozor!", limit_warning_body: (today, limit) => `⚠️ Blížíš se k dennímu limitu (${today}/${limit})!`, email_placeholder: "E-mail", password_placeholder: "Heslo", footer_note: "je moderní online nástroj pro sledování a správu užívání nikotinových sáčků.", footer_privacy: "Zásady ochrany soukromí", footer_github: "GitHub (Open Source)",
+                  import_skipped: "Přeskočeny budoucí nebo neplatné záznamy", invalid_backup: "Neplatný formát zálohy.", error_prefix: "Chyba:", health_empty: "Zatím žádná data", wizard_step_label: "Krok", benchmark_percentile_label: "Percentil", benchmark_profile_label: "Tvůj profil",
+                  daily_average_label: "Denní průměr", range_note: "(škála 0-20)", pouch_unit_label: "sáčků", limit_reached_title: "⚠️ Limit dosažen", limit_reached_body: (today, limit) => `Dnes jsi na ${today}/${limit}. Zvaž pauzu.`,
+                  limit_warning_title: "⚠️ Pozor!", limit_warning_body: (today, limit) => `⚠️ Blížíš se k dennímu limitu (${today}/${limit})!`, email_placeholder: "E-mail", password_placeholder: "Heslo", footer_note: "je moderní online nástroj pro sledování a správu užívání nikotinových sáčků.", footer_privacy: "Zásady ochrany soukromí", footer_github: "GitHub (Open Source)",
                 today_usage: "DNES", streak: "ŘADA DNÍ", money_saved: "UŠETŘENO", log_usage: "Zapsat sáček", history: "Historie", view_all: "Zobrazit vše",
                 settings: "Nastavení", quit_title: "Cesta ke svobodě", achievements: "Úspěchy",
                 export_csv: "📄 Export CSV", export_json: "💾 Záloha", import_json: "📂 Nahrát zálohu", google_login: "Google", signed_in_google: "Přihlášeno přes Google", signed_in_generic: "Jste přihlášeni", streak_hint: "🔥 Jen tak dál", nicotine: "Nikotin",
-                total_today: "Celkem dnes", cost_label: "Dnešní útrata", limit_label: "Limit", days_label: "dní", daily_max: "DENNÍ CÍL", pouches_used: "zapsané sáčky", days_recorded: "dnů zaznamenáno",
+                  total_today: "Celkem dnes", cost_label: "Dnešní útrata", cost_note: "za sáčky", limit_label: "Limit", days_label: "dní", daily_max: "DENNÍ CÍL", pouches_used: "zapsané sáčky", days_recorded: "dnů zaznamenáno",
                 history_modal_title: "Kompletní historie", pick_date: "Vyber datum", add_past_entry: "Přidat zpětně", charts_title: "Statistiky", saved_compare: "v porovnání se standardní spotřebou", hourly_heatmap: "Hodinová mapa",
                 health_timeline: "Zdravotní regenerace", wiz_step1_title: "Jaký je cíl?", wiz_step2_title: "Strategie", wiz_step3_title: "Nastavení",
                 goal_track_title: "Sledovat", goal_quit_title: "Přestat", strat_smooth_title: "Plynule", strat_weekly_title: "Týdně",
@@ -847,6 +851,7 @@
         };
 
         const storedSettings = JSON.parse(localStorage.getItem('nt_settings')) || null;
+        const HISTORY_PAGE_SIZE = 14;
 
         // --- STATE ---
         let state = {
@@ -856,7 +861,7 @@
             history: JSON.parse(localStorage.getItem('nt_history')) || [],
             selection: JSON.parse(localStorage.getItem('nt_last_pouch')) || null,
             customPouches: JSON.parse(localStorage.getItem('nt_custom_pouches')) || [],
-            historyVisible: 20,
+            historyVisible: HISTORY_PAGE_SIZE,
             theme: getInitialTheme()
         };
         state.settings.onboarded = storedSettings?.onboarded ?? state.settings.onboarded ?? false;
@@ -1163,8 +1168,9 @@
                 document.getElementById('valSaved').innerText = `${Math.max(0, stats.savedTotal).toFixed(0)} ${state.settings.currency}`;
             }
 
-            const costToday = todayEntries.length * (state.settings.packPrice / state.settings.pouchesPerPack);
-            document.getElementById('valCost').innerText = `${t('cost_label')}: ${costToday.toFixed(0)}`;
+            const unitPrice = state.settings.pouchesPerPack ? state.settings.packPrice / state.settings.pouchesPerPack : 0;
+            const costToday = todayEntries.length * unitPrice;
+            document.getElementById('valSpent').innerText = `${costToday.toFixed(0)} ${state.settings.currency}`;
             document.getElementById('valMg').innerText = `${todayEntries.reduce((s,i)=>s+(i.mg||0),0).toFixed(1)} mg`;
             
             // Quit Banner
@@ -1516,7 +1522,7 @@
         }
 
         async function clearHistory() {
-            state.history = []; state.historyVisible = 20; persistHistory(); renderUI();
+            state.history = []; state.historyVisible = HISTORY_PAGE_SIZE; persistHistory(); renderUI();
             document.getElementById('historyModal').close();
             showToast(t('history_cleared'));
             vibrateDevice([40, 40, 40]);
@@ -1642,7 +1648,7 @@
             document.getElementById('addConfirmCloseBtn').onclick=()=>document.getElementById('addConfirmModal').close();
             document.getElementById('toggleBackdateBtn').onclick=()=>{ toggleBackdatePanel(); vibrateDevice(15); };
             document.getElementById('confirmBackdateBtn').onclick=addPastEntry;
-            document.getElementById('loadMoreHistoryBtn').onclick=()=>{ state.historyVisible += 20; renderUI(); vibrateDevice(15); };
+            document.getElementById('loadMoreHistoryBtn').onclick=()=>{ state.historyVisible += HISTORY_PAGE_SIZE; renderUI(); vibrateDevice(15); };
             document.getElementById('promoBtn').onclick=()=>{ openWizard(); window.setWizOption('goal','quit'); wizStep=2; showStep(2); };
             const onboardingSettingsBtn = document.getElementById('onboardingSettingsBtn');
             if (onboardingSettingsBtn) onboardingSettingsBtn.onclick = () => { openWizard(); };
