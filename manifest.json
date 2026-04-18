@@ -3,8 +3,8 @@
   "short_name": "PouchLog",
   "start_url": "./index.html",
   "display": "standalone",
-  "theme_color": "#10b981",
-  "background_color": "#f3f4f6",
+  "theme_color": "#c2410c",
+  "background_color": "#faf8f5",
   "icons": [
     {
       "src": "./icon-192.png",
