@@ -651,7 +651,241 @@ export const POUCH_DB = [
   { b: "White Fox", n: "White Fox Double Mint", mg: 12.0 },
   { b: "White Fox", n: "White Fox Peppered Mint", mg: 12.0 },
   { b: "White Fox", n: "White Fox Full Charge", mg: 16.5 },
-  { b: "White Fox", n: "White Fox Black Edition", mg: 12.0 }
+  { b: "White Fox", n: "White Fox Black Edition", mg: 12.0 },
+
+  // --- White Fox (additional) ---
+  { b: "White Fox", n: "White Fox Dry Mint", mg: 6.5 },
+  { b: "White Fox", n: "White Fox Crushed Ice", mg: 12.0 },
+  { b: "White Fox", n: "White Fox Ice Cold", mg: 16.5 },
+
+  // --- SHIRO (Philip Morris AB, Sweden) ---
+  { b: "SHIRO", n: "Shiro Cool Mint Regular", mg: 3.6 },
+  { b: "SHIRO", n: "Shiro Cool Mint Strong", mg: 6.0 },
+  { b: "SHIRO", n: "Shiro Cool Mint Extra Strong", mg: 11.0 },
+  { b: "SHIRO", n: "Shiro Virginia Classic Regular", mg: 3.6 },
+  { b: "SHIRO", n: "Shiro Virginia Classic Strong", mg: 6.0 },
+  { b: "SHIRO", n: "Shiro Virginia Classic Extra Strong", mg: 11.0 },
+  { b: "SHIRO", n: "Shiro Sweet Mint Strong", mg: 6.0 },
+  { b: "SHIRO", n: "Shiro Sour Red Berry Extra Strong", mg: 11.0 },
+  { b: "SHIRO", n: "Shiro Tingling Mint Hyper Strong", mg: 15.5 },
+  { b: "SHIRO", n: "Shiro Cooling Mint Extra Strong", mg: 11.0 },
+
+  // --- EPOK (V2 Tobacco / Norway) ---
+  { b: "EPOK", n: "Epok Mint", mg: 8.5 },
+  { b: "EPOK", n: "Epok Licorice", mg: 8.5 },
+  { b: "EPOK", n: "Epok Blueberry", mg: 8.5 },
+  { b: "EPOK", n: "Epok Lime", mg: 8.5 },
+  { b: "EPOK", n: "Epok Melon", mg: 8.5 },
+  { b: "EPOK", n: "Epok Coffee", mg: 8.5 },
+  { b: "EPOK", n: "Epok Juniper", mg: 8.5 },
+
+  // --- THUNDER (V2 Tobacco, Denmark) ---
+  { b: "THUNDER", n: "Thunder Frosted", mg: 13.0 },
+  { b: "THUNDER", n: "Thunder Dark Frost", mg: 13.0 },
+  { b: "THUNDER", n: "Thunder Deep Freeze", mg: 16.0 },
+  { b: "THUNDER", n: "Thunder Slim White Frosted", mg: 16.0 },
+
+  // --- NICK & JOHNNY (Swedish Match) ---
+  { b: "NICK & JOHNNY", n: "Nick & Johnny Crushed Ice", mg: 12.0 },
+  { b: "NICK & JOHNNY", n: "Nick & Johnny Spicy Mix", mg: 12.0 },
+  { b: "NICK & JOHNNY", n: "Nick & Johnny Deep Freeze", mg: 16.0 },
+  { b: "NICK & JOHNNY", n: "Nick & Johnny Wintry Mix", mg: 12.0 },
+
+  // --- G.4 (Swedish Match) ---
+  { b: "G.4", n: "G.4 Cryo Slim", mg: 10.0 },
+  { b: "G.4", n: "G.4 Fu:zn Apple Mint", mg: 10.0 },
+  { b: "G.4", n: "G.4 Ice Cold Mint", mg: 12.0 },
+
+  // --- HIT (GN Tobacco, Sweden) ---
+  { b: "HIT", n: "Hit Blueberry", mg: 20.0 },
+  { b: "HIT", n: "Hit Orange", mg: 20.0 },
+  { b: "HIT", n: "Hit Mint", mg: 20.0 },
+  { b: "HIT", n: "Hit Watermelon", mg: 20.0 },
+  { b: "HIT", n: "Hit Cola", mg: 20.0 },
+
+  // --- ELF (Elf Bar Nicotine Pouches) ---
+  { b: "ELF", n: "Elf Blueberry Raspberry", mg: 6.0 },
+  { b: "ELF", n: "Elf Blueberry Raspberry Strong", mg: 12.0 },
+  { b: "ELF", n: "Elf Blueberry Raspberry Ultra", mg: 20.0 },
+  { b: "ELF", n: "Elf Grape Ice", mg: 6.0 },
+  { b: "ELF", n: "Elf Grape Ice Strong", mg: 12.0 },
+  { b: "ELF", n: "Elf Grape Ice Ultra", mg: 20.0 },
+  { b: "ELF", n: "Elf Cool Storm", mg: 6.0 },
+  { b: "ELF", n: "Elf Cool Storm Strong", mg: 12.0 },
+  { b: "ELF", n: "Elf Cool Storm Ultra", mg: 20.0 },
+  { b: "ELF", n: "Elf Fantasy Orange", mg: 6.0 },
+  { b: "ELF", n: "Elf Fantasy Orange Strong", mg: 12.0 },
+  { b: "ELF", n: "Elf Watermelon Ice", mg: 6.0 },
+  { b: "ELF", n: "Elf Watermelon Ice Ultra", mg: 20.0 },
+  { b: "ELF", n: "Elf Max Polar Mint", mg: 12.0 },
+  { b: "ELF", n: "Elf Max Polar Mint Ultra", mg: 20.0 },
+
+  // --- TACJA (Elf Bar / Miracle, Sweden) ---
+  { b: "TACJA", n: "Tacja Cool Mint Regular", mg: 12.0 },
+  { b: "TACJA", n: "Tacja Cool Mint Medium", mg: 18.0 },
+  { b: "TACJA", n: "Tacja Cool Mint Strong", mg: 20.0 },
+  { b: "TACJA", n: "Tacja Spearmint Regular", mg: 12.0 },
+  { b: "TACJA", n: "Tacja Spearmint Strong", mg: 20.0 },
+  { b: "TACJA", n: "Tacja Tropical Mango Regular", mg: 12.0 },
+  { b: "TACJA", n: "Tacja Tropical Mango Strong", mg: 20.0 },
+  { b: "TACJA", n: "Tacja Blueberry Regular", mg: 12.0 },
+  { b: "TACJA", n: "Tacja Blueberry Strong", mg: 20.0 },
+  { b: "TACJA", n: "Tacja Watermelon Ice Regular", mg: 12.0 },
+  { b: "TACJA", n: "Tacja Strawberry Kiwi Regular", mg: 12.0 },
+  { b: "TACJA", n: "Tacja Grape Ice Medium", mg: 18.0 },
+
+  // --- EXTREME (N.G.P Empire, Lithuania) ---
+  { b: "EXTREME", n: "Extreme Fruit Vibes", mg: 20.0 },
+  { b: "EXTREME", n: "Extreme Fruit Vibes Max", mg: 30.0 },
+  { b: "EXTREME", n: "Extreme Mint Blast", mg: 20.0 },
+  { b: "EXTREME", n: "Extreme Mint Blast Max", mg: 30.0 },
+  { b: "EXTREME", n: "Extreme Lime Rush", mg: 20.0 },
+  { b: "EXTREME", n: "Extreme Lime Rush Max", mg: 30.0 },
+  { b: "EXTREME", n: "Extreme Berry Bomb", mg: 20.0 },
+
+  // --- ZONE (US) ---
+  { b: "ZONE", n: "Zone Spearmint 6mg", mg: 6.0 },
+  { b: "ZONE", n: "Zone Spearmint 9mg", mg: 9.0 },
+  { b: "ZONE", n: "Zone Wintergreen 6mg", mg: 6.0 },
+  { b: "ZONE", n: "Zone Wintergreen 9mg", mg: 9.0 },
+  { b: "ZONE", n: "Zone Citrus 6mg", mg: 6.0 },
+  { b: "ZONE", n: "Zone Citrus 9mg", mg: 9.0 },
+  { b: "ZONE", n: "Zone Peppermint 6mg", mg: 6.0 },
+  { b: "ZONE", n: "Zone Peppermint 9mg", mg: 9.0 },
+  { b: "ZONE", n: "Zone Mint 6mg", mg: 6.0 },
+  { b: "ZONE", n: "Zone Mint 9mg", mg: 9.0 },
+  { b: "ZONE", n: "Zone Dragonfruit 6mg", mg: 6.0 },
+  { b: "ZONE", n: "Zone Dragonfruit 9mg", mg: 9.0 },
+
+  // --- ZEO Universe (US, international) ---
+  { b: "ZEO", n: "Zeo Mint Breeze 4mg", mg: 4.0 },
+  { b: "ZEO", n: "Zeo Mint Breeze 6mg", mg: 6.0 },
+  { b: "ZEO", n: "Zeo Mint Breeze 12mg", mg: 12.0 },
+  { b: "ZEO", n: "Zeo Wintergreen Ice 4mg", mg: 4.0 },
+  { b: "ZEO", n: "Zeo Wintergreen Ice 6mg", mg: 6.0 },
+  { b: "ZEO", n: "Zeo Wintergreen Ice 12mg", mg: 12.0 },
+  { b: "ZEO", n: "Zeo Menthol Evergreen 4mg", mg: 4.0 },
+  { b: "ZEO", n: "Zeo Menthol Evergreen 6mg", mg: 6.0 },
+  { b: "ZEO", n: "Zeo Menthol Evergreen 12mg", mg: 12.0 },
+  { b: "ZEO", n: "Zeo Pineapple Tropic 4mg", mg: 4.0 },
+  { b: "ZEO", n: "Zeo Pineapple Tropic 9mg", mg: 9.0 },
+  { b: "ZEO", n: "Zeo Watermelon Wave 4mg", mg: 4.0 },
+  { b: "ZEO", n: "Zeo Watermelon Wave 9mg", mg: 9.0 },
+  { b: "ZEO", n: "Zeo Berry Moonlight 4mg", mg: 4.0 },
+  { b: "ZEO", n: "Zeo Berry Moonlight 9mg", mg: 9.0 },
+  { b: "ZEO", n: "Zeo Flavor Free 4mg", mg: 4.0 },
+  { b: "ZEO", n: "Zeo Flavor Free 6mg", mg: 6.0 },
+  { b: "ZEO", n: "Zeo Flavor Free 12mg", mg: 12.0 },
+
+  // --- BLACK BUFFALO (US) ---
+  { b: "BLACK BUFFALO", n: "Black Buffalo Wintergreen", mg: 11.25 },
+  { b: "BLACK BUFFALO", n: "Black Buffalo Mint", mg: 11.25 },
+  { b: "BLACK BUFFALO", n: "Black Buffalo Straight", mg: 11.25 },
+  { b: "BLACK BUFFALO", n: "Black Buffalo Blood Orange", mg: 11.25 },
+  { b: "BLACK BUFFALO", n: "Black Buffalo Peach", mg: 11.25 },
+
+  // --- BRIDGE (US) ---
+  { b: "BRIDGE", n: "Bridge Cool Mint 4mg", mg: 4.0 },
+  { b: "BRIDGE", n: "Bridge Cool Mint 10mg", mg: 10.0 },
+  { b: "BRIDGE", n: "Bridge Cool Mint 15mg", mg: 15.0 },
+  { b: "BRIDGE", n: "Bridge Wintergreen 4mg", mg: 4.0 },
+  { b: "BRIDGE", n: "Bridge Wintergreen 10mg", mg: 10.0 },
+  { b: "BRIDGE", n: "Bridge Wintergreen 15mg", mg: 15.0 },
+  { b: "BRIDGE", n: "Bridge Spearmint 4mg", mg: 4.0 },
+  { b: "BRIDGE", n: "Bridge Spearmint 10mg", mg: 10.0 },
+  { b: "BRIDGE", n: "Bridge Spearmint 15mg", mg: 15.0 },
+  { b: "BRIDGE", n: "Bridge Citrus 4mg", mg: 4.0 },
+  { b: "BRIDGE", n: "Bridge Citrus 10mg", mg: 10.0 },
+  { b: "BRIDGE", n: "Bridge Citrus 15mg", mg: 15.0 },
+  { b: "BRIDGE", n: "Bridge Original 4mg", mg: 4.0 },
+  { b: "BRIDGE", n: "Bridge Original 10mg", mg: 10.0 },
+  { b: "BRIDGE", n: "Bridge Original 15mg", mg: 15.0 },
+
+  // --- MONK ---
+  { b: "MONK", n: "Monk Dragon Fruit Regular", mg: 12.0 },
+  { b: "MONK", n: "Monk Dragon Fruit Strong", mg: 20.0 },
+  { b: "MONK", n: "Monk Wild Berries Regular", mg: 12.0 },
+  { b: "MONK", n: "Monk Wild Berries Strong", mg: 20.0 },
+  { b: "MONK", n: "Monk Classic Mint Regular", mg: 12.0 },
+  { b: "MONK", n: "Monk Classic Mint Strong", mg: 20.0 },
+  { b: "MONK", n: "Monk Tropical Fruit Regular", mg: 12.0 },
+  { b: "MONK", n: "Monk Tropical Fruit Strong", mg: 20.0 },
+  { b: "MONK", n: "Monk Apple Cider Regular", mg: 12.0 },
+  { b: "MONK", n: "Monk Apple Cider Strong", mg: 20.0 },
+  { b: "MONK", n: "Monk Strawberry Lemonade Regular", mg: 12.0 },
+  { b: "MONK", n: "Monk Strawberry Lemonade Strong", mg: 20.0 },
+  { b: "MONK", n: "Monk Very Berry Strong", mg: 20.0 },
+  { b: "MONK", n: "Monk Cola Strong", mg: 20.0 },
+
+  // --- GRIZZLY (additional) ---
+  { b: "Grizzly", n: "Grizzly Wintergreen 7mg", mg: 7.0 },
+  { b: "Grizzly", n: "Grizzly Peppermint 7mg", mg: 7.0 },
+  { b: "Grizzly", n: "Grizzly Spearmint 7mg", mg: 7.0 },
+  { b: "Grizzly", n: "Grizzly Buckshot Coffee 12mg", mg: 12.0 },
+  { b: "Grizzly", n: "Grizzly Backcountry Dark Fruits 12mg", mg: 12.0 },
+
+  // --- ROGUE (additional flavors) ---
+  { b: "Rogue", n: "Rogue Honey Lemon 3mg", mg: 3.0 },
+  { b: "Rogue", n: "Rogue Honey Lemon 6mg", mg: 6.0 },
+  { b: "Rogue", n: "Rogue Apple 3mg", mg: 3.0 },
+  { b: "Rogue", n: "Rogue Apple 6mg", mg: 6.0 },
+  { b: "Rogue", n: "Rogue Citrus 6mg", mg: 6.0 },
+  { b: "Rogue", n: "Rogue Tabac 3mg", mg: 3.0 },
+  { b: "Rogue", n: "Rogue Tabac 6mg", mg: 6.0 },
+
+  // --- LUCY (additional flavors) ---
+  { b: "Lucy", n: "Lucy Apple Ice 4mg", mg: 4.0 },
+  { b: "Lucy", n: "Lucy Apple Ice 8mg", mg: 8.0 },
+  { b: "Lucy", n: "Lucy Apple Ice 12mg", mg: 12.0 },
+  { b: "Lucy", n: "Lucy Mango 4mg", mg: 4.0 },
+  { b: "Lucy", n: "Lucy Mango 8mg", mg: 8.0 },
+  { b: "Lucy", n: "Lucy Mango 12mg", mg: 12.0 },
+  { b: "Lucy", n: "Lucy Berry Citrus 4mg", mg: 4.0 },
+  { b: "Lucy", n: "Lucy Berry Citrus 8mg", mg: 8.0 },
+  { b: "Lucy", n: "Lucy Berry Citrus 12mg", mg: 12.0 },
+  { b: "Lucy", n: "Lucy Espresso 4mg", mg: 4.0 },
+  { b: "Lucy", n: "Lucy Espresso 8mg", mg: 8.0 },
+  { b: "Lucy", n: "Lucy Espresso 12mg", mg: 12.0 },
+  { b: "Lucy", n: "Lucy Cinnamon 4mg", mg: 4.0 },
+  { b: "Lucy", n: "Lucy Cinnamon 8mg", mg: 8.0 },
+  { b: "Lucy", n: "Lucy Cinnamon 12mg", mg: 12.0 },
+
+  // --- JUICE HEAD (additional flavors) ---
+  { b: "Juice Head", n: "Juice Head Raspberry Lemonade Mint 6mg", mg: 6.0 },
+  { b: "Juice Head", n: "Juice Head Raspberry Lemonade Mint 12mg", mg: 12.0 },
+  { b: "Juice Head", n: "Juice Head Peach Pineapple Mint 6mg", mg: 6.0 },
+  { b: "Juice Head", n: "Juice Head Peach Pineapple Mint 12mg", mg: 12.0 },
+  { b: "Juice Head", n: "Juice Head Blueberry Lemon Mint 6mg", mg: 6.0 },
+  { b: "Juice Head", n: "Juice Head Blueberry Lemon Mint 12mg", mg: 12.0 },
+
+  // --- KLINT (additional flavors) ---
+  { b: "KLINT", n: "Klint Lavender", mg: 5.0 },
+  { b: "KLINT", n: "Klint Lavender Strong", mg: 8.0 },
+  { b: "KLINT", n: "Klint Rose", mg: 5.0 },
+  { b: "KLINT", n: "Klint Rose Strong", mg: 8.0 },
+  { b: "KLINT", n: "Klint Honeymelon", mg: 5.0 },
+  { b: "KLINT", n: "Klint Honeymelon Strong", mg: 8.0 },
+  { b: "KLINT", n: "Klint Cola Lime", mg: 5.0 },
+  { b: "KLINT", n: "Klint Cola Lime Strong", mg: 10.0 },
+  { b: "KLINT", n: "Klint Pink Grapefruit", mg: 5.0 },
+  { b: "KLINT", n: "Klint Pink Grapefruit Strong", mg: 8.0 },
+  { b: "KLINT", n: "Klint Pomegranate", mg: 5.0 },
+  { b: "KLINT", n: "Klint Pomegranate Strong", mg: 8.0 },
+  { b: "KLINT", n: "Klint Spicy Ginger", mg: 5.0 },
+  { b: "KLINT", n: "Klint Spicy Ginger Strong", mg: 8.0 },
+
+  // --- VALKYRIA (additional) ---
+  { b: "Valkyria", n: "Valkyria Viking Maiden Peach Slim", mg: 4.5 },
+  { b: "Valkyria", n: "Valkyria Viking Maiden Peach Strong", mg: 6.0 },
+  { b: "Valkyria", n: "Valkyria Viking Maiden Peach X-Strong", mg: 9.0 },
+
+  // --- SKRUF (additional) ---
+  { b: "SKRUF", n: "Skruf Super White Slim Northern Lights", mg: 11.0 },
+  { b: "SKRUF", n: "Skruf Super White Slim Polar Mint", mg: 11.0 },
+  { b: "SKRUF", n: "Skruf Super White Slim Tropical Guava", mg: 11.0 },
+  { b: "SKRUF", n: "Skruf Super White Slim Barberry Cotton", mg: 8.5 },
+  { b: "SKRUF", n: "Skruf Super White Slim Menthol", mg: 8.5 },
+  { b: "SKRUF", n: "Skruf Super White Slim X-Strong Fresh Mint", mg: 19.0 }
 ];
 
 export const USER_BENCHMARKS = [
