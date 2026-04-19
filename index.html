@@ -464,6 +464,11 @@
             grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
             gap: 12px;
         }
+        .chart-container {
+            position: relative;
+            height: 200px;
+            width: 100%;
+        }
 
         /* --- MODALS --- */
         dialog {
@@ -950,11 +955,15 @@
             <div class="section-title" data-i18n="charts_title">Analytics</div>
             <div class="analytics-grid">
                 <div>
-                    <canvas id="trendChart" height="200"></canvas>
+                    <div class="chart-container">
+                        <canvas id="trendChart"></canvas>
+                    </div>
                 </div>
                 <div>
                     <div style="font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:var(--muted); margin-bottom:8px;" data-i18n="hourly_heatmap">Hourly Heatmap</div>
-                    <canvas id="hourlyChart" height="200"></canvas>
+                    <div class="chart-container">
+                        <canvas id="hourlyChart"></canvas>
+                    </div>
                 </div>
             </div>
             <div id="benchmarkCard" class="benchmark-card">
@@ -1837,7 +1846,7 @@
                 window.trendChartInst.update();
                 return;
             }
-            window.trendChartInst=new Chart(ctx,{type:'line',data:{labels,datasets:[{label:'Pcs',data:dataPoints,borderColor:isDark?'#ea580c':'#c2410c',backgroundColor:isDark?'rgba(234,88,12,0.08)':'rgba(194,65,12,0.06)',fill:true,tension:0.3,borderWidth:2,pointRadius:3,pointBackgroundColor:isDark?'#ea580c':'#c2410c'}]},options:{plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,grid:{color:gridColor},ticks:{color:textColor,font:{family:"'JetBrains Mono'"}}},x:{grid:{color:gridColor},ticks:{color:textColor,font:{family:"'JetBrains Mono'"}}}}}});
+            window.trendChartInst=new Chart(ctx,{type:'line',data:{labels,datasets:[{label:'Pcs',data:dataPoints,borderColor:isDark?'#ea580c':'#c2410c',backgroundColor:isDark?'rgba(234,88,12,0.08)':'rgba(194,65,12,0.06)',fill:true,tension:0.3,borderWidth:2,pointRadius:3,pointBackgroundColor:isDark?'#ea580c':'#c2410c'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,grid:{color:gridColor},ticks:{color:textColor,font:{family:"'JetBrains Mono'"}}},x:{grid:{color:gridColor},ticks:{color:textColor,font:{family:"'JetBrains Mono'"}}}}}});
         }
         function renderHourlyChart() {
             if (typeof Chart === 'undefined') return;
@@ -1861,7 +1870,7 @@
                 window.hourlyChartInst.update();
                 return;
             }
-            window.hourlyChartInst=new Chart(ctx,{type:'bar',data:{labels,datasets:[{data:dataPoints,backgroundColor:barColor,borderRadius:2}]},options:{plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,grid:{color:gridColor},ticks:{color:textColor,font:{family:"'JetBrains Mono'"}}},x:{grid:{color:gridColor},ticks:{color:textColor,font:{family:"'JetBrains Mono'"}}}}}});
+            window.hourlyChartInst=new Chart(ctx,{type:'bar',data:{labels,datasets:[{data:dataPoints,backgroundColor:barColor,borderRadius:2}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,grid:{color:gridColor},ticks:{color:textColor,font:{family:"'JetBrains Mono'"}}},x:{grid:{color:gridColor},ticks:{color:textColor,font:{family:"'JetBrains Mono'"}}}}}});
         }
 
         function setupSearch() {
