@@ -4,34 +4,213 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Privacy Policy - PouchLog</title>
+    <script>
+        (() => {
+            try {
+                const theme = localStorage.getItem('nt_theme');
+                if (theme === 'light' || theme === 'dark') {
+                    document.documentElement.setAttribute('data-theme', theme);
+                }
+            } catch {}
+        })();
+    </script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Public+Sans:wght@400;500;600;700;800&display=swap">
     <style>
-        body { font-family: sans-serif; line-height: 1.6; color: #333; max-width: 800px; margin: 0 auto; padding: 20px; }
-        h1 { color: #10b981; }
-        .section { margin-bottom: 20px; }
+        :root {
+            color-scheme: light;
+            --canvas: #f8fafd;
+            --surface: #ffffff;
+            --surface-muted: #f1f5fa;
+            --text: #102a43;
+            --text-muted: #52667a;
+            --border: #c8d6e8;
+            --grid: #d9e3f0;
+            --progress-track: #d8e1ee;
+            --accent: #1d5ce5;
+            --accent-hover: #174bc2;
+            --accent-active: #123d9d;
+            --accent-soft: #e9f1ff;
+            --accent-foreground: #ffffff;
+            --action: #1d5ce5;
+            --action-hover: #174bc2;
+            --danger: #b42318;
+            --danger-soft: #fff1f0;
+            --success: #087a55;
+            --focus: #1d5ce5;
+            --radius-sm: 2px;
+            --radius-md: 4px;
+            --radius-lg: 6px;
+        }
+
+        :root[data-theme="dark"] {
+            color-scheme: dark;
+            --canvas: #071422;
+            --surface: #0d1d2f;
+            --surface-muted: #12243a;
+            --text: #f2f6fc;
+            --text-muted: #a8b8cc;
+            --border: #2a3e56;
+            --grid: #233752;
+            --progress-track: #263852;
+            --accent: #76a7ff;
+            --accent-hover: #95bbff;
+            --accent-active: #b2ceff;
+            --accent-soft: #102b55;
+            --accent-foreground: #ffffff;
+            --action: #1f62d1;
+            --action-hover: #1a53b5;
+            --danger: #ff9b94;
+            --danger-soft: #351b20;
+            --success: #62d6ad;
+            --focus: #76a7ff;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            min-height: 100%;
+            background-color: var(--canvas);
+        }
+
+        body {
+            min-height: 100%;
+            margin: 0;
+            background-color: var(--canvas);
+            color: var(--text);
+            font-family: 'Public Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-size: 16px;
+            line-height: 1.65;
+        }
+
+        .page-shell {
+            width: 100%;
+            max-width: 720px;
+            margin: 0 auto;
+            padding-top: max(24px, env(safe-area-inset-top));
+            padding-right: max(16px, env(safe-area-inset-right));
+            padding-bottom: max(24px, env(safe-area-inset-bottom));
+            padding-left: max(16px, env(safe-area-inset-left));
+        }
+
+        .policy-card {
+            overflow: hidden;
+            background-color: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+        }
+
+        .policy-header {
+            padding: 24px;
+            background-color: var(--surface-muted);
+            border-bottom: 1px solid var(--border);
+        }
+
+        h1 {
+            margin: 0;
+            color: var(--accent);
+            font-size: clamp(1.75rem, 5vw, 2.25rem);
+            line-height: 1.15;
+            letter-spacing: -0.03em;
+        }
+
+        .technical-date {
+            margin: 10px 0 0;
+            color: var(--text-muted);
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+        }
+
+        .section {
+            padding: 24px;
+        }
+
+        .section > p:first-child {
+            margin-top: 0;
+        }
+
+        h2 {
+            margin: 28px 0 10px;
+            padding-top: 20px;
+            border-top: 1px solid var(--grid);
+            color: var(--text);
+            font-size: 1rem;
+            line-height: 1.3;
+        }
+
+        p,
+        ul {
+            margin-bottom: 16px;
+        }
+
+        ul {
+            padding-left: 1.25rem;
+        }
+
+        li + li {
+            margin-top: 10px;
+        }
+
+        strong {
+            color: var(--text);
+        }
+
+        a {
+            color: var(--accent);
+            text-decoration-thickness: 1px;
+            text-underline-offset: 3px;
+            overflow-wrap: anywhere;
+        }
+
+        a:hover {
+            color: var(--accent-hover);
+        }
+
+        a:focus-visible {
+            border-radius: var(--radius-sm);
+            outline: 2px solid var(--focus);
+            outline-offset: 3px;
+        }
+
+        @media (max-width: 560px) {
+            .policy-header,
+            .section {
+                padding: 20px;
+            }
+        }
     </style>
 </head>
 <body>
-    <h1>Privacy Policy</h1>
-    <p>Last updated: December 2025</p>
+    <main class="page-shell">
+        <article class="policy-card">
+            <header class="policy-header">
+                <h1>Privacy Policy</h1>
+                <p class="technical-date">Last updated: December 2025</p>
+            </header>
 
-    <div class="section">
-        <p>PouchLog is a hobby open-source project. We respect your privacy and data.</p>
-        
-        <h3>What we collect</h3>
-        <ul>
-            <li><strong>Login Data:</strong> We use Google Firebase Authentication. We only see your email or user ID to keep your account secure.</li>
-            <li><strong>Usage Data:</strong> We store the logs you create (pouch brand, strength, time) in Google Cloud Firestore so you can access them across devices.</li>
-            <li><strong>Analytics:</strong> We use Google Analytics to see anonymous traffic statistics.</li>
-        </ul>
+            <div class="section">
+                <p>PouchLog is a hobby open-source project. We respect your privacy and data.</p>
 
-        <h3>How we use it</h3>
-        <p>Strictly to provide the service (showing you your history and charts). We do not sell or share your data with anyone.</p>
+                <h2>What we collect</h2>
+                <ul>
+                    <li><strong>Login Data:</strong> We use Google Firebase Authentication. We only see your email or user ID to keep your account secure.</li>
+                    <li><strong>Usage Data:</strong> We store the logs you create (pouch brand, strength, time) in Google Cloud Firestore so you can access them across devices.</li>
+                    <li><strong>Analytics:</strong> We use Google Analytics to see anonymous traffic statistics.</li>
+                </ul>
 
-        <h3>Your Rights</h3>
-        <p>You can delete your entire history and account data at any time using the "Delete All" button in the app settings.</p>
+                <h2>How we use it</h2>
+                <p>Strictly to provide the service (showing you your history and charts). We do not sell or share your data with anyone.</p>
 
-        <h3>Contact & Code</h3>
-        <p>This project is open source. You can inspect the code or contact us via GitHub: <a href="https://github.com/OndraDol/WebNicotinePouches">https://github.com/OndraDol/WebNicotinePouches</a></p>
-    </div>
+                <h2>Your Rights</h2>
+                <p>You can delete your entire history and account data at any time using the "Delete All" button in the app settings.</p>
+
+                <h2>Contact & Code</h2>
+                <p>This project is open source. You can inspect the code or contact us via GitHub: <a href="https://github.com/OndraDol/WebNicotinePouches">https://github.com/OndraDol/WebNicotinePouches</a></p>
+            </div>
+        </article>
+    </main>
 </body>
 </html>
