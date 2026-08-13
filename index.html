@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="description" content="PouchLog: Free Nicotine Pouch Tracker & Quitting Tool.">
 
     <!-- PWA & Mobile -->
@@ -12,9 +12,9 @@
     <link rel="manifest" href="./manifest.json">
 
     <!-- Icons & PWA -->
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2212%22 fill=%22%23c2410c%22/><text x=%2250%22 y=%2268%22 font-size=%2254%22 text-anchor=%22middle%22 fill=%22%23fff%22 font-family=%22sans-serif%22 font-weight=%22800%22>P</text></svg>">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%226%22 fill=%22%231d5ce5%22/><text x=%2250%22 y=%2268%22 font-size=%2254%22 text-anchor=%22middle%22 fill=%22%23fff%22 font-family=%22sans-serif%22 font-weight=%22800%22>P</text></svg>">
     <link rel="apple-touch-icon" href="./apple-touch-icon.png">
-    <meta name="theme-color" content="#faf8f5">
+    <meta name="theme-color" content="#1d5ce5">
 
     <!-- Social Sharing (Open Graph) -->
     <meta property="og:title" content="PouchLog | Track Nicotine Pouches">
@@ -28,7 +28,7 @@
     <!-- Fonts & Libs -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800;1,9..40,400&family=JetBrains+Mono:wght@500;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Public+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
 
     <!-- ANTI-FLICKER SCRIPT -->
@@ -39,91 +39,105 @@
                 const theme = stored || 'light';
                 document.documentElement.setAttribute('data-theme', theme);
                 const metaColor = document.querySelector('meta[name="theme-color"]');
-                if (metaColor) metaColor.setAttribute('content', theme === 'dark' ? '#111110' : '#faf8f5');
+                if (metaColor) metaColor.setAttribute('content', theme === 'dark' ? '#071422' : '#1d5ce5');
             } catch (e) {}
         })();
     </script>
 
     <style>
         /* ========================================
-           POUCHLOG — EDITORIAL UTILITY DESIGN
+           POUCHLOG — COBALT UTILITY DESIGN
            ======================================== */
 
         :root {
-            --bg: #faf8f5;
-            --card: #ffffff;
-            --text: #1a1a1a;
-            --muted: #8a8578;
-            --border: #e8e4de;
+            color-scheme: light;
+            --canvas: #f8fafd;
+            --surface: #ffffff;
+            --surface-muted: #f1f5fa;
+            --text: #102a43;
+            --text-muted: #52667a;
+            --border: #c8d6e8;
+            --grid: #d9e3f0;
+            --progress-track: #d8e1ee;
+            --accent: #1d5ce5;
+            --accent-hover: #174bc2;
+            --accent-active: #123d9d;
+            --accent-soft: #e9f1ff;
+            --accent-foreground: #ffffff;
+            --action: #1d5ce5;
+            --action-hover: #174bc2;
+            --danger: #b42318;
+            --danger-soft: #fff1f0;
+            --success: #087a55;
+            --focus: #1d5ce5;
+            --radius-sm: 2px;
+            --radius-md: 4px;
+            --radius-lg: 6px;
+            --font-body: "Public Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            --font-mono: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
 
-            --primary: #c2410c;
-            --primary-fg: #ffffff;
-            --primary-dark: #9a3412;
-            --primary-soft: #fff7ed;
-            --primary-glow: rgba(194, 65, 12, 0.08);
-
-            --danger: #b91c1c;
-            --danger-bg: #fef2f2;
-
-            --input-bg: #ffffff;
-            --input-border: #d6d0c8;
-            --surface-hover: #f5f2ed;
-
-            --badge-bg: #fff7ed;
-            --badge-text: #9a3412;
-            --badge-border: #fed7aa;
-
-            --chip-bg: #fef3e2;
-            --chip-text: #9a3412;
-            --chip-border: #fcd9b6;
-
-            --wizard-card-hover: #fff7ed;
-            --wizard-card-active: #ffedd5;
-
-            --gradient-promo: #fff7ed;
-            --gradient-onboard: #fefbf6;
-
-            --font-body: 'DM Sans', -apple-system, sans-serif;
-            --font-mono: 'JetBrains Mono', 'SF Mono', monospace;
-
-            --radius-sm: 4px;
-            --radius-md: 8px;
-            --radius-lg: 12px;
+            --bg: var(--canvas);
+            --card: var(--surface);
+            --muted: var(--text-muted);
+            --primary: var(--accent);
+            --primary-fg: var(--accent-foreground);
+            --primary-dark: var(--accent-hover);
+            --primary-soft: var(--accent-soft);
+            --danger-bg: var(--danger-soft);
+            --input-bg: var(--surface);
+            --input-border: var(--border);
+            --surface-hover: var(--surface-muted);
+            --badge-bg: var(--accent-soft);
+            --badge-text: var(--accent-active);
+            --badge-border: var(--border);
+            --chip-bg: var(--surface);
+            --chip-text: var(--text);
+            --chip-border: var(--border);
+            --wizard-card-hover: var(--surface-muted);
+            --wizard-card-active: var(--accent-soft);
         }
 
         :root[data-theme="dark"] {
-            --bg: #111110;
-            --card: #1c1b1a;
-            --text: #e8e4de;
-            --muted: #8a8578;
-            --border: #2a2825;
+            color-scheme: dark;
+            --canvas: #071422;
+            --surface: #0d1d2f;
+            --surface-muted: #12243a;
+            --text: #f2f6fc;
+            --text-muted: #a8b8cc;
+            --border: #2a3e56;
+            --grid: #233752;
+            --progress-track: #263852;
+            --accent: #76a7ff;
+            --accent-hover: #95bbff;
+            --accent-active: #b2ceff;
+            --accent-soft: #102b55;
+            --action: #1f62d1;
+            --action-hover: #1a53b5;
+            --accent-foreground: #ffffff;
+            --danger: #ff9b94;
+            --danger-soft: #351b20;
+            --success: #62d6ad;
+            --focus: #76a7ff;
 
-            --primary: #ea580c;
-            --primary-fg: #ffffff;
-            --primary-dark: #fb923c;
-            --primary-soft: #1c1510;
-            --primary-glow: rgba(234, 88, 12, 0.1);
-
-            --danger: #ef4444;
-            --danger-bg: #1f1111;
-
-            --input-bg: #151413;
-            --input-border: #3a3835;
-            --surface-hover: #252320;
-
-            --badge-bg: #1c1510;
-            --badge-text: #fb923c;
-            --badge-border: #3a2d1e;
-
-            --chip-bg: #1c1510;
-            --chip-text: #fdba74;
-            --chip-border: #3a2d1e;
-
-            --wizard-card-hover: #252320;
-            --wizard-card-active: #1c1510;
-
-            --gradient-promo: #1c1510;
-            --gradient-onboard: #1a1918;
+            --bg: var(--canvas);
+            --card: var(--surface);
+            --muted: var(--text-muted);
+            --primary: var(--accent);
+            --primary-fg: var(--accent-foreground);
+            --primary-dark: var(--accent-hover);
+            --primary-soft: var(--accent-soft);
+            --danger-bg: var(--danger-soft);
+            --input-bg: var(--surface);
+            --input-border: var(--border);
+            --surface-hover: var(--surface-muted);
+            --badge-bg: var(--accent-soft);
+            --badge-text: var(--accent);
+            --badge-border: var(--border);
+            --chip-bg: var(--surface);
+            --chip-text: var(--text);
+            --chip-border: var(--border);
+            --wizard-card-hover: var(--surface-muted);
+            --wizard-card-active: var(--accent-soft);
         }
 
         /* --- RESET & BASE --- */
@@ -131,17 +145,14 @@
         body {
             font-family: var(--font-body);
             background-color: var(--bg);
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg' opacity='0.025'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-            background-repeat: repeat;
-            background-size: 256px 256px;
-            background-attachment: fixed;
             color: var(--text);
-            padding-bottom: 100px;
+            padding-bottom: calc(48px + env(safe-area-inset-bottom));
             -webkit-tap-highlight-color: transparent;
             overflow-x: hidden;
             font-size: 14px;
             line-height: 1.6;
             -webkit-font-smoothing: antialiased;
+            font-synthesis: none;
         }
 
         .shell { max-width: 680px; margin: 0 auto; padding: 24px 20px; }
@@ -195,7 +206,7 @@
             cursor: pointer;
             font-size: 13px;
             font-family: var(--font-body);
-            transition: all 0.15s ease;
+            transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease, opacity 0.15s ease, transform 0.15s ease;
             display: inline-flex;
             align-items: center;
             gap: 6px;
@@ -309,12 +320,11 @@
             background: var(--input-bg);
             font-size: 14px;
             font-family: var(--font-body);
-            outline: none;
             color: var(--text);
             transition: border-color 0.2s;
         }
         input:focus { border-color: var(--primary); }
-        input::placeholder { color: var(--muted); opacity: 0.5; }
+        input::placeholder { color: var(--muted); opacity: 1; }
 
         label {
             font-size: 10px;
@@ -373,7 +383,7 @@
         }
         .health-done { color: var(--text); }
         .health-done .health-icon { color: var(--primary); font-weight: 700; }
-        .health-locked { opacity: 0.35; }
+        .health-locked { color: var(--text-muted); }
 
         /* --- ACHIEVEMENTS --- */
         .achievements {
@@ -392,18 +402,17 @@
             align-items: center;
             justify-content: center;
             min-height: 90px;
-            transition: all 0.2s;
+            transition: background-color 0.2s, border-color 0.2s, color 0.2s, opacity 0.2s;
             background: var(--card);
             color: var(--muted);
         }
         .achievement.unlocked {
             border-color: var(--primary);
             color: var(--text);
-            background: var(--primary-glow);
+            background: var(--accent-soft);
         }
         .achievement.locked {
             border-style: dashed;
-            opacity: 0.4;
         }
 
         /* --- BANNERS --- */
@@ -411,7 +420,7 @@
             display: flex;
             align-items: center;
             gap: 14px;
-            background: var(--gradient-promo);
+            background: var(--surface);
             border: 1px solid var(--border);
             border-left: 3px solid var(--primary);
         }
@@ -436,7 +445,7 @@
             display: flex;
             gap: 14px;
             align-items: flex-start;
-            background: var(--gradient-onboard);
+            background: var(--surface);
             border: 1px solid var(--border);
             border-left: 3px solid var(--primary);
         }
@@ -484,7 +493,7 @@
         :root[data-theme="dark"] dialog {
             box-shadow: 0 24px 48px -12px rgba(0, 0, 0, 0.5);
         }
-        dialog::backdrop { background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(4px); }
+        dialog::backdrop { background: rgba(2, 10, 20, 0.72); }
         dialog:not([open]) { display: none; }
         .modal-head {
             padding: 14px 18px;
@@ -545,7 +554,7 @@
             padding: 16px;
             cursor: pointer;
             text-align: center;
-            transition: all 0.15s;
+            transition: background-color 0.15s, border-color 0.15s, color 0.15s;
             background: var(--card);
         }
         .selection-card:hover {
@@ -556,8 +565,10 @@
             border-color: var(--primary);
             background: var(--wizard-card-active);
         }
-        .selection-card h4 { margin: 4px 0 0; }
-        .selection-card p { margin: 6px 0 0; color: var(--muted); font-size: 12px; line-height: 1.4; }
+        .selection-card h4,
+        .selection-card .selection-title { display: block; margin: 4px 0 0; }
+        .selection-card p,
+        .selection-card .selection-description { display: block; margin: 6px 0 0; color: var(--muted); font-size: 12px; line-height: 1.4; }
         .wizard-step { animation: fadeIn 0.25s ease; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
 
@@ -709,7 +720,6 @@
             border: none;
             border-bottom: 2px solid var(--border);
             font-size: 16px;
-            outline: none;
             background: transparent;
             color: var(--text);
             font-family: var(--font-body);
@@ -791,7 +801,7 @@
         }
         .benchmark-fill {
             height: 100%;
-            background: linear-gradient(90deg, var(--primary), #f59e0b, var(--danger));
+            background: var(--accent);
             width: 0%;
             transition: width 0.3s ease;
         }
@@ -835,36 +845,659 @@
         @media (min-width: 641px) {
             .stats-grid { grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); }
         }
+
+        /* --- COBALT UTILITY LAYOUT --- */
+        :where(a, button, input, select, summary):focus-visible {
+            outline: 2px solid var(--focus);
+            outline-offset: 2px;
+        }
+        :where(button, input, select, summary) { min-height: 44px; }
+        button { touch-action: manipulation; }
+        .skip-link {
+            position: fixed;
+            top: 8px;
+            left: 8px;
+            z-index: 3000;
+            padding: 10px 14px;
+            color: var(--accent-foreground);
+            background: var(--action);
+            transform: translateY(-160%);
+            transition: transform 0.15s ease;
+        }
+        .skip-link:focus { transform: translateY(0); }
+        .shell {
+            max-width: 1120px;
+            margin: 0 auto;
+            padding: 24px clamp(16px, 3vw, 32px);
+        }
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            display: block;
+            padding: 0;
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+        }
+        .header-inner {
+            width: 100%;
+            max-width: 1120px;
+            min-height: 70px;
+            margin: 0 auto;
+            padding: 0 clamp(16px, 3vw, 32px);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+        }
+        .logo { color: var(--text); }
+        .logo-row {
+            color: var(--text);
+            font-family: var(--font-body);
+            font-size: clamp(30px, 3vw, 34px);
+            font-weight: 800;
+            line-height: 1;
+            letter-spacing: -0.045em;
+        }
+        .logo-tagline { display: none; }
+        .header-actions { gap: 8px; }
+        .header-actions .btn { flex: 0 0 auto; }
+        .btn {
+            border-radius: var(--radius-sm);
+            min-height: 44px;
+            padding: 10px 14px;
+        }
+        .btn-primary {
+            background: var(--action);
+            color: var(--accent-foreground);
+        }
+        .btn-primary:hover { background: var(--action-hover); opacity: 1; }
+        .btn-primary:active { background: var(--accent-active); }
+        :root[data-theme="dark"] .btn-primary:active { background: var(--action-hover); }
+        .btn-outline { border: 1px solid var(--border); background: var(--surface); }
+        .btn-plain { border: 0; background: transparent; color: var(--text); }
+        .btn-plain:hover { color: var(--accent); background: var(--surface-muted); }
+        .icon-button { width: 44px; padding: 0; justify-content: center; }
+        .header-login { font-size: 14px; font-weight: 500; }
+        .utility-button { font-size: 12px; }
+        .hide-mobile { display: inline-flex; }
+
+        .card,
+        .logging-band,
+        .analytics-band,
+        .lower-grid,
+        .plan-rail,
+        .kpi-strip {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 0;
+            box-shadow: none;
+        }
+        .card { margin-bottom: 16px; padding: 20px; }
+        .card:hover { border-color: var(--border); }
+        .card-accent { border-left: 1px solid var(--border); }
+        .onboarding-banner,
+        .promo-banner { border-left: 3px solid var(--accent); }
+
+        .technical-label,
+        .section-title,
+        .chart-title,
+        .stat .lbl {
+            color: var(--text-muted);
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            line-height: 1.3;
+            text-transform: uppercase;
+        }
+        .section-title {
+            margin: 0;
+            color: var(--text);
+            font-family: var(--font-body);
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+            text-transform: none;
+        }
+        .mono-data,
+        .stat .val,
+        .plan-target-value,
+        .plan-limit-value,
+        .history-time,
+        .history-strength,
+        .pouch-strength,
+        .chart-fallback {
+            font-family: var(--font-mono);
+            font-variant-numeric: tabular-nums;
+        }
+
+        .plan-rail {
+            min-height: 96px;
+            margin-bottom: 0;
+            padding: 18px 24px;
+            display: grid;
+            grid-template-columns: minmax(210px, 1fr) minmax(120px, 0.75fr) minmax(300px, 2.3fr) minmax(100px, 0.65fr);
+            align-items: center;
+            gap: 24px;
+        }
+        .plan-identity { display: flex; align-items: center; gap: 14px; min-width: 0; }
+        .plan-icon { flex: 0 0 auto; color: var(--accent); }
+        .plan-name { font-size: 18px; line-height: 1.2; text-transform: uppercase; letter-spacing: 0.04em; }
+        .plan-target,
+        .plan-limit { min-width: 0; border-left: 1px solid var(--border); padding-left: 24px; }
+        .plan-target-value,
+        .plan-limit-value { display: block; margin-top: 4px; font-size: 25px; font-weight: 500; line-height: 1.15; }
+        .plan-limit { text-align: center; }
+        .plan-progress-group { min-width: 0; }
+        .plan-progress-copy { display: flex; justify-content: center; align-items: baseline; gap: 10px; margin-bottom: 8px; }
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            margin: 0;
+            overflow: hidden;
+            background: var(--progress-track);
+            border-radius: var(--radius-sm);
+        }
+        .progress-fill {
+            height: 100%;
+            width: 0;
+            background: var(--accent);
+            border-radius: var(--radius-sm);
+            transition: width 0.35s ease;
+        }
+
+        .kpi-strip {
+            display: grid;
+            grid-template-columns: repeat(5, minmax(0, 1fr));
+            gap: 0;
+            margin: 0;
+            border-top: 0;
+        }
+        .kpi-strip:not(.with-savings) { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+        .kpi-strip .stat {
+            min-width: 0;
+            min-height: 120px;
+            padding: 18px 24px;
+            border: 0;
+            border-right: 1px solid var(--border);
+            border-radius: 0;
+            background: var(--surface);
+        }
+        .kpi-strip .stat:last-child { border-right: 0; }
+        #statsGrid .stat:first-child { border-top: 3px solid var(--accent); border-left: 0; }
+        .stat .val {
+            margin-top: 10px;
+            color: var(--text);
+            font-size: clamp(36px, 4vw, 46px);
+            font-weight: 500;
+            line-height: 1;
+            letter-spacing: -0.055em;
+            overflow-wrap: anywhere;
+        }
+        #valToday { color: var(--accent); font-weight: 600; }
+        #valSaved { color: var(--accent); }
+        .stat .val .metric-unit { margin-left: 6px; font-family: var(--font-mono); font-size: 14px; font-weight: 500; color: var(--text); letter-spacing: 0; }
+        .stat .sub { font-size: 11px; line-height: 1.35; }
+
+        .logging-band,
+        .analytics-band { margin-top: 24px; }
+        .logging-band { padding: 18px 24px; }
+        .band-heading,
+        .module-heading { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+        .backdate-toggle,
+        .module-link { min-height: 44px; padding: 8px 10px; color: var(--accent); font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; }
+        .logging-grid {
+            display: grid;
+            grid-template-columns: minmax(260px, 1.55fr) minmax(190px, 0.9fr) minmax(300px, 1.75fr);
+            align-items: stretch;
+            gap: 16px;
+            margin-top: 12px;
+        }
+        .selector-btn {
+            min-width: 0;
+            min-height: 80px;
+            padding: 14px 18px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            background: var(--surface);
+        }
+        .selector-copy { display: block; min-width: 0; }
+        .selected-pouch-name {
+            display: -webkit-box;
+            min-width: 0;
+            margin-top: 4px;
+            overflow: hidden;
+            color: var(--text);
+            font-size: 16px;
+            font-weight: 600;
+            line-height: 1.3;
+            overflow-wrap: anywhere;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 2;
+        }
+        .selected-pouch-name .pouch-mg { display: block; color: var(--text-muted); font-family: var(--font-mono); font-size: 12px; font-weight: 500; }
+        .log-pouch-button {
+            min-height: 80px;
+            justify-content: center;
+            border-radius: var(--radius-sm);
+            font-size: 16px;
+            letter-spacing: 0.02em;
+            text-transform: uppercase;
+        }
+        .quick-actions-block { min-width: 0; }
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 8px;
+            margin: 7px 0 0;
+            padding: 0;
+            overflow: visible;
+        }
+        .quick-choice {
+            min-width: 0;
+            min-height: 58px;
+            padding: 10px 12px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            color: var(--text);
+            background: var(--surface);
+            font-family: var(--font-body);
+            font-size: 12px;
+            font-weight: 600;
+            text-align: left;
+            cursor: pointer;
+        }
+        .quick-choice:hover { border-color: var(--accent); background: var(--accent-soft); }
+        .quick-choice-name { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .quick-choice-mg { display: block; margin-top: 3px; color: var(--text-muted); font-family: var(--font-mono); font-size: 10px; }
+        .backdate-panel {
+            display: grid;
+            grid-template-columns: 1fr 1fr auto;
+            gap: 10px;
+            align-items: end;
+            margin-top: 14px;
+            padding-top: 14px;
+            border-top: 1px solid var(--border);
+        }
+
+        .analytics-band { padding: 20px 24px; }
+        .analytics-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 0;
+            margin-top: 14px;
+        }
+        .chart-module { min-width: 0; padding-right: 24px; }
+        .chart-module + .chart-module { padding-right: 0; padding-left: 24px; border-left: 1px solid var(--border); }
+        .chart-title { margin-bottom: 8px; }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            height: 200px;
+        }
+        .chart-fallback {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+        .benchmark-card {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(220px, 0.75fr);
+            gap: 16px;
+            align-items: center;
+            margin-top: 18px;
+            padding: 14px 0 0;
+            border: 0;
+            border-top: 1px solid var(--border);
+            border-radius: 0;
+        }
+        .benchmark-progress { height: 7px; background: var(--progress-track); border-radius: var(--radius-sm); }
+        .benchmark-fill { background: var(--accent); border-radius: var(--radius-sm); }
+
+        .lower-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 28fr) minmax(0, 22fr) minmax(0, 50fr);
+            gap: 0;
+            margin-top: 24px;
+        }
+        .lower-module {
+            min-width: 0;
+            margin: 0;
+            padding: 18px 20px;
+            border: 0;
+            border-right: 1px solid var(--border);
+            border-radius: 0;
+            background: var(--surface);
+        }
+        .lower-module:last-child { border-right: 0; }
+        .lower-module > summary { padding: 0; font-family: var(--font-body); font-size: 16px; letter-spacing: -0.01em; text-transform: none; }
+        .achievements { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        .achievement { min-width: 0; min-height: 100px; border-radius: var(--radius-sm); overflow-wrap: anywhere; }
+        .achievement-icon { margin-bottom: 4px; font-family: var(--font-mono); font-size: 16px; font-weight: 700; letter-spacing: -0.04em; }
+        .achievement-title { font-size: 10px; font-weight: 700; letter-spacing: 0.04em; line-height: 1.2; text-transform: uppercase; }
+        .achievement-desc { margin-top: 3px; font-size: 9px; line-height: 1.3; }
+        .health-copy { flex: 1; min-width: 0; font-size: 13px; overflow-wrap: anywhere; }
+        .health-icon { color: var(--success); font-family: var(--font-mono); font-weight: 700; }
+        .empty-state { padding: 14px 8px; color: var(--text-muted); font-size: 12px; text-align: center; }
+        .history-item {
+            display: grid;
+            grid-template-columns: 62px minmax(0, 1fr) auto 18px;
+            gap: 12px;
+            align-items: center;
+            min-height: 44px;
+            padding: 8px 4px;
+            border-bottom: 1px solid var(--border);
+        }
+        .history-time,
+        .history-strength { color: var(--text-muted); font-size: 11px; }
+        .history-name { min-width: 0; overflow-wrap: anywhere; font-size: 13px; font-weight: 600; }
+        .history-chevron { color: var(--accent); font-family: var(--font-mono); }
+        .load-more-row { display: flex; justify-content: center; padding-top: 12px; }
+        .full-history-item { grid-template-columns: minmax(0, 1fr) auto; }
+        .full-history-copy { min-width: 0; overflow-wrap: anywhere; }
+        .full-history-copy small { display: block; margin-top: 3px; color: var(--text-muted); }
+        .history-row-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 6px; }
+        .history-row-actions .btn { font-size: 11px; }
+
+        footer { text-align: center; margin-top: 32px; padding: 16px; font-size: 11px; color: var(--text-muted); }
+
+        dialog {
+            width: min(520px, calc(100vw - 32px));
+            max-height: min(760px, calc(100dvh - 32px));
+            overflow: hidden;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            background: var(--surface);
+            color: var(--text);
+            box-shadow: 0 24px 72px rgba(2, 10, 20, 0.38);
+        }
+        dialog[open] { display: flex; flex-direction: column; }
+        #searchModal,
+        #historyModal { width: min(760px, calc(100vw - 32px)); }
+        .modal-head,
+        .search-header {
+            position: sticky;
+            top: 0;
+            z-index: 2;
+            flex: 0 0 auto;
+            min-height: 58px;
+            padding: 10px 18px;
+            border-bottom: 1px solid var(--border);
+            border-radius: 0;
+            background: var(--surface);
+        }
+        .modal-body { flex: 1 1 auto; min-height: 0; overflow-y: auto; padding: 20px; }
+        .modal-foot {
+            position: sticky;
+            bottom: 0;
+            z-index: 2;
+            flex: 0 0 auto;
+            padding: 12px 18px;
+            border-top: 1px solid var(--border);
+            background: var(--surface);
+        }
+        #searchModal {
+            top: 50%;
+            left: 50%;
+            right: auto;
+            bottom: auto;
+            height: min(720px, calc(100dvh - 32px));
+            max-height: calc(100dvh - 32px);
+            transform: translate(-50%, -50%);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            background: var(--surface);
+        }
+        .search-header { display: flex; }
+        .search-results { min-height: 0; padding: 0 18px 20px; background: var(--surface); }
+        .search-item {
+            width: 100%;
+            min-height: 62px;
+            border: 0;
+            border-bottom: 1px solid var(--border);
+            background: transparent;
+            font-family: var(--font-body);
+            text-align: left;
+        }
+        .search-item:hover { background: var(--surface-muted); }
+        .pouch-title { overflow-wrap: anywhere; }
+        .selection-card {
+            width: 100%;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            color: var(--text);
+            font-family: var(--font-body);
+        }
+        .selection-card.active { border-color: var(--accent); background: var(--accent-soft); }
+        .visually-hidden {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+        .modal-title { margin: 0; font-size: 16px; font-weight: 700; letter-spacing: 0; text-transform: none; }
+        .modal-section-title { margin: 0 0 8px; font-size: 14px; }
+        .modal-head-actions { display: flex; align-items: center; gap: 6px; }
+        .wizard-indicator { color: var(--text-muted); font-family: var(--font-mono); font-size: 11px; }
+        .auth-toggle { width: 100%; margin-top: 8px; justify-content: center; color: var(--accent); }
+        .auth-status-icon {
+            width: 40px;
+            height: 40px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 8px;
+            border: 1px solid var(--accent);
+            border-radius: 50%;
+            background: var(--accent-soft);
+        }
+        .banner-copy { flex: 1; min-width: 0; }
+        .banner-title { margin: 4px 0 6px; font-size: 16px; }
+        .compact-button { font-size: 12px; }
+        .benchmark-summary { display: flex; justify-content: space-between; align-items: center; gap: 16px; }
+        .benchmark-primary { font-size: 13px; }
+        .benchmark-percentile { font-family: var(--font-mono); font-weight: 700; }
+        .health-list { margin-top: 8px; }
+        .page-footer p { margin: 0; }
+        .page-footer .footer-lead { margin-bottom: 8px; }
+        .page-footer a { color: var(--text-muted); text-decoration: none; border-bottom: 1px solid var(--border); }
+        .footer-separator { margin: 0 8px; opacity: 0.4; }
+        .modal-message { margin: 0 0 12px; font-size: 13px; font-weight: 600; }
+        .confirmation-metric { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 14px; border: 1px solid var(--border); border-radius: var(--radius-md); background: var(--surface-muted); }
+        .confirmation-value { color: var(--accent); font-family: var(--font-mono); font-size: 28px; font-weight: 700; letter-spacing: -0.04em; }
+        .confirmation-note { color: var(--text-muted); font-family: var(--font-mono); font-size: 12px; text-align: right; }
+        .custom-toolbar { display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 10px 16px; border-bottom: 1px solid var(--border); background: var(--surface); }
+        .custom-prompt { color: var(--text-muted); font-size: 12px; }
+        .form-spacer { margin-top: 10px; }
+        .form-spacer-small { margin-top: 6px; }
+        .form-actions { display: flex; justify-content: flex-end; gap: 6px; margin-top: 10px; }
+        .full-history-list { max-height: 52vh; overflow-y: auto; }
+        .form-grid-two { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+        .confirm-message { margin: 0; color: var(--text); font-size: 13px; font-weight: 600; }
+        .wizard-title { margin: 0 0 16px; font-size: 14px; letter-spacing: 0.06em; text-align: center; text-transform: uppercase; }
+        .selection-symbol { margin-bottom: 4px; font-family: var(--font-mono); font-size: 28px; }
+        .strategy-options { gap: 10px; }
+        .auth-fields { gap: 8px; }
+        .centered-button { justify-content: center; }
+        .auth-status { padding: 16px 0; text-align: center; }
+        .auth-status-message { color: var(--accent); font-size: 13px; font-weight: 700; }
+        .centered-actions { display: flex; justify-content: center; margin-top: 10px; }
+        .data-management { margin-top: 18px; padding-top: 18px; border-top: 1px solid var(--border); }
+        .data-management-title { margin-bottom: 10px; }
+        .full-width-button { width: 100%; }
+
+        @media (min-width: 1024px) {
+            .shell { padding-top: 18px; }
+            .logging-band,
+            .analytics-band,
+            .lower-grid { margin-top: 16px; }
+            .logging-band { padding-block: 12px; }
+            .logging-grid { margin-top: 8px; }
+            .selector-btn,
+            .log-pouch-button { min-height: 72px; }
+            .analytics-band { padding-block: 16px; }
+            .analytics-grid { margin-top: 10px; }
+            .benchmark-card { margin-top: 12px; padding-top: 10px; }
+        }
+
+        @media (min-width: 768px) and (max-width: 1023px) {
+            .plan-rail { grid-template-columns: 1fr 0.72fr 1.45fr 0.68fr; }
+            .kpi-strip,
+            .kpi-strip:not(.with-savings) { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+            .kpi-strip .stat:nth-child(3n) { border-right: 0; }
+            .kpi-strip .stat:nth-child(n+4) { border-top: 1px solid var(--border); }
+            .logging-grid { grid-template-columns: minmax(0, 1fr) minmax(180px, 0.55fr); }
+            .quick-actions-block { grid-column: 1 / -1; }
+            .quick-actions { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+            .lower-grid { grid-template-columns: 56fr 44fr; }
+            .history-module { grid-column: 1 / -1; border-top: 1px solid var(--border); }
+            .recovery-module { border-right: 0; }
+        }
+
+        @media (max-width: 767px) {
+            body { padding-bottom: calc(32px + env(safe-area-inset-bottom)); }
+            header { padding: 0; }
+            .header-inner { min-height: 64px; padding: max(6px, env(safe-area-inset-top)) max(12px, env(safe-area-inset-right)) 6px max(12px, env(safe-area-inset-left)); gap: 8px; }
+            .logo-row { font-size: clamp(25px, 8vw, 28px); }
+            .header-actions { gap: 4px; }
+            .header-actions .btn { min-width: 44px; min-height: 44px; padding: 6px 8px; }
+            .header-login { min-width: auto; }
+            .hide-mobile { display: inline-flex !important; }
+            .shell { padding: 16px max(12px, env(safe-area-inset-left)) 16px max(12px, env(safe-area-inset-right)); }
+            .plan-rail { grid-template-columns: 1fr auto; gap: 16px; padding: 16px; }
+            .plan-identity { grid-column: 1 / -1; }
+            .plan-target { padding-left: 0; border-left: 0; }
+            .plan-progress-group { grid-column: 1 / -1; grid-row: 3; }
+            .plan-limit { padding-left: 14px; }
+            .plan-name { font-size: 17px; }
+            .plan-target-value,
+            .plan-limit-value { font-size: 22px; }
+            .kpi-strip,
+            .kpi-strip:not(.with-savings) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+            .kpi-strip .stat { min-height: 112px; padding: 16px; border-right: 1px solid var(--border); border-top: 1px solid var(--border); }
+            .kpi-strip .stat:nth-child(-n+2) { border-top: 0; }
+            .kpi-strip .stat:nth-child(2n) { border-right: 0; }
+            .stat .val { font-size: clamp(32px, 11vw, 36px); }
+            .logging-band,
+            .analytics-band,
+            .lower-grid { margin-top: 16px; }
+            .logging-band,
+            .analytics-band { padding: 16px; }
+            .logging-grid { grid-template-columns: minmax(0, 1fr); gap: 10px; }
+            .selector-btn,
+            .log-pouch-button { min-height: 64px; }
+            .backdate-toggle { min-width: 44px; }
+            .quick-actions-block { min-width: 0; }
+            .quick-actions {
+                display: flex;
+                max-width: 100%;
+                gap: 8px;
+                overflow-x: auto;
+                overscroll-behavior-inline: contain;
+                padding-bottom: 4px;
+                scroll-snap-type: inline proximity;
+            }
+            .quick-choice { flex: 0 0 min(72vw, 240px); scroll-snap-align: start; border-radius: var(--radius-sm); }
+            .backdate-panel { grid-template-columns: minmax(0, 1fr); }
+            .analytics-grid { grid-template-columns: minmax(0, 1fr); }
+            .chart-module,
+            .chart-module + .chart-module { padding: 0; border: 0; }
+            .chart-module + .chart-module { margin-top: 24px; padding-top: 18px; border-top: 1px solid var(--border); }
+            .chart-container { height: 220px; }
+            .benchmark-card { grid-template-columns: minmax(0, 1fr); }
+            .lower-grid { grid-template-columns: minmax(0, 1fr); }
+            .lower-module { border-right: 0; border-bottom: 1px solid var(--border); }
+            .lower-module:last-child { border-bottom: 0; }
+            .achievements { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+            .history-item { grid-template-columns: 50px minmax(0, 1fr) auto 14px; gap: 8px; }
+            .history-strength { white-space: nowrap; }
+            dialog,
+            #searchModal,
+            #historyModal {
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                width: 100%;
+                max-width: 100%;
+                height: 100dvh;
+                max-height: 100dvh;
+                margin: 0;
+                transform: none;
+                border: 0;
+                border-radius: 0;
+            }
+            .modal-head,
+            .search-header { padding-top: max(10px, env(safe-area-inset-top)); padding-inline: max(16px, env(safe-area-inset-left)) max(16px, env(safe-area-inset-right)); }
+            .modal-body,
+            .search-results { padding-inline: max(16px, env(safe-area-inset-left)) max(16px, env(safe-area-inset-right)); }
+            .modal-foot { padding: 12px max(16px, env(safe-area-inset-right)) max(12px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left)); }
+            .custom-form .grid { grid-template-columns: minmax(0, 1fr); }
+        }
+
+        @media (max-width: 360px) {
+            .header-inner { flex-wrap: wrap; }
+            .logo { flex: 1 1 auto; }
+            .header-actions { flex: 0 1 auto; }
+            .header-actions .utility-button { display: none; }
+            .header-login { font-size: 12px; }
+            .kpi-strip .stat { padding: 14px 12px; }
+            .stat .val { font-size: 31px; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                scroll-behavior: auto !important;
+                animation-duration: 0s !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0s !important;
+            }
+        }
     </style>
 </head>
 
 <body>
+    <a class="skip-link" href="#mainContent" data-i18n="skip_to_content">Skip to content</a>
 
     <header>
-        <a href="./index.html" class="logo" aria-label="PouchLog home">
+        <div class="header-inner">
+        <a href="./index.html" class="logo" data-i18n-aria-label="home_aria" aria-label="PouchLog home">
             <div class="logo-stack">
-                <div class="logo-row">Pouch<span>Log</span></div>
+                <h1 class="logo-row">PouchLog</h1>
                 <span class="logo-tagline">Know your numbers</span>
             </div>
         </a>
         <div class="header-actions">
-            <button id="installBtn" class="btn btn-outline hidden" style="padding:6px 10px; font-size:11px;" data-i18n="install_prompt">Install</button>
-            <button id="syncBtn" class="btn btn-primary" style="font-size:12px;" data-i18n="auth_btn">Login</button>
-            <button id="themeToggle" class="btn btn-outline hide-mobile" style="padding:6px 8px; font-size:14px;">
+            <button id="installBtn" class="btn btn-outline utility-button hidden" data-i18n="install_prompt">Install</button>
+            <button id="syncBtn" class="btn btn-plain header-login" data-i18n="auth_btn">Login</button>
+            <button id="themeToggle" class="btn btn-outline icon-button hide-mobile" data-i18n-aria-label="theme_toggle_aria" aria-label="Toggle theme">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
             </button>
-            <button id="menuBtn" class="btn btn-outline" style="padding:6px 8px; font-size:14px;">
+            <button id="menuBtn" class="btn btn-outline icon-button" data-i18n-aria-label="menu_aria" aria-label="Open settings">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="20" y2="18"/></svg>
             </button>
         </div>
+        </div>
     </header>
 
-    <main class="shell">
+    <main id="mainContent" class="shell" tabindex="-1">
 
         <div id="onboardingNotice" class="card onboarding-banner hidden" role="status" aria-live="polite">
-            <div style="flex:1;">
+            <div class="banner-copy">
                 <div class="onboarding-pill" data-i18n="onboard_chip">Recommended</div>
-                <h3 style="margin:6px 0 8px;" data-i18n="onboard_title">Tune your profile?</h3>
+                <h2 class="banner-title" data-i18n="onboard_title">Tune your profile?</h2>
                 <p data-i18n="onboard_body">A 1-minute setup tailors prices, limits, and syncs everything once you sign up.</p>
             </div>
             <div class="onboarding-actions">
@@ -873,23 +1506,33 @@
             </div>
         </div>
 
-        <!-- Quit Program Banner -->
-        <div id="quitBanner" class="card card-accent hidden">
-            <div style="display:flex; justify-content:space-between; align-items:center;">
-                <div>
-                    <h3 style="margin:0; font-size:14px;" data-i18n="quit_title">Freedom Journey</h3>
-                    <p style="margin:4px 0 0; color:var(--primary); font-size:12px;" id="quitStatusText" data-i18n="quit_status_active">Plan active</p>
+        <!-- Active quit plan presentation; calculations remain in getDynamicLimitForDate. -->
+        <section id="quitBanner" class="plan-rail hidden" aria-labelledby="quitStatusText">
+            <div class="plan-identity">
+                <svg class="plan-icon" aria-hidden="true" width="42" height="42" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2"><circle cx="24" cy="24" r="18"/><circle cx="24" cy="24" r="10"/><path d="m24 24 10-10M29 14h5v5"/></svg>
+                <h2 id="quitStatusText" class="plan-name">Smooth Plan</h2>
+            </div>
+            <div class="plan-target">
+                <span class="technical-label" data-i18n="target_label">Target</span>
+                <strong id="quitTarget" class="plan-target-value">—</strong>
+            </div>
+            <div class="plan-progress-group">
+                <div class="plan-progress-copy">
+                    <span class="technical-label" data-i18n="today_usage">Today</span>
+                    <strong id="planToday" class="mono-data">0 / 0</strong>
                 </div>
-                <div style="text-align:right;">
-                    <div class="val" style="font-family:var(--font-mono); font-size:28px; font-weight:800; letter-spacing:-0.04em;" id="quitTarget">0</div>
-                    <div class="lbl" style="font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:0.1em; color:var(--muted);" data-i18n="daily_max">Daily Max</div>
+                <div id="quitProgressTrack" class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-valuetext="0 of 0">
+                    <div id="quitProgress" class="progress-fill"></div>
                 </div>
             </div>
-            <div class="progress-bar"><div id="quitProgress" class="progress-fill"></div></div>
-        </div>
+            <div class="plan-limit">
+                <span class="technical-label" data-i18n="daily_max">Daily max</span>
+                <strong id="planDailyMax" class="plan-limit-value">0</strong>
+            </div>
+        </section>
 
         <!-- Dashboard Stats -->
-        <div class="grid stats-grid">
+        <section id="statsGrid" class="kpi-strip stats-grid" aria-label="Key metrics">
             <div class="stat">
                 <div class="lbl" data-i18n="today_usage">Today</div>
                 <div class="val" id="valToday">0</div>
@@ -908,7 +1551,7 @@
             </div>
             <div class="stat" id="savedStat">
                 <div class="lbl" data-i18n="money_saved">Saved</div>
-                <div class="val" id="valSaved" style="color:var(--primary);">0</div>
+                <div class="val" id="valSaved">0</div>
                 <div class="sub" id="valSavedNote" data-i18n="saved_compare">vs typical use</div>
             </div>
             <div class="stat">
@@ -916,128 +1559,136 @@
                 <div class="val" id="valMg">0 mg</div>
                 <div class="sub" data-i18n="total_today">Total today</div>
             </div>
-        </div>
+        </section>
 
-        <!-- LOG USAGE -->
-        <div class="card card-accent" style="margin-top:4px;">
-            <div class="section-title" data-i18n="log_usage">Log Usage</div>
-            <div id="quickActions" class="quick-actions"></div>
-            <div class="grid" style="grid-template-columns: 1fr auto auto; align-items: stretch; gap:8px;">
-                <button id="openSearchBtn" class="selector-btn">
-                    <div>
-                        <div style="font-size:10px; color:var(--muted); text-transform:uppercase; letter-spacing:0.06em; font-weight:700;" data-i18n="selected_pouch">Selected</div>
-                        <div id="selectedPouchName" style="font-weight:700; font-size:13px; margin-top:2px;">...</div>
-                    </div>
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
-                </button>
-                <button id="addBtn" class="btn btn-primary btn-add" aria-label="Add entry" title="Add entry">
-                    <svg viewBox="0 0 24 24" aria-hidden="true">
-                        <path d="M12 5v14M5 12h14" />
-                    </svg>
-                </button>
-                <button id="toggleBackdateBtn" class="btn btn-outline" style="height:52px; white-space:nowrap; font-size:11px;" data-i18n="add_past_entry">Add Past Entry</button>
+        <!-- LOG POUCH -->
+        <section class="logging-band" aria-labelledby="loggingTitle">
+            <div class="band-heading">
+                <h2 id="loggingTitle" class="section-title" data-i18n="log_usage">Log Pouch</h2>
+                <button id="toggleBackdateBtn" class="btn btn-plain backdate-toggle" data-i18n="add_past_entry">Add Past Entry</button>
             </div>
-            <div id="backdatePanel" class="grid hidden" style="grid-template-columns: 1fr 1fr auto; gap:8px; margin-top:10px; align-items:end;">
+            <div class="logging-grid">
+                <button id="openSearchBtn" class="selector-btn" type="button">
+                    <span class="selector-copy">
+                        <span class="technical-label" data-i18n="selected_pouch">Selected</span>
+                        <span id="selectedPouchName" class="selected-pouch-name">...</span>
+                    </span>
+                    <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                </button>
+                <button id="addBtn" class="btn btn-primary log-pouch-button" type="button" data-i18n-aria-label="add_entry_aria" aria-label="Log pouch">
+                    <span aria-hidden="true">+</span> <span data-i18n="log_usage">Log Pouch</span>
+                </button>
+                <div class="quick-actions-block">
+                    <span class="technical-label" data-i18n="recent_choices">Recent choices</span>
+                    <div id="quickActions" class="quick-actions"></div>
+                </div>
+            </div>
+            <div id="backdatePanel" class="backdate-panel hidden">
                 <div>
-                    <label data-i18n="backdate_date">Date</label>
+                    <label for="backdateDate" data-i18n="backdate_date">Date</label>
                     <input type="date" id="backdateDate">
                 </div>
                 <div>
-                    <label data-i18n="backdate_time">Time</label>
+                    <label for="backdateTime" data-i18n="backdate_time">Time</label>
                     <input type="time" id="backdateTime">
                 </div>
-                <button id="confirmBackdateBtn" class="btn btn-primary" style="height:44px; align-self:flex-end; font-size:12px;" data-i18n="add_past_entry">Add Past Entry</button>
+                <button id="confirmBackdateBtn" class="btn btn-primary" data-i18n="add_past_entry">Add Past Entry</button>
             </div>
-        </div>
+        </section>
 
         <!-- Analytics -->
-        <div class="card">
-            <div class="section-title" data-i18n="charts_title">Analytics</div>
+        <section class="analytics-band" aria-labelledby="analyticsTitle">
+            <h2 id="analyticsTitle" class="section-title" data-i18n="charts_title">Analytics</h2>
             <div class="analytics-grid">
-                <div>
+                <div class="chart-module">
+                    <h3 id="trendChartTitle" class="chart-title" data-i18n="trend_chart_title">Pouches per day (last 14 days)</h3>
                     <div class="chart-container">
-                        <canvas id="trendChart"></canvas>
+                        <canvas id="trendChart" role="img" aria-labelledby="trendChartTitle" aria-describedby="trendChartFallback"></canvas>
                     </div>
+                    <p id="trendChartFallback" class="chart-fallback" data-i18n="trend_chart_fallback">Fourteen-day pouch count trend.</p>
                 </div>
-                <div>
-                    <div style="font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:var(--muted); margin-bottom:8px;" data-i18n="hourly_heatmap">Hourly Heatmap</div>
+                <div class="chart-module">
+                    <h3 id="hourlyChartTitle" class="chart-title" data-i18n="hourly_heatmap">Pouches by hour</h3>
                     <div class="chart-container">
-                        <canvas id="hourlyChart"></canvas>
+                        <canvas id="hourlyChart" role="img" aria-labelledby="hourlyChartTitle" aria-describedby="hourlyChartFallback"></canvas>
                     </div>
+                    <p id="hourlyChartFallback" class="chart-fallback" data-i18n="hourly_chart_fallback">Pouch count grouped by hour of day.</p>
                 </div>
             </div>
             <div id="benchmarkCard" class="benchmark-card">
-                <div style="display:flex; justify-content:space-between; align-items:center;">
+                <div class="benchmark-summary">
                     <div>
-                        <strong style="font-size:13px;"><span data-i18n="benchmark_profile_label">Your profile</span>: <span id="benchmarkLabel">-</span></strong>
+                        <strong class="benchmark-primary"><span data-i18n="benchmark_profile_label">Your profile</span>: <span id="benchmarkLabel">-</span></strong>
                         <div id="benchmarkMsg" class="benchmark-sub"></div>
                     </div>
-                    <div id="benchmarkPercentile" class="benchmark-sub" style="font-weight:700; font-family:var(--font-mono);"></div>
+                    <div id="benchmarkPercentile" class="benchmark-sub benchmark-percentile"></div>
                 </div>
-                <div class="benchmark-progress" style="margin-top:10px;">
+                <div class="benchmark-progress">
                     <div id="benchmarkProgress" class="benchmark-fill"></div>
                 </div>
                 <div id="benchmarkHint" class="benchmark-sub"></div>
             </div>
-        </div>
+        </section>
 
+        <div class="lower-grid">
         <!-- Achievements -->
-        <details class="card">
+        <details class="lower-module achievements-module">
             <summary><span data-i18n="achievements">Achievements</span></summary>
             <div class="content"><div id="badgeGrid" class="achievements"></div></div>
         </details>
 
         <!-- Health Recovery -->
-        <details id="healthSection" class="card">
+        <details id="healthSection" class="lower-module recovery-module">
             <summary><span data-i18n="health_timeline">Health Recovery</span></summary>
-            <div class="content" id="healthList" style="margin-top:8px;"></div>
+            <div class="content health-list" id="healthList"></div>
         </details>
 
         <!-- History -->
-        <div class="card">
-            <div style="display:flex; justify-content:space-between; align-items:center; gap:8px;">
-                <div class="section-title" style="margin:0;" data-i18n="history">History</div>
-                <button id="viewAllHistoryBtn" class="btn btn-outline" style="padding:4px 10px; font-size:11px;" data-i18n="view_all">View All</button>
+        <section class="lower-module history-module" aria-labelledby="recentHistoryTitle">
+            <div class="module-heading">
+                <h2 id="recentHistoryTitle" class="section-title" data-i18n="recent_history">Recent History</h2>
+                <button id="viewAllHistoryBtn" class="btn btn-plain module-link" data-i18n="view_all">View All</button>
             </div>
             <div id="historyList"></div>
-            <div style="text-align:center; margin-top:10px;">
-                <button id="loadMoreHistoryBtn" class="btn btn-outline hidden" style="padding:6px 12px; font-size:12px;" data-i18n="load_more">Load older</button>
+            <div class="load-more-row">
+                <button id="loadMoreHistoryBtn" class="btn btn-outline hidden" data-i18n="load_more">Load older</button>
             </div>
+        </section>
         </div>
 
         <div id="quitPromo" class="card promo-banner hidden">
             <div class="promo-badge" data-i18n="promo_kicker">Just Track</div>
-            <div style="flex:1;">
-                <h3 style="margin:0;" data-i18n="promo_title">Ready to quit?</h3>
+            <div class="banner-copy">
+                <h2 class="banner-title" data-i18n="promo_title">Ready to quit?</h2>
                 <p data-i18n="promo_desc">You are in Just Track mode. Jump into a guided quit plan with milestones and a target date.</p>
             </div>
             <div class="promo-actions">
-                <button id="promoBtn" class="btn btn-primary" style="font-size:12px;" data-i18n="promo_cta">Launch quit program</button>
+                <button id="promoBtn" class="btn btn-primary compact-button" data-i18n="promo_cta">Launch quit program</button>
             </div>
         </div>
 
-        <footer style="text-align:center; margin-top:32px; padding:16px; font-size:11px; color:var(--muted);">
-            <p style="margin:0 0 8px;"><strong>PouchLog Cloud</strong> <span data-i18n="footer_note">je moderní online nástroj pro sledování a správu užívání nikotinových sáčků.</span></p>
-            <p style="margin:0;">
-                <a href="./privacy.html" target="_blank" style="color:var(--muted); text-decoration:none; border-bottom:1px solid var(--border);" data-i18n="footer_privacy">Privacy Policy</a>
-                <span style="margin:0 8px; opacity:0.4;">|</span>
-                <a href="https://github.com/OndraDol/WebNicotinePouches" target="_blank" style="color:var(--muted); text-decoration:none; border-bottom:1px solid var(--border);" data-i18n="footer_github">GitHub</a>
+        <footer class="page-footer">
+            <p class="footer-lead"><strong>PouchLog Cloud</strong> <span data-i18n="footer_note">je moderní online nástroj pro sledování a správu užívání nikotinových sáčků.</span></p>
+            <p>
+                <a href="./privacy.html" target="_blank" data-i18n="footer_privacy">Privacy Policy</a>
+                <span class="footer-separator">|</span>
+                <a href="https://github.com/OndraDol/WebNicotinePouches" target="_blank" data-i18n="footer_github">GitHub</a>
             </p>
         </footer>
     </main>
 
-    <div id="toast"></div>
+    <div id="toast" role="status" aria-live="polite" aria-atomic="true"></div>
 
-    <dialog id="installHelpModal">
+    <dialog id="installHelpModal" aria-labelledby="installHelpTitle">
         <div class="modal-head">
-            <span data-i18n="install_help_title">Install PouchLog</span>
-            <button id="closeInstallHelpX" class="btn btn-outline" style="padding:4px 8px;" aria-label="Close">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            <h2 id="installHelpTitle" class="modal-title" data-i18n="install_help_title">Install PouchLog</h2>
+            <button id="closeInstallHelpX" class="btn btn-outline icon-button" data-i18n-aria-label="close_aria" aria-label="Close">
+                <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
             </button>
         </div>
         <div class="modal-body install-help">
             <div id="installHelpIos">
-                <h4 style="margin:0 0 8px; font-size:14px;" data-i18n="install_help_ios_title">On iPhone/iPad</h4>
+                <h3 class="modal-section-title" data-i18n="install_help_ios_title">On iPhone/iPad</h3>
                 <ol class="install-steps">
                     <li data-i18n="install_help_ios_step_share">Tap Share (arrow icon).</li>
                     <li data-i18n="install_help_ios_step_add">Choose 'Add to Home Screen'.</li>
@@ -1045,7 +1696,7 @@
                 <p class="install-note" data-i18n="install_help_ios_note">PouchLog runs full-screen without browser chrome.</p>
             </div>
             <div id="installHelpAndroid" class="hidden">
-                <h4 style="margin:0 0 8px; font-size:14px;" data-i18n="install_help_android_title">On Android</h4>
+                <h3 class="modal-section-title" data-i18n="install_help_android_title">On Android</h3>
                 <ol class="install-steps">
                     <li data-i18n="install_help_android_step_menu">Open the menu in the browser.</li>
                     <li data-i18n="install_help_android_step_add">Pick 'Install app' or 'Add to Home screen'.</li>
@@ -1053,178 +1704,179 @@
                 <p class="install-note" data-i18n="install_help_android_note">After install you'll find PouchLog in your apps.</p>
             </div>
         </div>
-        <div class="modal-foot" style="justify-content:flex-end;">
+        <div class="modal-foot">
             <button id="closeInstallHelpBtn" class="btn btn-outline" data-i18n="close">Close</button>
         </div>
     </dialog>
 
     <!-- Add Confirmation Modal -->
-    <dialog id="addConfirmModal">
-        <div class="modal-head"><span id="addConfirmTitle" data-i18n="add_confirm_title">Pouch added</span></div>
+    <dialog id="addConfirmModal" aria-labelledby="addConfirmTitle">
+        <div class="modal-head"><h2 class="modal-title" id="addConfirmTitle" data-i18n="add_confirm_title">Pouch added</h2></div>
         <div class="modal-body">
-            <p id="addConfirmMessage" style="margin:0 0 12px; font-weight:600; font-size:13px;" data-i18n="add_confirm_msg">Saved to today's log.</p>
-            <div style="border:1px solid var(--border); border-radius:var(--radius-md); padding:14px; display:flex; justify-content:space-between; align-items:center; gap:12px; background:var(--bg);">
+            <p id="addConfirmMessage" class="modal-message" data-i18n="add_confirm_msg">Saved to today's log.</p>
+            <div class="confirmation-metric">
                 <div>
-                    <div id="addConfirmRemainingLabel" style="font-size:10px; color:var(--muted); text-transform:uppercase; letter-spacing:0.06em; font-weight:700;" data-i18n="add_confirm_left">Remaining to limit</div>
-                    <div id="addConfirmRemainingValue" style="font-family:var(--font-mono); font-size:28px; font-weight:800; color:var(--primary); letter-spacing:-0.04em;">-</div>
+                    <div id="addConfirmRemainingLabel" class="technical-label" data-i18n="add_confirm_left">Remaining to limit</div>
+                    <div id="addConfirmRemainingValue" class="confirmation-value">-</div>
                 </div>
-                <div id="addConfirmLimitNote" style="font-size:12px; color:var(--muted); text-align:right; font-family:var(--font-mono);"></div>
+                <div id="addConfirmLimitNote" class="confirmation-note"></div>
             </div>
         </div>
-        <div class="modal-foot" style="justify-content:flex-end;">
+        <div class="modal-foot">
             <button id="addConfirmCloseBtn" class="btn btn-primary" data-i18n="close">Close</button>
         </div>
     </dialog>
 
     <!-- SEARCH MODAL -->
-    <dialog id="searchModal">
+    <dialog id="searchModal" aria-labelledby="searchModalTitle">
         <div class="search-header">
-            <input type="search" id="searchInput" placeholder="..." autocomplete="off">
-            <button class="btn btn-outline" style="border:none; padding:4px 8px;" onclick="document.getElementById('searchModal').close()">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            <h2 id="searchModalTitle" class="visually-hidden" data-i18n="search_dialog_title">Choose a pouch</h2>
+            <input type="search" id="searchInput" placeholder="..." autocomplete="off" data-i18n-aria-label="search_aria" aria-label="Search pouches">
+            <button class="btn btn-outline icon-button" type="button" data-i18n-aria-label="close_aria" aria-label="Close" onclick="document.getElementById('searchModal').close()">
+                <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
             </button>
         </div>
-        <div style="padding:10px 16px; border-bottom:1px solid var(--border); background:var(--card); display:flex; justify-content:space-between; align-items:center; gap:8px;">
-            <div style="font-size:12px; color:var(--muted);" data-i18n="custom_prompt">Can't find it? Create your own</div>
-            <button id="openCustomFormBtn" class="btn btn-outline" style="padding:6px 10px; font-size:11px;">+ Custom</button>
+        <div class="custom-toolbar">
+            <div class="custom-prompt" data-i18n="custom_prompt">Can't find it? Create your own</div>
+            <button id="openCustomFormBtn" class="btn btn-outline compact-button">+ Custom</button>
         </div>
         <div id="customPouchForm" class="custom-form hidden">
-            <h4 data-i18n="custom_form_title">Custom pouch</h4>
+            <h3 data-i18n="custom_form_title">Custom pouch</h3>
             <div class="grid">
-                <div><label data-i18n="custom_brand_label">Brand</label><input id="customBrandInput" placeholder="Brand" data-i18n-placeholder="custom_brand_placeholder"></div>
-                <div><label data-i18n="custom_name_label">Name</label><input id="customNameInput" placeholder="Name" data-i18n-placeholder="custom_name_placeholder"></div>
+                <div><label for="customBrandInput" data-i18n="custom_brand_label">Brand</label><input id="customBrandInput" placeholder="Brand" data-i18n-placeholder="custom_brand_placeholder"></div>
+                <div><label for="customNameInput" data-i18n="custom_name_label">Name</label><input id="customNameInput" placeholder="Name" data-i18n-placeholder="custom_name_placeholder"></div>
             </div>
-            <div style="margin-top:8px;"><label data-i18n="custom_strength_label">Strength (mg)</label><input type="number" id="customMgInput" placeholder="mg" data-i18n-placeholder="custom_strength_placeholder"></div>
+            <div class="form-spacer"><label for="customMgInput" data-i18n="custom_strength_label">Strength (mg)</label><input type="number" id="customMgInput" placeholder="mg" data-i18n-placeholder="custom_strength_placeholder"></div>
             <div class="custom-helper" data-i18n="custom_helper">Stored on device and in cloud after sign-in.</div>
-            <div style="display:flex; justify-content:flex-end; gap:6px; margin-top:10px;">
-                <button id="cancelCustomPouchBtn" class="btn btn-outline" style="padding:6px 12px;" data-i18n="cancel">Cancel</button>
-                <button id="saveCustomPouchBtn" class="btn btn-primary" style="padding:6px 14px;" data-i18n="save">Save</button>
+            <div class="form-actions">
+                <button id="cancelCustomPouchBtn" class="btn btn-outline" data-i18n="cancel">Cancel</button>
+                <button id="saveCustomPouchBtn" class="btn btn-primary" data-i18n="save">Save</button>
             </div>
         </div>
         <div id="searchResults" class="search-results"></div>
     </dialog>
 
     <!-- Full History Modal -->
-    <dialog id="historyModal">
-        <div class="modal-head"><span data-i18n="history_modal_title">Full History</span></div>
+    <dialog id="historyModal" aria-labelledby="historyModalTitle">
+        <div class="modal-head"><h2 id="historyModalTitle" class="modal-title" data-i18n="history_modal_title">Full History</h2></div>
         <div class="modal-body">
-            <div id="fullHistoryList" style="max-height:300px; overflow-y:auto;"></div>
+            <div id="fullHistoryList" class="full-history-list"></div>
         </div>
-        <div class="modal-foot" style="justify-content: flex-end; gap: 8px;">
+        <div class="modal-foot">
             <button class="btn btn-outline" onclick="document.getElementById('historyModal').close()" data-i18n="close">Close</button>
             <button id="deleteAllHistoryBtn" class="btn btn-danger" data-i18n="delete_all_history">Delete All</button>
         </div>
     </dialog>
 
-    <dialog id="entryDeletedModal">
-        <div class="modal-head"><span data-i18n="entry_deleted_title">Entry deleted</span></div>
+    <dialog id="entryDeletedModal" aria-labelledby="entryDeletedTitle">
+        <div class="modal-head"><h2 id="entryDeletedTitle" class="modal-title" data-i18n="entry_deleted_title">Entry deleted</h2></div>
         <div class="modal-body">
-            <p style="margin:0; font-size:13px;" data-i18n="entry_deleted_msg">The entry was removed from history.</p>
+            <p class="modal-message" data-i18n="entry_deleted_msg">The entry was removed from history.</p>
         </div>
-        <div class="modal-foot" style="justify-content:flex-end;">
+        <div class="modal-foot">
             <button class="btn btn-primary" onclick="document.getElementById('entryDeletedModal').close()" data-i18n="close">Close</button>
         </div>
     </dialog>
 
-    <dialog id="editEntryModal">
-        <div class="modal-head"><span data-i18n="edit_entry">Edit</span></div>
+    <dialog id="editEntryModal" aria-labelledby="editEntryTitle">
+        <div class="modal-head"><h2 id="editEntryTitle" class="modal-title" data-i18n="edit_entry">Edit</h2></div>
         <div class="modal-body">
-            <div class="grid" style="grid-template-columns:1fr 1fr; gap:10px;">
+            <div class="grid form-grid-two">
                 <div>
-                    <label data-i18n="backdate_date">Date</label>
+                    <label for="editDateInput" data-i18n="backdate_date">Date</label>
                     <input type="date" id="editDateInput">
                 </div>
                 <div>
-                    <label data-i18n="backdate_time">Time</label>
+                    <label for="editTimeInput" data-i18n="backdate_time">Time</label>
                     <input type="time" id="editTimeInput">
                 </div>
             </div>
         </div>
-        <div class="modal-foot" style="justify-content:flex-end; gap:8px;">
+        <div class="modal-foot">
             <button class="btn btn-outline" onclick="document.getElementById('editEntryModal').close()" data-i18n="close">Close</button>
             <button id="saveEditedEntryBtn" class="btn btn-primary" data-i18n="save_changes">Save changes</button>
         </div>
     </dialog>
 
     <!-- Delete History Confirm Modals -->
-    <dialog id="confirmDeleteModalStep1">
-        <div class="modal-head"><span data-i18n="delete_all_history">Delete All</span></div>
+    <dialog id="confirmDeleteModalStep1" aria-labelledby="deleteStep1Title">
+        <div class="modal-head"><h2 id="deleteStep1Title" class="modal-title" data-i18n="delete_all_history">Delete All</h2></div>
         <div class="modal-body">
-            <p id="deleteConfirmText1" style="margin:0; font-weight:600; color:var(--text); font-size:13px;"></p>
+            <p id="deleteConfirmText1" class="confirm-message"></p>
         </div>
-        <div class="modal-foot" style="justify-content: flex-end; gap: 8px;">
+        <div class="modal-foot">
             <button id="cancelDeleteHistoryBtn1" class="btn btn-outline" data-i18n="close">Close</button>
             <button id="confirmDeleteNextBtn1" class="btn btn-danger">OK</button>
         </div>
     </dialog>
 
-    <dialog id="confirmDeleteModalStep2">
-        <div class="modal-head"><span data-i18n="delete_all_history">Delete All</span></div>
+    <dialog id="confirmDeleteModalStep2" aria-labelledby="deleteStep2Title">
+        <div class="modal-head"><h2 id="deleteStep2Title" class="modal-title" data-i18n="delete_all_history">Delete All</h2></div>
         <div class="modal-body">
-            <p id="deleteConfirmText2" style="margin:0; font-weight:600; color:var(--text); font-size:13px;"></p>
+            <p id="deleteConfirmText2" class="confirm-message"></p>
         </div>
-        <div class="modal-foot" style="justify-content: flex-end; gap: 8px;">
+        <div class="modal-foot">
             <button id="cancelDeleteHistoryBtn2" class="btn btn-outline" data-i18n="close">Close</button>
             <button id="confirmDeleteNextBtn2" class="btn btn-danger">OK</button>
         </div>
     </dialog>
 
     <!-- Settings Wizard Modal -->
-    <dialog id="settingsModal">
+    <dialog id="settingsModal" aria-labelledby="settingsTitle">
         <div class="modal-head">
-            <span data-i18n="settings">Settings</span>
-            <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap; justify-content:flex-end;">
-                <button id="settingsLangBtn" class="btn btn-outline" style="padding:4px 8px; font-size:11px;" aria-label="Switch language">EN</button>
-                <span style="font-size:11px; color:var(--muted); font-family:var(--font-mono);" id="wizardStepIndicator">1/3</span>
-                <button id="closeSettingsBtn" class="btn btn-outline" style="padding:4px 8px;" aria-label="Close settings">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            <h2 id="settingsTitle" class="modal-title" data-i18n="settings">Settings</h2>
+            <div class="modal-head-actions">
+                <button id="settingsLangBtn" class="btn btn-outline icon-button" data-i18n-aria-label="language_aria" aria-label="Switch language">EN</button>
+                <span class="wizard-indicator" id="wizardStepIndicator">1/3</span>
+                <button id="closeSettingsBtn" class="btn btn-outline icon-button" data-i18n-aria-label="close_settings_aria" aria-label="Close settings">
+                    <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
                 </button>
             </div>
         </div>
         <div class="modal-body">
             <!-- Step 1: Goal -->
             <div id="step1" class="wizard-step">
-                <h3 style="margin:0 0 16px; font-size:14px; text-align:center; text-transform:uppercase; letter-spacing:0.06em;" data-i18n="wiz_step1_title">Goal?</h3>
-                <div class="grid" style="grid-template-columns: 1fr 1fr;">
-                    <div class="selection-card" id="goalTrack" onclick="window.setWizOption('goal', 'track')">
-                        <div style="font-size:28px; margin-bottom:4px;">&#9632;</div><h4 data-i18n="goal_track_title">Track</h4>
-                    </div>
-                    <div class="selection-card" id="goalQuit" onclick="window.setWizOption('goal', 'quit')">
-                        <div style="font-size:28px; margin-bottom:4px;">&#10005;</div><h4 data-i18n="goal_quit_title">Quit</h4>
-                    </div>
+                <h3 class="wizard-title" data-i18n="wiz_step1_title">Goal?</h3>
+                <div class="grid form-grid-two">
+                    <button type="button" class="selection-card" id="goalTrack" aria-pressed="false" onclick="window.setWizOption('goal', 'track')">
+                        <span class="selection-symbol" aria-hidden="true">&#9632;</span><span class="selection-title" data-i18n="goal_track_title">Track</span>
+                    </button>
+                    <button type="button" class="selection-card" id="goalQuit" aria-pressed="false" onclick="window.setWizOption('goal', 'quit')">
+                        <span class="selection-symbol" aria-hidden="true">&#10005;</span><span class="selection-title" data-i18n="goal_quit_title">Quit</span>
+                    </button>
                 </div>
             </div>
             <!-- Step 2: Strategy -->
             <div id="step2" class="wizard-step hidden">
-                <h3 style="margin:0 0 16px; font-size:14px; text-align:center; text-transform:uppercase; letter-spacing:0.06em;" data-i18n="wiz_step2_title">Strategy</h3>
-                <div class="grid" style="gap:10px;">
-                    <div class="selection-card" id="stratSmooth" onclick="window.setWizOption('strategy', 'smooth')">
-                        <h4 data-i18n="strat_smooth_title">Smooth</h4>
-                        <p data-i18n="strat_smooth_desc">Gradually taper your daily limit for a gentle landing.</p>
-                    </div>
-                    <div class="selection-card" id="stratWeekly" onclick="window.setWizOption('strategy', 'weekly')">
-                        <h4 data-i18n="strat_weekly_title">Weekly</h4>
-                        <p data-i18n="strat_weekly_desc">Step down your daily cap evenly each week.</p>
-                    </div>
-                    <div class="selection-card" id="stratCutoff" onclick="window.setWizOption('strategy', 'cutoff')">
-                        <h4 data-i18n="strat_cutoff_title">Cutoff</h4>
-                        <p data-i18n="strat_cutoff_desc">Stay on your current limit until the target date, then stop.</p>
-                    </div>
+                <h3 class="wizard-title" data-i18n="wiz_step2_title">Strategy</h3>
+                <div class="grid strategy-options">
+                    <button type="button" class="selection-card" id="stratSmooth" aria-pressed="false" onclick="window.setWizOption('strategy', 'smooth')">
+                        <span class="selection-title" data-i18n="strat_smooth_title">Smooth</span>
+                        <span class="selection-description" data-i18n="strat_smooth_desc">Gradually taper your daily limit for a gentle landing.</span>
+                    </button>
+                    <button type="button" class="selection-card" id="stratWeekly" aria-pressed="false" onclick="window.setWizOption('strategy', 'weekly')">
+                        <span class="selection-title" data-i18n="strat_weekly_title">Weekly</span>
+                        <span class="selection-description" data-i18n="strat_weekly_desc">Step down your daily cap evenly each week.</span>
+                    </button>
+                    <button type="button" class="selection-card" id="stratCutoff" aria-pressed="false" onclick="window.setWizOption('strategy', 'cutoff')">
+                        <span class="selection-title" data-i18n="strat_cutoff_title">Cutoff</span>
+                        <span class="selection-description" data-i18n="strat_cutoff_desc">Stay on your current limit until the target date, then stop.</span>
+                    </button>
                 </div>
             </div>
             <!-- Step 3: Setup -->
             <div id="step3" class="wizard-step hidden">
-                <h3 style="margin:0 0 16px; font-size:14px; text-align:center; text-transform:uppercase; letter-spacing:0.06em;" data-i18n="wiz_step3_title">Setup</h3>
-                <div class="grid" style="grid-template-columns: 1fr 1fr;">
-                    <div><label data-i18n="currency">Currency</label><input id="currencyInput"></div>
-                    <div><label data-i18n="pack_price">Price/Can</label><input type="number" id="priceInput"></div>
+                <h3 class="wizard-title" data-i18n="wiz_step3_title">Setup</h3>
+                <div class="grid form-grid-two">
+                    <div><label for="currencyInput" data-i18n="currency">Currency</label><input id="currencyInput"></div>
+                    <div><label for="priceInput" data-i18n="pack_price">Price/Can</label><input type="number" id="priceInput"></div>
                 </div>
-                <div class="grid" style="grid-template-columns: 1fr 1fr; margin-top:8px;">
-                    <div><label data-i18n="pouches_pack">Pcs/Can</label><input type="number" id="piecesInput"></div>
-                    <div><label data-i18n="start_limit">Daily Limit</label><input type="number" id="limitInput"></div>
+                <div class="grid form-grid-two form-spacer">
+                    <div><label for="piecesInput" data-i18n="pouches_pack">Pcs/Can</label><input type="number" id="piecesInput"></div>
+                    <div><label for="limitInput" data-i18n="start_limit">Daily Limit</label><input type="number" id="limitInput"></div>
                 </div>
-                <div id="dateInputContainer" class="hidden" style="margin-top:8px;">
-                    <label data-i18n="target_date">Target Date</label>
+                <div id="dateInputContainer" class="hidden form-spacer">
+                    <label for="wizardDateInput" data-i18n="target_date">Target Date</label>
                     <input type="date" id="wizardDateInput">
                 </div>
             </div>
@@ -1236,37 +1888,39 @@
     </dialog>
 
     <!-- Auth Modal -->
-    <dialog id="authModal">
-        <div class="modal-head" id="authTitle" data-i18n="auth_title">Sync & Backup</div>
+    <dialog id="authModal" aria-labelledby="authTitle">
+        <div class="modal-head"><h2 class="modal-title" id="authTitle" data-i18n="auth_title">Sync & Backup</h2></div>
         <div class="modal-body">
             <div id="authSection">
-                <div class="grid" style="gap:8px;">
+                <div class="grid auth-fields">
+                    <label class="visually-hidden" for="emailInput" data-i18n="email_placeholder">Email</label>
                     <input type="email" id="emailInput" placeholder="Email" data-i18n-placeholder="email_placeholder" autocomplete="username">
+                    <label class="visually-hidden" for="passInput" data-i18n="password_placeholder">Password</label>
                     <input type="password" id="passInput" placeholder="Password" data-i18n-placeholder="password_placeholder" autocomplete="current-password">
-                    <button id="loginBtn" class="btn btn-primary" style="justify-content:center;" data-i18n="login">Log In</button>
-                    <button id="googleAuthBtn" class="btn btn-outline" style="justify-content:center;" data-i18n="google_login">Google Login</button>
+                    <button id="loginBtn" class="btn btn-primary centered-button" data-i18n="login">Log In</button>
+                    <button id="googleAuthBtn" class="btn btn-outline centered-button" data-i18n="google_login">Google Login</button>
                 </div>
-                <div style="text-align:center; margin-top:10px; font-size:12px; color:var(--primary); cursor:pointer; font-weight:600;" id="toggleReg" data-i18n="toggle_reg">Register</div>
+                <button type="button" class="btn btn-plain auth-toggle" id="toggleReg" data-i18n="toggle_reg">Register</button>
             </div>
-            <div id="authStatus" class="hidden" style="text-align:center; padding:16px 0;">
-                <div style="width:40px; height:40px; border-radius:50%; background:var(--primary-glow); border:2px solid var(--primary); display:inline-flex; align-items:center; justify-content:center; margin-bottom:8px;">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            <div id="authStatus" class="hidden auth-status">
+                <div class="auth-status-icon">
+                    <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
                 </div>
-                <div id="authStatusMsg" style="font-weight:700; color:var(--primary); font-size:13px;"></div>
-                <div style="margin-top:10px; display:flex; justify-content:center;">
-                    <button id="logoutBtn" class="btn btn-outline hidden" style="justify-content:center; font-size:12px;" data-i18n="logout">Log Out</button>
+                <div id="authStatusMsg" class="auth-status-message"></div>
+                <div class="centered-actions">
+                    <button id="logoutBtn" class="btn btn-outline hidden centered-button compact-button" data-i18n="logout">Log Out</button>
                 </div>
             </div>
-            <div style="border-top:1px solid var(--border); margin-top:18px; padding-top:18px;">
-                <div style="font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.1em; color:var(--muted); margin-bottom:10px;" data-i18n="data_management">Data Management</div>
-                <div class="grid" style="grid-template-columns: 1fr 1fr; gap:6px;">
-                    <button id="btnExportJson" class="btn btn-outline" style="justify-content:center; font-size:12px;" data-i18n="export_json">Backup</button>
-                    <button id="btnImportJson" class="btn btn-outline" style="justify-content:center; font-size:12px;" data-i18n="import_json">Restore</button>
+            <div class="data-management">
+                <div class="technical-label data-management-title" data-i18n="data_management">Data Management</div>
+                <div class="grid form-grid-two">
+                    <button id="btnExportJson" class="btn btn-outline centered-button compact-button" data-i18n="export_json">Backup</button>
+                    <button id="btnImportJson" class="btn btn-outline centered-button compact-button" data-i18n="import_json">Restore</button>
                 </div>
-                <div style="margin-top:6px;">
-                    <button id="btnExportCsv" class="btn btn-outline" style="width:100%; font-size:12px;" data-i18n="export_csv">CSV Export</button>
+                <div class="form-spacer-small">
+                    <button id="btnExportCsv" class="btn btn-outline full-width-button compact-button" data-i18n="export_csv">CSV Export</button>
                 </div>
-                <input type="file" id="importInput" accept=".json" style="display:none">
+                <input type="file" id="importInput" accept=".json" class="hidden">
             </div>
         </div>
         <div class="modal-foot"><button class="btn btn-outline" onclick="document.getElementById('authModal').close()" data-i18n="close">Close</button></div>
@@ -1334,11 +1988,11 @@
                   import_skipped: "Skipped future or invalid entries", invalid_backup: "Invalid backup format.", error_prefix: "Error:", health_empty: "No data yet", wizard_step_label: "", benchmark_percentile_label: "Percentile", benchmark_profile_label: "Your profile",
                   daily_average_label: "Daily average", range_note: "(scale 0-20)", pouch_unit_label: "pouches", limit_reached_title: "Limit reached", limit_reached_body: (today, limit) => `Today you are at ${today}/${limit}. Consider a break.`,
                   limit_warning_title: "Heads up!", limit_warning_body: (today, limit) => `Warning: You're nearing the daily limit (${today}/${limit})!`, email_placeholder: "Email", password_placeholder: "Password", footer_note: "is a modern online tool for tracking and managing nicotine pouch use.", footer_privacy: "Privacy", footer_github: "GitHub",
-                today_usage: "TODAY", streak: "STREAK", money_saved: "SAVED", log_usage: "Log Usage", history: "History", view_all: "View All",
+                today_usage: "TODAY", streak: "STREAK", money_saved: "SAVED", log_usage: "Log Pouch", history: "History", recent_history: "Recent History", view_all: "View All",
                 settings: "Settings", quit_title: "Freedom Journey", achievements: "Achievements",
                 export_csv: "CSV Export", export_json: "Backup", import_json: "Restore", google_login: "Google Login", signed_in_google: "Signed in with Google", signed_in_generic: "You are signed in", streak_hint: "Keep it up", nicotine: "Nicotine",
-                  total_today: "Total today", cost_label: "TODAY SPENT", cost_note: "on pouches", limit_label: "Limit", days_label: "days", daily_max: "DAILY MAX", pouches_used: "pouches used", days_recorded: "days recorded",
-                history_modal_title: "Full History", pick_date: "Pick Date", add_past_entry: "Add Past Entry", charts_title: "Analytics", saved_compare: "vs typical use", hourly_heatmap: "Hourly Heatmap",
+                  total_today: "Total today", cost_label: "TODAY SPENT", cost_note: "on pouches", limit_label: "Limit", days_label: "days", daily_max: "DAILY MAX", target_label: "TARGET", pouches_used: "pouches used", days_recorded: "days recorded",
+                history_modal_title: "Full History", pick_date: "Pick Date", add_past_entry: "Add Past Entry", charts_title: "Analytics", saved_compare: "vs typical use", hourly_heatmap: "Pouches by hour",
                 health_timeline: "Health Recovery", wiz_step1_title: "Goal?", wiz_step2_title: "Strategy", wiz_step3_title: "Setup",
                 goal_track_title: "Just Track", goal_quit_title: "I Want to Quit", strat_smooth_title: "Smooth", strat_weekly_title: "Weekly",
                 strat_cutoff_title: "Cold Turkey", strat_smooth_desc: "Gradually taper your daily limit to the quit date for a gentle landing. We trim a tiny bit each day so the drop feels softer.",
@@ -1361,7 +2015,11 @@
                 onboard_title: "Tune your profile?",
                 onboard_body: "A 1-minute setup tailors prices, limits, and syncs everything once you sign up.",
                 onboard_settings_cta: "Open setup",
-                onboard_auth_cta: "Register & backup"
+                onboard_auth_cta: "Register & backup",
+                smooth_plan: "Smooth Plan", weekly_plan: "Weekly Plan", cutoff_plan: "Cutoff Plan", recent_choices: "Recent choices",
+                trend_chart_title: "Pouches per day (last 14 days)", trend_chart_fallback: "Fourteen-day pouch count trend.", hourly_chart_fallback: "Pouch count grouped by hour of day.",
+                skip_to_content: "Skip to content", home_aria: "PouchLog home", theme_toggle_aria: "Toggle color theme", menu_aria: "Open settings", add_entry_aria: "Log selected pouch", search_dialog_title: "Choose a pouch", search_aria: "Search pouches", close_aria: "Close dialog", language_aria: "Switch language", close_settings_aria: "Close settings", stats_aria: "Key metrics",
+                plan_progress_aria: (today, limit) => `Today ${today} of ${limit}`
             },
             cs: {
                 install_prompt: "Instalovat", install_help_title: "Instalovat PouchLog", install_help_ios_title: "Na iPhone/iPad", install_help_ios_step_share: "Klepněte na Sdílet (ikona se šipkou).", install_help_ios_step_add: 'Vyberte „Přidat na plochu".', install_help_ios_note: "PouchLog pak poběží na celou obrazovku bez lišty prohlížeče.", install_help_android_title: "Na Androidu", install_help_android_step_menu: "Otevřete menu v prohlížeči.", install_help_android_step_add: 'Zvolte „Instalovat aplikaci" nebo „Přidat na plochu".', install_help_android_note: "Po instalaci najdete PouchLog přímo mezi aplikacemi.", load_more: "Starší", custom_prompt: "Nenašli jste? Vytvořit vlastní", custom_form_title: "Vlastní sáček", custom_brand_label: "Značka", custom_name_label: "Název", custom_strength_label: "Síla (mg)",
@@ -1370,11 +2028,11 @@
                   import_skipped: "Přeskočeny budoucí nebo neplatné záznamy", invalid_backup: "Neplatný formát zálohy.", error_prefix: "Chyba:", health_empty: "Zatím žádná data", wizard_step_label: "", benchmark_percentile_label: "Percentil", benchmark_profile_label: "Tvůj profil",
                   daily_average_label: "Denní průměr", range_note: "(škála 0-20)", pouch_unit_label: "sáčků", limit_reached_title: "Limit dosažen", limit_reached_body: (today, limit) => `Dnes jsi na ${today}/${limit}. Zvaž pauzu.`,
                   limit_warning_title: "Pozor!", limit_warning_body: (today, limit) => `Blížíš se k dennímu limitu (${today}/${limit})!`, email_placeholder: "E-mail", password_placeholder: "Heslo", footer_note: "je moderní online nástroj pro sledování a správu užívání nikotinových sáčků.", footer_privacy: "Ochrana soukromí", footer_github: "GitHub",
-                today_usage: "DNES", streak: "ŘADA", money_saved: "UŠETŘENO", log_usage: "Zapsat sáček", history: "Historie", view_all: "Vše",
+                today_usage: "DNES", streak: "ŘADA", money_saved: "UŠETŘENO", log_usage: "Zapsat sáček", history: "Historie", recent_history: "Nedávná historie", view_all: "Vše",
                 settings: "Nastavení", quit_title: "Cesta ke svobodě", achievements: "Úspěchy",
                 export_csv: "Export CSV", export_json: "Záloha", import_json: "Obnovit", google_login: "Google", signed_in_google: "Přihlášeno přes Google", signed_in_generic: "Jste přihlášeni", streak_hint: "Jen tak dál", nicotine: "Nikotin",
-                  total_today: "Celkem dnes", cost_label: "ÚTRATA", cost_note: "za sáčky", limit_label: "Limit", days_label: "dní", daily_max: "DENNÍ CÍL", pouches_used: "zapsané sáčky", days_recorded: "dnů zaznamenáno",
-                history_modal_title: "Kompletní historie", pick_date: "Vyber datum", add_past_entry: "Přidat zpětně", charts_title: "Statistiky", saved_compare: "v porovnání se standardní spotřebou", hourly_heatmap: "Hodinová mapa",
+                  total_today: "Celkem dnes", cost_label: "ÚTRATA", cost_note: "za sáčky", limit_label: "Limit", days_label: "dní", daily_max: "DENNÍ MAXIMUM", target_label: "CÍL", pouches_used: "zapsané sáčky", days_recorded: "dnů zaznamenáno",
+                history_modal_title: "Kompletní historie", pick_date: "Vyber datum", add_past_entry: "Přidat zpětně", charts_title: "Statistiky", saved_compare: "v porovnání se standardní spotřebou", hourly_heatmap: "Sáčky podle hodin",
                 health_timeline: "Zdravotní regenerace", wiz_step1_title: "Cíl?", wiz_step2_title: "Strategie", wiz_step3_title: "Nastavení",
                 goal_track_title: "Sledovat", goal_quit_title: "Přestat", strat_smooth_title: "Plynule", strat_weekly_title: "Týdně",
                 strat_cutoff_title: "Rázně", strat_smooth_desc: "Denně lehce snižuješ limit a dojdeš k nule plynule. Každý den ubereš malý kousek, aby byl přechod co nejjemnější.",
@@ -1398,7 +2056,11 @@
                 onboard_title: "Vyplň krátké nastavení",
                 onboard_body: "Díky profilu spočítáme cenu sáčků, limity a po registraci vše bezpečně zálohujeme.",
                 onboard_settings_cta: "Otevřít nastavení",
-                onboard_auth_cta: "Registrovat a zálohovat"
+                onboard_auth_cta: "Registrovat a zálohovat",
+                smooth_plan: "Plynulý plán", weekly_plan: "Týdenní plán", cutoff_plan: "Plán s pevným koncem", recent_choices: "Nedávné volby",
+                trend_chart_title: "Sáčky za den (posledních 14 dní)", trend_chart_fallback: "Trend počtu sáčků za posledních čtrnáct dní.", hourly_chart_fallback: "Počet sáčků seskupený podle hodiny dne.",
+                skip_to_content: "Přeskočit na obsah", home_aria: "Domovská stránka PouchLog", theme_toggle_aria: "Přepnout barevný režim", menu_aria: "Otevřít nastavení", add_entry_aria: "Zapsat vybraný sáček", search_dialog_title: "Vybrat sáček", search_aria: "Hledat sáčky", close_aria: "Zavřít dialog", language_aria: "Přepnout jazyk", close_settings_aria: "Zavřít nastavení", stats_aria: "Klíčové metriky",
+                plan_progress_aria: (today, limit) => `Dnes ${today} z ${limit}`
             }
         };
         const t = (key) => { const lang = state?.lang || 'en'; return translations[lang]?.[key] || translations.en[key] || key; };
@@ -1450,9 +2112,10 @@
 
         // --- MAIN LOGIC ---
         function init() {
+            const needsOnboarding = !localStorage.getItem('nt_settings');
             applyTheme(state.theme);
             applyLanguage(state.lang); setupSearch(); setupListeners();
-            if (!localStorage.getItem('nt_settings')) openWizard();
+            if (needsOnboarding) openWizard(false);
             if('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js');
             setupInstallPrompt();
         }
@@ -1470,7 +2133,17 @@
                 const value = t(el.dataset.i18nPlaceholder);
                 el.placeholder = typeof value === 'function' ? '' : value;
             });
+            document.querySelectorAll('[data-i18n-aria-label]').forEach(el => {
+                const value = t(el.dataset.i18nAriaLabel);
+                if (typeof value !== 'function') el.setAttribute('aria-label', value);
+            });
+            document.querySelectorAll('[data-i18n-title]').forEach(el => {
+                const value = t(el.dataset.i18nTitle);
+                if (typeof value !== 'function') el.setAttribute('title', value);
+            });
+            document.querySelectorAll('svg').forEach(svg => svg.setAttribute('aria-hidden', 'true'));
             document.getElementById('searchInput').placeholder = t('search_placeholder');
+            document.getElementById('statsGrid')?.setAttribute('aria-label', t('stats_aria'));
             const syncBtn = document.getElementById('syncBtn');
             if (syncBtn) syncBtn.innerText = state.user ? '~' : t('auth_btn');
             if (state.user) {
@@ -1503,12 +2176,15 @@
             const toggle = document.getElementById('themeToggle');
             if (toggle) {
                 toggle.innerHTML = state.theme === 'dark'
-                    ? '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>'
-                    : '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
+                    ? '<svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>'
+                    : '<svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
+                toggle.setAttribute('aria-label', t('theme_toggle_aria'));
             }
             const metaColor = document.querySelector('meta[name="theme-color"]');
-            if (metaColor) metaColor.setAttribute('content', state.theme === 'dark' ? '#111110' : '#faf8f5');
+            if (metaColor) metaColor.setAttribute('content', state.theme === 'dark' ? '#071422' : '#1d5ce5');
             persistHistory();
+            if (window.trendChartInst) renderChart();
+            if (window.hourlyChartInst) renderHourlyChart();
         }
 
         function vibrateDevice(pattern = 40) {
@@ -1693,6 +2369,22 @@
         function calculateDynamicLimit() { return getDynamicLimitForDate(new Date()); }
 
         // --- RENDERERS ---
+        function escapeHTML(value = '') {
+            return String(value).replace(/[&<>'"]/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' })[char]);
+        }
+
+        function setMetricValue(id, value, unit = '') {
+            const metric = document.getElementById(id);
+            if (!metric) return;
+            metric.replaceChildren(document.createTextNode(String(value)));
+            if (unit) {
+                const unitEl = document.createElement('span');
+                unitEl.className = 'metric-unit';
+                unitEl.textContent = unit;
+                metric.appendChild(unitEl);
+            }
+        }
+
         function renderUI() {
             const today = getLocalISODate();
             const todayEntries = state.history.filter(h => getEntryLocalDate(h) === today);
@@ -1707,48 +2399,70 @@
 
             // Quick Actions
             const counts = {}; state.history.forEach(h => { const k = h.brand + '|' + (h.name||''); counts[k] = (counts[k]||0)+1; });
-            const top = Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0, 3).map(e=>e[0]);
+            const top = Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0, 3).map(([key]) => {
+                const [b, n] = key.split('|');
+                const catalogPouch = getAllPouches().find(p => p.b === b && p.n === n);
+                const historicalPouch = state.history.find(p => p.brand === b && (p.name || '') === n);
+                return catalogPouch || { b, n, mg: historicalPouch?.mg };
+            });
             const qaContainer = document.getElementById('quickActions');
-            qaContainer.innerHTML = top.map(k => { const [b, n] = k.split('|'); return `<div class="quick-chip">${n || b}</div>`; }).join('');
-            qaContainer.querySelectorAll('.quick-chip').forEach((el, i) => {
+            qaContainer.innerHTML = top.map((pouch, index) => `<button type="button" class="quick-choice" data-quick-index="${index}"><span class="quick-choice-name">${escapeHTML(pouch.n || pouch.b)}</span>${Number.isFinite(Number(pouch.mg)) ? `<span class="quick-choice-mg">${escapeHTML(pouch.mg)} mg</span>` : ''}</button>`).join('');
+            qaContainer.querySelectorAll('.quick-choice').forEach((el, i) => {
                 el.onclick = () => {
-                    const [b, n] = top[i].split('|');
-                    const full = getAllPouches().find(p => p.b === b && p.n === n) || { b, n, mg: 0 };
-                    selectPouch(full);
+                    selectPouch(top[i]);
                     vibrateDevice(15);
                 };
             });
 
             // Selection
             const selName = document.getElementById('selectedPouchName');
-            if (state.selection) selName.innerHTML = `${state.selection.n} <span style="color:var(--primary); font-size:11px; font-family:var(--font-mono); font-weight:700;">${state.selection.mg}mg</span>`;
-            else selName.innerText = t('select_placeholder');
+            selName.replaceChildren();
+            if (state.selection) {
+                selName.appendChild(document.createTextNode(state.selection.n || state.selection.b));
+                if (Number.isFinite(Number(state.selection.mg))) {
+                    const mg = document.createElement('span');
+                    mg.className = 'pouch-mg';
+                    mg.textContent = `${state.selection.mg} mg`;
+                    selName.appendChild(mg);
+                }
+            } else selName.innerText = t('select_placeholder');
 
             // Stats Dashboard
-            document.getElementById('valToday').innerText = todayEntries.length;
+            setMetricValue('valToday', todayEntries.length);
             document.getElementById('valTodayNote').innerText = t('pouches_used');
             document.getElementById('valLimit').innerText = `${t('limit_label')}: ${limit ?? 0}`;
-            document.getElementById('valStreak').innerHTML = `${stats.streak} <span>${t('days_recorded')}</span>`;
+            setMetricValue('valStreak', stats.streak, t('days_label'));
 
             const savedVisible = state.settings.goal === 'quit';
             document.getElementById('savedStat').classList.toggle('hidden', !savedVisible);
+            document.getElementById('statsGrid').classList.toggle('with-savings', savedVisible);
             document.getElementById('valSavedNote').innerText = t('saved_compare');
             if (savedVisible) {
-                document.getElementById('valSaved').innerText = `${Math.max(0, stats.savedTotal).toFixed(0)} ${state.settings.currency}`;
+                setMetricValue('valSaved', Math.max(0, stats.savedTotal).toFixed(0), state.settings.currency);
             }
 
             const unitPrice = state.settings.pouchesPerPack ? state.settings.packPrice / state.settings.pouchesPerPack : 0;
             const costToday = todayEntries.length * unitPrice;
-            document.getElementById('valSpent').innerText = `${costToday.toFixed(0)} ${state.settings.currency}`;
-            document.getElementById('valMg').innerText = `${todayEntries.reduce((s,i)=>s+(i.mg||0),0).toFixed(1)} mg`;
+            setMetricValue('valSpent', costToday.toFixed(0), state.settings.currency);
+            setMetricValue('valMg', todayEntries.reduce((s,i)=>s+(i.mg||0),0).toFixed(1), 'mg');
 
             // Quit Banner
             if (state.settings.goal === 'quit') {
                 document.getElementById('quitBanner').classList.remove('hidden');
-                document.getElementById('quitTarget').innerText = limit ?? 0;
+                const strategyKey = ({ smooth: 'smooth_plan', weekly: 'weekly_plan', cutoff: 'cutoff_plan' })[state.settings.strategy || 'smooth'] || 'smooth_plan';
+                document.getElementById('quitStatusText').innerText = t(strategyKey);
+                const targetDate = state.settings.targetDate ? new Date(`${state.settings.targetDate}T12:00:00`) : null;
+                document.getElementById('quitTarget').innerText = targetDate && !Number.isNaN(targetDate.getTime())
+                    ? targetDate.toLocaleDateString(state.lang === 'cs' ? 'cs-CZ' : 'en-GB', { day: 'numeric', month: 'short' })
+                    : '—';
+                document.getElementById('planToday').innerText = `${todayEntries.length} / ${limit ?? 0}`;
+                document.getElementById('planDailyMax').innerText = limit ?? 0;
                 const pct = limit <= 0 ? (todayEntries.length > 0 ? 100 : 0) : Math.min(100, (todayEntries.length / limit) * 100);
                 document.getElementById('quitProgress').style.width = pct + '%';
-                document.getElementById('quitProgress').style.background = pct > 100 ? 'var(--danger)' : 'var(--primary)';
+                const progressTrack = document.getElementById('quitProgressTrack');
+                progressTrack.setAttribute('aria-valuenow', String(Math.round(pct)));
+                const progressLabel = t('plan_progress_aria');
+                progressTrack.setAttribute('aria-valuetext', typeof progressLabel === 'function' ? progressLabel(todayEntries.length, limit ?? 0) : `${todayEntries.length} / ${limit ?? 0}`);
             } else {
                 document.getElementById('quitBanner').classList.add('hidden');
             }
@@ -1760,7 +2474,8 @@
             const visibleCount = Math.min(state.historyVisible, state.history.length);
             const visibleHistory = state.history.slice(0, visibleCount);
             visibleHistory.forEach(h => {
-                list.innerHTML += `<div class="history-item"><div><strong>${h.name || h.brand}</strong> <span style="color:var(--muted); font-family:var(--font-mono); font-size:11px;">${h.mg}mg</span></div><div style="font-size:11px; color:var(--muted); font-family:var(--font-mono);">${new Date(h.date).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</div></div>`;
+                const time = new Date(h.date).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+                list.insertAdjacentHTML('beforeend', `<div class="history-item"><time class="history-time" datetime="${escapeHTML(h.date)}">${escapeHTML(time)}</time><strong class="history-name">${escapeHTML(h.name || h.brand)}</strong><span class="history-strength">${escapeHTML(h.mg)} mg</span><span class="history-chevron" aria-hidden="true">›</span></div>`);
             });
             const loadMoreBtn = document.getElementById('loadMoreHistoryBtn');
             loadMoreBtn.classList.toggle('hidden', state.history.length <= visibleCount);
@@ -1781,7 +2496,7 @@
                     const desc = state.lang === 'cs' ? b.desc_cs : b.desc_en;
                     const div = document.createElement('div');
                     div.className = `achievement ${unlocked ? 'unlocked' : 'locked'}`;
-                    div.innerHTML = `<div style="font-family:var(--font-mono); font-size:16px; font-weight:800; margin-bottom:4px; letter-spacing:-0.04em;">${b.icon}</div><div style="font-weight:700; font-size:10px; line-height:1.2; text-transform:uppercase; letter-spacing:0.04em;">${title}</div><div style="font-size:9px; margin-top:3px; line-height:1.3;">${desc}</div>`;
+                    div.innerHTML = `<div class="achievement-icon">${escapeHTML(b.icon)}</div><div class="achievement-title">${escapeHTML(title)}</div><div class="achievement-desc">${escapeHTML(desc)}</div>`;
                     container.appendChild(div);
                 });
             } catch (e) { console.error("Badge render error", e); }
@@ -1789,7 +2504,7 @@
 
         function renderHealth() {
             const container = document.getElementById('healthList'); container.innerHTML = '';
-            if (state.history.length === 0) { container.innerHTML = `<div style="padding:10px; color:var(--muted); text-align:center; font-size:12px;">${t('health_empty')}</div>`; return; }
+            if (state.history.length === 0) { container.innerHTML = `<div class="empty-state">${t('health_empty')}</div>`; return; }
 
             const lastDate = new Date(state.history[0].date);
             const diffMins = (new Date() - lastDate) / 1000 / 60;
@@ -1802,8 +2517,8 @@
                 container.innerHTML += `
                 <div class="health-item ${unlocked ? 'health-done' : 'health-locked'}">
                     <div class="health-time">${timeLbl}</div>
-                    <div style="flex:1; font-size:13px;">${text}</div>
-                    ${unlocked ? '<div class="health-icon" style="color:var(--primary); font-family:var(--font-mono); font-weight:700;">OK</div>' : ''}
+                    <div class="health-copy">${escapeHTML(text)}</div>
+                    ${unlocked ? '<div class="health-icon">OK</div>' : ''}
                 </div>`;
             });
         }
@@ -1824,53 +2539,92 @@
         }
 
         // --- CHART & SEARCH ---
+        function getChartTheme() {
+            const styles = getComputedStyle(document.documentElement);
+            return {
+                accent: styles.getPropertyValue('--accent').trim(),
+                grid: styles.getPropertyValue('--grid').trim(),
+                text: styles.getPropertyValue('--text-muted').trim(),
+                surface: styles.getPropertyValue('--surface').trim(),
+                border: styles.getPropertyValue('--border').trim(),
+                mono: styles.getPropertyValue('--font-mono').trim()
+            };
+        }
+
+        function getChartOptions(theme) {
+            const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            return {
+                responsive: true,
+                maintainAspectRatio: false,
+                animation: reduceMotion ? false : { duration: 180 },
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        backgroundColor: theme.surface,
+                        titleColor: theme.text,
+                        bodyColor: theme.text,
+                        borderColor: theme.border,
+                        borderWidth: 1,
+                        displayColors: false,
+                        titleFont: { family: theme.mono },
+                        bodyFont: { family: theme.mono }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: { display: true, color: theme.grid, drawTicks: false },
+                        border: { display: false },
+                        ticks: { color: theme.text, precision: 0, stepSize: 1, font: { family: theme.mono, size: 10 } }
+                    },
+                    x: {
+                        grid: { display: false },
+                        border: { color: theme.border },
+                        ticks: { color: theme.text, autoSkip: true, maxRotation: 0, font: { family: theme.mono, size: 10 } }
+                    }
+                }
+            };
+        }
+
         function renderChart(){
             if (typeof Chart === 'undefined') return;
-            const isDark = state.theme === 'dark';
-            const gridColor = isDark ? '#2a2825' : '#e8e4de';
-            const textColor = isDark ? '#8a8578' : '#8a8578';
+            const theme = getChartTheme();
             const days={}; for(let i=13;i>=0;i--){const d=new Date();d.setHours(0,0,0,0);d.setDate(d.getDate()-i); days[getLocalISODate(d)]=0;}
             state.history.forEach(h=>{const k=getEntryLocalDate(h);if(days[k]!==undefined)days[k]++;});
             const labels = Object.keys(days).map(d=>d.slice(5));
             const dataPoints = Object.values(days);
+            document.getElementById('trendChartFallback').textContent = `${t('trend_chart_fallback')} ${labels.map((label, index) => `${label}: ${dataPoints[index]}`).join(', ')}`;
             const ctx=document.getElementById('trendChart');
             if(window.trendChartInst){
                 window.trendChartInst.data.labels = labels;
                 window.trendChartInst.data.datasets[0].data = dataPoints;
-                window.trendChartInst.data.datasets[0].borderColor = isDark ? '#ea580c' : '#c2410c';
-                window.trendChartInst.data.datasets[0].backgroundColor = isDark ? 'rgba(234,88,12,0.08)' : 'rgba(194,65,12,0.06)';
-                window.trendChartInst.options.scales = {
-                    y: { beginAtZero: true, grid: { color: gridColor }, ticks: { color: textColor, font: { family: "'JetBrains Mono'" } } },
-                    x: { grid: { color: gridColor }, ticks: { color: textColor, font: { family: "'JetBrains Mono'" } } }
-                };
+                window.trendChartInst.data.datasets[0].borderColor = theme.accent;
+                window.trendChartInst.data.datasets[0].pointBackgroundColor = theme.accent;
+                window.trendChartInst.options = getChartOptions(theme);
                 window.trendChartInst.update();
                 return;
             }
-            window.trendChartInst=new Chart(ctx,{type:'line',data:{labels,datasets:[{label:'Pcs',data:dataPoints,borderColor:isDark?'#ea580c':'#c2410c',backgroundColor:isDark?'rgba(234,88,12,0.08)':'rgba(194,65,12,0.06)',fill:true,tension:0.3,borderWidth:2,pointRadius:3,pointBackgroundColor:isDark?'#ea580c':'#c2410c'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,grid:{color:gridColor},ticks:{color:textColor,font:{family:"'JetBrains Mono'"}}},x:{grid:{color:gridColor},ticks:{color:textColor,font:{family:"'JetBrains Mono'"}}}}}});
+            window.trendChartInst=new Chart(ctx,{type:'line',data:{labels,datasets:[{label:'Pcs',data:dataPoints,borderColor:theme.accent,fill:false,tension:0,borderWidth:2,pointRadius:3,pointHoverRadius:4,pointBackgroundColor:theme.accent}]},options:{...getChartOptions(theme),maintainAspectRatio:false}});
         }
         function renderHourlyChart() {
             if (typeof Chart === 'undefined') return;
-            const isDark = state.theme === 'dark';
-            const gridColor = isDark ? '#2a2825' : '#e8e4de';
-            const textColor = isDark ? '#8a8578' : '#8a8578';
-            const barColor = isDark ? '#ea580c' : '#c2410c';
+            const theme = getChartTheme();
             const hours=Array.from({length:24},(_,i)=>({l:i,c:0}));
             state.history.forEach(h=>hours[new Date(h.date).getHours()].c++);
-            const labels = hours.map(h=>h.l);
+            const labels = hours.map(h=>String(h.l).padStart(2, '0'));
             const dataPoints = hours.map(h=>h.c);
+            const occupiedHours = hours.filter(hour => hour.c > 0).map(hour => `${String(hour.l).padStart(2, '0')}:00: ${hour.c}`).join(', ');
+            document.getElementById('hourlyChartFallback').textContent = `${t('hourly_chart_fallback')} ${occupiedHours || '0'}`;
             const ctx=document.getElementById('hourlyChart');
             if(window.hourlyChartInst){
                 window.hourlyChartInst.data.labels = labels;
                 window.hourlyChartInst.data.datasets[0].data = dataPoints;
-                window.hourlyChartInst.data.datasets[0].backgroundColor = barColor;
-                window.hourlyChartInst.options.scales = {
-                    y: { beginAtZero: true, grid: { color: gridColor }, ticks: { color: textColor, font: { family: "'JetBrains Mono'" } } },
-                    x: { grid: { color: gridColor }, ticks: { color: textColor, font: { family: "'JetBrains Mono'" } } }
-                };
+                window.hourlyChartInst.data.datasets[0].backgroundColor = theme.accent;
+                window.hourlyChartInst.options = getChartOptions(theme);
                 window.hourlyChartInst.update();
                 return;
             }
-            window.hourlyChartInst=new Chart(ctx,{type:'bar',data:{labels,datasets:[{data:dataPoints,backgroundColor:barColor,borderRadius:2}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,grid:{color:gridColor},ticks:{color:textColor,font:{family:"'JetBrains Mono'"}}},x:{grid:{color:gridColor},ticks:{color:textColor,font:{family:"'JetBrains Mono'"}}}}}});
+            window.hourlyChartInst=new Chart(ctx,{type:'bar',data:{labels,datasets:[{data:dataPoints,backgroundColor:theme.accent,borderRadius:0,borderSkipped:false}]},options:{...getChartOptions(theme),maintainAspectRatio:false}});
         }
 
         function setupSearch() {
@@ -1882,18 +2636,18 @@
 
             const renderList = (items) => {
                 results.innerHTML = items.map((item, index) => `
-                    <div class="search-item" onclick="window.selectByIndex(${index})">
-                        <div class="search-text">
-                            <span class="pouch-title">${item.n}</span>
-                            <div class="pouch-meta">
-                                <span class="pouch-brand">${item.b}</span>
+                    <button type="button" class="search-item" onclick="window.selectByIndex(${index})">
+                        <span class="search-text">
+                            <span class="pouch-title">${escapeHTML(item.n)}</span>
+                            <span class="pouch-meta">
+                                <span class="pouch-brand">${escapeHTML(item.b)}</span>
                                 ${item.isCustom ? `<span class="badge-custom">${t('custom_badge')}</span>` : ''}
-                            </div>
-                        </div>
-                        <div class="pouch-strength">
-                            <div class="mg-badge">${item.mg}<span>mg</span></div>
-                        </div>
-                    </div>
+                            </span>
+                        </span>
+                        <span class="pouch-strength">
+                            <span class="mg-badge">${escapeHTML(item.mg)}<span>mg</span></span>
+                        </span>
+                    </button>
                 `).join('');
             };
 
@@ -1949,7 +2703,7 @@
             c.innerHTML = '';
             state.history.forEach(h => {
                 const dateStr = new Date(h.date).toLocaleString();
-                c.innerHTML += `<div class="history-item"><div>${h.name || h.brand} <span style="font-family:var(--font-mono); font-size:11px; color:var(--muted);">(${h.mg}mg)</span><br><small style="color:var(--muted);">${dateStr}</small></div><div style="display:flex; gap:6px; flex-wrap:wrap; justify-content:flex-end;"><button class="btn btn-outline" style="font-size:11px; padding:4px 8px;" onclick="window.openEditEntry('${h.id}')">${t('edit_entry')}</button><button class="btn btn-danger" style="font-size:11px; padding:4px 8px;" onclick="window.delHist('${h.id}')">${t('delete_entry')}</button></div></div>`;
+                c.innerHTML += `<div class="history-item full-history-item"><div class="full-history-copy"><strong>${escapeHTML(h.name || h.brand)}</strong> <span class="history-strength">${escapeHTML(h.mg)} mg</span><small>${escapeHTML(dateStr)}</small></div><div class="history-row-actions"><button class="btn btn-outline" onclick="window.openEditEntry('${h.id}')">${t('edit_entry')}</button><button class="btn btn-danger" onclick="window.delHist('${h.id}')">${t('delete_entry')}</button></div></div>`;
             });
         }
 
@@ -2109,12 +2863,24 @@
         }
 
         // --- WIZARD LOGIC ---
-        window.openWizard = () => { wizStep = 1; tempSettings = { ...state.settings, goal: undefined }; showStep(1); document.getElementById('settingsModal').showModal(); vibrateDevice(20); };
+        window.openWizard = (withHaptics = true) => {
+            wizStep = 1;
+            tempSettings = { ...state.settings, goal: undefined };
+            showStep(1);
+            document.getElementById('settingsModal').showModal();
+            if (withHaptics) vibrateDevice(20);
+        };
         window.setWizOption = (key, val) => {
             tempSettings[key] = val;
-            document.querySelectorAll(`#step${wizStep} .selection-card`).forEach(el => el.classList.remove('active'));
-            if(key==='goal') document.getElementById(val==='track'?'goalTrack':'goalQuit').classList.add('active');
-            if(key==='strategy') document.getElementById('strat'+val.charAt(0).toUpperCase()+val.slice(1)).classList.add('active');
+            document.querySelectorAll(`#step${wizStep} .selection-card`).forEach(el => {
+                el.classList.remove('active');
+                el.setAttribute('aria-pressed', 'false');
+            });
+            const selected = key === 'goal'
+                ? document.getElementById(val === 'track' ? 'goalTrack' : 'goalQuit')
+                : document.getElementById('strat' + val.charAt(0).toUpperCase() + val.slice(1));
+            selected.classList.add('active');
+            selected.setAttribute('aria-pressed', 'true');
         };
         window.showStep = (s) => {
             [1,2,3].forEach(i => document.getElementById(`step${i}`).classList.add('hidden'));
