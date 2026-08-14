@@ -124,7 +124,8 @@ function createContactHandler({
     adminEmail,
     senderEmail,
     clock = Date.now,
-    updatedAt = clock
+    updatedAt = clock,
+    logger = console
 }) {
     return async ({ data, source }) => {
         if (data && typeof data.website === 'string' && data.website.trim()) {
@@ -147,7 +148,12 @@ function createContactHandler({
                 from: `PouchLog <${senderEmail}>`,
                 to: adminEmail
             }));
-        } catch (_error) {
+        } catch (error) {
+            logger.error('Contact email transport failed.', {
+                code: typeof error?.code === 'string' ? error.code.slice(0, 32) : 'UNKNOWN',
+                responseCode: Number.isFinite(error?.responseCode) ? error.responseCode : null,
+                command: typeof error?.command === 'string' ? error.command.slice(0, 32) : null
+            });
             throw new ContactError('internal', 'The message could not be sent. Please try again later.');
         }
 

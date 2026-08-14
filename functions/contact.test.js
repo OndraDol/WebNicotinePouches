@@ -255,18 +255,30 @@ test('valid handler call reserves limits and sends one email', async () => {
 });
 
 test('mail transport failures become internal contact errors', async () => {
+    const logged = [];
+    const transportError = Object.assign(new Error('SMTP unavailable for private-user@example.com'), {
+        code: 'EAUTH',
+        responseCode: 535,
+        command: 'AUTH PLAIN'
+    });
     const handler = createContactHandler({
         db: createFakeDb(),
-        transport: { sendMail: async () => { throw new Error('SMTP unavailable'); } },
+        transport: { sendMail: async () => { throw transportError; } },
         secret: SECRET,
         adminEmail: 'owner@example.com',
         senderEmail: 'sender@example.com',
         clock: () => NOW,
-        updatedAt: () => 'SERVER_TIME'
+        updatedAt: () => 'SERVER_TIME',
+        logger: { error: (message, metadata) => logged.push({ message, metadata }) }
     });
 
     await assert.rejects(
         handler({ data: validPayload(), source: '203.0.113.25' }),
         (error) => error instanceof ContactError && error.code === 'internal' && !error.message.includes('SMTP')
     );
+    assert.deepEqual(logged, [{
+        message: 'Contact email transport failed.',
+        metadata: { code: 'EAUTH', responseCode: 535, command: 'AUTH PLAIN' }
+    }]);
+    assert.equal(JSON.stringify(logged).includes('private-user@example.com'), false);
 });

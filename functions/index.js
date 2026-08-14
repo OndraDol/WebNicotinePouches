@@ -2,6 +2,7 @@ const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 const nodemailer = require('nodemailer');
 const { onCall, HttpsError } = require('firebase-functions/v2/https');
+const logger = require('firebase-functions/logger');
 const { ContactError, createContactHandler } = require('./contact');
 
 admin.initializeApp();
@@ -93,7 +94,8 @@ exports.submitContact = onCall({
         secret: process.env.CONTACT_RATE_SECRET,
         adminEmail: ADMIN_EMAIL,
         senderEmail: process.env.GMAIL_EMAIL,
-        updatedAt: () => admin.firestore.FieldValue.serverTimestamp()
+        updatedAt: () => admin.firestore.FieldValue.serverTimestamp(),
+        logger
     });
 
     try {
