@@ -75,3 +75,5 @@ node_modules/
 audit/pouches/*
 !audit/pouches/input.json
 !audit/pouches/unresolved-input.json
+!audit/pouches/recheck-v3/
+!audit/pouches/recheck-v3/**

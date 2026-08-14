@@ -65,9 +65,16 @@ function deterministicCandidateRejection(url) {
       || /^(?:www\.)?sec\.gov$/iu.test(parsed.hostname) && /\/Archives\/edgar\//iu.test(parsed.pathname)
       || /(?:filedown|com_trend)\.php$/iu.test(parsed.pathname)
       || /(?:^|[/.])(?:file(?:down|download)|download(?:_[a-z0-9]+)?|nttFileDownload|gongMeFileDown|DownloadServlet|getExcelFile\d*|download_post_attachment|bbsDownload)(?:\.|\/|$)/iu.test(parsed.pathname)
+      || /(?:^|\.)jmir\.org$/iu.test(parsed.hostname) && /\/2021\/1\/PDF$/iu.test(parsed.pathname)
+      || /(?:^|\/)(?:gastenboek|guestbook)\.php$/iu.test(parsed.pathname)
+      || /\/(?:readDownloadFile|downloadFile|file_download)\.(?:do|jsp)$/iu.test(parsed.pathname)
+      || /\/UplDownloadFile$/iu.test(parsed.pathname)
+      || /(?:^|\/)\w+_download\.(?:do|jsp|php)$/iu.test(parsed.pathname)
       || /(?:^|\/)file\/down(?:load)?(?:\.|\/|$)/iu.test(parsed.pathname)
       || /(?:^|\/)documents?\/download(?:\/|$)/iu.test(parsed.pathname)
       || /(?:^|[?&])documentId=/iu.test(parsed.search)
+      || /(?:^|[?&])fn=fileDownload(?:[&#]|$)/iu.test(parsed.search)
+      || /(?:^|[?&])fn=(?:down)?File(?:[&#]|$)/iu.test(parsed.search)
       || /(?:^|[?&])com_board_basic=read_form(?:[&#]|$)/iu.test(parsed.search)
       || /(?:^|[?&])picseq=/iu.test(parsed.search)
       || /(?:^|\.)tistory\.com$/iu.test(parsed.hostname)
@@ -77,6 +84,8 @@ function deterministicCandidateRejection(url) {
       || /(?:^|\.)bloggang\.com$/iu.test(parsed.hostname)
       || /(?:^|\.)gist\.github\.com$/iu.test(parsed.hostname)
       || /(?:^|\.)camra\.org\.uk$/iu.test(parsed.hostname)
+      || /(?:^|\.)thetastingalliance\.com$/iu.test(parsed.hostname) && /^\/results\//iu.test(parsed.pathname)
+      || /(?:^|\.)theinternationalman\.com$/iu.test(parsed.hostname) && /\/connoisseur-products-and-services\.php$/iu.test(parsed.pathname)
       || /(?:^|\.)colombopereira\.com$/iu.test(parsed.hostname)
       || /(?:^|\.)edepot\.wur\.nl$/iu.test(parsed.hostname)
       || /^(?:www\.)?nicoleaks\.com$/iu.test(parsed.hostname)
@@ -87,6 +96,7 @@ function deterministicCandidateRejection(url) {
       || /(?:^|\.)guitarshop\.co\.kr$/iu.test(parsed.hostname)
       || /(?:^|\.)caffeineinformer\.com$/iu.test(parsed.hostname)
       || /(?:^|\/)collections(?:\/|$)/iu.test(parsed.pathname)
+      || /^\/nicotine-pouches\/?$/iu.test(parsed.pathname)
       || (/(?:^|\.)snusexpress\.com$/iu.test(parsed.hostname) && parsed.pathname === '/apres')
       || (/(?:^|\.)kita\.net$/iu.test(parsed.hostname) && /(?:^|\/)tradeNavi\/sps\/spsDetail\.do$/iu.test(parsed.pathname))
       || /(?:^|\.)huggingface\.co$/iu.test(parsed.hostname) && /(?:^|\/)blob(?:\/|$)/iu.test(parsed.pathname)
@@ -101,7 +111,7 @@ function deterministicCandidateRejection(url) {
       || /(?:^|\/)zeroboard\/zboard\.php$/iu.test(parsed.pathname)
       || /(?:^|\/)mibbs\.cgi$/iu.test(parsed.pathname)
       || /(?:^|\/)contentNewFile\.do$/iu.test(parsed.pathname)
-      || (/(?:^|[?&])act=board(?:[&#]|$)/iu.test(parsed.search) && /(?:^|[?&])bbs_mode=view(?:[&#]|$)/iu.test(parsed.search))
+      || (/(?:^|[?&])act=board(?:\.[^&#]*)?(?:[&#]|$)/iu.test(parsed.search) && /(?:^|[?&])bbs_mode=view(?:[&#]|$)/iu.test(parsed.search))
       || (/(?:^|[?&])cath=board(?:[&#]|$)/iu.test(parsed.search) && /(?:^|[?&])exec=view(?:[&#]|$)/iu.test(parsed.search))
       || (/(?:^|\/)sub\d+_[^/]+\.php$/iu.test(parsed.pathname) && /(?:^|[?&])(?:mode|bmode)=view(?:[&#]|$)/iu.test(parsed.search))
       || (/(?:^|\/)new(?:\/|$)/iu.test(parsed.pathname) && /(?:mode|bmode)=view/iu.test(parsed.search))) {
@@ -127,6 +137,8 @@ async function performSearch(row, path, system, query, fetchImpl, cache, clock) 
   const requestedUrl = `${system.base}${encodeURIComponent(query)}`;
   let response = await fetchLive(requestedUrl, { fetchImpl, cache });
   let fallbackFrom = null;
+  let proxyUrl = null;
+  let directStatus = null;
   if (system.id === 'naver' && response.status === 403) {
     fallbackFrom = requestedUrl;
     const fallbackUrls = [
@@ -145,6 +157,24 @@ async function performSearch(row, path, system, query, fetchImpl, cache, clock) 
       attemptFrom = fallbackUrl;
     }
   }
+  if ([403, 429].includes(response.status)) {
+    proxyUrl = jinaProxyUrl(response.requested_url ?? requestedUrl);
+    if (proxyUrl) {
+      const directResponse = response;
+      const proxyResponse = await fetchLive(proxyUrl, { fetchImpl, cache, timeoutMs: 20000 });
+      await append(path, {
+        input_id: row.input_id,
+        event_type: 'transport_event',
+        payload: { kind: 'search_http_proxy_fallback', requested_url: directResponse.requested_url ?? requestedUrl, proxy_url: proxyUrl, status: directResponse.status, proxy_status: proxyResponse.status, error: proxyResponse.transport_error ?? null },
+      }, isoClock(clock.now, clock.count++));
+      if (!proxyResponse.transport_error && proxyResponse.status >= 200 && proxyResponse.status < 300) {
+        directStatus = directResponse.status;
+        response = proxyResponse;
+      } else {
+        proxyUrl = null;
+      }
+    }
+  }
   if (response.transport_error) {
     await append(path, { input_id: row.input_id, event_type: 'transport_event', payload: { kind: 'network_error', requested_url: response.requested_url ?? requestedUrl, fallback_from: fallbackFrom, error: response.transport_error } }, isoClock(clock.now, clock.count++));
     return { response, candidates: [] };
@@ -156,8 +186,11 @@ async function performSearch(row, path, system, query, fetchImpl, cache, clock) 
     payload: {
       system: system.id,
       query,
-      request_url: response.requested_url ?? requestedUrl,
+      request_url: proxyUrl ? requestedUrl : (response.requested_url ?? requestedUrl),
       fallback_from: fallbackFrom,
+      proxy_url: proxyUrl,
+      transport_fallback: proxyUrl ? 'jina_ai' : null,
+      direct_status: directStatus,
       status: response.status,
       final_url: response.final_url,
       title: response.title,
@@ -174,6 +207,8 @@ async function performOwnerLookup(row, path, system, query, fetchImpl, cache, cl
   const requestedUrl = `${system.base}${encodeURIComponent(query)}`;
   let response = await fetchLive(requestedUrl, { fetchImpl, cache });
   let fallbackFrom = null;
+  let proxyUrl = null;
+  let directStatus = null;
   if (system.id === 'naver' && response.status === 403) {
     fallbackFrom = requestedUrl;
     const fallbackUrls = [
@@ -192,6 +227,24 @@ async function performOwnerLookup(row, path, system, query, fetchImpl, cache, cl
       attemptFrom = fallbackUrl;
     }
   }
+  if ([403, 429].includes(response.status)) {
+    proxyUrl = jinaProxyUrl(response.requested_url ?? requestedUrl);
+    if (proxyUrl) {
+      const directResponse = response;
+      const proxyResponse = await fetchLive(proxyUrl, { fetchImpl, cache, timeoutMs: 20000 });
+      await append(path, {
+        input_id: row.input_id,
+        event_type: 'transport_event',
+        payload: { kind: 'owner_lookup_http_proxy_fallback', requested_url: directResponse.requested_url ?? requestedUrl, proxy_url: proxyUrl, status: directResponse.status, proxy_status: proxyResponse.status, error: proxyResponse.transport_error ?? null },
+      }, isoClock(clock.now, clock.count++));
+      if (!proxyResponse.transport_error && proxyResponse.status >= 200 && proxyResponse.status < 300) {
+        directStatus = directResponse.status;
+        response = proxyResponse;
+      } else {
+        proxyUrl = null;
+      }
+    }
+  }
   if (response.transport_error) {
     await append(path, { input_id: row.input_id, event_type: 'transport_event', payload: { kind: 'owner_lookup_network_error', requested_url: response.requested_url ?? requestedUrl, fallback_from: fallbackFrom, error: response.transport_error } }, isoClock(clock.now, clock.count++));
     return;
@@ -200,7 +253,7 @@ async function performOwnerLookup(row, path, system, query, fetchImpl, cache, cl
   await append(path, {
     input_id: row.input_id,
     event_type: 'owner_lookup',
-    payload: { system: system.id, query, request_url: response.requested_url ?? requestedUrl, fallback_from: fallbackFrom, status: response.status, final_url: response.final_url, response_sha256: response.body_sha256, parse_status: parsed.parse_status, owner: null, candidate_urls: parsed.candidate_urls, cache_hit: response.cache_hit === true },
+    payload: { system: system.id, query, request_url: proxyUrl ? requestedUrl : (response.requested_url ?? requestedUrl), fallback_from: fallbackFrom, proxy_url: proxyUrl, transport_fallback: proxyUrl ? 'jina_ai' : null, direct_status: directStatus, status: response.status, final_url: response.final_url, response_sha256: response.body_sha256, parse_status: parsed.parse_status, owner: null, candidate_urls: parsed.candidate_urls, cache_hit: response.cache_hit === true },
   }, isoClock(clock.now, clock.count++));
 }
 

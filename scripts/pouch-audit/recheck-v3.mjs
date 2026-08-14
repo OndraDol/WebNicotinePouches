@@ -33,9 +33,9 @@ const PATHS = {
 const PILOT_BRAND = '77 Pouches';
 const BATCH_SEARCH_SYSTEMS = [
   { id: 'bing', base: 'https://www.bing.com/search?q=' },
-  { id: 'naver', base: 'https://search.naver.com/search.naver?query=' },
+  { id: 'google', base: 'https://www.google.com/search?q=' },
 ];
-const BATCH_FALLBACK_SYSTEM = { id: 'naver', base: 'https://search.naver.com/search.naver?query=' };
+const BATCH_FALLBACK_SYSTEM = { id: 'google', base: 'https://www.google.com/search?q=' };
 const RESEARCH_INPUT_CONCURRENCY = 4;
 
 async function json(path) { return JSON.parse(await readFile(path, 'utf8')); }
@@ -209,7 +209,7 @@ async function runBatch(limit) {
       && (row.unreviewed_candidate_count > 0
         || row.errors.some((error) => /two independent successful search systems|owner-specific successful attempts/iu.test(error))));
     if (recoverableRows.length === 0) throw new Error('Batch validator did not pass');
-    process.stdout.write(`recovering ${recoverableRows.length} active row(s) with the Naver fallback search system\n`);
+    process.stdout.write(`recovering ${recoverableRows.length} active row(s) with the ${BATCH_FALLBACK_SYSTEM.id} fallback search system\n`);
     for (const row of snap.rows.filter((candidate) => recoverableRows.some((item) => item.input_id === candidate.input_id))) {
       await researchOneInput(row, { outputPath: PATHS.rawEventsPath, searchSystems: [BATCH_FALLBACK_SYSTEM], catalogs: [] });
     }

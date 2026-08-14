@@ -1269,6 +1269,181 @@ test('safe application leaves unresolved results unchanged and is idempotent', (
   assert.deepEqual(second.source, first.source);
 });
 
+test('research deterministically rejects fn=fileDownload endpoints', async () => {
+  const { dir, path } = await makeTempPath('raw-events.jsonl');
+  try {
+    const downloadUrl = 'https://www.kgca-i.or.kr/html/?pmode=abstzipview&smode=ajax&fn=fileDownload&seq=19159&fnm=fixture';
+    await researchOneInput(fixtureRow(), { outputPath: path, fetchImpl: async (url) => {
+      const parsed = new URL(url);
+      if (parsed.hostname.includes('google') || parsed.hostname.includes('bing')) return new Response(JSON.stringify({ title: 'Fixture search', candidates: [downloadUrl] }), { status: 200, headers: { 'content-type': 'application/json' } });
+      throw new Error('fixture download transport failure');
+    } });
+    const decision = (await readRawEvents(path)).find((event) => event.event_type === 'candidate_decision');
+    assert.equal(decision.payload.candidate_url, downloadUrl);
+    assert.equal(decision.payload.rejection_rule, 'non_product_document_or_forum');
+  } finally {
+    await rm(dir, { recursive: true, force: true });
+  }
+});
+
+test('research deterministically rejects additional file download endpoints', async () => {
+  const { dir, path } = await makeTempPath('raw-events.jsonl');
+  try {
+    const candidates = [
+      'https://www.mcee.go.kr/home/file/readDownloadFile.do?fileId=222062&fileSeq=1',
+      'http://www.nims.go.kr/_part/downloadFile.jsp?cate=file&idx=910',
+      'https://www.snubh.org/file_download.do?board_id=B007&fileOrgName=fixture.xlsx',
+    ];
+    await researchOneInput(fixtureRow(), { outputPath: path, fetchImpl: async (url) => {
+      const parsed = new URL(url);
+      if (parsed.hostname.includes('google') || parsed.hostname.includes('bing')) return new Response(JSON.stringify({ title: 'Fixture search', candidates }), { status: 200, headers: { 'content-type': 'application/json' } });
+      throw new Error('fixture download transport failure');
+    } });
+    const decisions = (await readRawEvents(path)).filter((event) => event.event_type === 'candidate_decision');
+    assert.equal(decisions.length, candidates.length);
+    assert.ok(decisions.every((event) => event.payload.rejection_rule === 'non_product_document_or_forum'));
+  } finally {
+    await rm(dir, { recursive: true, force: true });
+  }
+});
+
+test('research deterministically rejects suffixed board detail URLs', async () => {
+  const { dir, path } = await makeTempPath('raw-events.jsonl');
+  try {
+    const boardUrl = 'https://www.koses.org/?act=board.index&bbs_code=gallery&bbs_mode=view&bbs_seq=129';
+    await researchOneInput(fixtureRow(), { outputPath: path, fetchImpl: async (url) => {
+      const parsed = new URL(url);
+      if (parsed.hostname.includes('google') || parsed.hostname.includes('bing')) return new Response(JSON.stringify({ title: 'Fixture search', candidates: [boardUrl] }), { status: 200, headers: { 'content-type': 'application/json' } });
+      throw new Error('fixture board transport failure');
+    } });
+    const decision = (await readRawEvents(path)).find((event) => event.event_type === 'candidate_decision');
+    assert.equal(decision.payload.candidate_url, boardUrl);
+    assert.equal(decision.payload.rejection_rule, 'non_product_document_or_forum');
+  } finally {
+    await rm(dir, { recursive: true, force: true });
+  }
+});
+
+test('research deterministically rejects nicotine pouch collection roots', async () => {
+  const { dir, path } = await makeTempPath('raw-events.jsonl');
+  try {
+    const collectionUrl = 'https://theroyalsnus.eu/nicotine-pouches';
+    await researchOneInput(fixtureRow(), { outputPath: path, fetchImpl: async (url) => {
+      const parsed = new URL(url);
+      if (parsed.hostname.includes('google') || parsed.hostname.includes('bing')) return new Response(JSON.stringify({ title: 'Fixture search', candidates: [collectionUrl] }), { status: 200, headers: { 'content-type': 'application/json' } });
+      throw new Error('fixture collection transport failure');
+    } });
+    const decision = (await readRawEvents(path)).find((event) => event.event_type === 'candidate_decision');
+    assert.equal(decision.payload.candidate_url, collectionUrl);
+    assert.equal(decision.payload.rejection_rule, 'non_product_document_or_forum');
+  } finally {
+    await rm(dir, { recursive: true, force: true });
+  }
+});
+
+test('research deterministically rejects competition results pages', async () => {
+  const { dir, path } = await makeTempPath('raw-events.jsonl');
+  try {
+    const resultsUrl = 'https://thetastingalliance.com/results/2024-san-francisco-world-spirits-competition-results/';
+    await researchOneInput(fixtureRow(), { outputPath: path, fetchImpl: async (url) => {
+      const parsed = new URL(url);
+      if (parsed.hostname.includes('google') || parsed.hostname.includes('bing')) return new Response(JSON.stringify({ title: 'Fixture search', candidates: [resultsUrl] }), { status: 200, headers: { 'content-type': 'application/json' } });
+      throw new Error('fixture event results transport failure');
+    } });
+    const decision = (await readRawEvents(path)).find((event) => event.event_type === 'candidate_decision');
+    assert.equal(decision.payload.candidate_url, resultsUrl);
+    assert.equal(decision.payload.rejection_rule, 'non_product_document_or_forum');
+  } finally {
+    await rm(dir, { recursive: true, force: true });
+  }
+});
+
+test('research deterministically rejects upload download endpoints', async () => {
+  const { dir, path } = await makeTempPath('raw-events.jsonl');
+  try {
+    const candidates = [
+      'https://www.gskorea.or.kr/html/?pmode=BBBS0002700007&smode=ajax&fn=downFile&fileSeq=1563',
+      'https://www.mcst.go.kr/servlets/eduport/front/upload/UplDownloadFile?pFileName=fixture.pdf&pRealName=fixture.pdf&pPath=0301000000',
+    ];
+    await researchOneInput(fixtureRow(), { outputPath: path, fetchImpl: async (url) => {
+      const parsed = new URL(url);
+      if (parsed.hostname.includes('google') || parsed.hostname.includes('bing')) return new Response(JSON.stringify({ title: 'Fixture search', candidates }), { status: 200, headers: { 'content-type': 'application/json' } });
+      throw new Error('fixture upload download transport failure');
+    } });
+    const decisions = (await readRawEvents(path)).filter((event) => event.event_type === 'candidate_decision');
+    assert.equal(decisions.length, candidates.length);
+    assert.ok(decisions.every((event) => event.payload.rejection_rule === 'non_product_document_or_forum'));
+  } finally {
+    await rm(dir, { recursive: true, force: true });
+  }
+});
+
+test('research deterministically rejects attachment filename download endpoints', async () => {
+  const { dir, path } = await makeTempPath('raw-events.jsonl');
+  try {
+    const downloadUrl = 'https://www.cancer.go.kr/org_bbs_b_download.do?attach_seq=8134';
+    await researchOneInput(fixtureRow(), { outputPath: path, fetchImpl: async (url) => {
+      const parsed = new URL(url);
+      if (parsed.hostname.includes('google') || parsed.hostname.includes('bing')) return new Response(JSON.stringify({ title: 'Fixture search', candidates: [downloadUrl] }), { status: 200, headers: { 'content-type': 'application/json' } });
+      throw new Error('fixture attachment download transport failure');
+    } });
+    const decision = (await readRawEvents(path)).find((event) => event.event_type === 'candidate_decision');
+    assert.equal(decision.payload.candidate_url, downloadUrl);
+    assert.equal(decision.payload.rejection_rule, 'non_product_document_or_forum');
+  } finally {
+    await rm(dir, { recursive: true, force: true });
+  }
+});
+
+test('research deterministically rejects PDF guestbook and services pages', async () => {
+  const { dir, path } = await makeTempPath('raw-events.jsonl');
+  try {
+    const candidates = [
+      'https://www.jmir.org/2021/1/PDF',
+      'https://tractorpullingwekerom.nl/gastenboek.php',
+      'https://www.theinternationalman.com/connoisseur-products-and-services.php',
+    ];
+    await researchOneInput(fixtureRow(), { outputPath: path, fetchImpl: async (url) => {
+      const parsed = new URL(url);
+      if (parsed.hostname.includes('google') || parsed.hostname.includes('bing')) return new Response(JSON.stringify({ title: 'Fixture search', candidates }), { status: 200, headers: { 'content-type': 'application/json' } });
+      throw new Error('fixture unrelated page transport failure');
+    } });
+    const decisions = (await readRawEvents(path)).filter((event) => event.event_type === 'candidate_decision');
+    assert.equal(decisions.length, candidates.length);
+    assert.ok(decisions.every((event) => event.payload.rejection_rule === 'non_product_document_or_forum'));
+  } finally {
+    await rm(dir, { recursive: true, force: true });
+  }
+});
+
+test('research records a transparent proxy fallback for blocked search and owner lookups', async () => {
+  const { dir, path } = await makeTempPath('raw-events.jsonl');
+  try {
+    await researchOneInput(fixtureRow(), { outputPath: path, fetchImpl: async (url) => {
+      const parsed = new URL(url);
+      if (parsed.hostname === 'www.google.com') return new Response('blocked', { status: 429 });
+      if (parsed.hostname === 'r.jina.ai') return new Response(JSON.stringify({ title: 'Proxy search', candidates: [] }), { status: 200, headers: { 'content-type': 'application/json' } });
+      if (parsed.hostname === 'www.bing.com') return new Response(JSON.stringify({ title: 'Bing search', candidates: [] }), { status: 200, headers: { 'content-type': 'application/json' } });
+      if (parsed.hostname.includes('haypp') || parsed.hostname.includes('northerner')) return new Response('not found', { status: 404 });
+      throw new Error(`unexpected fixture URL: ${url}`);
+    }, searchSystems: [
+      { id: 'google', base: 'https://www.google.com/search?q=' },
+      { id: 'bing', base: 'https://www.bing.com/search?q=' },
+    ] });
+    const events = await readRawEvents(path);
+    const googleSearch = events.find((event) => event.event_type === 'search_attempt' && event.payload.system === 'google');
+    const googleOwner = events.find((event) => event.event_type === 'owner_lookup' && event.payload.system === 'google');
+    assert.equal(googleSearch.payload.status, 200);
+    assert.equal(googleSearch.payload.transport_fallback, 'jina_ai');
+    assert.match(googleSearch.payload.request_url, /^https:\/\/www\.google\.com\//u);
+    assert.match(googleSearch.payload.proxy_url, /^https:\/\/r\.jina\.ai\//u);
+    assert.equal(googleOwner.payload.status, 200);
+    assert.equal(googleOwner.payload.transport_fallback, 'jina_ai');
+  } finally {
+    await rm(dir, { recursive: true, force: true });
+  }
+});
+
 assert.equal(V3_EVENT_TYPES.has('search_attempt'), true);
 assert.equal(DERIVED_FIELD_NAMES.has('outcome'), true);
 assert.ok(SOURCE_REGISTRY);
