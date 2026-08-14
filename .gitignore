@@ -72,4 +72,6 @@ node_modules/
 .cache/pouch-audit/
 
 # Generated pouch audit outputs (can exceed GitHub's per-file limit)
-audit/pouches/
+audit/pouches/*
+!audit/pouches/input.json
+!audit/pouches/unresolved-input.json

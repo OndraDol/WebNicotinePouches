@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { execFileSync, spawnSync } from 'node:child_process';
-import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -170,6 +170,9 @@ test('research runner closes an offline unresolved row without continuation scop
 function isolatedEnv(temp) {
   writeFileSync(join(temp, 'data.js'), execFileSync('git', ['show', 'HEAD:data.js'], { cwd: root, encoding: 'utf8' }));
   writeFileSync(join(temp, 'sw.js'), readFileSync(join(root, 'sw.js')));
+  const auditDir = join(temp, 'audit', 'pouches');
+  mkdirSync(auditDir, { recursive: true });
+  writeFileSync(join(auditDir, 'input.json'), readFileSync(join(root, 'audit', 'pouches', 'input.json')));
   return { POUCH_AUDIT_ROOT: temp, POUCH_AUDIT_WORKSPACE_ROOT: temp };
 }
 
