@@ -2380,6 +2380,30 @@
             return Math.max(0, Math.floor(calculated));
         }
 
+        // --- RECORDED-DAY STREAK START ---
+        function calculateRecordedDayStreak(days, today, getLimitForDate) {
+            const checkDate = new Date(today);
+            checkDate.setHours(0, 0, 0, 0);
+            const dateKey = (date) => {
+                const pad = (value) => String(value).padStart(2, '0');
+                return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
+            };
+
+            if ((days[dateKey(checkDate)] || 0) === 0) {
+                checkDate.setDate(checkDate.getDate() - 1);
+            }
+
+            let streak = 0;
+            while (true) {
+                const recorded = days[dateKey(checkDate)] || 0;
+                if (recorded === 0 || recorded > getLimitForDate(new Date(checkDate))) break;
+                streak += 1;
+                checkDate.setDate(checkDate.getDate() - 1);
+            }
+            return streak;
+        }
+        // --- RECORDED-DAY STREAK END ---
+
         function calculateStats() {
             const days = {}; state.history.forEach(h => { const d = getEntryLocalDate(h); if (!d) return; days[d] = (days[d] || 0) + 1; });
             const limit = getDynamicLimitForDate();
@@ -2391,15 +2415,7 @@
             const sundayLimit = getDynamicLimitForDate(sunday);
             const cleanWeekend = (days[getLocalISODate(saturday)] || 0) <= saturdayLimit && (days[getLocalISODate(sunday)] || 0) <= sundayLimit && state.history.length > 0;
 
-            let streak = 0; let checkDate = new Date(today); checkDate.setDate(checkDate.getDate() - 1);
-            const firstLogDay = state.history.length ? getEntryLocalDate(state.history[state.history.length-1]) : null;
-            while (true) {
-                const dStr = getLocalISODate(checkDate);
-                if (state.history.length === 0) break;
-                if (firstLogDay && dStr < firstLogDay && streak > 0) break;
-                const dayLimit = getDynamicLimitForDate(checkDate);
-                if ((days[dStr] || 0) <= dayLimit) { streak++; checkDate.setDate(checkDate.getDate() - 1); } else break;
-            }
+            const streak = calculateRecordedDayStreak(days, today, getDynamicLimitForDate);
 
             let savedTotal = 0; const unitPrice = state.settings.pouchesPerPack ? state.settings.packPrice / state.settings.pouchesPerPack : 0;
             const toDateFromLocalISO = (isoStr) => {
