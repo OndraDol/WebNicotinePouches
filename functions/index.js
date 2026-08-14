@@ -1,6 +1,8 @@
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 const nodemailer = require('nodemailer');
+const { onCall, HttpsError } = require('firebase-functions/v2/https');
+const { ContactError, createContactHandler } = require('./contact');
 
 admin.initializeApp();
 
@@ -65,3 +67,45 @@ exports.notifyNewEntry = functions.firestore
             .then(() => console.log('New entry email sent'))
             .catch(err => console.error('Error sending entry email:', err));
     });
+
+/**
+ * Veřejný kontaktní formulář. Obsah zprávy se odesílá pouze e-mailem;
+ * Firestore uchovává jen HMAC identifikátory a čítače pro rate limiting.
+ */
+exports.submitContact = onCall({
+    secrets: ['GMAIL_EMAIL', 'GMAIL_PASSWORD', 'CONTACT_RATE_SECRET'],
+    cors: [
+        'https://pouchlog.com',
+        'https://www.pouchlog.com',
+        /^http:\/\/(127\.0\.0\.1|localhost)(:\d+)?$/
+    ]
+}, async (request) => {
+    const contactTransport = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+            user: process.env.GMAIL_EMAIL,
+            pass: process.env.GMAIL_PASSWORD
+        }
+    });
+    const handler = createContactHandler({
+        db: admin.firestore(),
+        transport: contactTransport,
+        secret: process.env.CONTACT_RATE_SECRET,
+        adminEmail: ADMIN_EMAIL,
+        senderEmail: process.env.GMAIL_EMAIL,
+        updatedAt: () => admin.firestore.FieldValue.serverTimestamp()
+    });
+
+    try {
+        return await handler({
+            data: request.data,
+            source: request.rawRequest?.ip || request.rawRequest?.socket?.remoteAddress || 'unknown'
+        });
+    } catch (error) {
+        if (error instanceof ContactError) {
+            throw new HttpsError(error.code, error.message);
+        }
+        console.error('Unexpected contact submission failure.');
+        throw new HttpsError('internal', 'The message could not be sent. Please try again later.');
+    }
+});
