@@ -1,0 +1,15 @@
+{
+  "schema": "pouch-audit-v3.1-approval",
+  "snapshot_sha256": "408e0b83713d605d1f4eef333910d0bc797432b4980a437c229345e42dd7785e",
+  "validator_source_sha256": "86f56930016d876c0c3674feefd009c1203cc18a14dfd3adfc35b652a8da249d",
+  "qa_source_sha256": "11d32f983758a47cf03c558a29f4413350e60573429fea284d0fddf24b835021",
+  "pilot_input_ids": [
+    "input-0001-085e88ca93ef03ac9893ea0830450cefc336587739f2f7e327d94de387234a0d",
+    "input-0002-71c543906843107fb22e2455f03901cfd146709e7766a6918892bf7ef14bb1d8",
+    "input-0003-e795961d515af3888622991e920d0bca57437e59e0e03067728e5c9e603a56a2",
+    "input-0004-5ef6e34e2c1a18afa8b3755eb466f11475d928fef2937ca41069df4c970a88d6",
+    "input-0005-c77ce9e5ab4bd2a6c6d011dfd964f93ab4c9d1e2439c1407c3975e83881f3fb7"
+  ],
+  "approved_at": "2026-08-14T23:44:58.043Z",
+  "basis": "explicit user preapproval for all 861 and main push"
+}

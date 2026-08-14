@@ -77,3 +77,16 @@ audit/pouches/*
 !audit/pouches/unresolved-input.json
 !audit/pouches/recheck-v3/
 !audit/pouches/recheck-v3/**
+
+# Pouch audit v3.1: commit compact evidence artifacts, keep expanded raw/report local
+!audit/pouches/recheck-v3.1/
+audit/pouches/recheck-v3.1/*
+!audit/pouches/recheck-v3.1/input-snapshot.json
+!audit/pouches/recheck-v3.1/derived-results.jsonl
+!audit/pouches/recheck-v3.1/qa.jsonl
+!audit/pouches/recheck-v3.1/progress.json
+!audit/pouches/recheck-v3.1/approval.json
+!audit/pouches/recheck-v3.1/manifest.json
+!audit/pouches/recheck-v3.1/summary.md
+!audit/pouches/recheck-v3.1/raw-events.jsonl.gz
+!audit/pouches/recheck-v3.1/report.md.gz

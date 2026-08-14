@@ -1,0 +1,82 @@
+{
+  "schema": "pouch-audit-v3.1-manifest",
+  "created_at": "2026-08-14T23:50:26.910Z",
+  "files": {
+    "snapshot": {
+      "path": "audit/pouches/recheck-v3.1/input-snapshot.json",
+      "sha256": "689a4661b711c6017d17257ef76f12a4107e8dea989503894aa2099c05701f0f"
+    },
+    "raw": {
+      "path": "audit/pouches/recheck-v3.1/raw-events.jsonl",
+      "sha256": "59bffe5bfa5ab996cb5a9d6cd3c2cbcaaeb52cec551dc1a63ff294449fb82ac5"
+    },
+    "results": {
+      "path": "audit/pouches/recheck-v3.1/derived-results.jsonl",
+      "sha256": "ed2b802b28513f86289c00066b56474597479fa44c6deaf7cb81a9648ebdb654"
+    },
+    "qa": {
+      "path": "audit/pouches/recheck-v3.1/qa.jsonl",
+      "sha256": "11293f8898d6b8324f5f62ce1c92501a1deeb84f8d9afee6cd744dfe7046bcb5"
+    },
+    "report": {
+      "path": "audit/pouches/recheck-v3.1/report.md",
+      "sha256": "d337e9077335e39a3dee4397734455db2d1bbd5dbc9d4a083533e829cc9fd899"
+    },
+    "raw_gz": {
+      "path": "audit/pouches/recheck-v3.1/raw-events.jsonl.gz",
+      "sha256": "9f8fcc714df0b8c0d205be9b049cfc81bf7190cff3193b180a4ff86b49d0f026"
+    },
+    "report_gz": {
+      "path": "audit/pouches/recheck-v3.1/report.md.gz",
+      "sha256": "fb9c580d2a081e84ec6347b33ef5b50549a13572e27c627913deb862d37ff53f"
+    },
+    "progress": {
+      "path": "audit/pouches/recheck-v3.1/progress.json",
+      "sha256": "9abd56932973bdbd8d8bdc8b3d57b5aff9ab380fce31dd4a13c7f019762b0a1d"
+    },
+    "approval": {
+      "path": "audit/pouches/recheck-v3.1/approval.json",
+      "sha256": "07efd7035293b9c101e100d996ac55b150e3ff8889e5b995b7f7b041ee4ec337"
+    }
+  },
+  "counts": {
+    "total": 861,
+    "verified": 0,
+    "conflicted": 0,
+    "unresolved": 861,
+    "pending": 0,
+    "qa_passed": 861,
+    "unreviewed": 0
+  },
+  "data_js": {
+    "before_sha256": "9e0b777bb4b21b3adb8987bc539657dbb3efe88ecb82744d2f90dcf7272cdb82",
+    "after_sha256": "323f86186e17a3be1b3c7b944f8fd592d290c2ff3ac0cc665678bcaadb53776d",
+    "changes": []
+  },
+  "source_versions": {
+    "validator": "11b81d8da213ce0b12d9e8475f6a0f45d95863e3c11a6d69982ca8528b11c879",
+    "qa": "692f457c8b33a22f48374c896d567f79789ec6dea7244e8508c5a3d630544313",
+    "research": "74fcb077474619c9ffbaabd50383082d7af6b11691df6b5af08b264b1a1972d0"
+  },
+  "unavailable_sources": [
+    "Google direct search rate-limited during portions of the run; direct live evidence was not accepted without complete replacement transport."
+  ],
+  "fallbacks": [
+    "Jina AI proxy fallback used: 2191",
+    "DuckDuckGo independent fallback used: 909",
+    "No catalog endpoints used; repeated catalog 404s were avoided by direct search/owner lookup."
+  ],
+  "previous_artifacts": {
+    "data.js": "9e0b777bb4b21b3adb8987bc539657dbb3efe88ecb82744d2f90dcf7272cdb82",
+    "scripts/pouch-audit/recheck-v2.mjs": "252378d06dcb08b1d4677cf0b122eb737f385f7fe552d52c31ebb2f6cd92e884",
+    "scripts/pouch-audit/recheck-v2.test.mjs": "dd70639fd5c938d9df348bfc1d451de1a97be4f3d4c8570e96d616c04ff8ae2d",
+    "audit/pouches/recheck-v3/audit-loss-incident.json": "8c381759d2882e627d4c9b1f2124614f87ac1817429976b05d790606bfd0ee3e",
+    "audit/pouches/recheck-v3/derived-results.jsonl": "254b566ac7cc00b1817fc43197a558f96dcb277f805b71de84be77aa58368cf5",
+    "audit/pouches/recheck-v3/input-snapshot.json": "c03f32a03edb4e5bb974fff57dd34ed9c3bbeeb0e60bb1d226052f5684520669",
+    "audit/pouches/recheck-v3/pilot-approval.json": "9ae3162ff740c3072f8e4e62379152376f36d44e68241a2c39224acc5a2b194f",
+    "audit/pouches/recheck-v3/pilot-report.md": "4076ae1cdc2e30d9815030c1d48e0f776d802dc5b18c3f717496bb4dc2ddd47d",
+    "audit/pouches/recheck-v3/progress.json": "c521a196b3609d35801de43efbd7681900e89c7d61a365d041219489a5a24667",
+    "audit/pouches/recheck-v3/qa.jsonl": "e38b44e847686ed3dfce4ada15dddb6917b6652a85bd18a8d6eb2a84bfe31b3f",
+    "audit/pouches/recheck-v3/raw-events.jsonl": "40e6abce692d8b56c0ea7a44e05c52d4765c5ba9e1d3f43fecb4cceb1bc9fd39"
+  }
+}
