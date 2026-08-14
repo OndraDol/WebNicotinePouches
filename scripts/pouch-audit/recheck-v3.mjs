@@ -74,7 +74,8 @@ async function runFreeze() {
 }
 
 async function runRepairRaw() {
-  const result = await repairRawEventLog({ sourcePath: PATHS.rawEventsPath, targetPath: PATHS.rawEventsPath, incidentPath: PATHS.rawEventsIncidentPath, manifestPath: PATHS.rawRepairManifestPath });
+  const snap = await snapshot();
+  const result = await repairRawEventLog({ sourcePath: PATHS.rawEventsPath, targetPath: PATHS.rawEventsPath, incidentPath: PATHS.rawEventsIncidentPath, manifestPath: PATHS.rawRepairManifestPath, expectedInputIds: snap.rows.map((row) => row.input_id) });
   printJson(result.manifest);
   return result;
 }

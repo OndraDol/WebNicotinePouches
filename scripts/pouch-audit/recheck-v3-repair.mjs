@@ -17,8 +17,10 @@ async function preserveIncident(sourcePath, incidentPath, sourceText, sourceHash
   if (sha256(copied) !== sourceHash || copied !== sourceText) throw new Error('Forensic incident copy verification failed');
 }
 
-export async function repairRawEventLog({ sourcePath, targetPath = sourcePath, incidentPath, manifestPath, now = new Date().toISOString() } = {}) {
+export async function repairRawEventLog({ sourcePath, targetPath = sourcePath, incidentPath, manifestPath, expectedInputIds = null, now = new Date().toISOString() } = {}) {
   if (!sourcePath || !incidentPath || !manifestPath) throw new Error('Raw-log repair requires sourcePath, incidentPath, and manifestPath');
+  const expectedIds = expectedInputIds === null ? null : new Set(expectedInputIds);
+  if (expectedIds?.size === 0) throw new Error('Raw-log repair expectedInputIds cannot be empty');
   const sourceText = await readFile(sourcePath, 'utf8');
   const sourceHash = sha256(sourceText);
   const lines = sourceText.split(/\r?\n/u).filter(Boolean);
@@ -37,6 +39,7 @@ export async function repairRawEventLog({ sourcePath, targetPath = sourcePath, i
       if (event.sequence !== index + 1) throw new Error(`Sequence mismatch: expected ${index + 1}, received ${event.sequence}`);
       if (event.previous_event_sha256 !== previousHash) throw new Error(`Previous hash mismatch at ${event.event_id}`);
       assertRawEvent(event, { expectedSequence: index + 1 });
+      if (expectedIds && !expectedIds.has(event.input_id)) throw new Error(`input_id outside expected frozen set: ${event.input_id}`);
     } catch (error) {
       errorMessage = error.message;
     }
