@@ -67,3 +67,9 @@ node_modules/
 
 # dataconnect generated files
 .dataconnect
+
+# Pouch catalog audit cache
+.cache/pouch-audit/
+
+# Generated pouch audit outputs (can exceed GitHub's per-file limit)
+audit/pouches/

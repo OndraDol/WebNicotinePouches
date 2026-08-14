@@ -39,6 +39,16 @@ Since this is a static web application utilizing Backend-as-a-Service, no build 
 2.  **Run the application:**
     Open `index.html` in a modern web browser. For the best experience (including Service Worker functionality), serve the files using a local server (e.g., Live Server extension for VS Code or Python SimpleHTTPServer).
 
+## Testing
+
+Run the browser and pouch-audit tests serially because the audit test files use shared state and can fail nondeterministically when Node executes files in parallel:
+
+```bash
+node --test --test-concurrency=1 tests/*.test.mjs scripts/pouch-audit/*.test.mjs
+```
+
+Individual test files can be run without the concurrency override.
+
 ## Privacy and Data
 
 This project is developed as a hobby initiative and is not a commercial product.
