@@ -1,4 +1,4 @@
-const CACHE_NAME = 'pouchlog-v1.2';
+const CACHE_NAME = 'pouchlog-v1.3';
 
 const APP_SHELL = [
   './',
@@ -14,6 +14,7 @@ const APP_SHELL = [
   'https://www.gstatic.com/firebasejs/10.12.2/firebase-analytics.js',
   'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js',
   'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js',
+  'https://www.gstatic.com/firebasejs/10.12.2/firebase-functions.js',
   'https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js',
   'https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Public+Sans:wght@400;500;600;700;800&display=swap'
 ];

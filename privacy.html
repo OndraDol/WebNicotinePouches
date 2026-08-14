@@ -188,7 +188,7 @@
         <article class="policy-card">
             <header class="policy-header">
                 <h1>Privacy Policy</h1>
-                <p class="technical-date">Last updated: December 2025</p>
+                <p class="technical-date">Last updated: August 2026</p>
             </header>
 
             <div class="section">
@@ -199,16 +199,18 @@
                     <li><strong>Login Data:</strong> We use Google Firebase Authentication. We only see your email or user ID to keep your account secure.</li>
                     <li><strong>Usage Data:</strong> We store the logs you create (pouch brand, strength, time) in Google Cloud Firestore so you can access them across devices.</li>
                     <li><strong>Analytics:</strong> We use Google Analytics to see anonymous traffic statistics.</li>
+                    <li><strong>Contact Data:</strong> If you use the contact form, your optional name, email address, selected topic, and message are sent by email so we can reply. The message itself is not stored in Firestore.</li>
+                    <li><strong>Spam Prevention:</strong> Firestore stores only HMAC-anonymized identifiers derived from the request source and normalized email, together with rate-limit counters and timestamps. Raw IP addresses, email addresses, and message content are not stored for this purpose.</li>
                 </ul>
 
                 <h2>How we use it</h2>
-                <p>Strictly to provide the service (showing you your history and charts). We do not sell or share your data with anyone.</p>
+                <p>Strictly to provide the service (showing you your history and charts), reply to contact-form messages, and prevent contact-form abuse. We do not sell or share your data with anyone.</p>
 
                 <h2>Your Rights</h2>
                 <p>You can delete your entire history and account data at any time using the "Delete All" button in the app settings.</p>
 
                 <h2>Contact & Code</h2>
-                <p>This project is open source. You can inspect the code or contact us via GitHub: <a href="https://github.com/OndraDol/WebNicotinePouches">https://github.com/OndraDol/WebNicotinePouches</a></p>
+                <p>This project is open source. You can inspect the code on GitHub: <a href="https://github.com/OndraDol/WebNicotinePouches">https://github.com/OndraDol/WebNicotinePouches</a>. You can also use the contact form in PouchLog; your email address and message are used only to respond to you.</p>
             </div>
         </article>
     </main>

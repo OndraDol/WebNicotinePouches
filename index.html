@@ -312,7 +312,7 @@
         }
 
         /* --- INPUTS --- */
-        input, select {
+        input, select, textarea {
             width: 100%;
             padding: 10px 12px;
             border: 1.5px solid var(--input-border);
@@ -323,8 +323,9 @@
             color: var(--text);
             transition: border-color 0.2s;
         }
-        input:focus { border-color: var(--primary); }
+        input:focus, select:focus, textarea:focus { border-color: var(--primary); }
         input::placeholder { color: var(--muted); opacity: 1; }
+        textarea { min-height: 132px; resize: vertical; line-height: 1.5; }
 
         label {
             font-size: 10px;
@@ -847,7 +848,7 @@
         }
 
         /* --- COBALT UTILITY LAYOUT --- */
-        :where(a, button, input, select, summary):focus-visible {
+        :where(a, button, input, select, textarea, summary):focus-visible {
             outline: 2px solid var(--focus);
             outline-offset: 2px;
         }
@@ -1226,6 +1227,7 @@
         dialog {
             width: min(520px, calc(100vw - 32px));
             max-height: min(760px, calc(100dvh - 32px));
+            margin: auto;
             overflow: hidden;
             border: 1px solid var(--border);
             border-radius: var(--radius-lg);
@@ -1327,7 +1329,23 @@
         .health-list { margin-top: 8px; }
         .page-footer p { margin: 0; }
         .page-footer .footer-lead { margin-bottom: 8px; }
-        .page-footer a { color: var(--text-muted); text-decoration: none; border-bottom: 1px solid var(--border); }
+        .footer-links { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 0; }
+        .page-footer a,
+        .footer-link-button {
+            display: inline-flex;
+            align-items: center;
+            min-height: 44px;
+            padding: 0 2px;
+            border: 0;
+            border-bottom: 1px solid var(--border);
+            background: transparent;
+            color: var(--text-muted);
+            font: inherit;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .page-footer a:hover,
+        .footer-link-button:hover { color: var(--accent); border-bottom-color: var(--accent); }
         .footer-separator { margin: 0 8px; opacity: 0.4; }
         .modal-message { margin: 0 0 12px; font-size: 13px; font-weight: 600; }
         .confirmation-metric { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 14px; border: 1px solid var(--border); border-radius: var(--radius-md); background: var(--surface-muted); }
@@ -1352,6 +1370,45 @@
         .data-management { margin-top: 18px; padding-top: 18px; border-top: 1px solid var(--border); }
         .data-management-title { margin-bottom: 10px; }
         .full-width-button { width: 100%; }
+        .contact-intro { margin: 0 0 18px; color: var(--text-muted); font-size: 14px; line-height: 1.55; }
+        .contact-form { display: grid; gap: 14px; }
+        .contact-form-row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+        .contact-field { min-width: 0; }
+        .contact-field label { color: var(--text-muted); }
+        .contact-privacy { margin: 0; color: var(--text-muted); font-size: 11px; line-height: 1.5; }
+        .contact-privacy a { color: var(--accent); text-underline-offset: 2px; }
+        .contact-error {
+            margin: 0;
+            padding: 10px 12px;
+            border-left: 3px solid var(--danger);
+            background: var(--danger-soft);
+            color: var(--danger);
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .contact-success { padding: 24px 4px; text-align: center; }
+        .contact-success-mark {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 44px;
+            height: 44px;
+            margin-bottom: 12px;
+            border: 1px solid var(--success);
+            border-radius: var(--radius-md);
+            color: var(--success);
+            font-family: var(--font-mono);
+            font-weight: 700;
+        }
+        .contact-success h3 { margin: 0 0 8px; font-size: 18px; }
+        .contact-success p { margin: 0; color: var(--text-muted); font-size: 13px; line-height: 1.5; }
+        .contact-honeypot {
+            position: absolute;
+            left: -10000px;
+            width: 1px;
+            height: 1px;
+            overflow: hidden;
+        }
 
         @media (min-width: 1024px) {
             .shell { padding-top: 16px; }
@@ -1496,6 +1553,7 @@
             .search-results { padding-inline: max(16px, env(safe-area-inset-left)) max(16px, env(safe-area-inset-right)); }
             .modal-foot { padding: 12px max(16px, env(safe-area-inset-right)) max(12px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left)); }
             .custom-form .grid { grid-template-columns: minmax(0, 1fr); }
+            .contact-form-row { grid-template-columns: minmax(0, 1fr); }
         }
 
         @media (max-width: 360px) {
@@ -1728,8 +1786,10 @@
 
         <footer class="page-footer">
             <p class="footer-lead"><strong>PouchLog Cloud</strong> <span data-i18n="footer_note">je moderní online nástroj pro sledování a správu užívání nikotinových sáčků.</span></p>
-            <p>
+            <p class="footer-links">
                 <a href="./privacy.html" target="_blank" data-i18n="footer_privacy">Privacy Policy</a>
+                <span class="footer-separator">|</span>
+                <button id="contactBtn" class="footer-link-button" type="button" data-i18n="contact_link">Contact me</button>
                 <span class="footer-separator">|</span>
                 <a href="https://github.com/OndraDol/WebNicotinePouches" target="_blank" data-i18n="footer_github">GitHub</a>
             </p>
@@ -1985,12 +2045,67 @@
         <div class="modal-foot"><button class="btn btn-outline" onclick="document.getElementById('authModal').close()" data-i18n="close">Close</button></div>
     </dialog>
 
+    <dialog id="contactModal" aria-labelledby="contactTitle">
+        <div class="modal-head">
+            <h2 class="modal-title" id="contactTitle" data-i18n="contact_title">Contact me</h2>
+            <button id="closeContactX" class="btn btn-outline icon-button" type="button" data-i18n-aria-label="close_aria" aria-label="Close">
+                <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div id="contactFormPanel">
+                <p class="contact-intro" data-i18n="contact_intro">Have a question, an idea for a new feature, or something that could make PouchLog better? Send me a message using the form below. I read every message and truly appreciate your feedback.</p>
+                <form id="contactForm" class="contact-form" novalidate>
+                    <div class="contact-form-row">
+                        <div class="contact-field">
+                            <label for="contactName" data-i18n="contact_name">Name (optional)</label>
+                            <input id="contactName" name="name" type="text" maxlength="80" autocomplete="name">
+                        </div>
+                        <div class="contact-field">
+                            <label for="contactEmail" data-i18n="contact_email">Email</label>
+                            <input id="contactEmail" name="email" type="email" maxlength="254" autocomplete="email" required>
+                        </div>
+                    </div>
+                    <div class="contact-field">
+                        <label for="contactTopic" data-i18n="contact_topic">Topic</label>
+                        <select id="contactTopic" name="topic" required>
+                            <option value="general" data-i18n="contact_topic_general">General</option>
+                            <option value="feature" data-i18n="contact_topic_feature">Feature request</option>
+                            <option value="bug" data-i18n="contact_topic_bug">Bug report</option>
+                            <option value="other" data-i18n="contact_topic_other">Other</option>
+                        </select>
+                    </div>
+                    <div class="contact-field">
+                        <label for="contactMessage" data-i18n="contact_message">Message</label>
+                        <textarea id="contactMessage" name="message" minlength="10" maxlength="3000" required></textarea>
+                    </div>
+                    <div class="contact-honeypot" aria-hidden="true">
+                        <label for="contactWebsite">Website</label>
+                        <input id="contactWebsite" name="website" type="text" tabindex="-1" autocomplete="off">
+                    </div>
+                    <p class="contact-privacy"><span data-i18n="contact_privacy_note">Your message is used only to reply and is not stored in the app.</span> <a href="./privacy.html" target="_blank" rel="noopener" data-i18n="footer_privacy">Privacy Policy</a></p>
+                    <p id="contactFormError" class="contact-error hidden" role="alert"></p>
+                </form>
+            </div>
+            <div id="contactSuccessPanel" class="contact-success hidden" role="status" aria-live="polite">
+                <div class="contact-success-mark" aria-hidden="true">✓</div>
+                <h3 data-i18n="contact_success_title">Message sent</h3>
+                <p data-i18n="contact_success_body">Thank you. Your message is on its way and I will get back to you as soon as I can.</p>
+            </div>
+        </div>
+        <div class="modal-foot">
+            <button id="closeContactBtn" class="btn btn-outline" type="button" data-i18n="close">Close</button>
+            <button id="contactSubmitBtn" class="btn btn-primary" type="submit" form="contactForm" data-i18n="contact_send">Send message</button>
+        </div>
+    </dialog>
+
     <script type="module">
         import { POUCH_DB, USER_BENCHMARKS } from './data.js';
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
         import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-analytics.js";
         import { getAuth, signInWithPopup, GoogleAuthProvider, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
         import { getFirestore, doc, setDoc, getDoc, collection, onSnapshot, query, orderBy, Timestamp, deleteDoc, getDocs } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+        import { getFunctions, httpsCallable } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-functions.js';
 
         // --- RESTORED API CONFIG ---
         const firebaseConfig = {
@@ -2010,6 +2125,8 @@
         }
         const auth = getAuth(app);
         const db = getFirestore(app);
+        const functionsClient = getFunctions(app);
+        const submitContact = httpsCallable(functionsClient, 'submitContact');
 
         const BADGES_DEF = [
             { id: 'b1', icon: '01', en: 'First Step', cs: 'První krok', desc_en: 'Log first pouch', desc_cs: 'První záznam', condition: (s, h, stats) => h.length > 0 },
@@ -2078,6 +2195,10 @@
                 smooth_plan: "Smooth Plan", weekly_plan: "Weekly Plan", cutoff_plan: "Cutoff Plan", recent_choices: "Recent choices",
                 trend_chart_title: "Pouches per day (last 14 days)", trend_chart_fallback: "Fourteen-day pouch count trend.", hourly_chart_fallback: "Pouch count grouped by hour of day.",
                 skip_to_content: "Skip to content", home_aria: "PouchLog home", theme_toggle_aria: "Toggle color theme", menu_aria: "Open settings", add_entry_aria: "Log selected pouch", search_dialog_title: "Choose a pouch", search_aria: "Search pouches", close_aria: "Close dialog", language_aria: "Switch language", close_settings_aria: "Close settings", stats_aria: "Key metrics",
+                contact_link: "Contact me", contact_title: "Contact me", contact_intro: "Have a question, an idea for a new feature, or something that could make PouchLog better? Send me a message using the form below. I read every message and truly appreciate your feedback.",
+                contact_name: "Name (optional)", contact_email: "Email", contact_topic: "Topic", contact_message: "Message", contact_topic_general: "General", contact_topic_feature: "Feature request", contact_topic_bug: "Bug report", contact_topic_other: "Other",
+                contact_privacy_note: "Your message is used only to reply and is not stored in the app.", contact_send: "Send message", contact_sending: "Sending…", contact_success_title: "Message sent", contact_success_body: "Thank you. Your message is on its way and I will get back to you as soon as I can.",
+                contact_error_invalid: "Please check the highlighted fields.", contact_error_offline: "You are offline. Reconnect and try again.", contact_error_rate: "Too many messages were sent recently. Please try again later.", contact_error_retry: "Please reopen the contact form and try again.", contact_error_generic: "The message could not be sent. Please try again later.",
                 plan_progress_aria: (today, limit) => `Today ${today} of ${limit}`
             },
             cs: {
@@ -2119,6 +2240,10 @@
                 smooth_plan: "Plynulý plán", weekly_plan: "Týdenní plán", cutoff_plan: "Plán s pevným koncem", recent_choices: "Nedávné volby",
                 trend_chart_title: "Sáčky za den (posledních 14 dní)", trend_chart_fallback: "Trend počtu sáčků za posledních čtrnáct dní.", hourly_chart_fallback: "Počet sáčků seskupený podle hodiny dne.",
                 skip_to_content: "Přeskočit na obsah", home_aria: "Domovská stránka PouchLog", theme_toggle_aria: "Přepnout barevný režim", menu_aria: "Otevřít nastavení", add_entry_aria: "Zapsat vybraný sáček", search_dialog_title: "Vybrat sáček", search_aria: "Hledat sáčky", close_aria: "Zavřít dialog", language_aria: "Přepnout jazyk", close_settings_aria: "Zavřít nastavení", stats_aria: "Klíčové metriky",
+                contact_link: "Napište mi", contact_title: "Napište mi", contact_intro: "Máte otázku, nápad na novou funkci nebo něco, co by mohlo PouchLog vylepšit? Napište mi prostřednictvím formuláře níže. Každou zprávu si přečtu a za zpětnou vazbu budu rád.",
+                contact_name: "Jméno (volitelné)", contact_email: "E-mail", contact_topic: "Téma", contact_message: "Zpráva", contact_topic_general: "Obecný dotaz", contact_topic_feature: "Nápad na funkci", contact_topic_bug: "Nahlášení chyby", contact_topic_other: "Jiné",
+                contact_privacy_note: "Zprávu použiji pouze k odpovědi a v aplikaci ji neukládám.", contact_send: "Odeslat zprávu", contact_sending: "Odesílám…", contact_success_title: "Zpráva odeslána", contact_success_body: "Děkuji. Zpráva je na cestě a ozvu se vám, jakmile to bude možné.",
+                contact_error_invalid: "Zkontrolujte prosím zvýrazněná pole.", contact_error_offline: "Jste offline. Připojte se k internetu a zkuste to znovu.", contact_error_rate: "V poslední době bylo odesláno příliš mnoho zpráv. Zkuste to prosím později.", contact_error_retry: "Otevřete kontaktní formulář znovu a opakujte odeslání.", contact_error_generic: "Zprávu se nepodařilo odeslat. Zkuste to prosím později.",
                 plan_progress_aria: (today, limit) => `Dnes ${today} z ${limit}`
             }
         };
@@ -2167,7 +2292,7 @@
         state.settings.onboarded = storedSettings?.onboarded ?? state.settings.onboarded ?? false;
         state.history = normalizeHistory(state.history);
         let wizStep = 1; let tempSettings = {}; let currentSearchResults = []; let isRegistering = false;
-        let installPrompt = null; let editingEntryId = null;
+        let installPrompt = null; let editingEntryId = null; let contactOpenedAt = 0; let contactWasSent = false;
 
         // --- MAIN LOGIC ---
         function init() {
@@ -3044,6 +3169,92 @@
             const a = document.createElement('a'); a.href = url; a.download = fileName; a.click();
         }
 
+        function showContactError(message) {
+            const errorNode = document.getElementById('contactFormError');
+            errorNode.textContent = message;
+            errorNode.classList.remove('hidden');
+        }
+
+        function openContactDialog() {
+            const modal = document.getElementById('contactModal');
+            const form = document.getElementById('contactForm');
+            const email = document.getElementById('contactEmail');
+            const formPanel = document.getElementById('contactFormPanel');
+            const successPanel = document.getElementById('contactSuccessPanel');
+            const submitButton = document.getElementById('contactSubmitBtn');
+
+            if (contactWasSent) {
+                form.reset();
+                contactWasSent = false;
+            }
+            formPanel.classList.remove('hidden');
+            successPanel.classList.add('hidden');
+            submitButton.classList.remove('hidden');
+            submitButton.disabled = false;
+            submitButton.textContent = t('contact_send');
+            document.getElementById('contactFormError').classList.add('hidden');
+            if (!email.value && state.user?.email) email.value = state.user.email;
+            contactOpenedAt = Date.now();
+            modal.showModal();
+            requestAnimationFrame(() => document.getElementById('contactName').focus());
+            vibrateDevice(10);
+        }
+
+        async function handleContactSubmit(event) {
+            event.preventDefault();
+            const form = event.currentTarget;
+            const submitButton = document.getElementById('contactSubmitBtn');
+            const errorNode = document.getElementById('contactFormError');
+            errorNode.classList.add('hidden');
+
+            if (!form.reportValidity()) {
+                showContactError(t('contact_error_invalid'));
+                return;
+            }
+            if (!navigator.onLine) {
+                showContactError(t('contact_error_offline'));
+                return;
+            }
+
+            submitButton.disabled = true;
+            submitButton.textContent = t('contact_sending');
+            const formData = new FormData(form);
+            const payload = {
+                name: String(formData.get('name') || ''),
+                email: String(formData.get('email') || ''),
+                topic: String(formData.get('topic') || ''),
+                message: String(formData.get('message') || ''),
+                website: String(formData.get('website') || ''),
+                openedAt: contactOpenedAt
+            };
+
+            try {
+                const result = await submitContact(payload);
+                if (!result.data?.ok) throw new Error('Unexpected contact response');
+                contactWasSent = true;
+                document.getElementById('contactFormPanel').classList.add('hidden');
+                document.getElementById('contactSuccessPanel').classList.remove('hidden');
+                submitButton.classList.add('hidden');
+                document.getElementById('closeContactBtn').focus();
+            } catch (error) {
+                const code = error?.code || '';
+                if (!navigator.onLine || code === 'functions/unavailable') {
+                    showContactError(t('contact_error_offline'));
+                } else if (code === 'functions/resource-exhausted') {
+                    showContactError(t('contact_error_rate'));
+                } else if (code === 'functions/failed-precondition') {
+                    showContactError(t('contact_error_retry'));
+                } else if (code === 'functions/invalid-argument') {
+                    showContactError(t('contact_error_invalid'));
+                } else {
+                    showContactError(t('contact_error_generic'));
+                }
+            } finally {
+                submitButton.disabled = false;
+                if (!submitButton.classList.contains('hidden')) submitButton.textContent = t('contact_send');
+            }
+        }
+
         // --- LISTENERS ---
         function setupListeners() {
         document.getElementById('settingsLangBtn').onclick=()=>applyLanguage(state.lang==='en'?'cs':'en');
@@ -3063,6 +3274,10 @@
             document.getElementById('closeInstallHelpBtn').onclick = () => document.getElementById('installHelpModal').close();
             document.getElementById('closeInstallHelpX').onclick = () => document.getElementById('installHelpModal').close();
             document.getElementById('closeSettingsBtn').onclick = () => document.getElementById('settingsModal').close();
+            document.getElementById('contactBtn').onclick = openContactDialog;
+            document.getElementById('closeContactX').onclick = () => document.getElementById('contactModal').close();
+            document.getElementById('closeContactBtn').onclick = () => document.getElementById('contactModal').close();
+            document.getElementById('contactForm').addEventListener('submit', handleContactSubmit);
 
             document.getElementById('btnExportCsv').onclick = exportCSV;
             document.getElementById('btnExportJson').onclick = exportJSON;
