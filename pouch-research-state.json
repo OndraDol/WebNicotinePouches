@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "next_batch": 2,
+  "market_queue": [
+    "US+CA",
+    "Europe excluding CZ",
+    "CZ"
+  ],
+  "current_market": "US+CA",
+  "completed_catalogs": [
+    {
+      "market": "US",
+      "catalog": "Nicokick / ALP",
+      "source_url": "https://nicokick.com/us/nicotine-pouches/alp",
+      "checked_at": "2026-08-14"
+    },
+    {
+      "market": "US",
+      "catalog": "Nicokick / CLEW",
+      "source_url": "https://nicokick.com/us/nicotine-pouches/clew",
+      "checked_at": "2026-08-14"
+    },
+    {
+      "market": "US",
+      "catalog": "Nicokick / Grizzly",
+      "source_url": "https://nicokick.com/us/nicotine-pouches/grizzly",
+      "checked_at": "2026-08-14"
+    },
+    {
+      "market": "US",
+      "catalog": "Nicokick / Rogue and Rogue Max",
+      "source_url": "https://nicokick.com/us/nicotine-pouches/rogue",
+      "checked_at": "2026-08-14"
+    },
+    {
+      "market": "US",
+      "catalog": "Nicokick / Sesh+",
+      "source_url": "https://nicokick.com/us/nicotine-pouches/sesh",
+      "checked_at": "2026-08-14"
+    },
+    {
+      "market": "US",
+      "catalog": "Nicokick / VELO Plus",
+      "source_url": "https://nicokick.com/us/nicotine-pouches/velo",
+      "checked_at": "2026-08-14"
+    },
+    {
+      "market": "US",
+      "catalog": "FDA / on! PLUS authorized products",
+      "source_url": "https://www.fda.gov/tobacco-products/market-and-distribute-tobacco-product/nicotine-pouch-products-authorized-fda",
+      "checked_at": "2026-08-14"
+    },
+    {
+      "market": "US",
+      "catalog": "FDA / ZYN authorized products",
+      "source_url": "https://www.fda.gov/tobacco-products/market-and-distribute-tobacco-product/nicotine-pouch-products-authorized-fda",
+      "checked_at": "2026-08-14"
+    },
+    {
+      "market": "CA",
+      "catalog": "ZONNIC Canada / Mint",
+      "source_url": "https://www.zonnic.ca/ca/en/faq/about-zonnic",
+      "checked_at": "2026-08-14"
+    }
+  ],
+  "last_completed_total": 1087
+}

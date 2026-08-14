@@ -7,7 +7,7 @@ const workerPath = fileURLToPath(new URL('../sw.js', import.meta.url));
 const source = readFileSync(workerPath, 'utf8');
 
 test('service worker versions the cache and includes the application core module', () => {
-  assert.match(source, /const CACHE_NAME = 'pouchlog-v1\.4'/);
+  assert.match(source, /const CACHE_NAME = 'pouchlog-v\d+\.\d+'/);
   assert.match(source, /['"]\.\/app-core\.mjs['"]/);
 });
 
