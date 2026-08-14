@@ -2028,6 +2028,7 @@
                 <div id="authStatusMsg" class="auth-status-message"></div>
                 <div class="centered-actions">
                     <button id="logoutBtn" class="btn btn-outline hidden centered-button compact-button" data-i18n="logout">Log Out</button>
+                    <button id="deleteAccountBtn" class="btn btn-danger hidden centered-button compact-button" data-i18n="delete_account">Delete account</button>
                 </div>
             </div>
             <div class="data-management">
@@ -2043,6 +2044,29 @@
             </div>
         </div>
         <div class="modal-foot"><button class="btn btn-outline" onclick="document.getElementById('authModal').close()" data-i18n="close">Close</button></div>
+    </dialog>
+
+    <dialog id="deleteAccountModal" aria-labelledby="deleteAccountTitle">
+        <div class="modal-head"><h2 class="modal-title" id="deleteAccountTitle" data-i18n="delete_account_title">Delete account and data</h2></div>
+        <form id="deleteAccountForm" novalidate>
+            <div class="modal-body">
+                <p class="confirm-message" data-i18n="delete_account_warning">This permanently deletes your cloud history, settings, custom pouches, and login account.</p>
+                <p class="modal-message"><span data-i18n="delete_account_email_intro">To confirm, enter this e-mail exactly:</span> <strong id="deleteAccountEmail"></strong></p>
+                <div class="contact-field form-spacer">
+                    <label for="deleteAccountEmailInput" data-i18n="delete_account_email_label">Account e-mail</label>
+                    <input id="deleteAccountEmailInput" type="email" autocomplete="off" required>
+                </div>
+                <div id="deleteAccountPasswordField" class="contact-field form-spacer hidden">
+                    <label for="deleteAccountPasswordInput" data-i18n="password_placeholder">Password</label>
+                    <input id="deleteAccountPasswordInput" type="password" autocomplete="current-password">
+                </div>
+                <p id="deleteAccountError" class="contact-error hidden" role="alert"></p>
+            </div>
+            <div class="modal-foot">
+                <button id="cancelDeleteAccountBtn" class="btn btn-outline" type="button" data-i18n="cancel">Cancel</button>
+                <button id="confirmDeleteAccountBtn" class="btn btn-danger" type="submit" data-i18n="delete_account_confirm">Permanently delete</button>
+            </div>
+        </form>
     </dialog>
 
     <dialog id="contactModal" aria-labelledby="contactTitle">
@@ -2101,9 +2125,20 @@
 
     <script type="module">
         import { POUCH_DB, USER_BENCHMARKS } from './data.js';
+        import {
+            buildHistoryCsv,
+            evaluatePeriodAchievements,
+            getHistoryOwnerMode,
+            mergeHistories,
+            safeParseJson,
+            selectBenchmark,
+            toLocalDateTimeInput,
+            validateBackup,
+            validateSettings
+        } from './app-core.mjs';
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
         import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-analytics.js";
-        import { getAuth, signInWithPopup, GoogleAuthProvider, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+        import { getAuth, signInWithPopup, GoogleAuthProvider, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut, reauthenticateWithPopup, reauthenticateWithCredential, EmailAuthProvider } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
         import { getFirestore, doc, setDoc, getDoc, collection, onSnapshot, query, orderBy, Timestamp, deleteDoc, getDocs } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
         import { getFunctions, httpsCallable } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-functions.js';
 
@@ -2127,6 +2162,7 @@
         const db = getFirestore(app);
         const functionsClient = getFunctions(app);
         const submitContact = httpsCallable(functionsClient, 'submitContact');
+        const deleteAccountRequest = httpsCallable(functionsClient, 'deleteAccount');
 
         const BADGES_DEF = [
             { id: 'b1', icon: '01', en: 'First Step', cs: 'První krok', desc_en: 'Log first pouch', desc_cs: 'První záznam', condition: (s, h, stats) => h.length > 0 },
@@ -2180,7 +2216,7 @@
                 delete_history_confirm1: "Delete entire history?", delete_history_confirm2: "This cannot be undone. Proceed?",
                 history_cleared: "History cleared", history_empty: "History is already empty", entry_deleted_title: "Entry deleted",
                 entry_deleted_msg: "The entry was removed from history.", edit_entry: "Edit", save_changes: "Save changes", entry_updated: "Entry updated",
-                quit_status_active: "Plan active", auth_btn: "Login", auth_title: "Sync & Backup", login: "Log In", register: "Register", toggle_reg: "Need account? Register", toggle_log: "Have account? Login", logout: "Log Out", logout_success: "Signed out",
+                quit_status_active: "Plan active", auth_btn: "Login", auth_title: "Sync & Backup", login: "Log In", register: "Register", toggle_reg: "Need account? Register", toggle_log: "Have account? Login", logout: "Log Out", logout_success: "Signed out", settings_invalid: "Check the currency, price, quantity, limit, and target date.", sync_error: "The change was saved on this device, but cloud sync failed.", delete_account: "Delete account", delete_account_title: "Delete account and data", delete_account_warning: "This permanently deletes your cloud history, settings, custom pouches, and login account.", delete_account_email_intro: "To confirm, enter this e-mail exactly:", delete_account_email_label: "Account e-mail", delete_account_confirm: "Permanently delete", delete_account_deleting: "Deleting…", delete_account_email_mismatch: "The e-mail does not match the signed-in account.", delete_account_password_required: "Enter your password to confirm your identity.", delete_account_reauth_failed: "Identity verification failed. Sign in again and retry.", delete_account_failed: "The account could not be deleted. No local data was cleared.",
                 currency: "Currency", pack_price: "Price/Can", pouches_pack: "Pcs/Can", close: "Close", delete_entry: "Delete", added: "Added!",
                 add_confirm_title: "Pouch added", add_confirm_msg: "Saved to today's log.", add_confirm_left: "Remaining to limit", add_confirm_over: "Over limit by", add_confirm_no_limit: "No daily limit set.", add_confirm_progress: "Today",
                 just_now: "Just now", hours_ago: "h ago", mins_ago: "m ago",
@@ -2225,7 +2261,7 @@
                 delete_history_confirm1: "Smazat celou historii?", delete_history_confirm2: "Opravdu to chcete udělat?", history_cleared: "Historie smazána",
                 history_empty: "Historie je prázdná", entry_deleted_title: "Záznam smazán", entry_deleted_msg: "Záznam byl úspěšně odstraněn.",
                 edit_entry: "Editovat", save_changes: "Uložit změny", entry_updated: "Záznam upraven",
-                quit_status_active: "Plán aktivní", auth_btn: "Login", auth_title: "Záloha dat", login: "Přihlásit", register: "Registrovat", toggle_reg: "Registrovat se", toggle_log: "Mám účet", logout: "Odhlásit", logout_success: "Odhlášeno",
+                quit_status_active: "Plán aktivní", auth_btn: "Přihlásit", auth_title: "Synchronizace a záloha", login: "Přihlásit", register: "Registrovat", toggle_reg: "Registrovat se", toggle_log: "Mám účet", logout: "Odhlásit", logout_success: "Odhlášeno", settings_invalid: "Zkontrolujte měnu, cenu, množství, limit a cílové datum.", sync_error: "Změna je uložená v zařízení, ale synchronizace s cloudem selhala.", delete_account: "Odstranit účet", delete_account_title: "Odstranit účet a data", delete_account_warning: "Tato akce trvale odstraní cloudovou historii, nastavení, vlastní sáčky i přihlašovací účet.", delete_account_email_intro: "Pro potvrzení zadejte přesně tento e-mail:", delete_account_email_label: "E-mail účtu", delete_account_confirm: "Trvale odstranit", delete_account_deleting: "Odstraňuji…", delete_account_email_mismatch: "E-mail neodpovídá přihlášenému účtu.", delete_account_password_required: "Pro ověření identity zadejte heslo.", delete_account_reauth_failed: "Ověření identity selhalo. Přihlaste se znovu a akci zopakujte.", delete_account_failed: "Účet se nepodařilo odstranit. Místní data zůstala zachována.",
                 currency: "Měna", pack_price: "Cena/Puk", pouches_pack: "Ks/Puk", close: "Zavřít", delete_entry: "Smazat", added: "Přidáno!",
                 add_confirm_title: "Sáček přidán", add_confirm_msg: "Záznam byl uložen do dneška.", add_confirm_left: "Do limitu zbývá", add_confirm_over: "Limit překročen o", add_confirm_no_limit: "Denní limit není nastaven.", add_confirm_progress: "Dnes",
                 just_now: "Právě teď", hours_ago: "h zpět", mins_ago: "m zpět",
@@ -2275,7 +2311,18 @@
             return 'light';
         };
 
-        const storedSettings = JSON.parse(localStorage.getItem('nt_settings')) || null;
+        const safeParseStoredValue = (key, fallback) => safeParseJson(
+            localStorage.getItem(key),
+            fallback,
+            (error) => console.warn(`Ignoring invalid ${key} data`, error?.message || error)
+        );
+        const storedSettingsValue = safeParseStoredValue('nt_settings', null);
+        const storedSettings = storedSettingsValue && typeof storedSettingsValue === 'object' && !Array.isArray(storedSettingsValue)
+            ? storedSettingsValue
+            : null;
+        const storedHistoryValue = safeParseStoredValue('nt_history', []);
+        const storedSelectionValue = safeParseStoredValue('nt_last_pouch', null);
+        const storedCustomPouchesValue = safeParseStoredValue('nt_custom_pouches', []);
         const HISTORY_PAGE_SIZE = 14;
 
         // --- STATE ---
@@ -2283,9 +2330,9 @@
             user: null,
             lang: localStorage.getItem('nt_lang') || 'en',
             settings: storedSettings || { currency: 'CZK', packPrice: 150, pouchesPerPack: 20, dailyLimit: 10, goal: 'track', createdAt: Date.now(), onboarded: false },
-            history: JSON.parse(localStorage.getItem('nt_history')) || [],
-            selection: JSON.parse(localStorage.getItem('nt_last_pouch')) || null,
-            customPouches: JSON.parse(localStorage.getItem('nt_custom_pouches')) || [],
+            history: Array.isArray(storedHistoryValue) ? storedHistoryValue : [],
+            selection: storedSelectionValue && typeof storedSelectionValue === 'object' ? storedSelectionValue : null,
+            customPouches: Array.isArray(storedCustomPouchesValue) ? storedCustomPouchesValue : [],
             historyVisible: HISTORY_PAGE_SIZE,
             theme: getInitialTheme()
         };
@@ -2293,11 +2340,13 @@
         state.history = normalizeHistory(state.history);
         let wizStep = 1; let tempSettings = {}; let currentSearchResults = []; let isRegistering = false;
         let installPrompt = null; let editingEntryId = null; let contactOpenedAt = 0; let contactWasSent = false;
+        let historyOwner = localStorage.getItem('nt_history_owner') || 'guest';
+        let unsubscribeHistory = null;
 
         // --- MAIN LOGIC ---
         function init() {
             const needsOnboarding = !localStorage.getItem('nt_settings');
-            applyTheme(state.theme);
+            applyTheme(state.theme, false);
             applyLanguage(state.lang); setupSearch(); setupListeners();
             if (needsOnboarding) openWizard(false);
             if('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js');
@@ -2354,13 +2403,14 @@
             localStorage.setItem('nt_settings', JSON.stringify(state.settings));
             localStorage.setItem('nt_custom_pouches', JSON.stringify(state.customPouches));
             localStorage.setItem('nt_theme', state.theme);
+            localStorage.setItem('nt_history_owner', historyOwner);
         }
 
         const isFutureDate = (date) => date.getTime() > Date.now();
 
         const getAllPouches = () => [...state.customPouches, ...POUCH_DB];
 
-        function applyTheme(theme) {
+        function applyTheme(theme, shouldPersist = true) {
             state.theme = theme === 'dark' ? 'dark' : 'light';
             if (state.theme === 'dark') {
                 document.documentElement.setAttribute('data-theme', 'dark');
@@ -2376,7 +2426,7 @@
             }
             const metaColor = document.querySelector('meta[name="theme-color"]');
             if (metaColor) metaColor.setAttribute('content', state.theme === 'dark' ? '#071422' : '#1d5ce5');
-            persistHistory();
+            if (shouldPersist) persistHistory();
             if (window.trendChartInst) renderChart();
             if (window.hourlyChartInst) renderHourlyChart();
         }
@@ -2541,11 +2591,13 @@
             const limit = getDynamicLimitForDate();
 
             const today = new Date(); today.setHours(0,0,0,0);
-            const sunday = new Date(today); sunday.setDate(sunday.getDate() - sunday.getDay());
-            const saturday = new Date(sunday); saturday.setDate(saturday.getDate() - 1);
-            const saturdayLimit = getDynamicLimitForDate(saturday);
-            const sundayLimit = getDynamicLimitForDate(sunday);
-            const cleanWeekend = (days[getLocalISODate(saturday)] || 0) <= saturdayLimit && (days[getLocalISODate(sunday)] || 0) <= sundayLimit && state.history.length > 0;
+            const periodAchievements = evaluatePeriodAchievements({
+                createdAt: state.settings.createdAt,
+                history: state.history,
+                today,
+                getLimitForDate: getDynamicLimitForDate
+            });
+            const { cleanWeekend, yesterdaySuccess } = periodAchievements;
 
             const streak = calculateRecordedDayStreak(days, today, getDynamicLimitForDate);
 
@@ -2560,10 +2612,8 @@
                 if (days[d] < dayLimit) savedTotal += (dayLimit - days[d]) * unitPrice;
             });
 
-            const yDate = new Date(today); yDate.setDate(yDate.getDate()-1);
-            const yesterdaySuccess = (days[getLocalISODate(yDate)] || 0) <= getDynamicLimitForDate(yDate);
             const dailyAvg = state.history.length / (Object.keys(days).length || 1);
-            const benchmark = USER_BENCHMARKS.find(b => dailyAvg <= b.max) || USER_BENCHMARKS[USER_BENCHMARKS.length - 1];
+            const benchmark = selectBenchmark(dailyAvg, USER_BENCHMARKS, state.history.length);
 
             const streakMilestones = [7, 14, 30, 60, 90];
             const reached = streakMilestones.filter(m => streak >= m).pop();
@@ -2900,7 +2950,14 @@
                 vibrateDevice(30);
                 showToast(t('custom_saved'));
 
-                if(state.user) await setDoc(doc(db,'users',state.user.uid,'custom_pouches',pouch.id),{ ...pouch, createdAt: Timestamp.now() });
+                if(state.user) {
+                    try {
+                        await setDoc(doc(db,'users',state.user.uid,'custom_pouches',pouch.id),{ ...pouch, createdAt: Timestamp.now() });
+                    } catch (error) {
+                        console.error('Failed to sync custom pouch', error);
+                        showToast(t('sync_error'));
+                    }
+                }
             };
         }
 
@@ -2910,10 +2967,39 @@
             const c = document.getElementById('fullHistoryList');
             if (!c) return;
 
-            c.innerHTML = '';
+            c.replaceChildren();
             state.history.forEach(h => {
                 const dateStr = new Date(h.date).toLocaleString();
-                c.innerHTML += `<div class="history-item full-history-item"><div class="full-history-copy"><strong>${escapeHTML(h.name || h.brand)}</strong> <span class="history-strength">${escapeHTML(h.mg)} mg</span><small>${escapeHTML(dateStr)}</small></div><div class="history-row-actions"><button class="btn btn-outline" onclick="window.openEditEntry('${h.id}')">${t('edit_entry')}</button><button class="btn btn-danger" onclick="window.delHist('${h.id}')">${t('delete_entry')}</button></div></div>`;
+                const item = document.createElement('div');
+                item.className = 'history-item full-history-item';
+
+                const copy = document.createElement('div');
+                copy.className = 'full-history-copy';
+                const name = document.createElement('strong');
+                name.textContent = h.name || h.brand;
+                const strength = document.createElement('span');
+                strength.className = 'history-strength';
+                strength.textContent = `${h.mg} mg`;
+                const date = document.createElement('small');
+                date.textContent = dateStr;
+                copy.append(name, document.createTextNode(' '), strength, date);
+
+                const actions = document.createElement('div');
+                actions.className = 'history-row-actions';
+                const editButton = document.createElement('button');
+                editButton.type = 'button';
+                editButton.className = 'btn btn-outline';
+                editButton.textContent = t('edit_entry');
+                editButton.addEventListener('click', () => window.openEditEntry(h.id));
+                const deleteButton = document.createElement('button');
+                deleteButton.type = 'button';
+                deleteButton.className = 'btn btn-danger';
+                deleteButton.textContent = t('delete_entry');
+                deleteButton.addEventListener('click', () => deleteHistoryEntry(h.id));
+                actions.append(editButton, deleteButton);
+
+                item.append(copy, actions);
+                c.append(item);
             });
         }
 
@@ -2928,8 +3014,9 @@
             if (!entry) return;
 
             editingEntryId = id;
-            document.getElementById('editDateInput').value = entry.date.slice(0, 10);
-            document.getElementById('editTimeInput').value = entry.date.slice(11, 16);
+            const localInput = toLocalDateTimeInput(entry.date);
+            document.getElementById('editDateInput').value = localInput.date;
+            document.getElementById('editTimeInput').value = localInput.time;
             document.getElementById('editEntryModal').showModal();
             vibrateDevice(15);
         };
@@ -2953,7 +3040,14 @@
             vibrateDevice(20);
             showToast(t('entry_updated'));
 
-            if(state.user) await setDoc(doc(db,'users',state.user.uid,'history',state.history[idx].id), { ...state.history[idx], timestamp: Timestamp.fromDate(parsedDate) }, { merge: true });
+            if(state.user) {
+                try {
+                    await setDoc(doc(db,'users',state.user.uid,'history',state.history[idx].id), { ...state.history[idx], timestamp: Timestamp.fromDate(parsedDate) }, { merge: true });
+                } catch (error) {
+                    console.error('Failed to sync edited history entry', error);
+                    showToast(t('sync_error'));
+                }
+            }
         }
 
         async function deleteHistoryEntry(id) {
@@ -2963,7 +3057,14 @@
             vibrateDevice([40,30,40]);
             showEntryDeletedModal();
 
-            if(state.user && target) { await deleteDoc(doc(db,'users',state.user.uid,'history',target.id)).catch(()=>{}); }
+            if(state.user && target) {
+                try {
+                    await deleteDoc(doc(db,'users',state.user.uid,'history',target.id));
+                } catch (error) {
+                    console.error('Failed to sync deleted history entry', error);
+                    showToast(t('sync_error'));
+                }
+            }
         }
 
         function showAddConfirmDialog(todayCount, limit) {
@@ -3007,7 +3108,14 @@
             const todayCount = state.history.filter(h => getEntryLocalDate(h) === today).length;
             maybeNotifyLimit(todayCount, limit);
             showAddConfirmDialog(todayCount, limit);
-            if(state.user) setDoc(doc(db,'users',state.user.uid,'history',rec.id),{ ...rec, timestamp:Timestamp.now() });
+            if(state.user) {
+                try {
+                    await setDoc(doc(db,'users',state.user.uid,'history',rec.id),{ ...rec, timestamp:Timestamp.now() });
+                } catch (error) {
+                    console.error('Failed to sync history entry', error);
+                    showToast(t('sync_error'));
+                }
+            }
         }
 
         function setBackdateDefaults() {
@@ -3041,7 +3149,14 @@
                 showAddConfirmDialog(todayCount, limit);
             }
             document.getElementById('backdatePanel').classList.add('hidden');
-            if(state.user) await setDoc(doc(db,'users',state.user.uid,'history',rec.id),{ ...rec, timestamp:Timestamp.fromDate(parsedDate) });
+            if(state.user) {
+                try {
+                    await setDoc(doc(db,'users',state.user.uid,'history',rec.id),{ ...rec, timestamp:Timestamp.fromDate(parsedDate) });
+                } catch (error) {
+                    console.error('Failed to sync past history entry', error);
+                    showToast(t('sync_error'));
+                }
+            }
         }
 
         function openDeleteConfirmStep1() {
@@ -3068,7 +3183,10 @@
                 try {
                     const snap = await getDocs(collection(db,'users',state.user.uid,'history'));
                     await Promise.all(snap.docs.map(d => deleteDoc(d.ref)));
-                } catch(err) { console.error('Failed to clear remote history', err); }
+                } catch(err) {
+                    console.error('Failed to clear remote history', err);
+                    showToast(t('sync_error'));
+                }
             }
         }
 
@@ -3112,7 +3230,7 @@
                 }
             }
         };
-        window.nextStep = () => {
+        window.nextStep = async () => {
             if(wizStep === 1 && !tempSettings.goal) { showToast(t('goal_missing')); return; }
 
             if(wizStep===1 && tempSettings.goal==='track') {
@@ -3124,10 +3242,22 @@
                 tempSettings.dailyLimit = Number(document.getElementById('limitInput').value);
                 tempSettings.targetDate = document.getElementById('wizardDateInput').value;
                 tempSettings.onboarded = true;
-                tempSettings.createdAt = Date.now();
-                state.settings = tempSettings; persistHistory(); renderUI();
+                tempSettings.createdAt = Number(state.settings.createdAt) || Date.now();
+                const validation = validateSettings(tempSettings, getLocalISODate());
+                if (!validation.ok) {
+                    showToast(t('settings_invalid'));
+                    return;
+                }
+                state.settings = validation.value; persistHistory(); renderUI();
                 document.getElementById('settingsModal').close();
-                if(state.user) setDoc(doc(db,'users',state.user.uid,'settings','profile'), state.settings);
+                if(state.user) {
+                    try {
+                        await setDoc(doc(db,'users',state.user.uid,'settings','profile'), state.settings);
+                    } catch (error) {
+                        console.error('Failed to sync settings', error);
+                        showToast(t('sync_error'));
+                    }
+                }
                 return;
             } else {
                 wizStep++;
@@ -3144,11 +3274,7 @@
         function showToast(m) { const t=document.getElementById('toast');t.innerHTML=`<div class="toast-msg">${m}</div>`;setTimeout(()=>t.innerHTML='',2000); }
 
         function exportCSV() {
-            let csv = "Date,Time,Brand,Name,Mg\n";
-            state.history.forEach(h => {
-                const d = new Date(h.date);
-                csv += `${getLocalISODate(d)},${d.toLocaleTimeString()},"${h.brand}","${h.name}",${h.mg}\n`;
-            });
+            const csv = buildHistoryCsv(state.history);
             downloadFile(csv, 'pouchlog_export.csv', 'text/csv');
         }
         function exportJSON() {
@@ -3164,17 +3290,17 @@
                 reader.onload = (ev) => {
                     try {
                         const data = JSON.parse(ev.target.result);
-                        if(data.history && data.settings) {
-                            const now = Date.now();
-                            const cleanedHistory = data.history.filter(item => {
-                                const parsed = new Date(item.date);
-                                return item.date && !isNaN(parsed) && parsed.getTime() <= now;
-                            });
-                            if(cleanedHistory.length !== data.history.length) showToast(t('import_skipped'));
-                            state.history = normalizeHistory(cleanedHistory); state.settings = data.settings;
-                            persistHistory(); renderUI(); showToast(t('restore_success')); location.reload();
-                        } else showToast(t('invalid_backup'));
+                        const validation = validateBackup(data, getLocalISODate());
+                        if (!validation.ok) {
+                            showToast(t('invalid_backup'));
+                            return;
+                        }
+                        state.history = validation.value.history;
+                        state.settings = validation.value.settings;
+                        historyOwner = state.user?.uid || 'guest';
+                        persistHistory(); renderUI(); showToast(t('restore_success'));
                     } catch(e) { showToast(`${t('error_prefix')} ${e.message}`); }
+                    finally { fileInput.value = ''; }
                 };
                 reader.readAsText(file);
             };
@@ -3271,6 +3397,163 @@
             }
         }
 
+        function showDeleteAccountError(message) {
+            const errorElement = document.getElementById('deleteAccountError');
+            errorElement.textContent = message;
+            errorElement.classList.toggle('hidden', !message);
+        }
+
+        function openDeleteAccountDialog() {
+            if (!state.user?.email) return;
+            const providerIds = new Set(state.user.providerData.map((provider) => provider.providerId));
+            const needsPassword = !providerIds.has('google.com') && providerIds.has('password');
+            document.getElementById('deleteAccountEmail').textContent = state.user.email;
+            document.getElementById('deleteAccountEmailInput').value = '';
+            document.getElementById('deleteAccountPasswordInput').value = '';
+            document.getElementById('deleteAccountPasswordField').classList.toggle('hidden', !needsPassword);
+            showDeleteAccountError('');
+            document.getElementById('deleteAccountModal').showModal();
+        }
+
+        async function handleDeleteAccount() {
+            if (!state.user?.email) return;
+            const confirmationEmail = document.getElementById('deleteAccountEmailInput').value;
+            if (confirmationEmail !== state.user.email) {
+                showDeleteAccountError(t('delete_account_email_mismatch'));
+                return;
+            }
+
+            const providerIds = new Set(state.user.providerData.map((provider) => provider.providerId));
+            const password = document.getElementById('deleteAccountPasswordInput').value;
+            if (!providerIds.has('google.com') && providerIds.has('password') && !password) {
+                showDeleteAccountError(t('delete_account_password_required'));
+                return;
+            }
+
+            const button = document.getElementById('confirmDeleteAccountBtn');
+            button.disabled = true;
+            button.textContent = t('delete_account_deleting');
+            showDeleteAccountError('');
+            let identityVerified = false;
+
+            try {
+                if (providerIds.has('google.com')) {
+                    await reauthenticateWithPopup(state.user, new GoogleAuthProvider());
+                } else if (providerIds.has('password')) {
+                    const credential = EmailAuthProvider.credential(state.user.email, password);
+                    await reauthenticateWithCredential(state.user, credential);
+                } else {
+                    throw new Error('Unsupported authentication provider.');
+                }
+                identityVerified = true;
+
+                await deleteAccountRequest();
+                for (let index = localStorage.length - 1; index >= 0; index -= 1) {
+                    const key = localStorage.key(index);
+                    if (key?.startsWith('nt_')) localStorage.removeItem(key);
+                }
+                location.reload();
+            } catch (error) {
+                console.error('Account deletion failed', error);
+                showDeleteAccountError(t(identityVerified ? 'delete_account_failed' : 'delete_account_reauth_failed'));
+                button.disabled = false;
+                button.textContent = t('delete_account_confirm');
+            }
+        }
+
+        function historyFromSnapshot(snapshot) {
+            return snapshot.docs.map((documentSnapshot) => {
+                const data = documentSnapshot.data();
+                const timestamp = data.timestamp?.toDate?.() || new Date(data.date);
+                const validTimestamp = Number.isNaN(timestamp.getTime()) ? new Date() : timestamp;
+                return {
+                    id: documentSnapshot.id,
+                    brand: data.brand,
+                    name: data.name || data.brand,
+                    mg: data.mg,
+                    date: validTimestamp.toISOString(),
+                    localDate: data.localDate || getLocalISODate(validTimestamp)
+                };
+            });
+        }
+
+        async function initializeSignedInState(user) {
+            const ownerMode = getHistoryOwnerMode(historyOwner, user.uid);
+            const historyQuery = query(collection(db, 'users', user.uid, 'history'), orderBy('timestamp', 'desc'));
+            const [historySnapshot, settingsSnapshot, customSnapshot] = await Promise.all([
+                getDocs(historyQuery),
+                getDoc(doc(db, 'users', user.uid, 'settings', 'profile')),
+                getDocs(collection(db, 'users', user.uid, 'custom_pouches'))
+            ]);
+            if (state.user?.uid !== user.uid) return;
+
+            const remoteHistory = normalizeHistory(historyFromSnapshot(historySnapshot));
+            if (ownerMode === 'guest') {
+                const { merged, localOnly } = mergeHistories(state.history, remoteHistory);
+                await Promise.all(localOnly.map((entry) => setDoc(
+                    doc(db, 'users', user.uid, 'history', entry.id),
+                    { ...entry, timestamp: Timestamp.fromDate(new Date(entry.date)) }
+                )));
+                state.history = normalizeHistory(merged);
+            } else {
+                state.history = normalizeHistory(remoteHistory);
+            }
+
+            if (settingsSnapshot.exists()) {
+                const profile = settingsSnapshot.data();
+                state.settings = {
+                    ...state.settings,
+                    ...profile,
+                    onboarded: profile.onboarded === undefined ? true : profile.onboarded
+                };
+            } else {
+                await setDoc(doc(db, 'users', user.uid, 'settings', 'profile'), state.settings);
+            }
+
+            const remoteCustomPouches = customSnapshot.docs.map((documentSnapshot) => ({
+                id: documentSnapshot.id,
+                ...documentSnapshot.data(),
+                isCustom: true
+            }));
+            if (ownerMode === 'guest') {
+                const remoteIds = new Set(remoteCustomPouches.map((pouch) => pouch.id));
+                const localOnlyPouches = state.customPouches.filter((pouch) => pouch.id && !remoteIds.has(pouch.id));
+                await Promise.all(localOnlyPouches.map((pouch) => setDoc(
+                    doc(db, 'users', user.uid, 'custom_pouches', pouch.id),
+                    { ...pouch, createdAt: Timestamp.now() }
+                )));
+                state.customPouches = [...remoteCustomPouches, ...localOnlyPouches];
+            } else {
+                state.customPouches = remoteCustomPouches;
+            }
+
+            historyOwner = user.uid;
+            persistHistory();
+            renderUI();
+
+            unsubscribeHistory = onSnapshot(historyQuery, (snapshot) => {
+                if (state.user?.uid !== user.uid) return;
+                const remoteHistory = historyFromSnapshot(snapshot);
+                state.history = normalizeHistory(remoteHistory);
+                historyOwner = user.uid;
+                persistHistory();
+                renderUI();
+            }, (error) => {
+                console.error('History synchronization failed', error);
+                showToast(t('sync_error'));
+            });
+        }
+
+        function resetAccountLocalData() {
+            state.history = [];
+            state.customPouches = [];
+            state.selection = null;
+            state.historyVisible = HISTORY_PAGE_SIZE;
+            historyOwner = 'guest';
+            localStorage.removeItem('nt_last_pouch');
+            persistHistory();
+        }
+
         // --- LISTENERS ---
         function setupListeners() {
         document.getElementById('settingsLangBtn').onclick=()=>applyLanguage(state.lang==='en'?'cs':'en');
@@ -3294,6 +3577,18 @@
             document.getElementById('closeContactX').onclick = () => document.getElementById('contactModal').close();
             document.getElementById('closeContactBtn').onclick = () => document.getElementById('contactModal').close();
             document.getElementById('contactForm').addEventListener('submit', handleContactSubmit);
+            document.getElementById('deleteAccountBtn').onclick = openDeleteAccountDialog;
+            document.getElementById('cancelDeleteAccountBtn').onclick = () => document.getElementById('deleteAccountModal').close();
+            document.getElementById('deleteAccountForm').addEventListener('submit', (event) => {
+                event.preventDefault();
+                handleDeleteAccount();
+            });
+            document.getElementById('deleteAccountModal').addEventListener('close', () => {
+                const button = document.getElementById('confirmDeleteAccountBtn');
+                button.disabled = false;
+                button.textContent = t('delete_account_confirm');
+                showDeleteAccountError('');
+            });
 
             document.getElementById('btnExportCsv').onclick = exportCSV;
             document.getElementById('btnExportJson').onclick = exportJSON;
@@ -3303,7 +3598,7 @@
                 isRegistering = !isRegistering;
                 document.getElementById('toggleReg').innerText = isRegistering ? t('toggle_log') : t('toggle_reg');
                 document.getElementById('loginBtn').innerText = isRegistering ? t('register') : t('login');
-                document.getElementById('authTitle').innerText = isRegistering ? "Register" : "Sync";
+                document.getElementById('authTitle').innerText = isRegistering ? t('register') : t('auth_title');
             };
 
             document.getElementById('viewAllHistoryBtn').onclick=()=>{
@@ -3333,8 +3628,6 @@
             document.getElementById('cancelDeleteHistoryBtn1').onclick = () => document.getElementById('confirmDeleteModalStep1').close();
             document.getElementById('cancelDeleteHistoryBtn2').onclick = () => document.getElementById('confirmDeleteModalStep2').close();
 
-            window.delHist = (id) => { deleteHistoryEntry(id); };
-
             document.getElementById('loginBtn').onclick=async()=>{
                 const e=document.getElementById('emailInput').value,p=document.getElementById('passInput').value;
                 try {
@@ -3355,40 +3648,34 @@
                 const authStatus = document.getElementById('authStatus');
                 const authStatusMsg = document.getElementById('authStatusMsg');
                 const logoutBtn = document.getElementById('logoutBtn');
-                if(u){ state.user=u;
+                const deleteAccountBtn = document.getElementById('deleteAccountBtn');
+                const previousUser = state.user;
+                if (unsubscribeHistory) {
+                    unsubscribeHistory();
+                    unsubscribeHistory = null;
+                }
+                if(u){
+                    state.user=u;
                     const providerId = u.providerData?.[0]?.providerId || '';
                     authSection.classList.add('hidden');
                     authStatus.classList.remove('hidden');
                     authStatusMsg.innerText = providerId.includes('google') ? t('signed_in_google') : t('signed_in_generic');
                     if (logoutBtn) logoutBtn.classList.remove('hidden');
-                    onSnapshot(query(collection(db,'users',u.uid,'history'),orderBy('timestamp','desc')),(s)=>{const h=s.docs.map(d=>{const ts=d.data().timestamp?.toDate?.()||new Date(); return {id:d.id, brand:d.data().brand, name:d.data().name||d.data().brand, mg:d.data().mg, date:ts.toISOString(), localDate:getLocalISODate(ts)};}); if(h.length){state.history=normalizeHistory(h);persistHistory();renderUI();}});
-                    getDoc(doc(db,'users',u.uid,'settings','profile')).then(d => {
-                        if(d.exists()) {
-                            const profile = d.data();
-                            const mergedSettings = { ...state.settings, ...profile };
-                            mergedSettings.onboarded = profile.onboarded === undefined ? true : profile.onboarded;
-                            state.settings = mergedSettings;
-                            persistHistory();
-                            renderUI();
-                        }
-                    });
-                    getDocs(collection(db,'users',u.uid,'custom_pouches')).then((snap)=>{
-                        const remote = snap.docs.map(docSnap => ({ id: docSnap.id, ...docSnap.data(), isCustom: true }));
-                        if(remote.length){
-                            const existingIds = new Set(state.customPouches.map(p => p.id || `${p.b}-${p.n}-${p.mg}`));
-                            remote.forEach(item => {
-                                const key = item.id || `${item.b}-${item.n}-${item.mg}`;
-                                if(!existingIds.has(key)) { state.customPouches.push(item); existingIds.add(key); }
-                            });
-                            persistHistory();
-                        }
-                    });
+                    if (deleteAccountBtn) deleteAccountBtn.classList.remove('hidden');
+                    try {
+                        await initializeSignedInState(u);
+                    } catch (error) {
+                        console.error('Failed to initialize cloud synchronization', error);
+                        showToast(t('sync_error'));
+                    }
                 } else {
                     state.user=null;
+                    if (previousUser || historyOwner !== 'guest') resetAccountLocalData();
                     authSection.classList.remove('hidden');
                     authStatus.classList.add('hidden');
                     authStatusMsg.innerText = '';
                     if (logoutBtn) logoutBtn.classList.add('hidden');
+                    if (deleteAccountBtn) deleteAccountBtn.classList.add('hidden');
                 }
                 renderSyncButton();
                 renderUI();

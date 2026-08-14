@@ -1,9 +1,10 @@
-const CACHE_NAME = 'pouchlog-v1.3';
+const CACHE_NAME = 'pouchlog-v1.4';
 
 const APP_SHELL = [
   './',
   './index.html',
   './data.js',
+  './app-core.mjs',
   './manifest.json',
   './favicon.ico',
   './apple-touch-icon.png',
@@ -36,36 +37,49 @@ self.addEventListener('activate', (event) => {
 const isDocumentRequest = (request) =>
   request.mode === 'navigate' || request.destination === 'document' || request.headers.get('accept')?.includes('text/html');
 
+function isMutableAppRequest(request) {
+  const url = new URL(request.url);
+  return url.origin === self.location.origin && ['/data.js', '/app-core.mjs'].includes(url.pathname);
+}
+
+async function putSuccessfulResponse(request, response) {
+  if (response && (response.ok || response.type === 'opaque')) {
+    const cache = await caches.open(CACHE_NAME);
+    await cache.put(request, response.clone());
+  }
+  return response;
+}
+
+async function networkFirst(request) {
+  try {
+    const response = await fetch(request);
+    return await putSuccessfulResponse(request, response);
+  } catch (error) {
+    const cached = await caches.match(request);
+    if (cached) return cached;
+    if (isDocumentRequest(request)) return caches.match('./index.html');
+    throw error;
+  }
+}
+
+async function staleWhileRevalidate(request) {
+  const cached = await caches.match(request);
+  const networkResponse = fetch(request)
+    .then((response) => putSuccessfulResponse(request, response))
+    .catch(() => null);
+  return cached || await networkResponse || Response.error();
+}
+
 self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
   if (!event.request.url.startsWith('http')) return;
 
-  if (isDocumentRequest(event.request)) {
-    event.respondWith(
-      fetch(event.request)
-        .then((response) => {
-          const clone = response.clone();
-          caches.open(CACHE_NAME).then((cache) => cache.put(event.request, clone));
-          return response;
-        })
-        .catch(() => caches.match(event.request).then((cached) => cached || caches.match('./index.html')))
-    );
+  if (isDocumentRequest(event.request) || isMutableAppRequest(event.request)) {
+    event.respondWith(networkFirst(event.request));
     return;
   }
 
-  event.respondWith(
-    caches.match(event.request).then((cached) => {
-      if (cached) return cached;
-
-      return fetch(event.request)
-        .then((response) => {
-          const clone = response.clone();
-          caches.open(CACHE_NAME).then((cache) => cache.put(event.request, clone));
-          return response;
-        })
-        .catch(() => cached);
-    })
-  );
+  event.respondWith(staleWhileRevalidate(event.request));
 });
 
 self.addEventListener('notificationclick', (event) => {

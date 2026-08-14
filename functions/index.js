@@ -4,6 +4,7 @@ const nodemailer = require('nodemailer');
 const { onCall, HttpsError } = require('firebase-functions/v2/https');
 const logger = require('firebase-functions/logger');
 const { ContactError, createContactHandler } = require('./contact');
+const { AccountDeletionError, createDeleteAccountHandler } = require('./delete-account');
 
 admin.initializeApp();
 
@@ -109,5 +110,32 @@ exports.submitContact = onCall({
         }
         console.error('Unexpected contact submission failure.');
         throw new HttpsError('internal', 'The message could not be sent. Please try again later.');
+    }
+});
+
+/**
+ * Odstraní celý Firestore strom právě přihlášeného uživatele a následně
+ * jeho účet Firebase Authentication. Čerstvé přihlášení ověřuje handler.
+ */
+exports.deleteAccount = onCall({
+    cors: [
+        'https://pouchlog.com',
+        'https://www.pouchlog.com',
+        /^http:\/\/(127\.0\.0\.1|localhost)(:\d+)?$/
+    ]
+}, async (request) => {
+    const handler = createDeleteAccountHandler({
+        db: admin.firestore(),
+        auth: admin.auth()
+    });
+
+    try {
+        return await handler(request);
+    } catch (error) {
+        if (error instanceof AccountDeletionError) {
+            throw new HttpsError(error.code, error.message);
+        }
+        console.error('Unexpected account deletion failure.', error);
+        throw new HttpsError('internal', 'The account could not be deleted. Please try again.');
     }
 });
