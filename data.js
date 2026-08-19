@@ -1966,6 +1966,106 @@ export const POUCH_DB = [
   ,{ b: "77 Pouches", n: "77 Fresh Mint Light", mg: 5.2 }
   ,{ b: "77 Pouches", n: "77 Fresh Mint Medium", mg: 10.4 }
   ,{ b: "77 Pouches", n: "77 Ghost Arctic Berry Mini", mg: 20 }
+  ,{ b: "77 Pouches", n: "77 Ghost Bubble Gum Mini", mg: 20 }
+  ,{ b: "77 Pouches", n: "77 Ghost Cola Ice Mini", mg: 20 }
+  ,{ b: "77 Pouches", n: "77 Ghost Mango Mini", mg: 20 }
+  ,{ b: "77 Pouches", n: "77 Ghost Mega Strong 50mg", mg: 50 }
+  ,{ b: "77 Pouches", n: "77 Ghost Original Mini", mg: 20 }
+  ,{ b: "77 Pouches", n: "77 Cherry Light", mg: 5.2 }
+  ,{ b: "77 Pouches", n: "77 Ice Mint Light", mg: 5.2 }
+  ,{ b: "77 Pouches", n: "77 Ice Mint Medium", mg: 10.4 }
+  ,{ b: "77 Pouches", n: "77 Peach Mint Medium", mg: 10.4 }
+  ,{ b: "77 Pouches", n: "77 Raspberry Medium", mg: 10.4 }
+  ,{ b: "77 Pouches", n: "77 Raspberry Vanilla Light", mg: 5.2 }
+  ,{ b: "77 Pouches", n: "77 Salted Caramel Medium", mg: 10.4 }
+  ,{ b: "77 Pouches", n: "77 Strawberry Light", mg: 5.2 }
+  ,{ b: "77 Pouches", n: "77 Strawberry Medium", mg: 10.4 }
+  ,{ b: "77 Pouches", n: "77 Tropical Mint Medium", mg: 10.4 }
+  ,{ b: "77 Pouches", n: "77 Watermelon Ice Medium", mg: 10.4 }
+  ,{ b: "77 Pouches", n: "77 Watermelon Light", mg: 5.2 }
+  ,{ b: "ACE", n: "ACE Berry Breeze Low 3.9 mg", mg: 3.9 }
+  ,{ b: "ACE", n: "ACE Cool Mint Low 3.9 mg", mg: 3.9 }
+  ,{ b: "ACE", n: "ACE Liquorice Mint", mg: 10.4 }
+  ,{ b: "ACE", n: "ACE X Honeydew Black Pepper", mg: 8 }
+  ,{ b: "Après", n: "Après No. 1 Menthol Extra Strong", mg: 8.3 }
+  ,{ b: "Après", n: "Après No. 1 Menthol Hyper Strong", mg: 11 }
+  ,{ b: "Après", n: "Après No. 10 Tangerine Spritz Hyper Strong", mg: 11 }
+  ,{ b: "Après", n: "Après No. 11 Bananas Hyper Strong", mg: 11 }
+  ,{ b: "Après", n: "Après No. 11 Bananas Mini 3.2 mg", mg: 3.2 }
+  ,{ b: "Après", n: "Après No. 11 Bananas Normal", mg: 4.4 }
+  ,{ b: "Après", n: "Après No. 12 Blueberry Hyper Strong", mg: 11 }
+  ,{ b: "Après", n: "Après No. 12 Blueberry Mini 3.2 mg", mg: 3.2 }
+  ,{ b: "Après", n: "Après No. 12 Blueberry Normal", mg: 4.4 }
+  ,{ b: "Après", n: "Après No. 2 Mint Normal", mg: 4.4 }
+  ,{ b: "Après", n: "Après No. 3 Lemon Curd Extra Strong", mg: 8.3 }
+  ,{ b: "Après", n: "Après No. 3 Lemon Curd Hyper Strong", mg: 11 }
+  ,{ b: "Après", n: "Après No. 3 Lemon Curd Normal", mg: 4.4 }
+  ,{ b: "Après", n: "Après No. 4 Cola Extra Strong Slim", mg: 8.3 }
+  ,{ b: "Après", n: "Après No. 4 Cola Hyper Strong", mg: 11 }
+  ,{ b: "Après", n: "Après No. 4 Cola Normal", mg: 4.4 }
+  ,{ b: "Après", n: "Après No. 5 Ice Tea Peach Extra Strong", mg: 8.3 }
+  ,{ b: "Après", n: "Après No. 5 Ice Tea Peach Hyper Strong", mg: 11 }
+  ,{ b: "Après", n: "Après No. 5 Ice Tea Peach Normal", mg: 4.4 }
+  ,{ b: "Après", n: "Après No. 5 Ice Tea Peach Petite Mini 3.2 mg", mg: 3.2 }
+  ,{ b: "Après", n: "Après No. 6 Appletini Extra Strong Slim", mg: 8.3 }
+  ,{ b: "Après", n: "Après No. 6 Appletini Normal Slim", mg: 4.4 }
+  ,{ b: "Après", n: "Après No. 7 Very Berry Normal", mg: 4.4 }
+  ,{ b: "Après", n: "Après No. 8 Raspberry Liqorice Normal", mg: 4.4 }
+  ,{ b: "BAGZ", n: "BAGZ Cola Max X-strong", mg: 14.2 }
+  ,{ b: "BAGZ", n: "BAGZ Fruit Punch X-strong", mg: 14.2 }
+  ,{ b: "BAGZ", n: "BAGZ Mojito Lime X-strong", mg: 13.7 }
+  ,{ b: "BAGZ", n: "BAGZ Pink Melon Ice X-Strong", mg: 14.2 }
+  ,{ b: "C.R.E.A.M", n: "C.R.E.A.M Cold As Ice Light", mg: 4 }
+  ,{ b: "C.R.E.A.M", n: "C.R.E.A.M Lemon Head Light", mg: 4 }
+  ,{ b: "C.R.E.A.M", n: "C.R.E.A.M Lemon Head X-Strong", mg: 12 }
+  ,{ b: "C.R.E.A.M", n: "C.R.E.A.M Mango Man Light", mg: 4 }
+  ,{ b: "C.R.E.A.M", n: "C.R.E.A.M Mango Man X-Strong", mg: 12 }
+  ,{ b: "COCO", n: "COCO Clean Peach", mg: 9 }
+  ,{ b: "CREED", n: "CREED Spezial Cola Orange Slim", mg: 12 }
+  ,{ b: "CUBA", n: "CUBA Black Cheese", mg: 43 }
+  ,{ b: "CUBA", n: "CUBA Black Jogurt", mg: 43 }
+  ,{ b: "CUBA", n: "CUBA Coca Leaf", mg: 50 }
+  ,{ b: "CUBA", n: "CUBA Ninja Bubble Gum", mg: 15.6 }
+  ,{ b: "CUBA", n: "CUBA Ninja Pinacolada", mg: 15.6 }
+  ,{ b: "CUBA", n: "CUBA White Jogurt", mg: 10.4 }
+  ,{ b: "CUBA", n: "CUBA White Lollipop", mg: 10.4 }
+  ,{ b: "CUBA", n: "CUBA White Raspberry", mg: 10.4 }
+  ,{ b: "DOPE", n: "DOPE Blueberry #50", mg: 35 }
+  ,{ b: "DOPE", n: "DOPE Freeze #50", mg: 35 }
+  ,{ b: "DOPE", n: "DOPE Cherry Ice #50", mg: 35 }
+  ,{ b: "DOPE", n: "DOPE Ice Mango #50", mg: 35 }
+  ,{ b: "DOPE", n: "DOPE Ice Mango Strong Edition", mg: 11.2 }
+  ,{ b: "DOPE", n: "DOPE Icy Cola Strong Edition", mg: 11.2 }
+  ,{ b: "DOPE", n: "DOPE Lime Smash Strong Edition", mg: 11.2 }
+  ,{ b: "DOPE", n: "DOPE Melon Strong Edition", mg: 11.2 }
+  ,{ b: "FUMI", n: "FUMi Fiery Mango Strong", mg: 8 }
+  ,{ b: "FUMI", n: "FUMi Salty Raspberry Strong", mg: 8 }
+  ,{ b: "FUMI", n: "FUMi Salty Violet Strong", mg: 8 }
+  ,{ b: "GOAT", n: "GOAT Cool Mint #12", mg: 8.4 }
+  ,{ b: "GOAT", n: "GOAT Tropical #12", mg: 8.4 }
+  ,{ b: "GOAT", n: "GOAT Wild Cherry #12", mg: 8.4 }
+  ,{ b: "Greatest", n: "GREATEST Arctic Edition Slim", mg: 9.96 }
+  ,{ b: "Greatest", n: "GREATEST Rage Lemonade Slim", mg: 9.96 }
+  ,{ b: "Greatest", n: "GREATEST Wasted Mango Slim Strong", mg: 12 }
+  ,{ b: "Helwit", n: "HELWIT Banana Extra Strong Slim", mg: 7.5 }
+  ,{ b: "Helwit", n: "HELWIT Banana Slim 3.5 mg", mg: 3.5 }
+  ,{ b: "Helwit", n: "HELWIT Cola Slim 3.5 mg", mg: 3.5 }
+  ,{ b: "Helwit", n: "HELWIT Lime Liquorice Slim", mg: 4.5 }
+  ,{ b: "Helwit", n: "HELWIT Lingonberry Slim 2 mg", mg: 2 }
+  ,{ b: "Helwit", n: "HELWIT Mint Slim 3.5 mg", mg: 3.5 }
+  ,{ b: "Helwit", n: "HELWIT Mocha Extra Strong Slim", mg: 7.5 }
+  ,{ b: "Helwit", n: "HELWIT Raspberry Liquorice 3.5 mg", mg: 3.5 }
+  ,{ b: "Helwit", n: "HELWIT Strawberry Slim", mg: 4.5 }
+  ,{ b: "Helwit", n: "HELWIT Vanilla Slim 3.5 mg", mg: 3.5 }
+  ,{ b: "Helwit", n: "HELWIT Violet Slim 3.5 mg", mg: 3.5 }
+  ,{ b: "Helwit", n: "HELWIT Watermelon Slim 3.5 mg", mg: 3.5 }
+  ,{ b: "ICEBERG", n: "ICEBERG Arasaka Extreme 50mg", mg: 30 }
+  ,{ b: "ICEBERG", n: "ICEBERG Black Extreme 50mg", mg: 30 }
+  ,{ b: "ICEBERG", n: "ICEBERG Dragon Fruit Extreme Slim 50mg", mg: 30 }
+  ,{ b: "ICEBERG", n: "ICEBERG Energy Extreme 50mg", mg: 30 }
+  ,{ b: "ICEBERG", n: "ICEBERG Grape Extreme Slim 50mg", mg: 30 }
+  ,{ b: "ICEBERG", n: "ICEBERG Guava Lime Extreme 50mg", mg: 30 }
+  ,{ b: "ICEBERG", n: "ICEBERG Gummy Bears Extreme 50 Mg", mg: 30 }
 ];
 
 export const USER_BENCHMARKS = [
