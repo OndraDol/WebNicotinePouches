@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "next_batch": 11,
+  "next_batch": 12,
   "market_queue": [
     "US+CA",
     "Europe excluding CZ",
@@ -187,7 +187,13 @@
       "catalog": "Nicotinos / Czech nicotine pouch catalog (verified product subset, batch 10)",
       "source_url": "https://nicotinos.com/cs-cz/collections/nicotine-pouches",
       "checked_at": "2026-08-19"
+    },
+    {
+      "market": "CZ",
+      "catalog": "Nicotinos / Czech nicotine pouch catalog (verified product subset, batch 11)",
+      "source_url": "https://nicotinos.com/cs-cz/collections/nicotine-pouches",
+      "checked_at": "2026-08-19"
     }
   ],
-  "last_completed_total": 1987
+  "last_completed_total": 2087
 }

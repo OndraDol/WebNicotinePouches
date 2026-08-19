@@ -2066,6 +2066,106 @@ export const POUCH_DB = [
   ,{ b: "ICEBERG", n: "ICEBERG Grape Extreme Slim 50mg", mg: 30 }
   ,{ b: "ICEBERG", n: "ICEBERG Guava Lime Extreme 50mg", mg: 30 }
   ,{ b: "ICEBERG", n: "ICEBERG Gummy Bears Extreme 50 Mg", mg: 30 }
+  ,{ b: "ICEBERG", n: "ICEBERG Cherry Apricot Gum Extreme Slim", mg: 30 }
+  ,{ b: "ICEBERG", n: "ICEBERG Raspberry Gum Extreme Slim", mg: 30 }
+  ,{ b: "ICEBERG", n: "ICEBERG Strawberry Banana Gum Extreme", mg: 30 }
+  ,{ b: "ICEBERG", n: "ICEBERG Strawberry Pomegrante Extreme", mg: 30 }
+  ,{ b: "ICEBERG", n: "ICEBERG Watermelon Lime Extreme 50mg", mg: 30 }
+  ,{ b: "ICEBERG", n: "ICEBERG Watermelon Mint Gum Extreme 50", mg: 30 }
+  ,{ b: "KELLY WHITE", n: "KELLY WHITE Cool Mint Slim Strong", mg: 8.4 }
+  ,{ b: "KELLY WHITE", n: "KELLY WHITE Hot Cherry Mini Strong", mg: 6.5 }
+  ,{ b: "KELLY WHITE", n: "KELLY WHITE Raspberry Lemon Mini", mg: 6 }
+  ,{ b: "KELLY WHITE", n: "KELLY WHITE Sparkling Strawberry Slim", mg: 4.8 }
+  ,{ b: "KELLY WHITE", n: "KELLY WHITE Sweet Melon Mint Slim", mg: 4.8 }
+  ,{ b: "KELLY WHITE", n: "KELLY WHITE Sweet Peach Mini Strong", mg: 7 }
+  ,{ b: "KELLY WHITE", n: "KELLY WHITE Sweet Peach Slim", mg: 3.6 }
+  ,{ b: "KELLY WHITE", n: "KELLY WHITE Sweet Peach Strong Slim", mg: 8 }
+  ,{ b: "KELLY WHITE", n: "KELLY WHITE Sweet Peppermint Mini", mg: 6 }
+  ,{ b: "KILLA", n: "KILLA 13 Extra Strong Slim", mg: 12.8 }
+  ,{ b: "KILLA", n: "KILLA Apple Extra Strong Slim", mg: 12.8 }
+  ,{ b: "KILLA", n: "KILLA Banana Ice Slim Extra Strong", mg: 12.8 }
+  ,{ b: "KILLA", n: "KILLA Blueberry Extra Strong Slim", mg: 12.8 }
+  ,{ b: "KLINT", n: "KLINT Apple Mint #5 X-strong Slim", mg: 11.5 }
+  ,{ b: "KLINT", n: "KLINT Arctic Mint #5 X-strong Slim", mg: 11.5 }
+  ,{ b: "KLINT", n: "KLINT Blåklint #5 Extra Strong Slim", mg: 11.5 }
+  ,{ b: "KLINT", n: "KLINT Freeze Mint #4 Extra Strong", mg: 11.2 }
+  ,{ b: "KLINT", n: "KLINT Honeymelon #2 Slim", mg: 5.6 }
+  ,{ b: "KLINT", n: "KLINT Liquorice #3 Slim", mg: 8.4 }
+  ,{ b: "KLINT", n: "KLINT Passionfruit #2 Slim", mg: 5.6 }
+  ,{ b: "KLINT", n: "KLINT Pink Grapefruit #4 Extra Strong", mg: 11.2 }
+  ,{ b: "LEO nicotine pouches", n: "LEO Black Cherry", mg: 12 }
+  ,{ b: "LEO nicotine pouches", n: "LEO Blue Razz Ice", mg: 12 }
+  ,{ b: "LEO nicotine pouches", n: "LEO Dubai Chocolate", mg: 12 }
+  ,{ b: "LEO nicotine pouches", n: "LEO Freeze Ice", mg: 12 }
+  ,{ b: "LEO nicotine pouches", n: "LEO Freeze Ice Max", mg: 16 }
+  ,{ b: "LEO nicotine pouches", n: "LEO Sour Peach", mg: 12 }
+  ,{ b: "LEO nicotine pouches", n: "LEO Strawberry Kiwi Lime", mg: 12 }
+  ,{ b: "LEO nicotine pouches", n: "LEO Watermelon Ice", mg: 12 }
+  ,{ b: "LONKERO", n: "LONKERO Grapefruit & Gin Strong", mg: 16 }
+  ,{ b: "LOOP", n: "LOOP Blackcurrant Strong", mg: 9.4 }
+  ,{ b: "LOOP", n: "LOOP Creamy Cappuccino Mini", mg: 6.8 }
+  ,{ b: "LOOP", n: "LOOP Hot Peach Mini", mg: 6.8 }
+  ,{ b: "LOOP", n: "LOOP Licorice Fusion Strong Slim", mg: 9.4 }
+  ,{ b: "LOOP", n: "LOOP Red Chili Melon Extra Strong Slim", mg: 12.5 }
+  ,{ b: "LOOP", n: "LOOP Smooth Mint Slim Strong", mg: 9.4 }
+  ,{ b: "Lundgrens", n: "Lundgrens Vågsvall", mg: 8 }
+  ,{ b: "LYFT", n: "LYFT Black Currant Strong Slim", mg: 10 }
+  ,{ b: "LYFT", n: "LYFT Citrus Mint Regular Mini", mg: 6 }
+  ,{ b: "LYFT", n: "LYFT Cool Air Ultra Strong Slim", mg: 14 }
+  ,{ b: "LYFT", n: "LYFT Cool Air X-Strong Slim", mg: 10.9 }
+  ,{ b: "LYFT", n: "LYFT Cucumber Mint Strong Slim", mg: 10 }
+  ,{ b: "LYFT", n: "LYFT Eucalyptus Honey Strong Slim", mg: 10 }
+  ,{ b: "LYFT", n: "LYFT Hot Berries Strong", mg: 10 }
+  ,{ b: "LYFT", n: "LYFT Pure Mint Regular Mini", mg: 6 }
+  ,{ b: "MAVERICK", n: "MAVERICK Frost Wood Strong", mg: 12.5 }
+  ,{ b: "Nor", n: "NOR Ice Mint Slim 14 mg", mg: 10.4 }
+  ,{ b: "Nor", n: "NOR Licorice & Violet Slim 8 mg", mg: 6 }
+  ,{ b: "Nor", n: "NOR Mint Slim 8 mg", mg: 6 }
+  ,{ b: "Nor", n: "NOR NAKD Mint Nicotine Pods 14 mg", mg: 10.5 }
+  ,{ b: "Nor", n: "NOR Peach Slim 8 mg", mg: 6 }
+  ,{ b: "Nor", n: "NOR Peppermint Slim 16 mg", mg: 12 }
+  ,{ b: "Nor", n: "NOR Strawberry Slim 12 mg", mg: 9 }
+  ,{ b: "Pablo", n: "PABLO Exclusive Passionfruit", mg: 30 }
+  ,{ b: "PUFF & POUCH", n: "Puff & Pouch Eucalyptus Slim", mg: 12 }
+  ,{ b: "PUFF & POUCH", n: "Puff & Pouch Rage Anabolic Berry Slim", mg: 11.66 }
+  ,{ b: "Siberia", n: "SIBERIA Long Portion", mg: 35.48 }
+  ,{ b: "Siberia", n: "SIBERIA Maxi All White Portion", mg: 29.7 }
+  ,{ b: "Siberia", n: "SIBERIA Mini All White Portion", mg: 16.5 }
+  ,{ b: "Siberia", n: "SIBERIA Original All White Portion", mg: 24.8 }
+  ,{ b: "Siberia", n: "SIBERIA Slim All White Portion", mg: 24.8 }
+  ,{ b: "Siberia", n: "SIBERIA Super Slim All White Portion", mg: 21.45 }
+  ,{ b: "SKRUF", n: "Skruf No.10 Fresh Superslim 4 mg", mg: 4 }
+  ,{ b: "SKRUF", n: "Skruf Super White No.57 Polar Eucalyptus Strong", mg: 9 }
+  ,{ b: "SKRUF", n: "Skruf Super White No.63 Purple Cassice Strong", mg: 9 }
+  ,{ b: "SKRUF", n: "Skruf Super White No.71 Purple Cassice", mg: 6 }
+  ,{ b: "SKRUF", n: "Skruf Superwhite Crystal Fresh Extra Strong", mg: 12 }
+  ,{ b: "SKRUF", n: "Skruf Superwhite No.54 Fresh Mint Extra Strong", mg: 11 }
+  ,{ b: "SKRUF", n: "Skruf Superwhite No.56 Nordic Liquorice", mg: 6 }
+  ,{ b: "SKRUF", n: "Skruf Superwhite No.58 Nordic Liquorice Extra Strong", mg: 11.5 }
+  ,{ b: "SKRUF", n: "Skruf Superwhite No.60 Frozen Mint Extra Strong", mg: 8 }
+  ,{ b: "SKRUF", n: "Skruf Superwhite No.62 Indigo Berry", mg: 6 }
+  ,{ b: "SYX", n: "SYX Apple Kiwi Strong", mg: 11.5 }
+  ,{ b: "SYX", n: "SYX Cool Mint Medium", mg: 5.8 }
+  ,{ b: "SYX", n: "SYX Cool Mint Strong", mg: 11.5 }
+  ,{ b: "SYX", n: "SYX Forest Fruit Strong", mg: 11.5 }
+  ,{ b: "SYX", n: "SYX Freeze Extra Strong", mg: 20 }
+  ,{ b: "SYX", n: "SYX Icy Cola Low 3 mg", mg: 3 }
+  ,{ b: "SYX", n: "SYX Original Low 3 mg", mg: 3 }
+  ,{ b: "SYX", n: "SYX Peppermint Low 3 mg", mg: 3 }
+  ,{ b: "SYX", n: "SYX Spearmint Low 3 mg", mg: 3 }
+  ,{ b: "SYX", n: "SYX Tropical Low 3 mg", mg: 3 }
+  ,{ b: "SYX", n: "SYX Wild Cherry Low 3 mg", mg: 3 }
+  ,{ b: "SYX", n: "SYX Wintergreen Low 3 mg", mg: 3 }
+  ,{ b: "VELO", n: "VELO Bright Peppermint Slim", mg: 8 }
+  ,{ b: "VELO", n: "VELO Bright Spearmint 14mg Slim", mg: 14 }
+  ,{ b: "VELO", n: "VELO Dark Blackcurrant Slim", mg: 8 }
+  ,{ b: "VELO", n: "VELO Freezing Peppermint 10,9mg Slim", mg: 10.9 }
+  ,{ b: "VELO", n: "VELO Icy Berries", mg: 8 }
+  ,{ b: "VELO", n: "VELO McLaren Limited Edition", mg: 10.9 }
+  ,{ b: "VELO", n: "VELO McLaren Sweet Papaya Limited Edition", mg: 8 }
+  ,{ b: "VELO", n: "VELO Nutty Virginia Mini", mg: 4.2 }
+  ,{ b: "VELO", n: "VELO Purple Grape Strong Slim", mg: 10 }
+  ,{ b: "VELO", n: "VELO Ruby Berry Slim", mg: 6 }
 ];
 
 export const USER_BENCHMARKS = [
