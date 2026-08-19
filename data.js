@@ -1366,6 +1366,106 @@ export const POUCH_DB = [
   ,{ b: "VOSS", n: "Voss - Grape Escape", mg: 30.0 }
   ,{ b: "VOSS", n: "Voss - Cherry Pop", mg: 30.0 }
   ,{ b: "VOSS", n: "Voss - Mango Punch", mg: 30.0 }
+  ,{ b: "77 Pouches", n: "77 - Apple & Mint", mg: 10.4 }
+  ,{ b: "77 Pouches", n: "77 - Blackcurrant", mg: 10.4 }
+  ,{ b: "77 Pouches", n: "77 - Cola", mg: 10.4 }
+  ,{ b: "77 Pouches", n: "77 - Freeze Mint", mg: 10.4 }
+  ,{ b: "77 Pouches", n: "77 - Melon Mint", mg: 5.2 }
+  ,{ b: "77 Pouches", n: "77 - Peach Mint", mg: 10.4 }
+  ,{ b: "77 Pouches", n: "77 - Peppermint", mg: 10.4 }
+  ,{ b: "77 Pouches", n: "77 - Raspberry", mg: 10.4 }
+  ,{ b: "77 Pouches", n: "77 Ghost Mini - Cola Vanilla", mg: 20 }
+  ,{ b: "77 Pouches", n: "77 Ghost Mini - Original", mg: 20 }
+  ,{ b: "77 Pouches", n: "77 Light - Forest Fruits", mg: 5.2 }
+  ,{ b: "77 Pouches", n: "77 VB Edition - Arctic Berry", mg: 20 }
+  ,{ b: "77 Pouches", n: "77 VB Edition - Spearmint", mg: 10.4 }
+  ,{ b: "ACE", n: "ACE X - Cool Mint", mg: 8 }
+  ,{ b: "ACE", n: "ACE X - Guarana Chili Boost", mg: 8 }
+  ,{ b: "CAMO", n: "CAMO - Grape", mg: 25 }
+  ,{ b: "CUBA", n: "CUBA Black - Apple Juice", mg: 43 }
+  ,{ b: "CUBA", n: "CUBA Black - Banana Hit", mg: 43 }
+  ,{ b: "CUBA", n: "CUBA Black - Blackberry", mg: 43 }
+  ,{ b: "CUBA", n: "CUBA Black - Blackcurrant", mg: 43 }
+  ,{ b: "CUBA", n: "CUBA Black - Blueberry", mg: 43 }
+  ,{ b: "CUBA", n: "CUBA Black - Cherry", mg: 43 }
+  ,{ b: "CUBA", n: "CUBA Black - Coca Leaf", mg: 32.5 }
+  ,{ b: "CUBA", n: "CUBA Black - Cola", mg: 43 }
+  ,{ b: "CUBA", n: "CUBA Black - Cold Dry", mg: 43 }
+  ,{ b: "CUBA", n: "CUBA Black - Double Fresh", mg: 43 }
+  ,{ b: "CUBA", n: "CUBA Black - Forest Berries", mg: 43 }
+  ,{ b: "CUBA", n: "CUBA Black - Grape", mg: 43 }
+  ,{ b: "CUBA", n: "CUBA Black - Ice Spearmint", mg: 43 }
+  ,{ b: "CUBA", n: "CUBA Black - Lollipop", mg: 43 }
+  ,{ b: "CUBA", n: "CUBA Black - Mango", mg: 43 }
+  ,{ b: "CUBA", n: "CUBA Black - Peach", mg: 43 }
+  ,{ b: "CUBA", n: "CUBA Black - Pineapple", mg: 43 }
+  ,{ b: "CUBA", n: "CUBA Black - Raspberry", mg: 43 }
+  ,{ b: "CUBA", n: "CUBA Black - Tropical Fruit", mg: 43 }
+  ,{ b: "CUBA", n: "CUBA Black - Watermelon", mg: 43 }
+  ,{ b: "CUBA", n: "CUBA Ninja - Coconut", mg: 15 }
+  ,{ b: "CUBA", n: "CUBA Ninja - Ice Cool", mg: 15 }
+  ,{ b: "CUBA", n: "CUBA Ninja - Mint Fresh", mg: 15 }
+  ,{ b: "CUBA", n: "CUBA Ninja - Orange", mg: 15 }
+  ,{ b: "CUBA", n: "CUBA White - Apple Juice", mg: 10.4 }
+  ,{ b: "CUBA", n: "CUBA White - Banana Hit", mg: 10.4 }
+  ,{ b: "CUBA", n: "CUBA White - Blackcurrant", mg: 10.4 }
+  ,{ b: "CUBA", n: "CUBA White - Blueberry", mg: 10.4 }
+  ,{ b: "CUBA", n: "CUBA White - Cold Dry", mg: 10.4 }
+  ,{ b: "CUBA", n: "CUBA White - Double Fresh", mg: 10.4 }
+  ,{ b: "CUBA", n: "CUBA White - Grape", mg: 10.4 }
+  ,{ b: "CUBA", n: "CUBA White - Pineapple", mg: 10.4 }
+  ,{ b: "DENSSI", n: "DENSSI - Blueberry Freeze", mg: 11.2 }
+  ,{ b: "DENSSI", n: "DENSSI - Mango Freeze", mg: 11.2 }
+  ,{ b: "DOPE", n: "DOPE #50 - Blueberry", mg: 35 }
+  ,{ b: "DOPE", n: "DOPE #50 - Cherry Ice", mg: 35 }
+  ,{ b: "DOPE", n: "DOPE #50 - Freeze", mg: 35 }
+  ,{ b: "DOPE", n: "DOPE #50 - Ice Mango", mg: 35 }
+  ,{ b: "DOPE", n: "DOPE #50 - Icy Mint", mg: 35 }
+  ,{ b: "DOPE", n: "DOPE Crazy Strong - Freeze", mg: 20 }
+  ,{ b: "DOPE", n: "DOPE Crazy Strong - Ice Mango", mg: 20 }
+  ,{ b: "DOPE", n: "DOPE Crazy Strong - Lime Smash", mg: 20 }
+  ,{ b: "DOPE", n: "DOPE Strong Edition - Freeze", mg: 11.2 }
+  ,{ b: "DOPE", n: "DOPE Strong Edition - Ice Cool", mg: 11.2 }
+  ,{ b: "DOPE", n: "DOPE Strong Edition - Ice Mango", mg: 11.2 }
+  ,{ b: "DOPE", n: "DOPE Strong Edition - Lime Smash", mg: 11.2 }
+  ,{ b: "DOSH", n: "DOSH - Citrus", mg: 9 }
+  ,{ b: "DOSH", n: "DOSH - Strawberry Lush", mg: 9 }
+  ,{ b: "DOSH", n: "DOSH Light - Cola", mg: 3 }
+  ,{ b: "DOSH", n: "DOSH Light - Lemon Crush", mg: 3 }
+  ,{ b: "DOSH", n: "DOSH Light - Spearmint Fresh", mg: 3 }
+  ,{ b: "DOSH", n: "DOSH Light - Watermelon", mg: 6 }
+  ,{ b: "DOSH", n: "DOSH Strong - Cola", mg: 16 }
+  ,{ b: "DOSH", n: "DOSH Strong - Fresh Mint", mg: 16 }
+  ,{ b: "DOSH", n: "DOSH Strong - Watermelon", mg: 16 }
+  ,{ b: "FEDRS", n: "FEDRS Energy - Energy", mg: 32.5 }
+  ,{ b: "FEDRS", n: "FEDRS Extra Strong - Blueberry", mg: 25 }
+  ,{ b: "FEDRS", n: "FEDRS Extra Strong - Cola", mg: 25 }
+  ,{ b: "FEDRS", n: "FEDRS Extra Strong - Freeze Mint", mg: 25 }
+  ,{ b: "FEDRS", n: "FEDRS Extra Strong - Mango", mg: 25 }
+  ,{ b: "FEDRS", n: "FEDRS Extra Strong - Mint", mg: 25 }
+  ,{ b: "FEDRS", n: "FEDRS Extreme - Bubble Gum", mg: 32.5 }
+  ,{ b: "FEDRS", n: "FEDRS Extreme - Cola Vanilla", mg: 32.5 }
+  ,{ b: "FEDRS", n: "FEDRS Extreme - Double Mint", mg: 32.5 }
+  ,{ b: "FEDRS", n: "FEDRS Extreme - Evilberry", mg: 32.5 }
+  ,{ b: "FEDRS", n: "FEDRS Extreme - Lime", mg: 32.5 }
+  ,{ b: "FEDRS", n: "FEDRS Extreme - Mango", mg: 32.5 }
+  ,{ b: "FEDRS", n: "FEDRS Extreme - Mint", mg: 32.5 }
+  ,{ b: "FEDRS", n: "FEDRS Extreme - Raspberry", mg: 32.5 }
+  ,{ b: "FEDRS", n: "FEDRS Light - Frosty Grape", mg: 10 }
+  ,{ b: "FEDRS", n: "FEDRS Medium - Blueberry", mg: 15 }
+  ,{ b: "FEDRS", n: "FEDRS Medium - Bubble Gum", mg: 15 }
+  ,{ b: "FEDRS", n: "FEDRS Medium - Cola", mg: 15 }
+  ,{ b: "FEDRS", n: "FEDRS Medium - Freeze Mint", mg: 15 }
+  ,{ b: "FEDRS", n: "FEDRS Medium - Frosty Grape", mg: 15 }
+  ,{ b: "FEDRS", n: "FEDRS Medium - Lime", mg: 15 }
+  ,{ b: "FEDRS", n: "FEDRS Medium - Mango", mg: 15 }
+  ,{ b: "FEDRS", n: "FEDRS Medium - Mint", mg: 15 }
+  ,{ b: "FEDRS", n: "FEDRS Medium - Ultra Mint", mg: 15 }
+  ,{ b: "FEDRS", n: "FEDRS Strong - Bubble Gum", mg: 20 }
+  ,{ b: "FEDRS", n: "FEDRS Strong - Cola", mg: 20 }
+  ,{ b: "FEDRS", n: "FEDRS Strong - Lime", mg: 20 }
+  ,{ b: "FEDRS", n: "FEDRS Strong - Mint", mg: 20 }
+  ,{ b: "GARANT", n: "GARANT - Eucalyptus", mg: 10 }
 ];
 
 export const USER_BENCHMARKS = [
