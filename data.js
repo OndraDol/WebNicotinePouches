@@ -1266,6 +1266,106 @@ export const POUCH_DB = [
   ,{ b: "VELO", n: "VELO Cherry Ice", mg: 8 }
   ,{ b: "KURWA", n: "KURWA COLLECTION Strawberry Gum", mg: 12 }
   ,{ b: "KURWA", n: "KURWA COLLECTION Pina Colada Mango", mg: 12 }
+  ,{ b: "AROMA", n: "Aroma Attention - Spearmint", mg: 35.0 }
+  ,{ b: "AROMA", n: "Aroma Essence - Bubblegum", mg: 13.0 }
+  ,{ b: "AROMA", n: "Aroma Attention - Bubblegum", mg: 35.0 }
+  ,{ b: "AROMA", n: "Aroma Essence - Lime Fresh", mg: 13.0 }
+  ,{ b: "AROMA", n: "Aroma Attention - Ice Blueberry", mg: 35.0 }
+  ,{ b: "AROMA", n: "Aroma Essence - Hot Peach", mg: 13.0 }
+  ,{ b: "AROMA", n: "Aroma Attention - Peppermint", mg: 35.0 }
+  ,{ b: "AROMA", n: "Aroma Essence - Peppermint", mg: 13.0 }
+  ,{ b: "AROMA", n: "Aroma Attention - Lime Fresh", mg: 35.0 }
+  ,{ b: "AROMA", n: "Aroma Essence - Spearmint", mg: 13.0 }
+  ,{ b: "AROMA", n: "Aroma Attention - Hot Peach", mg: 35.0 }
+  ,{ b: "AROMA", n: "Aroma Essence - Ice Blueberry", mg: 13.0 }
+  ,{ b: "APRÈS", n: "APRÈS - Menthol", mg: 11.0 }
+  ,{ b: "APRÈS", n: "APRÈS - Lemon Curd", mg: 11.0 }
+  ,{ b: "APRÈS", n: "APRÈS - Cola", mg: 11.0 }
+  ,{ b: "APRÈS", n: "APRÈS - Ice Tea Peach", mg: 11.0 }
+  ,{ b: "APRÈS", n: "APRÈS - Bananas", mg: 11.0 }
+  ,{ b: "APRÈS", n: "APRÈS - Blueberry", mg: 11.0 }
+  ,{ b: "APRÈS", n: "APRÈS - Raspberry Licorice", mg: 11.0 }
+  ,{ b: "APRÈS", n: "APRÈS - Cactus Lime", mg: 11.0 }
+  ,{ b: "APRÈS", n: "APRÈS - Mochaccino", mg: 11.0 }
+  ,{ b: "BARON", n: "BARON - Eucalyptus", mg: 50.0 }
+  ,{ b: "BARON", n: "BARON - Menthol", mg: 50.0 }
+  ,{ b: "BARON", n: "BARON - Classic", mg: 50.0 }
+  ,{ b: "BARON", n: "BARON - Wintergreen", mg: 50.0 }
+  ,{ b: "CAMO", n: "CAMO - Mango Melon Berries", mg: 25.0 }
+  ,{ b: "CAMO", n: "CAMO - Orange Bubble Gum", mg: 12.0 }
+  ,{ b: "CAMO", n: "CAMO - Spicy Citrus", mg: 12.0 }
+  ,{ b: "CAMO", n: "CAMO - Wild Mint", mg: 12.0 }
+  ,{ b: "CHAINPOP", n: "Chainpop - Apple Cinnamon", mg: 9.0 }
+  ,{ b: "CHAINPOP", n: "Chainpop - Cherry & Chili", mg: 9.0 }
+  ,{ b: "CHAINPOP", n: "Chainpop - Mint & Mellow", mg: 5.0 }
+  ,{ b: "CHAINPOP", n: "Chainpop - Peppermint & Ice", mg: 11.4 }
+  ,{ b: "CHAINPOP", n: "Chainpop - Raspberry Lemon", mg: 5.0 }
+  ,{ b: "CHAINPOP", n: "Chainpop - Violet Cactus", mg: 5.0 }
+  ,{ b: "EDEL", n: "Edel - Berry Ice", mg: 12.0 }
+  ,{ b: "EDEL", n: "Edel - Cold", mg: 12.0 }
+  ,{ b: "EDEL", n: "Edel - Foreverice", mg: 15.0 }
+  ,{ b: "EDEL", n: "Edel - Melon", mg: 9.0 }
+  ,{ b: "EDEL", n: "Edel - Onyx", mg: 15.0 }
+  ,{ b: "GLICK", n: "GLICK Extreme - Pink Fusion", mg: 10.0 }
+  ,{ b: "GLICK", n: "GLICK Extreme - Lemonberry", mg: 10.0 }
+  ,{ b: "GLICK", n: "GLICK Hazard - Lemonberry", mg: 25.0 }
+  ,{ b: "GLICK", n: "GLICK Hazard - Citrine Grape", mg: 25.0 }
+  ,{ b: "GLICK", n: "GLICK Extreme - Citrine Grape", mg: 10.0 }
+  ,{ b: "GLICK", n: "GLICK Hazard - Pink Fusion", mg: 25.0 }
+  ,{ b: "GLICK", n: "GLICK Extreme - Ice Mint", mg: 10.0 }
+  ,{ b: "GLICK", n: "GLICK Extreme - Triple Mint", mg: 10.0 }
+  ,{ b: "GLICK", n: "GLICK Hazard - Ice Mint", mg: 25.0 }
+  ,{ b: "KEEP", n: "Keep - Black Currant Raspberry", mg: 10.4 }
+  ,{ b: "KEEP", n: "Keep - Citrus Berries", mg: 10.4 }
+  ,{ b: "KEEP", n: "Keep - Citrus Blackberry", mg: 10.4 }
+  ,{ b: "KEEP", n: "Keep - Fruit Mix", mg: 10.4 }
+  ,{ b: "KEEP", n: "Keep - Cherry Cola", mg: 10.4 }
+  ,{ b: "KEEP", n: "Keep - Mango Coconut", mg: 10.4 }
+  ,{ b: "KEEP", n: "Keep - Mint", mg: 10.4 }
+  ,{ b: "KEEP", n: "Keep - Spearmint", mg: 10.4 }
+  ,{ b: "KEEP", n: "Keep - Strawberry Gum", mg: 10.4 }
+  ,{ b: "KELLY WHITE", n: "KELLY WHITE - Cool Mint", mg: 8.0 }
+  ,{ b: "KELLY WHITE", n: "KELLY WHITE - Cucumber Mint", mg: 5.0 }
+  ,{ b: "KELLY WHITE", n: "KELLY WHITE - Hot Cherry", mg: 6.5 }
+  ,{ b: "KELLY WHITE", n: "KELLY WHITE - Raspberry Lemon", mg: 6.0 }
+  ,{ b: "KELLY WHITE", n: "KELLY WHITE - Sparkling Strawberry", mg: 5.0 }
+  ,{ b: "KELLY WHITE", n: "KELLY WHITE - Strawberry Lime", mg: 5.0 }
+  ,{ b: "KELLY WHITE", n: "KELLY WHITE - Sweet Melon Mint", mg: 5.0 }
+  ,{ b: "KELLY WHITE", n: "KELLY WHITE - Sweet Peppermint", mg: 5.0 }
+  ,{ b: "MAGGIE", n: "MAGGIE - Cherry Tonic Wine", mg: 45.0 }
+  ,{ b: "MAGGIE", n: "MAGGIE - Fruit Punch", mg: 45.0 }
+  ,{ b: "MAGGIE", n: "MAGGIE - Grape Soda", mg: 13.6 }
+  ,{ b: "MAGGIE", n: "MAGGIE - Mr Blue", mg: 45.0 }
+  ,{ b: "MAGGIE", n: "MAGGIE - Summerfruits", mg: 13.6 }
+  ,{ b: "MAGGIE", n: "MAGGIE - Sweet Plantain", mg: 13.6 }
+  ,{ b: "MAVERICK", n: "MAVERICK - Berry Valley", mg: 12.5 }
+  ,{ b: "MAVERICK", n: "MAVERICK - Sicilian Sunset", mg: 12.5 }
+  ,{ b: "PAZ", n: "Paz - X-Freeze", mg: 14.4 }
+  ,{ b: "VOSS", n: "Voss - Mojito Lime", mg: 30.0 }
+  ,{ b: "PAZ", n: "Paz - Cool Mint +", mg: 16.8 }
+  ,{ b: "POKE", n: "Poke - Blue Raspberry", mg: 12.0 }
+  ,{ b: "POKE", n: "Poke - Freeze Mint", mg: 12.0 }
+  ,{ b: "POKE", n: "Poke - Mango", mg: 12.0 }
+  ,{ b: "POP", n: "POP - Blueberry Mint", mg: 12.0 }
+  ,{ b: "REBEL", n: "REBEL - Cherry", mg: 12.0 }
+  ,{ b: "REBEL", n: "REBEL - Mango", mg: 12.0 }
+  ,{ b: "SNOWMAN", n: "SNOWMAN - Arctic Kick", mg: 9.0 }
+  ,{ b: "SNOWMAN", n: "SNOWMAN - Fresh Mint", mg: 9.0 }
+  ,{ b: "SNOWMAN", n: "SNOWMAN - Raspberry Blast", mg: 9.0 }
+  ,{ b: "SNOWMAN", n: "SNOWMAN - Tropical Punch", mg: 9.0 }
+  ,{ b: "SNOWMAN", n: "SNOWMAN - Watermelon Breeze", mg: 9.0 }
+  ,{ b: "SUPREME", n: "SUPREME - Banana Milkshake", mg: 60.0 }
+  ,{ b: "SUPREME", n: "SUPREME - Fruit Juice", mg: 60.0 }
+  ,{ b: "SUPREME", n: "SUPREME - Grape", mg: 60.0 }
+  ,{ b: "SUPREME", n: "SUPREME - Mint Lime", mg: 60.0 }
+  ,{ b: "TOGO", n: "TOGO - Cold Mint -90°", mg: 10.0 }
+  ,{ b: "TOGO", n: "TOGO - Mighty Sour", mg: 8.0 }
+  ,{ b: "TOGO", n: "TOGO - Pomie Orange", mg: 8.0 }
+  ,{ b: "TOGO", n: "TOGO - Straw Melonade", mg: 8.0 }
+  ,{ b: "VOSS", n: "Voss - Cosmic Mint", mg: 30.0 }
+  ,{ b: "VOSS", n: "Voss - Grape Escape", mg: 30.0 }
+  ,{ b: "VOSS", n: "Voss - Cherry Pop", mg: 30.0 }
+  ,{ b: "VOSS", n: "Voss - Mango Punch", mg: 30.0 }
 ];
 
 export const USER_BENCHMARKS = [

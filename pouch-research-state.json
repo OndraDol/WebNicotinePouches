@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "next_batch": 3,
+  "next_batch": 4,
   "market_queue": [
     "US+CA",
     "Europe excluding CZ",
@@ -127,7 +127,31 @@
       "catalog": "Nikotin.cz / nicotine pouch sale catalog",
       "source_url": "https://nikotin.cz/collections/nikotinove-sacky-vyprodej",
       "checked_at": "2026-08-19"
+    },
+    {
+      "market": "CZ",
+      "catalog": "Nicopods.cz / nicotine pouch flavor catalog pages 1-6",
+      "source_url": "https://www.nicopods.cz/en/flavor/",
+      "checked_at": "2026-08-19"
+    },
+    {
+      "market": "CZ",
+      "catalog": "DarePouch / AROMA",
+      "source_url": "https://darepouch.com/collections/aroma",
+      "checked_at": "2026-08-19"
+    },
+    {
+      "market": "CZ",
+      "catalog": "DarePouch / APRÈS",
+      "source_url": "https://darepouch.com/collections/apres",
+      "checked_at": "2026-08-19"
+    },
+    {
+      "market": "CZ",
+      "catalog": "DarePouch / full nicotine pouch catalog pages 1-26",
+      "source_url": "https://darepouch.com/collections/all",
+      "checked_at": "2026-08-19"
     }
   ],
-  "last_completed_total": 1187
+  "last_completed_total": 1287
 }
