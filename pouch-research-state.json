@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "next_batch": 7,
+  "next_batch": 8,
   "market_queue": [
     "US+CA",
     "Europe excluding CZ",
@@ -157,7 +157,13 @@
       "catalog": "DarePouch / Shopify product catalog API pages 1-3",
       "source_url": "https://darepouch.com/collections/all/products.json?limit=250&page=1",
       "checked_at": "2026-08-19"
+    },
+    {
+      "market": "CZ",
+      "catalog": "Whitepouches / Czech nicotine pouch catalog (verified product subset, batch 7)",
+      "source_url": "https://www.whitepouches.com/eu/snus/cesku",
+      "checked_at": "2026-08-19"
     }
   ],
-  "last_completed_total": 1587
+  "last_completed_total": 1687
 }

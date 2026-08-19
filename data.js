@@ -1666,6 +1666,106 @@ export const POUCH_DB = [
   ,{ b: "PABLO", n: "PABLO Exclusive - Kiwi", mg: 30 }
   ,{ b: "POKE", n: "Poke - Watermelon", mg: 12 }
   ,{ b: "PUFF & POUCH", n: "PUFF & POUCH - Grape", mg: 12 }
+  ,{ b: "ACE", n: "Ace Spearmint Strong", mg: 6 }
+  ,{ b: "ACE", n: "Ace X Cool Mint Cosmic Strong", mg: 11.6 }
+  ,{ b: "Après", n: "Après Limoncello Di Capri - Limited Edition", mg: 5.5 }
+  ,{ b: "Après", n: "No.10 Après Tangerine Spritz - 4 mg Light", mg: 4 }
+  ,{ b: "Après", n: "No.10 Après Tangerine Spritz - Hypèr Strong", mg: 11 }
+  ,{ b: "Après", n: "No.11 Après Bananas - 4 mg Light", mg: 4 }
+  ,{ b: "Après", n: "No.11 Après Bananas Hypèr Strong", mg: 11 }
+  ,{ b: "Après", n: "No.12 Après Blueberry - 4 mg Light", mg: 4 }
+  ,{ b: "Après", n: "No.12 Après Blueberry Hypèr Strong", mg: 11 }
+  ,{ b: "Après", n: "No.13 Après Mochaccino - Hypèr Strong", mg: 11 }
+  ,{ b: "Après", n: "No.13 Après Mochaccino - Mini", mg: 3.2 }
+  ,{ b: "Après", n: "No.13 Après Mochaccino - Normal", mg: 4.4 }
+  ,{ b: "Après", n: "No.15 Après Hugo Spritz Hypèr Strong", mg: 11 }
+  ,{ b: "Après", n: "No.15 Après Hugo Spritz Mini", mg: 3.2 }
+  ,{ b: "Après", n: "No.15 Après Hugo Spritz Normal", mg: 4.4 }
+  ,{ b: "Après", n: "No.16 Après Pink Spritz Hypèr Strong", mg: 11 }
+  ,{ b: "Après", n: "No.16 Après Pink Spritz Mini", mg: 3.2 }
+  ,{ b: "Après", n: "No.16 Après Pink Spritz Normal", mg: 4.4 }
+  ,{ b: "Après", n: "No.2 Après Mint - 4 mg Light", mg: 4 }
+  ,{ b: "Après", n: "No.3 Après Lemon Curd - 4 mg Light", mg: 4 }
+  ,{ b: "Après", n: "No.3 Après Lemon Curd - Hypèr Strong", mg: 11 }
+  ,{ b: "Après", n: "No.4 Après Cola - Hypèr Strong", mg: 11 }
+  ,{ b: "Après", n: "No.5 Après Ice Tea Peach - 4 mg Light", mg: 4 }
+  ,{ b: "Après", n: "No.5 Après Ice Tea Peach - Hypèr Strong", mg: 11 }
+  ,{ b: "Après", n: "No.9 Après Cactus Lime - Hypèr Strong", mg: 11 }
+  ,{ b: "Buff 1Up", n: "BUFF 1UP Lava Light", mg: 4 }
+  ,{ b: "DIZZ", n: "DIZZ Blueberry Light", mg: 4 }
+  ,{ b: "DIZZ", n: "DIZZ Blueberry Strong", mg: 17.5 }
+  ,{ b: "DIZZ", n: "DIZZ Coco Cherry Light", mg: 4 }
+  ,{ b: "DIZZ", n: "DIZZ Coco Cherry Strong", mg: 17.5 }
+  ,{ b: "DIZZ", n: "DIZZ Cola Flame Light", mg: 4 }
+  ,{ b: "DIZZ", n: "DIZZ Cola Flame Strong", mg: 17.5 }
+  ,{ b: "DIZZ", n: "DIZZ Cold Mint Light", mg: 4 }
+  ,{ b: "DIZZ", n: "DIZZ Cold Mint Strong", mg: 17.5 }
+  ,{ b: "DIZZ", n: "DIZZ Double Mint Light", mg: 4 }
+  ,{ b: "DIZZ", n: "DIZZ Double Mint Strong", mg: 17.5 }
+  ,{ b: "DIZZ", n: "DIZZ Choco Mint Light", mg: 4 }
+  ,{ b: "DIZZ", n: "DIZZ Choco Mint Strong", mg: 17.5 }
+  ,{ b: "DIZZ", n: "DIZZ Kiwi Berry Light", mg: 4 }
+  ,{ b: "DIZZ", n: "DIZZ Kiwi Berry Strong", mg: 17.5 }
+  ,{ b: "DIZZ", n: "DIZZ Lemonade Light", mg: 4 }
+  ,{ b: "DIZZ", n: "DIZZ Lemonade Strong", mg: 17.5 }
+  ,{ b: "GARANT", n: "Garant Arctic Frost Prime Collection", mg: 11 }
+  ,{ b: "GARANT", n: "Garant Classic Double Ice", mg: 9 }
+  ,{ b: "GARANT", n: "Garant Classic Eucalyptus", mg: 8.8 }
+  ,{ b: "GARANT", n: "Garant Classic Ice Blueberry", mg: 10 }
+  ,{ b: "GARANT", n: "Garant Classic Ice Cool", mg: 15 }
+  ,{ b: "GARANT", n: "Garant Classic Ice Peach", mg: 10 }
+  ,{ b: "GARANT", n: "Garant Classic Mango Lime", mg: 13 }
+  ,{ b: "GARANT", n: "Garant Classic Mint", mg: 7.9 }
+  ,{ b: "GARANT", n: "Garant Classic Wild Berry", mg: 12.5 }
+  ,{ b: "GARANT", n: "Garant Ext. ed. Extreme", mg: 22 }
+  ,{ b: "GARANT", n: "Garant Ext. ed. Fresh Mint", mg: 25 }
+  ,{ b: "GARANT", n: "Garant Ext. ed. Ice Blueberry", mg: 22 }
+  ,{ b: "GARANT", n: "Garant Ext. ed. Ice Cool", mg: 15.4 }
+  ,{ b: "GARANT", n: "Garant Ext. ed. Ice Peach", mg: 22 }
+  ,{ b: "GARANT", n: "Garant Ext. ed. Mango Lime", mg: 25 }
+  ,{ b: "GARANT", n: "Garant Extreme Light", mg: 4 }
+  ,{ b: "GARANT", n: "Garant Extreme Mini", mg: 19.5 }
+  ,{ b: "GARANT", n: "Garant Frost Berry Prime Collection", mg: 11 }
+  ,{ b: "GARANT", n: "Garant Ice Cool Peppermint Prime Collection", mg: 11 }
+  ,{ b: "GARANT", n: "Garant Ice Cool Prime Collection", mg: 11 }
+  ,{ b: "GLICK", n: "Glick Citrine Grape Extreme Series", mg: 10 }
+  ,{ b: "GLICK", n: "Glick Ice Mint Light Series", mg: 4 }
+  ,{ b: "GLICK", n: "Glick Lemonberry Extreme Series", mg: 10 }
+  ,{ b: "GLICK", n: "Glick Lemonberry Light Series", mg: 4 }
+  ,{ b: "GLICK", n: "Glick Pink Fusion Extreme Series", mg: 10 }
+  ,{ b: "GLICK", n: "Glick Pink Fusion Light Series", mg: 4 }
+  ,{ b: "GLICK", n: "Glick Sweet Mint Light Series", mg: 4 }
+  ,{ b: "GLICK", n: "Glick Triple Mint Light Series", mg: 4 }
+  ,{ b: "Helwit", n: "Helwit MOCHA Slim Strong", mg: 4.5 }
+  ,{ b: "Helwit", n: "Helwit RASPBERRY/LIQUORICE Light", mg: 3.5 }
+  ,{ b: "Helwit", n: "Helwit Strawberry Strong", mg: 4.5 }
+  ,{ b: "ICEBERG", n: "Iceberg Dragonfire", mg: 35 }
+  ,{ b: "KILLA", n: "KILLA 13 Energy Extra Strong", mg: 12.8 }
+  ,{ b: "KILLA", n: "KILLA Melon Extra Strong", mg: 12.8 }
+  ,{ b: "KILLA", n: "KILLA Niclab Flash Blueberry Light", mg: 4 }
+  ,{ b: "KILLA", n: "KILLA Strawberry Lychee Extra Strong", mg: 12.8 }
+  ,{ b: "KLAR", n: "KLAR Afterglow Edition Oolong Melon Extra Strong", mg: 9 }
+  ,{ b: "KLAR", n: "KLAR Afterglow Edition Oolong Melon Regular", mg: 3 }
+  ,{ b: "KLAR", n: "KLAR Blueberry & Mint Extra Strong", mg: 9 }
+  ,{ b: "KLAR", n: "KLAR Strawberry & Basil Extra Strong", mg: 9 }
+  ,{ b: "KLAR", n: "KLAR Strawberry & Basil Regular", mg: 3 }
+  ,{ b: "KLINT", n: "KLINT APPLE MINT #5 SLIM X-Strong", mg: 11.2 }
+  ,{ b: "KLINT", n: "KLINT ARCTIC MINT #5 SLIM X-Strong", mg: 11.2 }
+  ,{ b: "KLINT", n: "KLINT Blueberry Mini", mg: 6.4 }
+  ,{ b: "KLINT", n: "KLINT BREEZE MINT#2", mg: 5.6 }
+  ,{ b: "KLINT", n: "KLINT COLA LIME #4 SLIM Strong", mg: 11.2 }
+  ,{ b: "KLINT", n: "KLINT Cola Lime Mini Light", mg: 3.2 }
+  ,{ b: "KLINT", n: "KLINT Freeze Mint #4 Slim Strong", mg: 11.2 }
+  ,{ b: "KLINT", n: "KLINT MINT #1 SLIM Light", mg: 4 }
+  ,{ b: "KLINT", n: "KLINT POLAR MINT#3", mg: 8.4 }
+  ,{ b: "KLINT", n: "KLINT Spearmint Mini", mg: 4.8 }
+  ,{ b: "KLINT", n: "KLINT Strawberry Mini", mg: 3.2 }
+  ,{ b: "KLINT", n: "KLINT Tropical Breeze", mg: 5.6 }
+  ,{ b: "KLINT", n: "KLINT Watermelon Mini", mg: 4.8 }
+  ,{ b: "KUMA", n: "KUMA Ice Cool - Ultra Strong", mg: 11 }
+  ,{ b: "LOOP", n: "LOOP Fresh Peppermint Hyper Strong", mg: 14.8 }
+  ,{ b: "LOOP", n: "LOOP Fresh Spearmint Hyper Strong", mg: 14.8 }
+  ,{ b: "LOOP", n: "LOOP Pineapple Ice Strong", mg: 9.4 }
 ];
 
 export const USER_BENCHMARKS = [
