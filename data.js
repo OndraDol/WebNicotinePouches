@@ -1466,6 +1466,106 @@ export const POUCH_DB = [
   ,{ b: "FEDRS", n: "FEDRS Strong - Lime", mg: 20 }
   ,{ b: "FEDRS", n: "FEDRS Strong - Mint", mg: 20 }
   ,{ b: "GARANT", n: "GARANT - Eucalyptus", mg: 10 }
+  ,{ b: "GARANT", n: "GARANT - Ice Blueberry", mg: 10 }
+  ,{ b: "GARANT", n: "GARANT - Ice Peach", mg: 10 }
+  ,{ b: "GARANT", n: "GARANT Extreme - Cherry", mg: 25 }
+  ,{ b: "GARANT", n: "GARANT Extreme - Cherry Mini", mg: 25 }
+  ,{ b: "GARANT", n: "GARANT Extreme - Citrus", mg: 25 }
+  ,{ b: "GARANT", n: "GARANT Extreme - Coconut", mg: 25 }
+  ,{ b: "GARANT", n: "GARANT Extreme - Energy Drink", mg: 25 }
+  ,{ b: "GARANT", n: "GARANT Extreme - Extreme Edition", mg: 25 }
+  ,{ b: "GARANT", n: "GARANT Extreme - Freeze", mg: 25 }
+  ,{ b: "GARANT", n: "GARANT Extreme - Fresh Mint", mg: 17.5 }
+  ,{ b: "GARANT", n: "GARANT Extreme - Grape", mg: 25 }
+  ,{ b: "GARANT", n: "GARANT Extreme - Ice Apricot", mg: 25 }
+  ,{ b: "GARANT", n: "GARANT Extreme - Ice Blueberry", mg: 25 }
+  ,{ b: "GARANT", n: "GARANT Extreme - Ice Cool", mg: 25 }
+  ,{ b: "GARANT", n: "GARANT Extreme - Ice Guava", mg: 25 }
+  ,{ b: "GARANT", n: "GARANT Extreme - Ice Melon", mg: 25 }
+  ,{ b: "GARANT", n: "GARANT Extreme - Ice Peach", mg: 25 }
+  ,{ b: "GARANT", n: "GARANT Extreme - Ice Peach Mini", mg: 25 }
+  ,{ b: "GARANT", n: "GARANT Extreme - Liquorice", mg: 25 }
+  ,{ b: "GARANT", n: "GARANT Extreme - Mango Lime", mg: 25 }
+  ,{ b: "GARANT", n: "GARANT Extreme - Orange", mg: 25 }
+  ,{ b: "GARANT", n: "GARANT Extreme - Original", mg: 19.5 }
+  ,{ b: "GARANT", n: "GARANT Extreme - Raspberry", mg: 25 }
+  ,{ b: "GARANT", n: "GARANT Strong - Ice Cool", mg: 10 }
+  ,{ b: "GARANT", n: "GARANT Strong - Ice Cool Mini", mg: 13.7 }
+  ,{ b: "GARANT", n: "GARANT Strong - Mango Lime", mg: 17.5 }
+  ,{ b: "GARANT", n: "GARANT Strong - Mint", mg: 10 }
+  ,{ b: "GARANT", n: "GARANT Strong - Wild Berry", mg: 10 }
+  ,{ b: "GLICK", n: "GLICK Hazard - Black Currant", mg: 25 }
+  ,{ b: "GOAT", n: "GOAT - Apple Mint", mg: 11.5 }
+  ,{ b: "GOAT", n: "GOAT - Blueberry", mg: 11.5 }
+  ,{ b: "GOAT", n: "GOAT - Double Apple", mg: 11.5 }
+  ,{ b: "GOAT", n: "GOAT - Salty Caramel", mg: 11.5 }
+  ,{ b: "GOAT", n: "GOAT - Wild Cherry", mg: 11.5 }
+  ,{ b: "GOAT", n: "GOAT Extra Strong - Wild Cherry", mg: 19.6 }
+  ,{ b: "Grant", n: "GRANT - Fresh Mint Extreme", mg: 25 }
+  ,{ b: "Greatest", n: "GREATEST - Arctic Edition", mg: 9.96 }
+  ,{ b: "Greatest", n: "GREATEST - Rage Lemonade", mg: 9.96 }
+  ,{ b: "Greatest", n: "GREATEST - Wasted Mango", mg: 12 }
+  ,{ b: "Greatest", n: "GREATEST Extra Strong - Cold Dry", mg: 16.5 }
+  ,{ b: "Greatest", n: "GREATEST Light - Cold Dry 4mg", mg: 4 }
+  ,{ b: "Greatest", n: "GREATEST Light - Cold Dry 8mg", mg: 8 }
+  ,{ b: "Greatest", n: "GREATEST Strong - Cold Dry", mg: 12 }
+  ,{ b: "Greatest", n: "GREATEST Strong - Cold Dry XL", mg: 11.2 }
+  ,{ b: "GRITT", n: "GRITT - Crisp Ice", mg: 8 }
+  ,{ b: "Helwit", n: "HELWIT XS - Cola", mg: 7.5 }
+  ,{ b: "ICE", n: "ICE - Cola Slush 16.5mg", mg: 16.5 }
+  ,{ b: "ICE", n: "ICE - Freeze", mg: 11.55 }
+  ,{ b: "ICE", n: "ICE - Freeze 22mg", mg: 22 }
+  ,{ b: "ICE", n: "ICE - Freeze Reaper", mg: 11.55 }
+  ,{ b: "ICE", n: "ICE - Freeze X", mg: 38 }
+  ,{ b: "ICE", n: "ICE - Frost", mg: 15.4 }
+  ,{ b: "ICE", n: "ICE - Frost 2.0", mg: 12 }
+  ,{ b: "ICE", n: "ICE - Grape X", mg: 26.6 }
+  ,{ b: "ICE", n: "ICE - Jalapeno Lime", mg: 11.55 }
+  ,{ b: "ICE", n: "ICE - Reaper", mg: 11.55 }
+  ,{ b: "ICE", n: "ICE - Sweet Mint", mg: 12 }
+  ,{ b: "ICE", n: "ICE Light - Freeze", mg: 6 }
+  ,{ b: "ICEBERG", n: "ICEBERG Extra Strong - Arasaka", mg: 40 }
+  ,{ b: "ICEBERG", n: "ICEBERG Extra Strong - Black", mg: 40 }
+  ,{ b: "ICEBERG", n: "ICEBERG Extra Strong - Black Mint", mg: 40 }
+  ,{ b: "ICEBERG", n: "ICEBERG Extra Strong - Blackcurrant", mg: 40 }
+  ,{ b: "ICEBERG", n: "ICEBERG Extra Strong - Bubblegum", mg: 40 }
+  ,{ b: "ICEBERG", n: "ICEBERG Extra Strong - Cherry", mg: 40 }
+  ,{ b: "ICEBERG", n: "ICEBERG Extra Strong - Cherry Apricot Gum", mg: 40 }
+  ,{ b: "ICEBERG", n: "ICEBERG Extra Strong - Cola", mg: 40 }
+  ,{ b: "ICEBERG", n: "ICEBERG Extra Strong - Crazy Mix", mg: 40 }
+  ,{ b: "ICEBERG", n: "ICEBERG Extra Strong - Dragon Fruit", mg: 40 }
+  ,{ b: "ICEBERG", n: "ICEBERG Extra Strong - Emerald", mg: 40 }
+  ,{ b: "ICEBERG", n: "ICEBERG Extra Strong - Energy", mg: 40 }
+  ,{ b: "ICEBERG", n: "ICEBERG Extra Strong - Energy Mango", mg: 40 }
+  ,{ b: "ICE", n: "ICEBERG Extra Strong - Frosty Mint", mg: 40 }
+  ,{ b: "ICEBERG", n: "ICEBERG Extra Strong - Grape", mg: 40 }
+  ,{ b: "ICEBERG", n: "ICEBERG Extra Strong - Grape Gum", mg: 40 }
+  ,{ b: "ICEBERG", n: "ICEBERG Extra Strong - Guava Lime", mg: 40 }
+  ,{ b: "ICEBERG", n: "ICEBERG Extra Strong - Kiwi Strawberry", mg: 40 }
+  ,{ b: "ICEBERG", n: "ICEBERG Extra Strong - Menthol Ultra", mg: 40 }
+  ,{ b: "ICEBERG", n: "ICEBERG Extra Strong - Mint Explosion", mg: 40 }
+  ,{ b: "ICEBERG", n: "ICEBERG Extra Strong - Raspberry Gum", mg: 40 }
+  ,{ b: "ICEBERG", n: "ICEBERG Extra Strong - Sour Berries", mg: 40 }
+  ,{ b: "ICEBERG", n: "ICEBERG Extra Strong - Strawberry Banana Gum", mg: 40 }
+  ,{ b: "ICEBERG", n: "ICEBERG Extra Strong - Strawberry Mango Gum", mg: 40 }
+  ,{ b: "ICEBERG", n: "ICEBERG Extra Strong - Strawberry Pomegranate", mg: 40 }
+  ,{ b: "ICEBERG", n: "ICEBERG Extra Strong - Sweet Mint", mg: 40 }
+  ,{ b: "ICEBERG", n: "ICEBERG Extra Strong - Watermelon Lime", mg: 40 }
+  ,{ b: "ICEBERG", n: "ICEBERG Extra Strong - Watermelon Mint Gum", mg: 40 }
+  ,{ b: "ICEBERG", n: "ICEBERG Extra Strong - Wild Berries", mg: 40 }
+  ,{ b: "ICEBERG", n: "ICEBERG Strong - Arasaka", mg: 12 }
+  ,{ b: "ICEBERG", n: "ICEBERG Strong - Berries", mg: 12 }
+  ,{ b: "ICEBERG", n: "ICEBERG Strong - Black", mg: 12 }
+  ,{ b: "ICEBERG", n: "ICEBERG Strong - Black Mint", mg: 12 }
+  ,{ b: "ICEBERG", n: "ICEBERG Strong - Blackcurrant", mg: 12 }
+  ,{ b: "ICEBERG", n: "ICEBERG Strong - Bubblegum", mg: 12 }
+  ,{ b: "ICEBERG", n: "ICEBERG Strong - Cherry", mg: 12 }
+  ,{ b: "ICEBERG", n: "ICEBERG Strong - Cola", mg: 12 }
+  ,{ b: "ICEBERG", n: "ICEBERG Strong - Energy", mg: 12 }
+  ,{ b: "ICEBERG", n: "ICEBERG Strong - Menthol", mg: 12 }
+  ,{ b: "ICEBERG", n: "ICEBERG Strong - Mint Explosion", mg: 12 }
+  ,{ b: "ICEBERG", n: "ICEBERG Strong - Watermelon", mg: 12 }
+  ,{ b: "ICEBERG", n: "ICEBERG Strong - Watermelon Mint Gum", mg: 12 }
 ];
 
 export const USER_BENCHMARKS = [

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "next_batch": 5,
+  "next_batch": 6,
   "market_queue": [
     "US+CA",
     "Europe excluding CZ",
@@ -159,5 +159,5 @@
       "checked_at": "2026-08-19"
     }
   ],
-  "last_completed_total": 1387
+  "last_completed_total": 1487
 }
