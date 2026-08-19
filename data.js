@@ -1165,7 +1165,107 @@ export const POUCH_DB = [
   { b: "ZYN", n: "ZYN Menthol 6mg", mg: 6 },
   { b: "ZYN", n: "ZYN Peppermint 3mg", mg: 3 },
   { b: "ZYN", n: "ZYN Smooth 3mg", mg: 3 },
-  { b: "ZYN", n: "ZYN Smooth 6mg", mg: 6 }
+  { b: "ZYN", n: "ZYN Smooth 6mg", mg: 6 },
+  { b: "ZYN", n: "ZYN Black Cherry 3mg", mg: 3 },
+  { b: "ZYN", n: "ZYN Black Cherry 6mg", mg: 6 },
+  { b: "ZYN", n: "ZYN Peach 3mg", mg: 3 },
+  { b: "ZYN", n: "ZYN Peach 6mg", mg: 6 },
+  { b: "ZYN", n: "ZYN Dragonberry 3mg", mg: 3 },
+  { b: "ZYN", n: "ZYN Dragonberry 6mg", mg: 6 },
+  { b: "ZYN", n: "ZYN Ultra Wintergreen Blast 9mg", mg: 9 },
+  { b: "ZYN", n: "ZYN Ultra Wintergreen Blast 11mg", mg: 11 },
+  { b: "ZYN", n: "ZYN Ultra Fresh Spearmint 9mg", mg: 9 },
+  { b: "ZYN", n: "ZYN Ultra Fresh Spearmint 11mg", mg: 11 },
+  { b: "ZYN", n: "ZYN Ultra Citrus Zest 9mg", mg: 9 },
+  { b: "ZYN", n: "ZYN Ultra Citrus Zest 11mg", mg: 11 },
+  { b: "ZYN", n: "ZYN Ultra Peppermint Frost 9mg", mg: 9 },
+  { b: "ZYN", n: "ZYN Ultra Peppermint Frost 11mg", mg: 11 },
+  { b: "ZYN", n: "ZYN Ultra Arctic Mint 9mg", mg: 9 },
+  { b: "ZYN", n: "ZYN Ultra Arctic Mint 11mg", mg: 11 },
+  { b: "ZYN", n: "ZYN Ultra Signature Smooth 9mg", mg: 9 },
+  { b: "ZYN", n: "ZYN Ultra Signature Smooth 11mg", mg: 11 },
+  { b: "ZYN", n: "ZYN Ultra Chill Mist 9mg", mg: 9 },
+  { b: "ZYN", n: "ZYN Ultra Chill Mist 11mg", mg: 11 }
+  ,{ b: "ZYN", n: "ZYN Ultra Menthol Ice 9mg", mg: 9 }
+  ,{ b: "ZYN", n: "ZYN Ultra Menthol Ice 11mg", mg: 11 }
+  ,{ b: "VELO", n: "VELO Citrus Burst 4mg", mg: 4 }
+  ,{ b: "VELO", n: "VELO Citrus Burst 7mg", mg: 7 }
+  ,{ b: "VELO", n: "VELO Dragon Fruit 4mg", mg: 4 }
+  ,{ b: "VELO", n: "VELO Dragon Fruit 7mg", mg: 7 }
+  ,{ b: "VELO", n: "VELO Peppermint 4mg", mg: 4 }
+  ,{ b: "VELO", n: "VELO Peppermint 7mg", mg: 7 }
+  ,{ b: "VELO", n: "VELO Spearmint 4mg", mg: 4 }
+  ,{ b: "VELO", n: "VELO Spearmint 7mg", mg: 7 }
+  ,{ b: "Lucy", n: "Lucy Breakers Apple Cider 8mg", mg: 8 }
+  ,{ b: "Lucy", n: "Lucy Breakers Espresso 8mg", mg: 8 }
+  ,{ b: "Lucy", n: "Lucy Breakers Apple Cider 4mg", mg: 4 }
+  ,{ b: "Lucy", n: "Lucy Breakers Espresso 4mg", mg: 4 }
+  ,{ b: "VELO", n: "VELO Bright Spearmint 8mg", mg: 8 }
+  ,{ b: "VELO", n: "VELO Mango Ice 10mg", mg: 10 }
+  ,{ b: "VELO", n: "VELO Freezing Peppermint 17mg", mg: 17 }
+  ,{ b: "VELO", n: "VELO Tangy Lime 6mg", mg: 6 }
+  ,{ b: "XQS", n: "XQS Crisp Ice 12mg", mg: 12 }
+  ,{ b: "XQS", n: "XQS Double Mint 12mg", mg: 12 }
+  ,{ b: "XQS", n: "XQS Frost Bite 12mg", mg: 12 }
+  ,{ b: "XQS", n: "XQS Spearmint 8.8mg", mg: 8.8 }
+  ,{ b: "XQS", n: "XQS Fizzy Peach 8mg", mg: 8 }
+  ,{ b: "PABLO", n: "PABLO Gold Edition Cola 17mg", mg: 17 }
+  ,{ b: "PABLO", n: "PABLO Gold Edition Pear 17mg", mg: 17 }
+  ,{ b: "PABLO", n: "PABLO Gold Edition Blueberry Peach Ice 17mg", mg: 17 }
+  ,{ b: "PABLO", n: "PABLO Gold Edition Tropical Punch 17mg", mg: 17 }
+  ,{ b: "ELF", n: "ELF Nicotine Pouches Pineapple 12mg", mg: 12 }
+  ,{ b: "Nordic Spirit", n: "Nordic Spirit Dark Fizz Regular 6mg", mg: 6 }
+  ,{ b: "Nordic Spirit", n: "Nordic Spirit Blueberry Regular 6mg", mg: 6 }
+  ,{ b: "ZONE", n: "ZONE Berry Blast 11mg", mg: 11 }
+  ,{ b: "ZONE", n: "ZONE Watermelon Ice 10mg", mg: 10 }
+  ,{ b: "Übbs", n: "Übbs Cherry 11mg", mg: 11 }
+  ,{ b: "ZYN", n: "ZYN Spearmint 11mg", mg: 11 }
+  ,{ b: "ZYN", n: "ZYN Red Fruits 9mg", mg: 9 }
+  ,{ b: "FUMi", n: "FUMi Blackcurrant Regular 4mg", mg: 4 }
+  ,{ b: "FUMi", n: "FUMi Tangy Strawberry Regular 4mg", mg: 4 }
+  ,{ b: "FUMi", n: "FUMi Watermelon Mint Regular 4mg", mg: 4 }
+  ,{ b: "FUMi", n: "FUMi Spearmint Ultra Strong 15mg", mg: 15 }
+  ,{ b: "FUMi", n: "FUMi Blackcurrant Strong 8mg", mg: 8 }
+  ,{ b: "White Fox", n: "White Fox Peppered Mint 14.3mg", mg: 14.3 }
+  ,{ b: "White Fox", n: "White Fox Peppered Mint 3mg", mg: 3 }
+  ,{ b: "White Fox", n: "White Fox Full Charge Large 16.5mg", mg: 16.5 }
+  ,{ b: "Greatest", n: "Greatest Lemonade Strong 10mg", mg: 10 }
+  ,{ b: "DOSH", n: "DOSH Spearmint Fresh", mg: 7.5 }
+  ,{ b: "DOSH", n: "DOSH Fresh Mint", mg: 7.5 }
+  ,{ b: "DOSH", n: "DOSH Spearmint Fresh Strong", mg: 9.8 }
+  ,{ b: "DOSH", n: "DOSH Lemon Mint", mg: 7.5 }
+  ,{ b: "DOSH", n: "DOSH Fresh Mint Strong", mg: 9.8 }
+  ,{ b: "GOAT", n: "GOAT Wild Cherry #16", mg: 11.5 }
+  ,{ b: "GOAT", n: "GOAT Blueberry #16", mg: 11.5 }
+  ,{ b: "GOAT", n: "GOAT Frosted #16", mg: 11.5 }
+  ,{ b: "GOAT", n: "GOAT Crystal Ice #16", mg: 11.5 }
+  ,{ b: "GOAT", n: "GOAT Cool Mint #16", mg: 11.5 }
+  ,{ b: "THOR", n: "THOR Arctic Purple Strong", mg: 9.5 }
+  ,{ b: "THOR", n: "THOR Amber Blast Strong", mg: 9.5 }
+  ,{ b: "THOR", n: "THOR Sunny Breeze Strong", mg: 9.5 }
+  ,{ b: "THOR", n: "THOR Nordic Freeze Strong", mg: 9.5 }
+  ,{ b: "THOR", n: "THOR Black Ice Strong", mg: 9.5 }
+  ,{ b: "BAGZ", n: "BAGZ Mojito Lime Classic", mg: 5.5 }
+  ,{ b: "BAGZ", n: "BAGZ Berry Cool Strong", mg: 11 }
+  ,{ b: "BAGZ", n: "BAGZ Berry Cool Classic", mg: 5.5 }
+  ,{ b: "BAGZ", n: "BAGZ Arctic Freeze Classic", mg: 5.5 }
+  ,{ b: "BAGZ", n: "BAGZ Fruit Punch Mild", mg: 2.7 }
+  ,{ b: "BAGZ", n: "BAGZ Fizzy Orange Mild", mg: 2.7 }
+  ,{ b: "BAGZ", n: "BAGZ Power Mint Strong", mg: 11 }
+  ,{ b: "KURWA", n: "KURWA COLLECTION Frost Ice", mg: 12 }
+  ,{ b: "KURWA", n: "KURWA COLLECTION Mango Raspberry", mg: 12 }
+  ,{ b: "KURWA", n: "KURWA COLLECTION Raspberry Strawberry", mg: 12 }
+  ,{ b: "KURWA", n: "KURWA COLLECTION Kiwi Apple", mg: 12 }
+  ,{ b: "ACE", n: "ACE X Cool Mint Slim", mg: 8 }
+  ,{ b: "ZYN", n: "ZYN Cool Mint 11mg", mg: 11 }
+  ,{ b: "ZYN", n: "ZYN Menthol Ice 11mg", mg: 11 }
+  ,{ b: "ZYN", n: "ZYN Blueberry 11mg", mg: 11 }
+  ,{ b: "ZYN", n: "ZYN Black Cherry Mini 1.5mg", mg: 1.5 }
+  ,{ b: "ACE", n: "ACE Cool Mint SW Slim", mg: 6 }
+  ,{ b: "VELO", n: "VELO Crispy Peppermint", mg: 10 }
+  ,{ b: "VELO", n: "VELO Cherry Ice", mg: 8 }
+  ,{ b: "KURWA", n: "KURWA COLLECTION Strawberry Gum", mg: 12 }
+  ,{ b: "KURWA", n: "KURWA COLLECTION Pina Colada Mango", mg: 12 }
 ];
 
 export const USER_BENCHMARKS = [

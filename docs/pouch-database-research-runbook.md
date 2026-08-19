@@ -28,6 +28,8 @@ Každý nový řádek musí mít právě jeden odpovídající řádek v `pouch-
 
 CSV zapisuj jako platné UTF-8; hodnoty s čárkou nebo uvozovkou řádně escapuj. `checked_at` je datum kontroly ve formátu `YYYY-MM-DD`. Pracovní kontrolní body ukládej po 20, 40, 60, 80 a 100 položkách změnou `in_progress.checkpoint`. Po úspěchu nastav `next_batch` na další číslo, `last_completed_total` na nový počet, aktualizuj `completed_catalogs` a odstraň `in_progress`. Dokud zůstává dost ověřitelných kandidátů, ponech `current_market`; jinak jej posuň na další položku fronty.
 
+Při přerušení obnovuj vždy z posledního kontrolního bodu: `in_progress` má tvar `{ "batch": N, "checkpoint": K, "market": "...", "added": K }`. Nejprve porovnej počet nových položek v `data.js` s `added` a počet řádků stejného `batch` v ledgeru, potom pokračuj až za posledním zapsaným řádkem. Kontrolní bod je platný jen tehdy, když prefix původní databáze zůstal nezměněn; po dokončení stovky stavový objekt `in_progress` odstraň.
+
 ## Povinná validace
 
 Před výzkumem ověř čistý `main`, proveď `git pull --ff-only origin main` a zkontroluj, že počet v `data.js` odpovídá `last_completed_total`. Ulož si parsovaný výchozí seznam v paměti nebo do dočasného souboru mimo commit.
@@ -40,7 +42,7 @@ Před dokončením musí současně platit:
 4. Ledger obsahuje pro číslo dávky právě 100 unikátních řádků a `brand`, `product_name` i `mg_per_pouch` se přesně párují s novými položkami.
 5. Všechny URL jsou `https://`, JSON i CSV jsou syntakticky platné a `pouch-research-state.json` odpovídá dokončenému stavu.
 6. Projde `node --check data.js`, `node --test --test-concurrency=1 tests/*.test.mjs scripts/pouch-audit/*.test.mjs` a `git diff --check`.
-7. Běžná dávka mění pouze `data.js`, `pouch-source-ledger.csv`, `pouch-research-state.json` a `sw.js`; první zavedení workflow smí navíc přidat tento runbook a jednorázově zobecnit test cache verze v `tests/service-worker.test.mjs`.
+7. Běžná dávka mění pouze `data.js`, `pouch-source-ledger.csv`, `pouch-research-state.json` a `sw.js`; první zavedení workflow smí navíc přidat tento runbook a jednorázově zobecnit test cache verze v `tests/service-worker.test.mjs`. Pokud immutable auditní snapshot v `audit/pouches/input.json` není stejnou sekvencí jako aktuální `data.js`, izolované auditní testy musí vytvořit svůj baseline přímo z `input.json`; test-only fixture úprava nesmí měnit produkční data ani auditní snapshot.
 
 Až po splnění celé stovky zvyš `CACHE_NAME` v `sw.js` právě o jednu verzi. Commit použij ve tvaru `data: add 100 verified nicotine pouch SKUs (batch N)`, pushni bez force na `origin main` a ověř shodu lokálního a vzdáleného HEAD. Při zamítnutém pushi konflikt neobcházej a pokračovací prompt nevydávej.
 

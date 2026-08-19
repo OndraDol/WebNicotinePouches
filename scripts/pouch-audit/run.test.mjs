@@ -168,11 +168,18 @@ test('research runner closes an offline unresolved row without continuation scop
 });
 
 function isolatedEnv(temp) {
-  writeFileSync(join(temp, 'data.js'), execFileSync('git', ['show', 'HEAD:data.js'], { cwd: root, encoding: 'utf8' }));
+  const baselineSource = execFileSync('git', ['show', 'HEAD:data.js'], { cwd: root, encoding: 'utf8' });
   writeFileSync(join(temp, 'sw.js'), readFileSync(join(root, 'sw.js')));
   const auditDir = join(temp, 'audit', 'pouches');
   mkdirSync(auditDir, { recursive: true });
-  writeFileSync(join(auditDir, 'input.json'), readFileSync(join(root, 'audit', 'pouches', 'input.json')));
+  const inputSource = readFileSync(join(root, 'audit', 'pouches', 'input.json'), 'utf8');
+  const input = JSON.parse(inputSource);
+  const benchmarkStart = baselineSource.indexOf('export const USER_BENCHMARKS');
+  if (benchmarkStart < 0) throw new Error('HEAD data.js lacks USER_BENCHMARKS export');
+  const baselineRows = input.rows.map((row) => row.original);
+  const baselineRowsSource = baselineRows.map((row) => `  { b: ${JSON.stringify(row.b)}, n: ${JSON.stringify(row.n)}, mg: ${String(row.mg)} },`).join('\n');
+  writeFileSync(join(temp, 'data.js'), `export const POUCH_DB = [\n${baselineRowsSource}\n];\n\n${baselineSource.slice(benchmarkStart)}`);
+  writeFileSync(join(auditDir, 'input.json'), inputSource);
   return { POUCH_AUDIT_ROOT: temp, POUCH_AUDIT_WORKSPACE_ROOT: temp };
 }
 

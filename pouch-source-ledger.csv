@@ -99,3 +99,103 @@ batch,market,brand,product_name,mg_per_pouch,source_type,source_url,checked_at,c
 1,US,ZYN,ZYN Peppermint 3mg,3,official regulator,https://www.fda.gov/tobacco-products/market-and-distribute-tobacco-product/nicotine-pouch-products-authorized-fda,2026-08-14,direct mg/pouch
 1,US,ZYN,ZYN Smooth 3mg,3,official regulator,https://www.fda.gov/tobacco-products/market-and-distribute-tobacco-product/nicotine-pouch-products-authorized-fda,2026-08-14,direct mg/pouch
 1,US,ZYN,ZYN Smooth 6mg,6,official regulator,https://www.fda.gov/tobacco-products/market-and-distribute-tobacco-product/nicotine-pouch-products-authorized-fda,2026-08-14,direct mg/pouch
+2,US,ZYN,ZYN Black Cherry 3mg,3,specialist retailer,https://nicokick.com/us/nicotine-pouches/zyn,2026-08-19,direct mg/pouch
+2,US,ZYN,ZYN Black Cherry 6mg,6,specialist retailer,https://nicokick.com/us/nicotine-pouches/zyn,2026-08-19,direct mg/pouch
+2,US,ZYN,ZYN Peach 3mg,3,specialist retailer,https://nicokick.com/us/nicotine-pouches/zyn,2026-08-19,direct mg/pouch
+2,US,ZYN,ZYN Peach 6mg,6,specialist retailer,https://nicokick.com/us/nicotine-pouches/zyn,2026-08-19,direct mg/pouch
+2,US,ZYN,ZYN Dragonberry 3mg,3,specialist retailer,https://nicokick.com/us/nicotine-pouches/zyn,2026-08-19,direct mg/pouch
+2,US,ZYN,ZYN Dragonberry 6mg,6,specialist retailer,https://nicokick.com/us/nicotine-pouches/zyn,2026-08-19,direct mg/pouch
+2,US,ZYN,ZYN Ultra Wintergreen Blast 9mg,9,specialist retailer,https://nicokick.com/us/nicotine-pouches/zyn,2026-08-19,direct mg/pouch
+2,US,ZYN,ZYN Ultra Wintergreen Blast 11mg,11,specialist retailer,https://nicokick.com/us/nicotine-pouches/zyn,2026-08-19,direct mg/pouch
+2,US,ZYN,ZYN Ultra Fresh Spearmint 9mg,9,specialist retailer,https://nicokick.com/us/nicotine-pouches/zyn,2026-08-19,direct mg/pouch
+2,US,ZYN,ZYN Ultra Fresh Spearmint 11mg,11,specialist retailer,https://nicokick.com/us/nicotine-pouches/zyn,2026-08-19,direct mg/pouch
+2,US,ZYN,ZYN Ultra Citrus Zest 9mg,9,specialist retailer,https://nicokick.com/us/nicotine-pouches/zyn,2026-08-19,direct mg/pouch
+2,US,ZYN,ZYN Ultra Citrus Zest 11mg,11,specialist retailer,https://nicokick.com/us/nicotine-pouches/zyn,2026-08-19,direct mg/pouch
+2,US,ZYN,ZYN Ultra Peppermint Frost 9mg,9,specialist retailer,https://nicokick.com/us/nicotine-pouches/zyn,2026-08-19,direct mg/pouch
+2,US,ZYN,ZYN Ultra Peppermint Frost 11mg,11,specialist retailer,https://nicokick.com/us/nicotine-pouches/zyn,2026-08-19,direct mg/pouch
+2,US,ZYN,ZYN Ultra Arctic Mint 9mg,9,specialist retailer,https://nicokick.com/us/nicotine-pouches/zyn,2026-08-19,direct mg/pouch
+2,US,ZYN,ZYN Ultra Arctic Mint 11mg,11,specialist retailer,https://nicokick.com/us/nicotine-pouches/zyn,2026-08-19,direct mg/pouch
+2,US,ZYN,ZYN Ultra Signature Smooth 9mg,9,specialist retailer,https://nicokick.com/us/nicotine-pouches/zyn,2026-08-19,direct mg/pouch
+2,US,ZYN,ZYN Ultra Signature Smooth 11mg,11,specialist retailer,https://nicokick.com/us/nicotine-pouches/zyn,2026-08-19,direct mg/pouch
+2,US,ZYN,ZYN Ultra Chill Mist 9mg,9,specialist retailer,https://nicokick.com/us/nicotine-pouches/zyn,2026-08-19,direct mg/pouch
+2,US,ZYN,ZYN Ultra Chill Mist 11mg,11,specialist retailer,https://nicokick.com/us/nicotine-pouches/zyn,2026-08-19,direct mg/pouch
+2,US,ZYN,ZYN Ultra Menthol Ice 9mg,9,specialist retailer,https://nicokick.com/us/nicotine-pouches/zyn,2026-08-19,direct mg/pouch
+2,US,ZYN,ZYN Ultra Menthol Ice 11mg,11,specialist retailer,https://nicokick.com/us/nicotine-pouches/zyn,2026-08-19,direct mg/pouch
+2,US,VELO,VELO Citrus Burst 4mg,4,manufacturer,https://www.velo.com/us/secure/products/velo.html,2026-08-19,direct mg/pouch
+2,US,VELO,VELO Citrus Burst 7mg,7,manufacturer,https://www.velo.com/us/secure/products/velo.html,2026-08-19,direct mg/pouch
+2,US,VELO,VELO Dragon Fruit 4mg,4,manufacturer,https://www.velo.com/us/secure/products/velo.html,2026-08-19,direct mg/pouch
+2,US,VELO,VELO Dragon Fruit 7mg,7,manufacturer,https://www.velo.com/us/secure/products/velo.html,2026-08-19,direct mg/pouch
+2,US,VELO,VELO Peppermint 4mg,4,manufacturer,https://www.velo.com/us/secure/products/velo.html,2026-08-19,direct mg/pouch
+2,US,VELO,VELO Peppermint 7mg,7,manufacturer,https://www.velo.com/us/secure/products/velo.html,2026-08-19,direct mg/pouch
+2,US,VELO,VELO Spearmint 4mg,4,manufacturer,https://www.velo.com/us/secure/products/velo.html,2026-08-19,direct mg/pouch
+2,US,VELO,VELO Spearmint 7mg,7,manufacturer,https://www.velo.com/us/secure/products/velo.html,2026-08-19,direct mg/pouch
+2,US,Lucy,Lucy Breakers Apple Cider 8mg,8,specialist retailer,https://nicokick.com/us/nicotine-pouches/lucy,2026-08-19,direct mg/pouch
+2,US,Lucy,Lucy Breakers Espresso 8mg,8,specialist retailer,https://nicokick.com/us/nicotine-pouches/lucy,2026-08-19,direct mg/pouch
+2,US,Lucy,Lucy Breakers Apple Cider 4mg,4,specialist retailer,https://nicokick.com/us/nicotine-pouches/lucy,2026-08-19,direct mg/pouch
+2,US,Lucy,Lucy Breakers Espresso 4mg,4,specialist retailer,https://nicokick.com/us/nicotine-pouches/lucy,2026-08-19,direct mg/pouch
+2,UK,VELO,VELO Bright Spearmint 8mg,8,specialist retailer,https://www.northerner.com/uk/snus/brands,2026-08-19,direct mg/pouch
+2,UK,VELO,VELO Mango Ice 10mg,10,specialist retailer,https://www.northerner.com/uk/snus/brands,2026-08-19,direct mg/pouch
+2,UK,VELO,VELO Freezing Peppermint 17mg,17,specialist retailer,https://www.northerner.com/uk/snus/brands,2026-08-19,direct mg/pouch
+2,UK,VELO,VELO Tangy Lime 6mg,6,specialist retailer,https://www.northerner.com/uk/snus/brands,2026-08-19,direct mg/pouch
+2,UK,XQS,XQS Crisp Ice 12mg,12,specialist retailer,https://www.northerner.com/uk/snus/brands,2026-08-19,direct mg/pouch
+2,UK,XQS,XQS Double Mint 12mg,12,specialist retailer,https://www.northerner.com/uk/snus/brands,2026-08-19,direct mg/pouch
+2,UK,XQS,XQS Frost Bite 12mg,12,specialist retailer,https://www.northerner.com/uk/snus/brands,2026-08-19,direct mg/pouch
+2,UK,XQS,XQS Spearmint 8.8mg,8.8,specialist retailer,https://www.northerner.com/uk/snus/brands,2026-08-19,direct mg/pouch
+2,UK,XQS,XQS Fizzy Peach 8mg,8,specialist retailer,https://www.northerner.com/uk/snus/brands,2026-08-19,direct mg/pouch
+2,UK,PABLO,PABLO Gold Edition Cola 17mg,17,specialist retailer,https://www.northerner.com/uk/snus/brands,2026-08-19,direct mg/pouch
+2,UK,PABLO,PABLO Gold Edition Pear 17mg,17,specialist retailer,https://www.northerner.com/uk/snus/brands,2026-08-19,direct mg/pouch
+2,UK,PABLO,PABLO Gold Edition Blueberry Peach Ice 17mg,17,specialist retailer,https://www.northerner.com/uk/snus/brands,2026-08-19,direct mg/pouch
+2,UK,PABLO,PABLO Gold Edition Tropical Punch 17mg,17,specialist retailer,https://www.northerner.com/uk/snus/brands,2026-08-19,direct mg/pouch
+2,UK,ELF,ELF Nicotine Pouches Pineapple 12mg,12,specialist retailer,https://www.northerner.com/uk/snus/brands,2026-08-19,direct mg/pouch
+2,UK,Nordic Spirit,Nordic Spirit Dark Fizz Regular 6mg,6,specialist retailer,https://www.northerner.com/uk/snus/brands,2026-08-19,direct mg/pouch
+2,UK,Nordic Spirit,Nordic Spirit Blueberry Regular 6mg,6,specialist retailer,https://www.northerner.com/uk/snus/brands,2026-08-19,direct mg/pouch
+2,UK,ZONE,ZONE Berry Blast 11mg,11,specialist retailer,https://www.northerner.com/uk/snus/brands,2026-08-19,direct mg/pouch
+2,UK,ZONE,ZONE Watermelon Ice 10mg,10,specialist retailer,https://www.northerner.com/uk/snus/brands,2026-08-19,direct mg/pouch
+2,UK,Übbs,Übbs Cherry 11mg,11,specialist retailer,https://www.northerner.com/uk/snus/brands,2026-08-19,direct mg/pouch
+2,UK,ZYN,ZYN Spearmint 11mg,11,specialist retailer,https://www.northerner.com/uk/snus/brands,2026-08-19,direct mg/pouch
+2,UK,ZYN,ZYN Red Fruits 9mg,9,specialist retailer,https://www.northerner.com/uk/snus/brands,2026-08-19,direct mg/pouch
+2,UK,FUMi,FUMi Blackcurrant Regular 4mg,4,specialist retailer,https://www.northerner.com/uk/snus/brands,2026-08-19,direct mg/pouch
+2,UK,FUMi,FUMi Tangy Strawberry Regular 4mg,4,specialist retailer,https://www.northerner.com/uk/snus/brands,2026-08-19,direct mg/pouch
+2,UK,FUMi,FUMi Watermelon Mint Regular 4mg,4,specialist retailer,https://www.northerner.com/uk/snus/brands,2026-08-19,direct mg/pouch
+2,UK,FUMi,FUMi Spearmint Ultra Strong 15mg,15,specialist retailer,https://www.northerner.com/uk/snus/brands,2026-08-19,direct mg/pouch
+2,UK,FUMi,FUMi Blackcurrant Strong 8mg,8,specialist retailer,https://www.northerner.com/uk/snus/brands,2026-08-19,direct mg/pouch
+2,UK,White Fox,White Fox Peppered Mint 14.3mg,14.3,specialist retailer,https://www.northerner.com/uk/snus/brands,2026-08-19,direct mg/pouch
+2,UK,White Fox,White Fox Peppered Mint 3mg,3,specialist retailer,https://www.northerner.com/uk/snus/brands,2026-08-19,direct mg/pouch
+2,UK,White Fox,White Fox Full Charge Large 16.5mg,16.5,specialist retailer,https://www.northerner.com/uk/snus/brands,2026-08-19,direct mg/pouch
+2,UK,Greatest,Greatest Lemonade Strong 10mg,10,specialist retailer,https://www.northerner.com/uk/snus/brands,2026-08-19,direct mg/pouch
+2,CZ,DOSH,DOSH Spearmint Fresh,7.5,specialist retailer,https://nikotin.cz/collections/dosh,2026-08-19,direct mg/pouch
+2,CZ,DOSH,DOSH Fresh Mint,7.5,specialist retailer,https://nikotin.cz/collections/dosh,2026-08-19,direct mg/pouch
+2,CZ,DOSH,DOSH Spearmint Fresh Strong,9.8,specialist retailer,https://nikotin.cz/collections/dosh,2026-08-19,direct mg/pouch
+2,CZ,DOSH,DOSH Lemon Mint,7.5,specialist retailer,https://nikotin.cz/collections/dosh,2026-08-19,direct mg/pouch
+2,CZ,DOSH,DOSH Fresh Mint Strong,9.8,specialist retailer,https://nikotin.cz/collections/dosh,2026-08-19,direct mg/pouch
+2,CZ,GOAT,GOAT Wild Cherry #16,11.5,specialist retailer,https://nikotin.cz/collections/goat,2026-08-19,direct mg/pouch
+2,CZ,GOAT,GOAT Blueberry #16,11.5,specialist retailer,https://nikotin.cz/collections/goat,2026-08-19,direct mg/pouch
+2,CZ,GOAT,GOAT Frosted #16,11.5,specialist retailer,https://nikotin.cz/collections/goat,2026-08-19,direct mg/pouch
+2,CZ,GOAT,GOAT Crystal Ice #16,11.5,specialist retailer,https://nikotin.cz/collections/goat,2026-08-19,direct mg/pouch
+2,CZ,GOAT,GOAT Cool Mint #16,11.5,specialist retailer,https://nikotin.cz/collections/goat,2026-08-19,direct mg/pouch
+2,CZ,THOR,THOR Arctic Purple Strong,9.5,specialist retailer,https://nikotin.cz/collections/thor,2026-08-19,direct mg/pouch
+2,CZ,THOR,THOR Amber Blast Strong,9.5,specialist retailer,https://nikotin.cz/collections/thor,2026-08-19,direct mg/pouch
+2,CZ,THOR,THOR Sunny Breeze Strong,9.5,specialist retailer,https://nikotin.cz/collections/thor,2026-08-19,direct mg/pouch
+2,CZ,THOR,THOR Nordic Freeze Strong,9.5,specialist retailer,https://nikotin.cz/collections/thor,2026-08-19,direct mg/pouch
+2,CZ,THOR,THOR Black Ice Strong,9.5,specialist retailer,https://nikotin.cz/collections/thor,2026-08-19,direct mg/pouch
+2,CZ,BAGZ,BAGZ Mojito Lime Classic,5.5,specialist retailer,https://nikotin.cz/collections/nikotinove-sacky,2026-08-19,direct mg/pouch
+2,CZ,BAGZ,BAGZ Berry Cool Strong,11,specialist retailer,https://nikotin.cz/collections/nikotinove-sacky?page=2,2026-08-19,direct mg/pouch
+2,CZ,BAGZ,BAGZ Berry Cool Classic,5.5,specialist retailer,https://nikotin.cz/collections/nikotinove-sacky?page=2,2026-08-19,direct mg/pouch
+2,CZ,BAGZ,BAGZ Arctic Freeze Classic,5.5,specialist retailer,https://nikotin.cz/collections/nikotinove-sacky?page=2,2026-08-19,direct mg/pouch
+2,CZ,BAGZ,BAGZ Fruit Punch Mild,2.7,specialist retailer,https://nikotin.cz/collections/nikotinove-sacky?page=2,2026-08-19,direct mg/pouch
+2,CZ,BAGZ,BAGZ Fizzy Orange Mild,2.7,specialist retailer,https://nikotin.cz/collections/nikotinove-sacky?page=2,2026-08-19,direct mg/pouch
+2,CZ,BAGZ,BAGZ Power Mint Strong,11,specialist retailer,https://nikotin.cz/collections/nikotinove-sacky,2026-08-19,direct mg/pouch
+2,CZ,KURWA,KURWA COLLECTION Frost Ice,12,specialist retailer,https://nikotin.cz/collections/nikotinove-sacky,2026-08-19,direct mg/pouch
+2,CZ,KURWA,KURWA COLLECTION Mango Raspberry,12,specialist retailer,https://nikotin.cz/collections/nikotinove-sacky,2026-08-19,direct mg/pouch
+2,CZ,KURWA,KURWA COLLECTION Raspberry Strawberry,12,specialist retailer,https://nikotin.cz/collections/nikotinove-sacky,2026-08-19,direct mg/pouch
+2,CZ,KURWA,KURWA COLLECTION Kiwi Apple,12,specialist retailer,https://nikotin.cz/collections/nikotinove-sacky,2026-08-19,direct mg/pouch
+2,CZ,ACE,ACE X Cool Mint Slim,8,specialist retailer,https://nikotin.cz/collections/nikotinove-sacky?page=2,2026-08-19,direct mg/pouch
+2,CZ,ZYN,ZYN Cool Mint 11mg,11,specialist retailer,https://nikotin.cz/collections/zyn-nikotinove-sacky,2026-08-19,direct mg/pouch
+2,CZ,ZYN,ZYN Menthol Ice 11mg,11,specialist retailer,https://nikotin.cz/collections/zyn-nikotinove-sacky,2026-08-19,direct mg/pouch
+2,CZ,ZYN,ZYN Blueberry 11mg,11,specialist retailer,https://nikotin.cz/collections/zyn-nikotinove-sacky,2026-08-19,direct mg/pouch
+2,CZ,ZYN,ZYN Black Cherry Mini 1.5mg,1.5,specialist retailer,https://nikotin.cz/collections/zyn-nikotinove-sacky,2026-08-19,direct mg/pouch
+2,CZ,ACE,ACE Cool Mint SW Slim,6,specialist retailer,https://nikotin.cz/collections/nikotinove-sacky?page=2,2026-08-19,direct mg/pouch
+2,CZ,VELO,VELO Crispy Peppermint,10,specialist retailer,https://nikotin.cz/collections/nikotinove-sacky-vyprodej,2026-08-19,direct mg/pouch
+2,CZ,VELO,VELO Cherry Ice,8,specialist retailer,https://nikotin.cz/collections/nikotinove-sacky-vyprodej,2026-08-19,direct mg/pouch
+2,CZ,KURWA,KURWA COLLECTION Strawberry Gum,12,specialist retailer,https://nikotin.cz/collections/nikotinove-sacky,2026-08-19,direct mg/pouch
+2,CZ,KURWA,KURWA COLLECTION Pina Colada Mango,12,specialist retailer,https://nikotin.cz/collections/nikotinove-sacky,2026-08-19,direct mg/pouch

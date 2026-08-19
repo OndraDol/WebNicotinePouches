@@ -1,12 +1,12 @@
 {
   "schema_version": 1,
-  "next_batch": 2,
+  "next_batch": 3,
   "market_queue": [
     "US+CA",
     "Europe excluding CZ",
     "CZ"
   ],
-  "current_market": "US+CA",
+  "current_market": "CZ",
   "completed_catalogs": [
     {
       "market": "US",
@@ -61,7 +61,73 @@
       "catalog": "ZONNIC Canada / Mint",
       "source_url": "https://www.zonnic.ca/ca/en/faq/about-zonnic",
       "checked_at": "2026-08-14"
+    },
+    {
+      "market": "US",
+      "catalog": "Nicokick / ZYN",
+      "source_url": "https://nicokick.com/us/nicotine-pouches/zyn",
+      "checked_at": "2026-08-19"
+    },
+    {
+      "market": "US",
+      "catalog": "VELO US / VELO products",
+      "source_url": "https://www.velo.com/us/secure/products/velo.html",
+      "checked_at": "2026-08-19"
+    },
+    {
+      "market": "US",
+      "catalog": "Nicokick / Lucy",
+      "source_url": "https://nicokick.com/us/nicotine-pouches/lucy",
+      "checked_at": "2026-08-19"
+    },
+    {
+      "market": "UK",
+      "catalog": "Northerner UK / current nicotine pouch catalog",
+      "source_url": "https://www.northerner.com/uk/snus/brands",
+      "checked_at": "2026-08-19"
+    },
+    {
+      "market": "CZ",
+      "catalog": "Nikotin.cz / DOSH",
+      "source_url": "https://nikotin.cz/collections/dosh",
+      "checked_at": "2026-08-19"
+    },
+    {
+      "market": "CZ",
+      "catalog": "Nikotin.cz / GOAT",
+      "source_url": "https://nikotin.cz/collections/goat",
+      "checked_at": "2026-08-19"
+    },
+    {
+      "market": "CZ",
+      "catalog": "Nikotin.cz / THOR",
+      "source_url": "https://nikotin.cz/collections/thor",
+      "checked_at": "2026-08-19"
+    },
+    {
+      "market": "CZ",
+      "catalog": "Nikotin.cz / nicotine pouch catalog pages",
+      "source_url": "https://nikotin.cz/collections/nikotinove-sacky",
+      "checked_at": "2026-08-19"
+    },
+    {
+      "market": "CZ",
+      "catalog": "Nikotin.cz / nicotine pouch catalog page 2",
+      "source_url": "https://nikotin.cz/collections/nikotinove-sacky?page=2",
+      "checked_at": "2026-08-19"
+    },
+    {
+      "market": "CZ",
+      "catalog": "Nikotin.cz / ZYN",
+      "source_url": "https://nikotin.cz/collections/zyn-nikotinove-sacky",
+      "checked_at": "2026-08-19"
+    },
+    {
+      "market": "CZ",
+      "catalog": "Nikotin.cz / nicotine pouch sale catalog",
+      "source_url": "https://nikotin.cz/collections/nikotinove-sacky-vyprodej",
+      "checked_at": "2026-08-19"
     }
   ],
-  "last_completed_total": 1087
+  "last_completed_total": 1187
 }
