@@ -1766,6 +1766,106 @@ export const POUCH_DB = [
   ,{ b: "LOOP", n: "LOOP Fresh Peppermint Hyper Strong", mg: 14.8 }
   ,{ b: "LOOP", n: "LOOP Fresh Spearmint Hyper Strong", mg: 14.8 }
   ,{ b: "LOOP", n: "LOOP Pineapple Ice Strong", mg: 9.4 }
+  ,{ b: "LOOP", n: "LOOP Sicily Spritz Strong", mg: 8.9 }
+  ,{ b: "LOOP", n: "LOOP Strawberry Ice Strong", mg: 9.4 }
+  ,{ b: "Lundgrens", n: "Lundgrens Äng", mg: 8 }
+  ,{ b: "Lundgrens", n: "Lundgrens Dagg", mg: 8 }
+  ,{ b: "Lundgrens", n: "Lundgrens Dunge", mg: 8 }
+  ,{ b: "Lundgrens", n: "Lundgrens Fjällskog", mg: 8 }
+  ,{ b: "Lundgrens", n: "Lundgrens Frostnatt", mg: 10 }
+  ,{ b: "Lundgrens", n: "Lundgrens Höståker", mg: 10 }
+  ,{ b: "Lundgrens", n: "Lundgrens Kvällsbris", mg: 8 }
+  ,{ b: "Lundgrens", n: "Lundgrens Månskära", mg: 8 }
+  ,{ b: "Lundgrens", n: "Lundgrens Mörk", mg: 8 }
+  ,{ b: "Lundgrens", n: "Lundgrens Mörk Stark", mg: 10 }
+  ,{ b: "Lundgrens", n: "Lundgrens Rimfrost", mg: 10 }
+  ,{ b: "Lundgrens", n: "Lundgrens Skugga", mg: 8 }
+  ,{ b: "Lundgrens", n: "Lundgrens Skugga Stark", mg: 12.5 }
+  ,{ b: "Lundgrens", n: "Lundgrens Tjäle", mg: 6 }
+  ,{ b: "NOIS", n: "NOIS Blueberry Extreme Mini", mg: 15 }
+  ,{ b: "NOIS", n: "NOIS Cool Strong Extreme", mg: 25 }
+  ,{ b: "NOIS", n: "NOIS Cool Strong MEGA CAN", mg: 17.5 }
+  ,{ b: "NOIS", n: "NOIS Cool Strong Mini", mg: 15 }
+  ,{ b: "NOIS", n: "NOIS Extreme Blueberry", mg: 25 }
+  ,{ b: "NOIS", n: "NOIS Extreme Cherry", mg: 25 }
+  ,{ b: "NOIS", n: "NOIS Extreme Light", mg: 4 }
+  ,{ b: "NOIS", n: "NOIS Extreme Mango", mg: 25 }
+  ,{ b: "NOIS", n: "NOIS Extreme Mini", mg: 15 }
+  ,{ b: "NOIS", n: "NOIS Extreme Strong", mg: 25 }
+  ,{ b: "NOIS", n: "NOIS Extreme Watermelon", mg: 25 }
+  ,{ b: "NOIS", n: "NOIS Mango ICE Light", mg: 4 }
+  ,{ b: "PAZ", n: "PAZ Extreme Cool Mint +", mg: 16.8 }
+  ,{ b: "PAZ", n: "PAZ Light Berry Frost", mg: 4 }
+  ,{ b: "PAZ", n: "PAZ Light Lush Ice", mg: 4 }
+  ,{ b: "PAZ", n: "PAZ Racing Dakar", mg: 12 }
+  ,{ b: "PAZ", n: "PAZ Racing Daytona", mg: 12 }
+  ,{ b: "PAZ", n: "PAZ X-Strong Cool Mint", mg: 10 }
+  ,{ b: "PAZ", n: "PAZ X-Strong Lush Ice", mg: 10 }
+  ,{ b: "PAZ", n: "PAZ X-Strong Mango Winter", mg: 10 }
+  ,{ b: "PAZ", n: "PAZ X-Strong Spearmint", mg: 10 }
+  ,{ b: "POWER", n: "POWER Blue Lights 30mg", mg: 21.6 }
+  ,{ b: "POWER", n: "POWER Full Charge 30mg", mg: 21.6 }
+  ,{ b: "POWER", n: "POWER Ice City 30mg", mg: 21.6 }
+  ,{ b: "Royal White", n: "Royal White Arctic Freeze Light", mg: 4 }
+  ,{ b: "Royal White", n: "Royal White Arctic Freeze Strong", mg: 8.3 }
+  ,{ b: "Royal White", n: "Royal White Black Currant Light", mg: 4 }
+  ,{ b: "Royal White", n: "Royal White Black Currant Strong", mg: 8.3 }
+  ,{ b: "Royal White", n: "Royal White Bubble Gum Light", mg: 4 }
+  ,{ b: "Royal White", n: "Royal White Bubble Gum Strong", mg: 8.3 }
+  ,{ b: "Royal White", n: "Royal White Cappuccino Light", mg: 4 }
+  ,{ b: "Royal White", n: "Royal White Cappuccino Strong", mg: 8.3 }
+  ,{ b: "Royal White", n: "Royal White Cola Cherry Light", mg: 4 }
+  ,{ b: "Royal White", n: "Royal White Fresh Mint Light", mg: 4 }
+  ,{ b: "Royal White", n: "Royal White Fresh Mint Strong", mg: 8.3 }
+  ,{ b: "Royal White", n: "Royal White Gin Grapefruit Light", mg: 4 }
+  ,{ b: "RUSH", n: "RUSH Blueberry Ice Light", mg: 4 }
+  ,{ b: "RUSH", n: "Rush Blueberry Ice PRO", mg: 11.2 }
+  ,{ b: "RUSH", n: "RUSH Extreme Grape Ice", mg: 21 }
+  ,{ b: "RUSH", n: "Rush Extreme Cherry Ice", mg: 20 }
+  ,{ b: "RUSH", n: "RUSH Extreme Peppermint Ice", mg: 20 }
+  ,{ b: "RUSH", n: "RUSH Grape Ice Light", mg: 4 }
+  ,{ b: "RUSH", n: "RUSH Mango Ice Light", mg: 4 }
+  ,{ b: "RUSH", n: "RUSH Pro Grape Ice", mg: 11.2 }
+  ,{ b: "RUSH", n: "RUSH Pro Mango Ice", mg: 11.2 }
+  ,{ b: "RUSH", n: "RUSH Pro Nordic Peppermint", mg: 11.2 }
+  ,{ b: "RUSH", n: "RUSH Pro Peppermint Ice", mg: 11.2 }
+  ,{ b: "RUSH", n: "RUSH Pro Spearmint", mg: 11.2 }
+  ,{ b: "RUSH", n: "RUSH Pro Watermelon Ice", mg: 11 }
+  ,{ b: "SKRUF", n: "Skruf Aloe Fresh Strong", mg: 8 }
+  ,{ b: "SKRUF", n: "Skruf Crystal Fresh Strong", mg: 12 }
+  ,{ b: "SKRUF", n: "Skruf Fresh Apple Extra Strong #64", mg: 12 }
+  ,{ b: "SKRUF", n: "Skruf Fresh Freeze #67", mg: 12 }
+  ,{ b: "SKRUF", n: "Skruf Fresh Mint #52", mg: 6 }
+  ,{ b: "SKRUF", n: "Skruf Fresh Mint Strong #53", mg: 10 }
+  ,{ b: "SKRUF", n: "Skruf Fresh Mint XTRA #54", mg: 11 }
+  ,{ b: "SKRUF", n: "Skruf Frozen Mint XTRA #60", mg: 8 }
+  ,{ b: "SKRUF", n: "Skruf Indigo Berry #62", mg: 6 }
+  ,{ b: "SKRUF", n: "Skruf Intense No005 Peppermint Ice", mg: 11 }
+  ,{ b: "SKRUF", n: "Skruf Intense No105 Spearmint Ice", mg: 11 }
+  ,{ b: "SKRUF", n: "Skruf Intense No215 Strawberry Ice #5", mg: 11.3 }
+  ,{ b: "SKRUF", n: "Skruf Nordic Liquorice #56", mg: 6 }
+  ,{ b: "SKRUF", n: "Skruf Nordic Liquorice XTRA #58", mg: 11 }
+  ,{ b: "SKRUF", n: "Skruf Purple Cassice #71", mg: 6 }
+  ,{ b: "SKRUF", n: "Skruf Purple Cassice Strong #63", mg: 10 }
+  ,{ b: "Smögen", n: "Smögen Seabreeze Mint Regular", mg: 8 }
+  ,{ b: "Smögen", n: "Smögen Stormy Licorice Regular", mg: 8 }
+  ,{ b: "Smögen", n: "Smögen Westcoast Berries Regular", mg: 8 }
+  ,{ b: "SNOWMAN", n: "Snowman Citrus Boost Medium 9mg", mg: 9 }
+  ,{ b: "SNOWMAN", n: "Snowman Citrus Boost Strong 12mg", mg: 12 }
+  ,{ b: "Stockholm White", n: "Stockholm White Arctic Menthol Light", mg: 4 }
+  ,{ b: "Stockholm White", n: "Stockholm White Arctic Menthol Strong", mg: 8 }
+  ,{ b: "Stockholm White", n: "Stockholm White Licorice Root Light", mg: 4 }
+  ,{ b: "Stockholm White", n: "Stockholm White Licorice Root X-Strong", mg: 12 }
+  ,{ b: "Stockholm White", n: "Stockholm White Wintergreen Light", mg: 4 }
+  ,{ b: "Stockholm White", n: "Stockholm White Wintergreen Strong", mg: 8 }
+  ,{ b: "SYX", n: "SYX Freeze Strong", mg: 11.5 }
+  ,{ b: "SYX", n: "SYX Freeze Xtra Strong", mg: 19.95 }
+  ,{ b: "SYX", n: "SYX Icy Cola Strong", mg: 11.5 }
+  ,{ b: "SYX", n: "SYX Icy Cola Xtra Strong", mg: 19.95 }
+  ,{ b: "SYX", n: "SYX Original Light", mg: 2.8 }
+  ,{ b: "SYX", n: "SYX Peppermint Light", mg: 2.8 }
+  ,{ b: "SYX", n: "SYX Peppermint Strong", mg: 11.5 }
+  ,{ b: "SYX", n: "SYX Peppermint Xtra Strong", mg: 19.95 }
 ];
 
 export const USER_BENCHMARKS = [
