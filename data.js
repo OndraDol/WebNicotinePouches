@@ -1866,6 +1866,106 @@ export const POUCH_DB = [
   ,{ b: "SYX", n: "SYX Peppermint Light", mg: 2.8 }
   ,{ b: "SYX", n: "SYX Peppermint Strong", mg: 11.5 }
   ,{ b: "SYX", n: "SYX Peppermint Xtra Strong", mg: 19.95 }
+  ,{ b: "SYX", n: "SYX Spearmint Strong", mg: 11.5 }
+  ,{ b: "SYX", n: "SYX Spearmint Xtra Strong", mg: 19.95 }
+  ,{ b: "SYX", n: "SYX Tropical Light", mg: 2.8 }
+  ,{ b: "SYX", n: "SYX Tropical Strong", mg: 11.5 }
+  ,{ b: "SYX", n: "SYX Tropical Xtra Strong", mg: 19.95 }
+  ,{ b: "SYX", n: "SYX Wild Cherry Light", mg: 2.8 }
+  ,{ b: "SYX", n: "SYX Wild Cherry Strong", mg: 11.5 }
+  ,{ b: "SYX", n: "SYX Wild Cherry Xtra Strong", mg: 19.95 }
+  ,{ b: "SYX", n: "SYX Wintergreen Light", mg: 2.8 }
+  ,{ b: "THOR", n: "THOR Arctic Berries Strong", mg: 9.5 }
+  ,{ b: "THOR", n: "THOR Black Mint Strong", mg: 9.5 }
+  ,{ b: "THOR", n: "THOR Hammer, Arctic Berries X-Strong", mg: 16 }
+  ,{ b: "THOR", n: "THOR Hammer, Black Mint X-Strong", mg: 16 }
+  ,{ b: "THOR", n: "THOR Hammer, Nordic Freeze X-Strong", mg: 16 }
+  ,{ b: "THOR", n: "THOR Honeymelon Heaven Strong", mg: 9.5 }
+  ,{ b: "TOGO", n: "TOGO Cold Mint -90°C", mg: 10 }
+  ,{ b: "TOGO", n: "TOGO Pommie Orange", mg: 8 }
+  ,{ b: "V&You", n: "V&YOU BERRY &Chill", mg: 3.8 }
+  ,{ b: "V&You", n: "V&YOU BLUEBERRY ICE &Chill", mg: 3.8 }
+  ,{ b: "V&You", n: "V&YOU Boost Berry", mg: 10 }
+  ,{ b: "V&You", n: "V&YOU Boost Citrus", mg: 10 }
+  ,{ b: "V&You", n: "V&YOU Boost Flavour Free", mg: 10 }
+  ,{ b: "V&You", n: "V&YOU Boost+ Berry Fizz", mg: 15 }
+  ,{ b: "V&You", n: "V&YOU Boost+ Blueberry Ice", mg: 15 }
+  ,{ b: "V&You", n: "V&YOU Boost+ Cool Berry", mg: 15 }
+  ,{ b: "V&You", n: "V&YOU Boost+ Intense Mint", mg: 15 }
+  ,{ b: "V&You", n: "V&YOU CITRUS &Chill", mg: 3.8 }
+  ,{ b: "V&You", n: "V&YOU MINT FREEZE &Chill", mg: 3.8 }
+  ,{ b: "VELO", n: "VELO Arctic Grapefruit", mg: 6 }
+  ,{ b: "VELO", n: "VELO Blueberry Ice", mg: 8 }
+  ,{ b: "VELO", n: "VELO Bright Peppermint", mg: 8 }
+  ,{ b: "VELO", n: "VELO Coconut Lime", mg: 8 }
+  ,{ b: "VELO", n: "VELO Dark Blackcurrant", mg: 8 }
+  ,{ b: "VELO", n: "VELO Dark Cherry Mini", mg: 4 }
+  ,{ b: "VELO", n: "VELO Green Spearmint", mg: 6 }
+  ,{ b: "VELO", n: "VELO Guava Jalapeno", mg: 8 }
+  ,{ b: "VELO", n: "VELO Guava Passionfruit", mg: 8 }
+  ,{ b: "VELO", n: "VELO Lime Flame", mg: 8 }
+  ,{ b: "VELO", n: "VELO Mango Flame", mg: 10 }
+  ,{ b: "VELO", n: "VELO McLaren Spicy Papaya", mg: 8 }
+  ,{ b: "VELO", n: "VELO Orange Spark", mg: 10.9 }
+  ,{ b: "VELO", n: "VELO Peppermint Storm", mg: 10.9 }
+  ,{ b: "VELO", n: "VELO Purple Grape Mini", mg: 6 }
+  ,{ b: "VELO", n: "VELO Purple Grape Strong", mg: 10 }
+  ,{ b: "VELO", n: "VELO Ruby Berry", mg: 6 }
+  ,{ b: "VELO", n: "VELO Salty Liquorice", mg: 10 }
+  ,{ b: "VELO", n: "VELO Sour Lime", mg: 6 }
+  ,{ b: "VELO", n: "VELO Wintery Watermelon Mini", mg: 6 }
+  ,{ b: "VELO", n: "VELO Zesty Elderflower", mg: 10 }
+  ,{ b: "VILD", n: "VILD Bris", mg: 5.6 }
+  ,{ b: "VILD", n: "VILD Jaeger", mg: 8 }
+  ,{ b: "VILD", n: "VILD Storm", mg: 11 }
+  ,{ b: "White Fox", n: "White Fox Double Mint Slim", mg: 12 }
+  ,{ b: "White Fox", n: "White Fox Slim", mg: 12 }
+  ,{ b: "Whitepouches", n: "Whitepouches Clean Mint Light", mg: 4 }
+  ,{ b: "Whitepouches", n: "Whitepouches Clean Mint Regular", mg: 8 }
+  ,{ b: "Whitepouches", n: "Whitepouches Smooth Mango Light", mg: 4 }
+  ,{ b: "Whitepouches", n: "Whitepouches Smooth Mango Regular", mg: 8 }
+  ,{ b: "XQS", n: "XQS Apple Crisp Strong", mg: 8 }
+  ,{ b: "XQS", n: "XQS Berrynana Twist Slim Strong", mg: 8 }
+  ,{ b: "XQS", n: "XQS Black Cherry Light Slim", mg: 4 }
+  ,{ b: "XQS", n: "XQS Blueberry Mint Light Slim", mg: 4 }
+  ,{ b: "XQS", n: "XQS Cola Lime X-Strong", mg: 8 }
+  ,{ b: "XQS", n: "XQS Hallonsoda Strong", mg: 8 }
+  ,{ b: "XQS", n: "XQS Orange Squeeze Strong", mg: 8 }
+  ,{ b: "XQS", n: "XQS Raspberry Blackcurrant Strong", mg: 8 }
+  ,{ b: "XQS", n: "XQS Strawberry Kiwi Strong", mg: 8 }
+  ,{ b: "XQS", n: "XQS The Menthol Strong", mg: 11 }
+  ,{ b: "XQS", n: "XQS The Menthol X-Strong", mg: 16.6 }
+  ,{ b: "XQS", n: "XQS The Peppermint X-Strong", mg: 10 }
+  ,{ b: "XQS", n: "XQS The Spearmint X-Strong", mg: 6 }
+  ,{ b: "XQS", n: "XQS Tropical Light", mg: 4 }
+  ,{ b: "XQS", n: "XQS Tropical Strong", mg: 8 }
+  ,{ b: "XQS", n: "XQS Twin Apple Strong", mg: 8 }
+  ,{ b: "XQS", n: "XQS Wintergreen Light", mg: 4 }
+  ,{ b: "XQS", n: "XQS Wintergreen Strong", mg: 8 }
+  ,{ b: "ZEUS", n: "ZEUS Arctic Freeze X-Strong", mg: 25 }
+  ,{ b: "ZEUS", n: "ZEUS Bubble Gum Light", mg: 4 }
+  ,{ b: "ZEUS", n: "ZEUS Bubble Gum Strong", mg: 10 }
+  ,{ b: "ZEUS", n: "ZEUS Bubblegum X-Strong", mg: 25 }
+  ,{ b: "ZEUS", n: "ZEUS Epic Berry X-Strong", mg: 25 }
+  ,{ b: "ZEUS", n: "ZEUS Frozen Citrus X-Strong", mg: 25 }
+  ,{ b: "ZEUS", n: "ZEUS Cherry Blossom X-Strong", mg: 25 }
+  ,{ b: "ZEUS", n: "ZEUS Mint Rage X-Strong", mg: 25 }
+  ,{ b: "ZEUS", n: "ZEUS Tropic Burst X-Strong", mg: 25 }
+  ,{ b: "ZEUS", n: "ZEUS True North Light", mg: 4 }
+  ,{ b: "ZEUS", n: "ZEUS True North Strong", mg: 10 }
+  ,{ b: "ZEUS", n: "ZEUS True North X-Strong", mg: 25 }
+  ,{ b: "77 Pouches", n: "77 Apple Mint Light", mg: 5.2 }
+  ,{ b: "77 Pouches", n: "77 Arctic Berry Medium", mg: 10.4 }
+  ,{ b: "77 Pouches", n: "77 Black Currant Medium", mg: 10.4 }
+  ,{ b: "77 Pouches", n: "77 Blueberry Ice Medium", mg: 10.4 }
+  ,{ b: "77 Pouches", n: "77 Classic Tobacco Medium", mg: 10.4 }
+  ,{ b: "77 Pouches", n: "77 Cola Cherry Medium", mg: 10.4 }
+  ,{ b: "77 Pouches", n: "77 Cola Ice Medium", mg: 10.4 }
+  ,{ b: "77 Pouches", n: "77 Cola Vanilla Medium", mg: 10.4 }
+  ,{ b: "77 Pouches", n: "77 Forest Fruits Light", mg: 5.2 }
+  ,{ b: "77 Pouches", n: "77 Fresh Mint Light", mg: 5.2 }
+  ,{ b: "77 Pouches", n: "77 Fresh Mint Medium", mg: 10.4 }
+  ,{ b: "77 Pouches", n: "77 Ghost Arctic Berry Mini", mg: 20 }
 ];
 
 export const USER_BENCHMARKS = [

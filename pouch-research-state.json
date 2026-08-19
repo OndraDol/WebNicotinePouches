@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "next_batch": 9,
+  "next_batch": 10,
   "market_queue": [
     "US+CA",
     "Europe excluding CZ",
@@ -169,7 +169,19 @@
       "catalog": "Whitepouches / Czech nicotine pouch catalog (verified product subset, batch 8)",
       "source_url": "https://www.whitepouches.com/eu/snus/cesku",
       "checked_at": "2026-08-19"
+    },
+    {
+      "market": "CZ",
+      "catalog": "Whitepouches / Czech nicotine pouch catalog (verified product subset, batch 9)",
+      "source_url": "https://www.whitepouches.com/eu/snus/cesku",
+      "checked_at": "2026-08-19"
+    },
+    {
+      "market": "CZ",
+      "catalog": "Nicotinos / Czech nicotine pouch catalog (verified product subset, batch 9)",
+      "source_url": "https://nicotinos.com/cs-cz/collections/nicotine-pouches",
+      "checked_at": "2026-08-19"
     }
   ],
-  "last_completed_total": 1787
+  "last_completed_total": 1887
 }
