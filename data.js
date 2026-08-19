@@ -1566,6 +1566,106 @@ export const POUCH_DB = [
   ,{ b: "ICEBERG", n: "ICEBERG Strong - Mint Explosion", mg: 12 }
   ,{ b: "ICEBERG", n: "ICEBERG Strong - Watermelon", mg: 12 }
   ,{ b: "ICEBERG", n: "ICEBERG Strong - Watermelon Mint Gum", mg: 12 }
+  ,{ b: "ICEBERG", n: "ICEBERG Ultra - Arasaka", mg: 56 }
+  ,{ b: "ICEBERG", n: "ICEBERG Ultra - Black", mg: 56 }
+  ,{ b: "ICEBERG", n: "ICEBERG Ultra - Emerald", mg: 56 }
+  ,{ b: "ICEBERG", n: "ICEBERG Ultra - Energy", mg: 56 }
+  ,{ b: "ICEBERG", n: "ICEBERG Ultra - Grape", mg: 56 }
+  ,{ b: "ICEBERG", n: "ICEBERG Ultra - Kiwi Strawberry", mg: 56 }
+  ,{ b: "ICEBERG", n: "ICEBERG Ultra - Sour Berries", mg: 56 }
+  ,{ b: "ICEBERG", n: "ICEBERG Ultra - Strawberry Banana Gum", mg: 56 }
+  ,{ b: "ICEBERG", n: "ICEBERG Ultra - Sweet Mint", mg: 56 }
+  ,{ b: "ICEBERG", n: "ICEBERG Ultra - Watermelon Mint Gum", mg: 56 }
+  ,{ b: "JIXX", n: "Jixx - Bubblegum", mg: 30 }
+  ,{ b: "JIXX", n: "Jixx - Freeze Max", mg: 30 }
+  ,{ b: "JIXX", n: "Jixx - Freeze Strong", mg: 15 }
+  ,{ b: "JIXX", n: "Jixx - Grape", mg: 10 }
+  ,{ b: "JIXX", n: "Jixx - Ice Cold", mg: 10.5 }
+  ,{ b: "JIXX", n: "Jixx - Watermelon", mg: 10 }
+  ,{ b: "Juice Head", n: "Juice Head - Arctic Mint Regular", mg: 6 }
+  ,{ b: "Juice Head", n: "Juice Head - Arctic Mint Super Strong", mg: 14 }
+  ,{ b: "Juice Head", n: "Juice Head - Blueberry Lemon Regular", mg: 6 }
+  ,{ b: "Juice Head", n: "Juice Head - Blueberry Lemon Super Strong", mg: 14 }
+  ,{ b: "Juice Head", n: "Juice Head - Peach Pineapple Regular", mg: 6 }
+  ,{ b: "Juice Head", n: "Juice Head - Peach Pineapple Strong", mg: 9 }
+  ,{ b: "Juice Head", n: "Juice Head - Spicy Pineapple Regular", mg: 6 }
+  ,{ b: "Juice Head", n: "Juice Head - Spicy Pineapple Super Strong", mg: 14 }
+  ,{ b: "Juice Head", n: "Juice Head - Watermelon Strawberry Regular", mg: 6 }
+  ,{ b: "Juice Head", n: "Juice Head - Watermelon Strawberry Strong", mg: 9 }
+  ,{ b: "Juice Head", n: "Juice Head - Watermelon Strawberry Super Strong", mg: 14 }
+  ,{ b: "KEEP", n: "Keep - Grape Raspberry", mg: 10.4 }
+  ,{ b: "KELLY WHITE", n: "KELLY WHITE Light - Sweet Peach", mg: 4 }
+  ,{ b: "KELLY WHITE", n: "KELLY WHITE Mini - Sweet Peach", mg: 7.5 }
+  ,{ b: "KILLA", n: "KILLA - Apple", mg: 11.2 }
+  ,{ b: "KILLA", n: "KILLA - Bubblegum", mg: 11.2 }
+  ,{ b: "KILLA", n: "KILLA Dry - Blueberry", mg: 12.8 }
+  ,{ b: "KILLA", n: "KILLA Dry - Cold Mint", mg: 9.9 }
+  ,{ b: "KILLA", n: "KILLA Exclusive - Cherry Cola", mg: 13.2 }
+  ,{ b: "KILLA", n: "KILLA Exclusive - Cold Dry", mg: 13.2 }
+  ,{ b: "KILLA", n: "KILLA Extreme - Melon", mg: 12.8 }
+  ,{ b: "KLAR", n: "Klar - Afterglow Extra Strong", mg: 9 }
+  ,{ b: "KLAR", n: "Klar - Blank Extra Strong", mg: 9 }
+  ,{ b: "KLAR", n: "Klar - Blank Regular", mg: 3 }
+  ,{ b: "KLAR", n: "Klar - Blank Strong", mg: 6 }
+  ,{ b: "KLAR", n: "Klar - Blueberry Mint Strong", mg: 6 }
+  ,{ b: "KLAR", n: "Klar - Mint Extra Strong", mg: 9 }
+  ,{ b: "KLAR", n: "Klar - Mint Strong", mg: 6 }
+  ,{ b: "KLAR", n: "Klar - Strawberry Basil Strong", mg: 6 }
+  ,{ b: "KURWA", n: "KURWA - Blackcurrant Purple Grape", mg: 16 }
+  ,{ b: "KURWA", n: "KURWA - Blueberry Ice", mg: 12 }
+  ,{ b: "KURWA", n: "KURWA - Double Apple", mg: 12 }
+  ,{ b: "KURWA", n: "KURWA - Fizzy Cherry", mg: 12 }
+  ,{ b: "KURWA", n: "KURWA - Frost Ice", mg: 16 }
+  ,{ b: "KURWA", n: "KURWA - Grape Ice", mg: 12 }
+  ,{ b: "KURWA", n: "KURWA - Raspberry Strawberry", mg: 16 }
+  ,{ b: "KURWA", n: "KURWA - Strawberry Gum", mg: 16 }
+  ,{ b: "KURWA", n: "KURWA - Strong Mint", mg: 12 }
+  ,{ b: "KURWA", n: "KURWA - Triple Mango", mg: 12 }
+  ,{ b: "KURWA", n: "KURWA Fatality - Apple Bubblegum", mg: 32.8 }
+  ,{ b: "KURWA", n: "KURWA Fatality - Brutal Fruity Gum", mg: 32.8 }
+  ,{ b: "KURWA", n: "KURWA Fatality - Brutal Strawberry", mg: 32.8 }
+  ,{ b: "KURWA", n: "KURWA Fatality - Energy Bubblegum", mg: 32.8 }
+  ,{ b: "KURWA", n: "KURWA Fresh - Cola Vanilla Cherry", mg: 16 }
+  ,{ b: "KURWA", n: "KURWA Just Berries - Forest Berries", mg: 16 }
+  ,{ b: "KURWA", n: "KURWA Max - Black Fruit Mint", mg: 32.8 }
+  ,{ b: "KURWA", n: "KURWA Max - Blueberry Ice", mg: 43 }
+  ,{ b: "KURWA", n: "KURWA Max - Brutal Blueberry", mg: 32.8 }
+  ,{ b: "KURWA", n: "KURWA Max - Fizzy Apple", mg: 43 }
+  ,{ b: "KURWA", n: "KURWA Max - Fizzy Cherry", mg: 43 }
+  ,{ b: "KURWA", n: "KURWA Max - Grape Ice", mg: 43 }
+  ,{ b: "KURWA", n: "KURWA Max - Strong Mint", mg: 43 }
+  ,{ b: "KURWA", n: "KURWA Max - Triple Mango", mg: 43 }
+  ,{ b: "LAGOM", n: "Lagom - Fresh Mint 16mg", mg: 10.4 }
+  ,{ b: "LEO", n: "Leo - Black Cherry", mg: 12 }
+  ,{ b: "LEO", n: "Leo - Dubai Chocolate", mg: 12 }
+  ,{ b: "LEO", n: "Leo - Freeze", mg: 12 }
+  ,{ b: "LEO", n: "Leo - Freeze Max", mg: 16 }
+  ,{ b: "LEO", n: "Leo - Sour Peach", mg: 12 }
+  ,{ b: "MAGGIE", n: "MAGGIE - Jamaican Kola", mg: 45 }
+  ,{ b: "MAGGIE", n: "MAGGIE Extra Strong - Grape Soda", mg: 45 }
+  ,{ b: "MAGGIE", n: "MAGGIE Extra Strong - Summerfruits", mg: 45 }
+  ,{ b: "MAGGIE", n: "MAGGIE Extra Strong - Sweet Plantain", mg: 45 }
+  ,{ b: "NOIS", n: "NOIS - Blackcurrant", mg: 8 }
+  ,{ b: "NOIS", n: "NOIS - Blueberry", mg: 25 }
+  ,{ b: "NOIS", n: "NOIS - Blueberry Ice", mg: 4 }
+  ,{ b: "NOIS", n: "NOIS - Cherry", mg: 25 }
+  ,{ b: "NOIS", n: "NOIS - Grape", mg: 25 }
+  ,{ b: "NOIS", n: "NOIS - Grape Ice", mg: 12.5 }
+  ,{ b: "NOIS", n: "NOIS - Ice Mango", mg: 4 }
+  ,{ b: "NOIS", n: "NOIS - Mango", mg: 25 }
+  ,{ b: "NOIS", n: "NOIS - Mango Mint", mg: 6 }
+  ,{ b: "NOIS", n: "NOIS - Mint", mg: 10 }
+  ,{ b: "NOIS", n: "NOIS - Original", mg: 25 }
+  ,{ b: "NOIS", n: "NOIS - Wintergreen", mg: 4 }
+  ,{ b: "NOIS", n: "NOIS Extra Strong - Watermelon Ice", mg: 25 }
+  ,{ b: "NOIS", n: "NOIS Mini - Blueberry", mg: 25 }
+  ,{ b: "NOIS", n: "NOIS Mini - Cherry", mg: 17.5 }
+  ,{ b: "NOIS", n: "NOIS Mini - Cool", mg: 25 }
+  ,{ b: "NOIS", n: "NOIS Mini - Original", mg: 25 }
+  ,{ b: "NOIS", n: "NOIS Strong - Watermelon Ice", mg: 12.5 }
+  ,{ b: "PABLO", n: "PABLO Exclusive - Kiwi", mg: 30 }
+  ,{ b: "POKE", n: "Poke - Watermelon", mg: 12 }
+  ,{ b: "PUFF & POUCH", n: "PUFF & POUCH - Grape", mg: 12 }
 ];
 
 export const USER_BENCHMARKS = [
