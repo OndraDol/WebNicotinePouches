@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "next_batch": 12,
+  "next_batch": 13,
   "market_queue": [
     "US+CA",
     "Europe excluding CZ",
@@ -193,7 +193,25 @@
       "catalog": "Nicotinos / Czech nicotine pouch catalog (verified product subset, batch 11)",
       "source_url": "https://nicotinos.com/cs-cz/collections/nicotine-pouches",
       "checked_at": "2026-08-19"
+    },
+    {
+      "market": "CZ",
+      "catalog": "Snusit.cz / current nicotine pouch catalog (verified subset, batch 12)",
+      "source_url": "https://www.snusit.cz/nikotinove-sacky/",
+      "checked_at": "2026-08-20"
+    },
+    {
+      "market": "CZ",
+      "catalog": "Nordiction.cz / current nicotine pouch catalog (verified subset, batch 12)",
+      "source_url": "https://www.nordiction.cz/nikotinove-sacky/",
+      "checked_at": "2026-08-20"
+    },
+    {
+      "market": "CZ",
+      "catalog": "Europouches / current nicotine pouch catalog (verified subset, batch 12)",
+      "source_url": "https://www.europouches.com/en/nicotine-pouches/",
+      "checked_at": "2026-08-20"
     }
   ],
-  "last_completed_total": 2087
+  "last_completed_total": 2187
 }

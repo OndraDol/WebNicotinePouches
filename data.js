@@ -2166,6 +2166,106 @@ export const POUCH_DB = [
   ,{ b: "VELO", n: "VELO Nutty Virginia Mini", mg: 4.2 }
   ,{ b: "VELO", n: "VELO Purple Grape Strong Slim", mg: 10 }
   ,{ b: "VELO", n: "VELO Ruby Berry Slim", mg: 6 }
+  ,{ b: "FEDRS", n: "Fedrs Stripe Energy Drink 20 mg/g", mg: 12 }
+  ,{ b: "FEDRS", n: "Fedrs Stripe Wild Berry 20 mg/g", mg: 12 }
+  ,{ b: "GOAT", n: "GOAT Frosted Mini Oktagon Limited Edition", mg: 10 }
+  ,{ b: "SYX", n: "SYX ROYAL STRONG EDITION", mg: 11.49 }
+  ,{ b: "VELO", n: "VELO Smooth Peppermint 11,4 mg", mg: 11.4 }
+  ,{ b: "ZYN", n: "ZYN CHILI GUAVA X-STRONG", mg: 11 }
+  ,{ b: "ZYN", n: "ZYN ICY MINT X-STRONG", mg: 11 }
+  ,{ b: "77 Pouches", n: "77 Grape Ice", mg: 10.4 }
+  ,{ b: "ACE", n: "ACE X Extend Double Mint", mg: 10 }
+  ,{ b: "ACE", n: "ACE X Extend Nordic Freeze", mg: 10 }
+  ,{ b: "BAGZ", n: "BAGZ Fruit Punch Classic", mg: 5.5 }
+  ,{ b: "CLEW", n: "CLEW Cherry Cola", mg: 10 }
+  ,{ b: "GRITT", n: "GRITT Maracuja Strong", mg: 8.8 }
+  ,{ b: "ICE", n: "ICE Cool Mint", mg: 5.6 }
+  ,{ b: "LIV", n: "LIV Ice Cool Strong", mg: 9.6 }
+  ,{ b: "LIV", n: "LIV Ice Cool Ultra", mg: 12 }
+  ,{ b: "LIV", n: "LIV Mango Strong", mg: 9.6 }
+  ,{ b: "POPIČ!", n: "POPIČ! Cola Cherry", mg: 10.4 }
+  ,{ b: "POPIČ!", n: "POPIČ! Cola Vanilla", mg: 10.4 }
+  ,{ b: "POPIČ!", n: "POPIČ! Forest Fruits", mg: 10.4 }
+  ,{ b: "POPIČ!", n: "POPIČ! Watermelon Ice", mg: 10.4 }
+  ,{ b: "VIKA", n: "VIKA Black Cherry", mg: 6 }
+  ,{ b: "VIKA", n: "VIKA Blueberry Cosmo", mg: 7.5 }
+  ,{ b: "VIKA", n: "VIKA Elderflower Spritz", mg: 6 }
+  ,{ b: "VIKA", n: "VIKA Fresh Peppermint", mg: 6 }
+  ,{ b: "VIKA", n: "VIKA Frozen Mint", mg: 12 }
+  ,{ b: "VIKA", n: "VIKA Champ", mg: 12 }
+  ,{ b: "VIKA", n: "VIKA Ice Cool Mint", mg: 12 }
+  ,{ b: "VIKA", n: "VIKA Mojito", mg: 12 }
+  ,{ b: "XQS", n: "XQS Cool Ice", mg: 9.6 }
+  ,{ b: "77 Pouches", n: "77 Ghost Freeze Mint Mini", mg: 20 }
+  ,{ b: "77 Pouches", n: "77 Ghost Peppermint Mini", mg: 20 }
+  ,{ b: "77 Pouches", n: "77 Ghost Watermelon Ice Mini", mg: 20 }
+  ,{ b: "77 Pouches", n: "77 Cherry Ice", mg: 10.4 }
+  ,{ b: "77 Pouches", n: "77 Pink Punch", mg: 10.4 }
+  ,{ b: "77 Pouches", n: "77 Raspberry Ice Extra Strong", mg: 15.6 }
+  ,{ b: "77 Pouches", n: "77 Sour Bliss", mg: 10.4 }
+  ,{ b: "BJÖRN", n: "BJÖRN Berry Liquorice Medium", mg: 9.1 }
+  ,{ b: "BJÖRN", n: "BJÖRN Berry Liquorice Strong", mg: 19.5 }
+  ,{ b: "BJÖRN", n: "BJÖRN Blueberry Strong", mg: 19.5 }
+  ,{ b: "BJÖRN", n: "BJÖRN Cola Ice Medium", mg: 9.1 }
+  ,{ b: "BJÖRN", n: "BJÖRN Frozen Mint Medium", mg: 9.1 }
+  ,{ b: "BJÖRN", n: "BJÖRN Frozen Mint Strong", mg: 19.5 }
+  ,{ b: "BJÖRN", n: "BJÖRN Chocomint Strong", mg: 19.5 }
+  ,{ b: "BJÖRN", n: "BJÖRN Lush Ice Medium", mg: 9.1 }
+  ,{ b: "BJÖRN", n: "BJÖRN Lush Ice Strong", mg: 19.5 }
+  ,{ b: "BJÖRN", n: "BJÖRN Rhub-Elder Punch Medium", mg: 9.1 }
+  ,{ b: "BJÖRN", n: "BJÖRN Rhub-Elder Punch Strong", mg: 19.5 }
+  ,{ b: "CAMO", n: "CAMO Ice Cold Mint Extra Strong", mg: 25 }
+  ,{ b: "COCO", n: "COCO Blue Razz", mg: 10 }
+  ,{ b: "COCO", n: "COCO Mighty Colada", mg: 15 }
+  ,{ b: "COCO", n: "COCO Mighty Fresh", mg: 15 }
+  ,{ b: "COCO", n: "COCO Mighty Mango", mg: 15 }
+  ,{ b: "COCO", n: "COCO Natural Mint", mg: 10 }
+  ,{ b: "FEDRS", n: "FEDRS BLACK Bloody Orange", mg: 32.5 }
+  ,{ b: "FEDRS", n: "FEDRS BLACK Cool Mint", mg: 32.5 }
+  ,{ b: "FEDRS", n: "FEDRS BLACK Freeze Mint", mg: 32.5 }
+  ,{ b: "FEDRS", n: "FEDRS BLACK Cherry Frost", mg: 32.5 }
+  ,{ b: "FEDRS", n: "FEDRS BLACK Ice Lemonade", mg: 32.5 }
+  ,{ b: "FEDRS", n: "FEDRS BLACK Mango Storm", mg: 32.5 }
+  ,{ b: "FEDRS", n: "FEDRS BLACK Sweet Raspberry", mg: 32.5 }
+  ,{ b: "FEDRS", n: "FEDRS BLACK Tropical Blast", mg: 32.5 }
+  ,{ b: "FEDRS", n: "FEDRS ONLY Blueberry", mg: 13 }
+  ,{ b: "FEDRS", n: "FEDRS ONLY Cola", mg: 13 }
+  ,{ b: "FEDRS", n: "FEDRS ONLY Cool Mint", mg: 13 }
+  ,{ b: "FEDRS", n: "FEDRS ONLY Freeze Mint", mg: 13 }
+  ,{ b: "FEDRS", n: "FEDRS ONLY Ice Spearmint", mg: 13 }
+  ,{ b: "FEDRS", n: "FEDRS ONLY Lime & Lemon", mg: 13 }
+  ,{ b: "FEDRS", n: "FEDRS ONLY Mango", mg: 13 }
+  ,{ b: "Fix", n: "FIX Blueberry Ice", mg: 11.5 }
+  ,{ b: "Fix", n: "FIX Chai Latte", mg: 8.4 }
+  ,{ b: "Fix", n: "FIX Cherry Blossom", mg: 11.5 }
+  ,{ b: "Fix", n: "FIX Peach Rhubarb", mg: 5.6 }
+  ,{ b: "Fix", n: "FIX Peppermint", mg: 9.8 }
+  ,{ b: "Fix", n: "FIX Pineapple Rum Coconut", mg: 9.8 }
+  ,{ b: "Fix", n: "FIX Spearmint", mg: 8.4 }
+  ,{ b: "Fix", n: "FIX Watermelon Ice", mg: 11.5 }
+  ,{ b: "GARANT", n: "GARANT Cola Extreme", mg: 25 }
+  ,{ b: "GLITCH", n: "GLITCH Blueberry Ice", mg: 12.8 }
+  ,{ b: "GLITCH", n: "GLITCH Cool Ice", mg: 12.8 }
+  ,{ b: "GLITCH", n: "GLITCH Frosted Mint", mg: 12.8 }
+  ,{ b: "GLITCH", n: "GLITCH Frozen Cherry Cola", mg: 12.8 }
+  ,{ b: "GLITCH", n: "GLITCH Grape Ice", mg: 12.8 }
+  ,{ b: "GLITCH", n: "GLITCH Kiwi", mg: 12.8 }
+  ,{ b: "GLITCH", n: "GLITCH Mango", mg: 12.8 }
+  ,{ b: "GLITCH", n: "GLITCH Strawberry Peach Ice", mg: 12.8 }
+  ,{ b: "GOAT", n: "GOAT Cool Mint Extra Strong", mg: 19.6 }
+  ,{ b: "GOAT", n: "GOAT Tropical Strong", mg: 11.5 }
+  ,{ b: "CHAINPOP", n: "CHAINPOP Almond & Vanilla", mg: 9 }
+  ,{ b: "ICEBERG", n: "ICEBERG Apricot Mini", mg: 20 }
+  ,{ b: "ICEBERG", n: "ICEBERG Fruity Gum Mini", mg: 20 }
+  ,{ b: "INIC", n: "INIC Berry Fusion Extra Strong", mg: 18 }
+  ,{ b: "INIC", n: "INIC Berry Fusion Strong", mg: 12 }
+  ,{ b: "INIC", n: "INIC Fresh Mint Extra Strong", mg: 18 }
+  ,{ b: "INIC", n: "INIC Fresh Mint Strong", mg: 12 }
+  ,{ b: "INIC", n: "INIC Peppermint Extra Strong", mg: 18 }
+  ,{ b: "INIC", n: "INIC Peppermint Strong", mg: 12 }
+  ,{ b: "INIC", n: "INIC Tropical Fruit Extra Strong", mg: 18 }
+  ,{ b: "INIC", n: "INIC Tropical Fruit Strong", mg: 12 }
+  ,{ b: "INIC", n: "INIC Wintermint Extra Strong", mg: 18 }
 ];
 
 export const USER_BENCHMARKS = [
