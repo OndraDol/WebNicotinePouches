@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "next_batch": 16,
+  "next_batch": 17,
   "market_queue": [
     "US+CA",
     "Europe excluding CZ",
@@ -277,7 +277,43 @@
       "catalog": "Europouches / current nicotine pouch catalog (verified subset, batch 15)",
       "source_url": "https://www.europouches.com/en/nicotine-pouches/",
       "checked_at": "2026-08-20"
+    },
+    {
+      "market": "CZ",
+      "catalog": "Europouches / current nicotine pouch catalog (verified subset, batch 16)",
+      "source_url": "https://www.europouches.com/en/nicotine-pouches/",
+      "checked_at": "2026-08-20"
+    },
+    {
+      "market": "CZ",
+      "catalog": "Nicotinos / Czech nicotine pouch catalog (verified subset, batch 16)",
+      "source_url": "https://nicotinos.com/cs-cz/collections/nicotine-pouches",
+      "checked_at": "2026-08-20"
+    },
+    {
+      "market": "CZ",
+      "catalog": "Whitepouches / Czech nicotine pouch catalog (verified subset, batch 16)",
+      "source_url": "https://www.whitepouches.com/eu/snus/cesku",
+      "checked_at": "2026-08-20"
+    },
+    {
+      "market": "CZ",
+      "catalog": "Pouchland / current nicotine pouch catalog (verified subset, batch 16)",
+      "source_url": "https://www.pouchland.com/collections/nicotine-pouches",
+      "checked_at": "2026-08-20"
+    },
+    {
+      "market": "CZ",
+      "catalog": "Snusmania / Czech current nicotine pouch catalog (verified subset, batch 16)",
+      "source_url": "https://snusmania.eu/cs/collections/nikotinove-sacky",
+      "checked_at": "2026-08-20"
+    },
+    {
+      "market": "CZ",
+      "catalog": "The Snus Outlet / current nicotine pouch catalog (verified subset, batch 16)",
+      "source_url": "https://thesnusoutlet.com/collections/nicotine-pouches",
+      "checked_at": "2026-08-20"
     }
   ],
-  "last_completed_total": 2487
+  "last_completed_total": 2587
 }

@@ -2566,6 +2566,106 @@ export const POUCH_DB = [
   ,{ b: "77 Pouches", n: "77 Watermelon Ice Extra Strong", mg: 15.6 }
   ,{ b: "ACE", n: "Ace Berry Breeze Low", mg: 3 }
   ,{ b: "CUBA", n: "CUBA Blackberry Light", mg: 4 }
+  ,{ b: "CUBA", n: "CUBA Double Fresh Light", mg: 4 }
+  ,{ b: "CUBA", n: "CUBA Cherry Light", mg: 4 }
+  ,{ b: "DENSSI", n: "DENSSI Blueberry Freeze Light", mg: 4 }
+  ,{ b: "DENSSI", n: "DENSSI Brain Freeze Light", mg: 4 }
+  ,{ b: "DENSSI", n: "DENSSI Mango Freeze Light", mg: 4 }
+  ,{ b: "DENSSI", n: "DENSSI Spearmint Light", mg: 4 }
+  ,{ b: "DENSSI", n: "DENSSI Strawberry Freeze Light", mg: 4 }
+  ,{ b: "DENSSI", n: "DENSSI Watermelon Freeze Light", mg: 4 }
+  ,{ b: "DOSH", n: "DOSH Cola 9mg", mg: 9 }
+  ,{ b: "DOSH", n: "DOSH Spearmint Fresh 9mg", mg: 9 }
+  ,{ b: "DOSH", n: "DOSH Strawberry Lush 6mg", mg: 6 }
+  ,{ b: "GARANT", n: "GARANT Energy Drink Medium", mg: 10 }
+  ,{ b: "GARANT", n: "GARANT Extreme Cherry Mini", mg: 19.5 }
+  ,{ b: "GARANT", n: "GARANT Extreme Ice Peach Mini", mg: 19.5 }
+  ,{ b: "GARANT", n: "GARANT Cherry Medium", mg: 10 }
+  ,{ b: "GARANT", n: "GARANT Raspberry Medium", mg: 10 }
+  ,{ b: "GOAT", n: "GOAT Wild Cherry Medium", mg: 8.4 }
+  ,{ b: "ICEBERG", n: "ICEBERG Berries Mini", mg: 20 }
+  ,{ b: "ICEBERG", n: "ICEBERG Energy Mini", mg: 20 }
+  ,{ b: "ICEBERG", n: "ICEBERG Grape Mini", mg: 20 }
+  ,{ b: "ICEBERG", n: "ICEBERG Sweet Mint Mini", mg: 20 }
+  ,{ b: "KELLY WHITE", n: "KELLY WHITE Raspberry Lemon Extra Strong Slim", mg: 10 }
+  ,{ b: "KELLY WHITE", n: "KELLY WHITE Sweet Peppermint Extra Strong Slim", mg: 10 }
+  ,{ b: "KILLA", n: "KILLA MINI Blueberry", mg: 8 }
+  ,{ b: "KILLA", n: "KILLA MINI Frosted Mint", mg: 8 }
+  ,{ b: "KLINT", n: "KLINT Apple Mint X-Strong", mg: 14 }
+  ,{ b: "KLINT", n: "KLINT Arctic Mint Max Ultra Strong", mg: 19.68 }
+  ,{ b: "KURWA", n: "KURWA Collection Blueberry Ice Low", mg: 4 }
+  ,{ b: "KURWA", n: "KURWA Collection Double Apple Low", mg: 4 }
+  ,{ b: "KURWA", n: "KURWA Collection Fizzy Cherry Low", mg: 4 }
+  ,{ b: "KURWA", n: "KURWA Collection Grape Ice Low", mg: 4 }
+  ,{ b: "KURWA", n: "KURWA Collection Strong Mint Low", mg: 4 }
+  ,{ b: "KURWA", n: "KURWA Collection Triple Mango Low", mg: 4 }
+  ,{ b: "NOIS", n: "NOIS Cool Strong Mini", mg: 10.5 }
+  ,{ b: "NOIS", n: "NOIS Cherry Ice Light", mg: 4 }
+  ,{ b: "SYX", n: "SYX Blueberry Medium", mg: 6 }
+  ,{ b: "SYX", n: "SYX Icy Cola Extra Strong", mg: 20 }
+  ,{ b: "SYX", n: "SYX Icy Cola Medium", mg: 6 }
+  ,{ b: "SYX", n: "SYX Peppermint Extra Strong", mg: 20 }
+  ,{ b: "SYX", n: "SYX Peppermint Medium", mg: 6 }
+  ,{ b: "SYX", n: "SYX Spearmint Extra Strong", mg: 20 }
+  ,{ b: "SYX", n: "SYX Spearmint Medium", mg: 6 }
+  ,{ b: "SYX", n: "SYX Tropical Extra Strong", mg: 20 }
+  ,{ b: "SYX", n: "SYX Tropical Medium", mg: 6 }
+  ,{ b: "SYX", n: "SYX Wild Cherry Extra Strong", mg: 20 }
+  ,{ b: "SYX", n: "SYX Wild Cherry Medium", mg: 6 }
+  ,{ b: "VELO", n: "VELO Crispy Peppermint Mini", mg: 8 }
+  ,{ b: "VELO", n: "VELO Freezing Peppermint Ultra", mg: 14 }
+  ,{ b: "XQS", n: "XQS Arctic Freeze Ultra Strong", mg: 11.2 }
+  ,{ b: "77 Pouches", n: "77 Forest Fruits Medium", mg: 10.4 }
+  ,{ b: "BAGZ", n: "BAGZ Berry Cool X-strong", mg: 13.7 }
+  ,{ b: "BAGZ", n: "BAGZ Power Mint X-strong", mg: 12.8 }
+  ,{ b: "Fix", n: "FIX Sweet Mint Lemon S2", mg: 5.6 }
+  ,{ b: "FUMI", n: "FUMi Freezy Mint Extra Strong", mg: 11 }
+  ,{ b: "LOOP", n: "LOOP Hot Mango Extra Strong", mg: 12.5 }
+  ,{ b: "LOOP", n: "LOOP Hot Peach Hyper Strong", mg: 15.6 }
+  ,{ b: "LOOP", n: "LOOP Ice Cool Mint Hyper Strong", mg: 15.6 }
+  ,{ b: "SNOWMAN", n: "SNOWMAN Arctic Kick Strong", mg: 12 }
+  ,{ b: "SNOWMAN", n: "SNOWMAN Fresh Mint Strong", mg: 12 }
+  ,{ b: "SNOWMAN", n: "SNOWMAN Raspberry Blast Strong", mg: 12 }
+  ,{ b: "SNOWMAN", n: "SNOWMAN Tropical Punch Strong", mg: 12 }
+  ,{ b: "SNOWMAN", n: "SNOWMAN Watermelon Breeze Strong", mg: 12 }
+  ,{ b: "XQS", n: "XQS Elderflower Strong", mg: 8 }
+  ,{ b: "XQS", n: "XQS Twin Apple Light 4 mg", mg: 4 }
+  ,{ b: "ZEUS", n: "Zeus Arctic Freeze Strong", mg: 10 }
+  ,{ b: "ZEUS", n: "Zeus Epic Berry Strong", mg: 10 }
+  ,{ b: "ZEUS", n: "Zeus Cherry Blossom Strong", mg: 10 }
+  ,{ b: "ZEUS", n: "Zeus Mint Rage Strong", mg: 10 }
+  ,{ b: "ZEUS", n: "Zeus Tropic Burst Strong", mg: 10 }
+  ,{ b: "ZYN", n: "ZYN Apple Mint 11 mg", mg: 11 }
+  ,{ b: "ZYN", n: "ZYN Blackcurrant Ice Slim Extra Strong (S4)", mg: 11 }
+  ,{ b: "ZYN", n: "ZYN Cool Mint Slim Strong (S3)", mg: 9 }
+  ,{ b: "ZYN", n: "ZYN Spearmint Slim Strong (S3)", mg: 9 }
+  ,{ b: "GARANT", n: "Garant Ice Blueberry Light", mg: 4 }
+  ,{ b: "GARANT", n: "Garant Ice Cool Light", mg: 4 }
+  ,{ b: "GARANT", n: "Garant Ice Peach Light", mg: 4 }
+  ,{ b: "GARANT", n: "Garant Mint Light", mg: 4 }
+  ,{ b: "NOIS", n: "NOIS Cool Strong Light", mg: 4 }
+  ,{ b: "SYX", n: "SYX Blueberry Strong", mg: 11.5 }
+  ,{ b: "ZEUS", n: "ZEUS Arctic Freeze Light", mg: 4 }
+  ,{ b: "ZEUS", n: "ZEUS Epic Berry Light", mg: 4 }
+  ,{ b: "ZEUS", n: "ZEUS Frozen Citrus Light", mg: 4 }
+  ,{ b: "ZEUS", n: "ZEUS Frozen Citrus Strong", mg: 10 }
+  ,{ b: "ZEUS", n: "ZEUS Cherry Blossom Light", mg: 4 }
+  ,{ b: "ZEUS", n: "ZEUS Mint Rage Light", mg: 4 }
+  ,{ b: "ZEUS", n: "ZEUS Tropic Burst Light", mg: 4 }
+  ,{ b: "GLICK", n: "Glick Citrine Grape Light", mg: 4 }
+  ,{ b: "KLAR", n: "KLAR Afterglow Edition Oolong Melon Mini Strong", mg: 6.4 }
+  ,{ b: "LOOP", n: "LOOP Fresh Peppermint Mini Hyper", mg: 11.3 }
+  ,{ b: "LOOP", n: "LOOP Fresh Spearmint Mini Hyper", mg: 11.3 }
+  ,{ b: "LOOP", n: "LOOP Spicy Apple Hyper Strong Limited Edition", mg: 15.6 }
+  ,{ b: "Nordic Spirit", n: "Nordic Spirit Raspberry Max", mg: 16.8 }
+  ,{ b: "ZYN", n: "ZYN Black Currant Ice S5", mg: 13.5 }
+  ,{ b: "ZYN", n: "ZYN Cactus Spice S3", mg: 9 }
+  ,{ b: "ZYN", n: "ZYN Red Berry Fizz S2", mg: 6 }
+  ,{ b: "ZYN", n: "ZYN Red Berry Fizz S3", mg: 9 }
+  ,{ b: "Après", n: "Après Cola Mini 3mg", mg: 3 }
+  ,{ b: "Après", n: "Après Mint Mini 3mg", mg: 3 }
+  ,{ b: "C.R.E.A.M", n: "CREAM Cold As Ice X-STRONG", mg: 12 }
+  ,{ b: "LOOP", n: "Loop Fresh Spearmint Mini Hyper Strong 10mg", mg: 10 }
 ];
 
 export const USER_BENCHMARKS = [
