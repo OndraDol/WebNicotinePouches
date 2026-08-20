@@ -2466,6 +2466,106 @@ export const POUCH_DB = [
   ,{ b: "LYNX", n: "Lynx Cool Mint Extra Strong", mg: 12.3 }
   ,{ b: "VELO", n: "VELO Shift Cool Peppermint", mg: 8 }
   ,{ b: "VELO", n: "VELO Shift Hot Peach", mg: 8 }
+  ,{ b: "XPCT", n: "XPCT Berry Mega Can", mg: 6 }
+  ,{ b: "XPCT", n: "XPCT Classic Berry", mg: 6 }
+  ,{ b: "XPCT", n: "XPCT Classic Mint", mg: 8 }
+  ,{ b: "XPCT", n: "XPCT Cola/Ginger Mega Can", mg: 8 }
+  ,{ b: "XPCT", n: "XPCT Mango/Pineapple Mega Can", mg: 8 }
+  ,{ b: "XPCT", n: "XPCT Raspberry Mint Mega Can", mg: 8 }
+  ,{ b: "ZIXS", n: "ZIXS Melon Freeze Large Extreme", mg: 13 }
+  ,{ b: "ZIXS", n: "ZIXS Melon Rush Large Strong", mg: 11.2 }
+  ,{ b: "ZIXS", n: "ZIXS Salmiak Large", mg: 6.4 }
+  ,{ b: "ZIXS", n: "ZIXS Salmiak/Licorice Ultra Strong", mg: 12 }
+  ,{ b: "ZIXS", n: "ZIXS Spearmint Slim Strong", mg: 11.7 }
+  ,{ b: "77 Pouches", n: "77 Bubbly Blizz Medium", mg: 10.4 }
+  ,{ b: "LEWA", n: "Lewa Classic", mg: 12.6 }
+  ,{ b: "LEWA", n: "Lewa Oranssi", mg: 16.6 }
+  ,{ b: "Nordic Spirit", n: "Nordic Spirit Icy Peppermint Extra Strong", mg: 10.5 }
+  ,{ b: "Nordic Spirit", n: "Nordic Spirit Icy Peppermint Max", mg: 16.8 }
+  ,{ b: "Nordic Spirit", n: "Nordic Spirit Jalapeno Lime Max", mg: 16.8 }
+  ,{ b: "SNOBERG", n: "SNOBERG Double Mint 13mg", mg: 6.5 }
+  ,{ b: "CAMO", n: "CAMO Green Apple 12mg", mg: 12 }
+  ,{ b: "CAMO", n: "CAMO Cherry Cola Lime 12mg", mg: 12 }
+  ,{ b: "CAMO", n: "CAMO Ice Cold Mint 12mg", mg: 12 }
+  ,{ b: "CAMO", n: "CAMO Peppermint 12mg", mg: 12 }
+  ,{ b: "CHAINPOP", n: "Chainpop Peach & Honey 9mg", mg: 9 }
+  ,{ b: "CHAINPOP", n: "Chainpop Pomegranate & Melon 9mg", mg: 9 }
+  ,{ b: "CHAINPOP", n: "Chainpop Raspberry & Melon 5mg", mg: 5 }
+  ,{ b: "ICEBERG", n: "ICEBERG Arctic Mint Mini - Crisp, discreet refreshment", mg: 20 }
+  ,{ b: "LOOP", n: "Loop Crispy Peppermint Hyper Strong 15mg", mg: 15 }
+  ,{ b: "LOOP", n: "Loop Crispy Peppermint Mini Hyper Strong 10mg", mg: 10 }
+  ,{ b: "Odin", n: "Odin Cold Mint 16.5 mg", mg: 16.5 }
+  ,{ b: "Odin", n: "Odin Cold Mint 8mg", mg: 8.3 }
+  ,{ b: "Odin", n: "Odin Cold Mint X-Strong 35 mg", mg: 35 }
+  ,{ b: "Odin", n: "Odin Double Mint 16.5 mg", mg: 16.5 }
+  ,{ b: "Odin", n: "Odin Double Mint 8mg", mg: 8.3 }
+  ,{ b: "Odin", n: "Odin Double Mint X-Strong 35mg", mg: 35 }
+  ,{ b: "Odin", n: "Odin Siberian Cold 8 mg", mg: 8 }
+  ,{ b: "Odin", n: "Odin Wintergreen 16.5 mg", mg: 16.5 }
+  ,{ b: "Odin", n: "Odin Wintergreen 8mg", mg: 8.3 }
+  ,{ b: "Odin", n: "Odin Wintergreen X-Strong 35 mg", mg: 35 }
+  ,{ b: "Royal", n: "Royal White - Gin and Grapefruit (Lonkero) 16.5 mg", mg: 16.5 }
+  ,{ b: "Royal", n: "Royal White Blackcurrant 16.5 mg", mg: 16.5 }
+  ,{ b: "Royal", n: "Royal White Cappuccino 16.5 mg", mg: 16.5 }
+  ,{ b: "Royal", n: "Royal White Gin and Grapefruit (Lonkero) 8mg", mg: 8.3 }
+  ,{ b: "ZEUS", n: "Zeus Legend Cold Lightning 8mg", mg: 8 }
+  ,{ b: "ZEUS", n: "Zeus Legend Cosmopolitan 8mg", mg: 8 }
+  ,{ b: "ZEUS", n: "Zeus Legend Crystal Cold 8mg", mg: 8 }
+  ,{ b: "ZEUS", n: "Zeus Legend Champagne 8mg", mg: 8 }
+  ,{ b: "ZEUS", n: "Zeus Legend Mighty Mint 8mg", mg: 8 }
+  ,{ b: "ZEUS", n: "Zeus Legend Scotch Whiskey 8mg", mg: 8 }
+  ,{ b: "ZEUS", n: "Zeus Legend Thunder Strike 8mg", mg: 8 }
+  ,{ b: "ZIXS", n: "ZIXS Ice Strong 10mg", mg: 10 }
+  ,{ b: "ICEBERG", n: "ICEBERG APPLE (PIE CAN) 50MG", mg: 40 }
+  ,{ b: "ICEBERG", n: "ICEBERG CHEESECAKE (PIE CAN) 50MG", mg: 40 }
+  ,{ b: "ICEBERG", n: "ICEBERG CHERRY (PIE CAN) 50MG", mg: 40 }
+  ,{ b: "ICEBERG", n: "ICEBERG ICEBERG BANOFFEE (PIE CAN) 50MG", mg: 40 }
+  ,{ b: "ICEBERG", n: "ICEBERG ICEBERG BLUEBERRY (PIE CAN) 50MG", mg: 40 }
+  ,{ b: "ICEBERG", n: "ICEBERG KEY LIME (PIE CAN) 50MG", mg: 40 }
+  ,{ b: "ACE", n: "ACE COOL MINT STRONG", mg: 9.6 }
+  ,{ b: "ACE", n: "Ace Eucalyptus", mg: 9.6 }
+  ,{ b: "CUBA", n: "Cuba White Apple Juice", mg: 12 }
+  ,{ b: "CUBA", n: "Cuba White Banana Hit", mg: 12 }
+  ,{ b: "CUBA", n: "Cuba White Blackcurrant", mg: 12 }
+  ,{ b: "CUBA", n: "Cuba White Blueberry", mg: 12 }
+  ,{ b: "CUBA", n: "Cuba White Cola", mg: 12 }
+  ,{ b: "CUBA", n: "Cuba White Grape", mg: 12 }
+  ,{ b: "CUBA", n: "Cuba White Cherry", mg: 12 }
+  ,{ b: "CUBA", n: "Cuba White Ice Spearmint", mg: 12 }
+  ,{ b: "CUBA", n: "Cuba White Peach", mg: 12 }
+  ,{ b: "CUBA", n: "Cuba White Pineapple", mg: 12 }
+  ,{ b: "CUBA", n: "Cuba White Watermelon", mg: 12 }
+  ,{ b: "GRITT", n: "Gritt Frost Bite Extra Strong", mg: 11 }
+  ,{ b: "GRITT", n: "GRITT FROST BITE STRONG", mg: 8.8 }
+  ,{ b: "ICEBERG", n: "Iceberg Berries Medium", mg: 11 }
+  ,{ b: "ICEBERG", n: "Iceberg Black Medium", mg: 11 }
+  ,{ b: "ICEBERG", n: "Iceberg Bubblegum Medium", mg: 11 }
+  ,{ b: "ICEBERG", n: "Iceberg Cola Medium", mg: 11 }
+  ,{ b: "ICEBERG", n: "Iceberg Grape Gum Medium", mg: 11 }
+  ,{ b: "ICEBERG", n: "Iceberg Cherry Apricot Gum Medium", mg: 11 }
+  ,{ b: "ICEBERG", n: "Iceberg Cherry Medium", mg: 11 }
+  ,{ b: "ICEBERG", n: "Iceberg Raspberry Gum Medium", mg: 11 }
+  ,{ b: "KILLA", n: "Killa Blueberry", mg: 11.2 }
+  ,{ b: "KILLA", n: "Killa Cola", mg: 11.2 }
+  ,{ b: "KILLA", n: "Killa Cold Mint", mg: 11.2 }
+  ,{ b: "KILLA", n: "Killa Mini Mango Ice", mg: 8 }
+  ,{ b: "KURWA", n: "Kurwa Collection Cola Cherry Vanilla", mg: 12 }
+  ,{ b: "NOIS", n: "NOIS MANGO MINT", mg: 10 }
+  ,{ b: "Pablo", n: "Pablo Ice Cold Mini", mg: 8 }
+  ,{ b: "SYX", n: "SYX BLUEBERRY", mg: 11.49 }
+  ,{ b: "VELO", n: "Velo Eucalyptus Storm", mg: 10.9 }
+  ,{ b: "VELO", n: "VELO Cherry Ice 11,4 mg", mg: 11.4 }
+  ,{ b: "VELO", n: "Velo Purple Grape", mg: 10.9 }
+  ,{ b: "XQS", n: "XQS Blueberry Mint", mg: 8 }
+  ,{ b: "77 Pouches", n: "77 Cola & Vanilla Extra Strong", mg: 15.6 }
+  ,{ b: "77 Pouches", n: "77 Forest Fruits Extra Strong", mg: 15.6 }
+  ,{ b: "77 Pouches", n: "77 Freeze Mint Extra Strong", mg: 15.6 }
+  ,{ b: "77 Pouches", n: "77 Fresh Mint Extra Strong", mg: 15.6 }
+  ,{ b: "77 Pouches", n: "77 Ice Mint Extra Strong", mg: 15.6 }
+  ,{ b: "77 Pouches", n: "77 Raspberry & Vanilla", mg: 10.4 }
+  ,{ b: "77 Pouches", n: "77 Watermelon Ice Extra Strong", mg: 15.6 }
+  ,{ b: "ACE", n: "Ace Berry Breeze Low", mg: 3 }
+  ,{ b: "CUBA", n: "CUBA Blackberry Light", mg: 4 }
 ];
 
 export const USER_BENCHMARKS = [

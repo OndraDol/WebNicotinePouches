@@ -1,4 +1,4 @@
-const CACHE_NAME = 'pouchlog-v1.18';
+const CACHE_NAME = 'pouchlog-v1.19';
 
 const APP_SHELL = [
   './',
