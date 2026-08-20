@@ -2266,6 +2266,106 @@ export const POUCH_DB = [
   ,{ b: "INIC", n: "INIC Tropical Fruit Extra Strong", mg: 18 }
   ,{ b: "INIC", n: "INIC Tropical Fruit Strong", mg: 12 }
   ,{ b: "INIC", n: "INIC Wintermint Extra Strong", mg: 18 }
+  ,{ b: "INIC", n: "INIC Wintermint Strong", mg: 12 }
+  ,{ b: "KELLY WHITE", n: "KELLY WHITE Crispy Apple Extra Strong Slim", mg: 10 }
+  ,{ b: "KELLY WHITE", n: "KELLY WHITE Minty Grape Extra Strong Slim", mg: 10 }
+  ,{ b: "KILLA", n: "KILLA Exclusive Green Mint", mg: 13.2 }
+  ,{ b: "KILLA", n: "KILLA Exclusive Orange", mg: 13.2 }
+  ,{ b: "KILLA", n: "KILLA Exclusive Strawberry Watermelon", mg: 13.2 }
+  ,{ b: "KILLA", n: "KILLA Exclusive Tropical Punch", mg: 13.2 }
+  ,{ b: "KLINT", n: "KLINT Alaskan Mint", mg: 21 }
+  ,{ b: "KLINT", n: "KLINT Avalanche Mint", mg: 17.5 }
+  ,{ b: "KLINT", n: "KLINT Racing Mint Limited Edition", mg: 4.2 }
+  ,{ b: "MAF", n: "MAF Blue Ice", mg: 18 }
+  ,{ b: "MAF", n: "MAF Minty Blizzard", mg: 10.5 }
+  ,{ b: "MAF", n: "MAF Polar Cherry", mg: 20 }
+  ,{ b: "MYNT", n: "MYNT Lychee Extra Strong", mg: 15 }
+  ,{ b: "MYNT", n: "MYNT Lychee Medium", mg: 9 }
+  ,{ b: "MYNT", n: "MYNT Mango Extra Strong", mg: 15 }
+  ,{ b: "MYNT", n: "MYNT Mango Medium", mg: 9 }
+  ,{ b: "MYNT", n: "MYNT Mint Extra Strong", mg: 15 }
+  ,{ b: "MYNT", n: "MYNT Mint Medium", mg: 9 }
+  ,{ b: "MYNT", n: "MYNT Spearmint Extra Strong", mg: 15 }
+  ,{ b: "MYNT", n: "MYNT Spearmint Medium", mg: 9 }
+  ,{ b: "MYNT", n: "MYNT Sweet Extra Strong", mg: 15 }
+  ,{ b: "MYNT", n: "MYNT Sweet Medium", mg: 9 }
+  ,{ b: "NEAFS", n: "NEAFS Blueberry X-Strong", mg: 16 }
+  ,{ b: "NEAFS", n: "NEAFS Ice Cool X-Strong", mg: 16 }
+  ,{ b: "NEAFS", n: "NEAFS Lush Ice X-Strong", mg: 16 }
+  ,{ b: "NEAFS", n: "NEAFS Mango Ice X-Strong", mg: 16 }
+  ,{ b: "NEAFS", n: "NEAFS Menthol X-Strong", mg: 16 }
+  ,{ b: "Nor", n: "NOR Black Grape Slim", mg: 15 }
+  ,{ b: "Nor", n: "NOR Watermelon Slim", mg: 12 }
+  ,{ b: "NOTO", n: "NOTO Bergamia", mg: 9.8 }
+  ,{ b: "NOTO", n: "NOTO Cedar", mg: 9.8 }
+  ,{ b: "NOTO", n: "NOTO Green Tea", mg: 8.4 }
+  ,{ b: "NOTO", n: "NOTO Jasmine", mg: 8.4 }
+  ,{ b: "NOTO", n: "NOTO Pimentón", mg: 11.2 }
+  ,{ b: "NOTO", n: "NOTO Pine", mg: 9.8 }
+  ,{ b: "Pablo", n: "PABLO Exclusive Blueberry Cranberry Cherry", mg: 30 }
+  ,{ b: "Pablo", n: "PABLO Exclusive Cola", mg: 30 }
+  ,{ b: "Pablo", n: "PABLO Exclusive Pineapple", mg: 30 }
+  ,{ b: "Pablo", n: "PABLO Exclusive Pink Lemonade", mg: 30 }
+  ,{ b: "Pablo", n: "PABLO Exclusive Sour Blueberries", mg: 30 }
+  ,{ b: "Pablo", n: "PABLO Exclusive Watermelon Lemon", mg: 30 }
+  ,{ b: "Pablo", n: "PABLO GOLD Pineapple", mg: 17 }
+  ,{ b: "Pablo", n: "PABLO GOLD Strawberry Kiwi", mg: 17 }
+  ,{ b: "R4VE nikotinové", n: "R4VE - Cola Explosion Extra Strong", mg: 19.5 }
+  ,{ b: "R4VE nikotinové", n: "R4VE - Cola Explosion Medium", mg: 9.6 }
+  ,{ b: "R4VE nikotinové", n: "R4VE - Frozen Citrus Extra Strong", mg: 19.5 }
+  ,{ b: "R4VE nikotinové", n: "R4VE - Frozen Citrus Medium", mg: 9.6 }
+  ,{ b: "R4VE nikotinové", n: "R4VE - Juicy Apple Extra Strong", mg: 19.5 }
+  ,{ b: "R4VE nikotinové", n: "R4VE - Juicy Apple Medium", mg: 9.6 }
+  ,{ b: "R4VE nikotinové", n: "R4VE - La Passion Fruit Extra Strong", mg: 19.5 }
+  ,{ b: "R4VE nikotinové", n: "R4VE - La Passion Fruit Medium", mg: 9.6 }
+  ,{ b: "R4VE nikotinové", n: "R4VE - Lemoncello Fruit Extra Strong", mg: 19.5 }
+  ,{ b: "R4VE nikotinové", n: "R4VE - Lemoncello Medium", mg: 9.6 }
+  ,{ b: "R4VE nikotinové", n: "R4VE - Mango Django Extra Strong", mg: 19.5 }
+  ,{ b: "R4VE nikotinové", n: "R4VE - Mango Django Medium", mg: 9.6 }
+  ,{ b: "R4VE nikotinové", n: "R4VE - Merry Cherry Extra Strong", mg: 19.5 }
+  ,{ b: "R4VE nikotinové", n: "R4VE - Merry Cherry Medium", mg: 9.6 }
+  ,{ b: "R4VE nikotinové", n: "R4VE - Minty Berry Extra Strong", mg: 19.5 }
+  ,{ b: "R4VE nikotinové", n: "R4VE - Minty Berry Medium", mg: 9.6 }
+  ,{ b: "R4VE nikotinové", n: "R4VE - Skittler Extra Strong", mg: 19.5 }
+  ,{ b: "R4VE nikotinové", n: "R4VE - Skittler Medium", mg: 9.6 }
+  ,{ b: "SNOBERG", n: "SNOBERG Blueberry Ice Medium", mg: 6.5 }
+  ,{ b: "SNOBERG", n: "SNOBERG Blueberry Ice Strong", mg: 10 }
+  ,{ b: "SNOBERG", n: "SNOBERG Cool Peppermint Medium", mg: 6.5 }
+  ,{ b: "SNOBERG", n: "SNOBERG Cool Peppermint Strong", mg: 10 }
+  ,{ b: "SNOBERG", n: "SNOBERG Double Mint Strong", mg: 10 }
+  ,{ b: "SNOBERG", n: "SNOBERG Cherry Ice Medium", mg: 6.5 }
+  ,{ b: "SNOBERG", n: "SNOBERG Cherry Ice Strong", mg: 10 }
+  ,{ b: "SNOBERG", n: "SNOBERG Watermelon Ice", mg: 6.5 }
+  ,{ b: "SNOBERG", n: "SNOBERG Watermelon Ice Strong", mg: 10 }
+  ,{ b: "SNOBERG", n: "SNOBERG Wintergreen Medium", mg: 6.5 }
+  ,{ b: "SNOBERG", n: "SNOBERG Wintergreen Strong", mg: 10 }
+  ,{ b: "SYX", n: "SYX Apple Mint Strong", mg: 12 }
+  ,{ b: "SYX", n: "SYX Peppermint Rush Strong", mg: 12 }
+  ,{ b: "SYX", n: "SYX Salty Caramel Strong", mg: 12 }
+  ,{ b: "VELO", n: "VELO Black Currant", mg: 10 }
+  ,{ b: "VELO", n: "VELO Tangled Berry", mg: 10 }
+  ,{ b: "VELO", n: "VELO Tropical Mango Ultra", mg: 14 }
+  ,{ b: "77 Pouches", n: "77 Liquorice Citrus Medium", mg: 10.4 }
+  ,{ b: "ACE", n: "ACE X X-mas Edition", mg: 8 }
+  ,{ b: "Après", n: "Après No. 4 Cola Petite Mini 3.2 mg", mg: 3.2 }
+  ,{ b: "BAGZ", n: "BAGZ Arctic Freeze X-strong", mg: 12.8 }
+  ,{ b: "BAGZ", n: "BAGZ Fizzy Orange X-strong", mg: 14.2 }
+  ,{ b: "BAGZ", n: "BAGZ Chilli Lime X-strong", mg: 14.2 }
+  ,{ b: "BAGZ", n: "BAGZ Mango Lassi X-strong", mg: 14.2 }
+  ,{ b: "BAGZ", n: "BAGZ Moccaccino Caffe X-strong", mg: 14.2 }
+  ,{ b: "Fix", n: "FIX Fig Raspberry S3", mg: 8.4 }
+  ,{ b: "Fix", n: "FIX Green Mango Lemongrass S5", mg: 11.5 }
+  ,{ b: "Fix", n: "FIX Irish Coffee S4", mg: 9.8 }
+  ,{ b: "Fix", n: "FIX Ruby Chocolate S2", mg: 5.6 }
+  ,{ b: "Fix", n: "FIX Strawberry Kiwi S4", mg: 9.8 }
+  ,{ b: "Helwit", n: "HELWIT Acai Slim Limited Edition", mg: 3.5 }
+  ,{ b: "KLINT", n: "KLINT Blåklint Mini Strong #3", mg: 8 }
+  ,{ b: "KLINT", n: "KLINT Fresh Lime Slim #2", mg: 5.6 }
+  ,{ b: "KLINT", n: "KLINT Rosé Mini Normal #2", mg: 6 }
+  ,{ b: "LEWA", n: "LEWA Liquorice", mg: 12.6 }
+  ,{ b: "LEWA", n: "LEWA Oranssi Mint", mg: 11.62 }
+  ,{ b: "LEWA", n: "LEWA Taste of Tobacco", mg: 12.6 }
+  ,{ b: "LYNX", n: "LYNX Blueberry Boost Slim Strong", mg: 10.5 }
 ];
 
 export const USER_BENCHMARKS = [
