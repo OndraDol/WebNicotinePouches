@@ -2366,6 +2366,106 @@ export const POUCH_DB = [
   ,{ b: "LEWA", n: "LEWA Oranssi Mint", mg: 11.62 }
   ,{ b: "LEWA", n: "LEWA Taste of Tobacco", mg: 12.6 }
   ,{ b: "LYNX", n: "LYNX Blueberry Boost Slim Strong", mg: 10.5 }
+  ,{ b: "LYNX", n: "LYNX Fizzy Lemonade Strong", mg: 10.5 }
+  ,{ b: "LYNX", n: "LYNX Tropical Passion Slim Strong", mg: 10.5 }
+  ,{ b: "PUFF & POUCH", n: "Puff & Pouch Berries Slim 12mg", mg: 12 }
+  ,{ b: "PUFF & POUCH", n: "Puff & Pouch Berries Slim 4mg", mg: 4 }
+  ,{ b: "PUFF & POUCH", n: "Puff & Pouch Citrus 12 mg", mg: 12 }
+  ,{ b: "PUFF & POUCH", n: "Puff & Pouch Citrus 4 mg", mg: 4 }
+  ,{ b: "PUFF & POUCH", n: "Puff & Pouch Cherry Slim 8mg", mg: 8 }
+  ,{ b: "PUFF & POUCH", n: "Puff & Pouch Ice Slim 12mg", mg: 12 }
+  ,{ b: "PUFF & POUCH", n: "Puff & Pouch Ice Slim 4mg", mg: 4 }
+  ,{ b: "PUFF & POUCH", n: "Puff & Pouch Peppermint Slim 12mg", mg: 12 }
+  ,{ b: "STRÖM", n: "STRÖM Fresh Mint", mg: 10 }
+  ,{ b: "STRÖM", n: "STRÖM Fruity Berry", mg: 10 }
+  ,{ b: "STRÖM", n: "STRÖM Gingery Liquorice Slim", mg: 10 }
+  ,{ b: "STRÖM", n: "STRÖM Iced Coffee Slim", mg: 10 }
+  ,{ b: "STRÖM", n: "STRÖM Minty Orange", mg: 10 }
+  ,{ b: "SWAVE", n: "SWAVE Apple XO Strong Slim", mg: 10.6 }
+  ,{ b: "SWAVE", n: "SWAVE Aviation Strong", mg: 10.6 }
+  ,{ b: "SWAVE", n: "SWAVE Cloudberry Lemon Strong Slim", mg: 10.6 }
+  ,{ b: "SWAVE", n: "SWAVE Cuba Libre Strong", mg: 10.6 }
+  ,{ b: "SWAVE", n: "SWAVE Daiquiri Mini", mg: 6.5 }
+  ,{ b: "SWAVE", n: "SWAVE Daiquiri Strong", mg: 10.6 }
+  ,{ b: "SWAVE", n: "SWAVE Mixed Fruits Mini", mg: 6.5 }
+  ,{ b: "SWAVE", n: "SWAVE Rhubarb Smash Mini", mg: 6.5 }
+  ,{ b: "SWAVE", n: "SWAVE Salmiac Liquorice Strong", mg: 10.6 }
+  ,{ b: "VELO", n: "VELO Shift Hot Dragon Fruit", mg: 8 }
+  ,{ b: "VELO", n: "VELO Shift Hot Grape", mg: 8 }
+  ,{ b: "VELO", n: "VELO Shift Hot Spearmint", mg: 8 }
+  ,{ b: "VELO", n: "VELO Tomorrowland Limited Edition", mg: 8 }
+  ,{ b: "VELO", n: "VELO Zest Flame", mg: 10 }
+  ,{ b: "VILD", n: "VILD Kuling", mg: 8 }
+  ,{ b: "XO", n: "XO Black Cherry Slim", mg: 8 }
+  ,{ b: "XO", n: "XO Blueberry", mg: 8 }
+  ,{ b: "XO", n: "XO Grape Ice", mg: 8 }
+  ,{ b: "XO", n: "XO Ice Cool", mg: 8 }
+  ,{ b: "XO", n: "XO Icy Citrus", mg: 8 }
+  ,{ b: "XO", n: "XO Icy Cola", mg: 8 }
+  ,{ b: "XO", n: "XO Mango Slim", mg: 8 }
+  ,{ b: "XO", n: "XO Spearmint", mg: 8 }
+  ,{ b: "XO", n: "XO Watermelon Chili", mg: 8 }
+  ,{ b: "XQS", n: "XQS Cool Ice Mini 4mg", mg: 4 }
+  ,{ b: "XQS", n: "XQS Fruzzle Strong", mg: 8 }
+  ,{ b: "XQS", n: "XQS Hallon Lakrits Slim Strong", mg: 8 }
+  ,{ b: "XQS", n: "XQS Soft Toffee Light 4 mg", mg: 4 }
+  ,{ b: "XQS", n: "XQS Soft Toffee Strong", mg: 8 }
+  ,{ b: "ZIXS", n: "ZIXS Black Cherry Jumbo Can", mg: 8 }
+  ,{ b: "ZIXS", n: "ZIXS Blue Chilli Slim", mg: 12 }
+  ,{ b: "ZIXS", n: "ZIXS Cola Buzz", mg: 12 }
+  ,{ b: "ZIXS", n: "ZIXS Exotic Chill Jumbo Can", mg: 8 }
+  ,{ b: "ZIXS", n: "ZIXS Exotic Chill Slim", mg: 12 }
+  ,{ b: "ZIXS", n: "ZIXS Icy Mint Jumbo Can", mg: 4 }
+  ,{ b: "ZIXS", n: "ZIXS Melon Freeze Slim", mg: 12 }
+  ,{ b: "ZIXS", n: "ZIXS Melon Rush Slim", mg: 6 }
+  ,{ b: "ZIXS", n: "ZIXS North Ice 66 Jumbo Can", mg: 8 }
+  ,{ b: "ZIXS", n: "ZIXS North Ice 66 Slim", mg: 12 }
+  ,{ b: "ZIXS", n: "ZIXS Spicy Lemon Slim", mg: 6 }
+  ,{ b: "ZIXS", n: "ZIXS Strawberry Lime Slim", mg: 12 }
+  ,{ b: "ZoneX", n: "ZONE X Cold Blast Extra Strong", mg: 9.6 }
+  ,{ b: "ZoneX", n: "ZONE X Cold Blast Strong", mg: 8.32 }
+  ,{ b: "ZoneX", n: "ZONE X Cosmic Blast Extra Strong", mg: 9.6 }
+  ,{ b: "ZoneX", n: "ZONE X Dark Flow Medium", mg: 4.48 }
+  ,{ b: "ZoneX", n: "ZONE X Fuji Zing Extra Strong", mg: 9.6 }
+  ,{ b: "ZoneX", n: "ZONE X Mint Breeze", mg: 4.48 }
+  ,{ b: "ZoneX", n: "ZONE X Southern Breeze", mg: 4.48 }
+  ,{ b: "ZoneX", n: "ZONE X Southern Storm Extra Strong", mg: 9.6 }
+  ,{ b: "ZoneX", n: "ZONE X Summer Dive Extra Strong", mg: 9.6 }
+  ,{ b: "ZYN", n: "ZYN Black Licorice Mini Normal (S2) 3 mg", mg: 3 }
+  ,{ b: "ZYN", n: "ZYN Gentle Mint Mini Low 3 mg", mg: 3 }
+  ,{ b: "ZYN", n: "ZYN Gentle Mint Slim Normal (S2)", mg: 6.5 }
+  ,{ b: "SYX", n: "SYX Blueberry Xtra Strong", mg: 19.95 }
+  ,{ b: "V&You", n: "V&YOU Boost Mint Freeze", mg: 10 }
+  ,{ b: "V&You", n: "V&YOU Boost+ Mint Freeze", mg: 15 }
+  ,{ b: "VELO", n: "VELO Blue Raspberry", mg: 8 }
+  ,{ b: "77 Pouches", n: "77 Blueberry Vanilla Banana", mg: 10.4 }
+  ,{ b: "Après", n: "Après Julmust Limited Edition", mg: 4.4 }
+  ,{ b: "Avant", n: "Avant Tropical Banana", mg: 7.8 }
+  ,{ b: "Baow", n: "BAOW Gin & Tonic", mg: 12 }
+  ,{ b: "Baow", n: "BAOW Chili Lime X-Strong", mg: 12 }
+  ,{ b: "Baow", n: "BAOW Negroni", mg: 12 }
+  ,{ b: "Baow", n: "BAOW Piña Colada", mg: 12 }
+  ,{ b: "BJÖRN", n: "BJÖRN Blueberry Ice", mg: 19.5 }
+  ,{ b: "BJÖRN", n: "BJÖRN Ice Berry Licorice", mg: 19.5 }
+  ,{ b: "BJÖRN", n: "BJÖRN Watermelon Ice", mg: 19.5 }
+  ,{ b: "CAMO", n: "CAMO Green Apple", mg: 6 }
+  ,{ b: "CAMO", n: "CAMO Ice Cold Mint", mg: 6 }
+  ,{ b: "GARANT", n: "Garant Extreme Pineapple", mg: 25 }
+  ,{ b: "Greatest", n: "Greatest Mega Can Black", mg: 8 }
+  ,{ b: "halt", n: "HALT Blueberry", mg: 9 }
+  ,{ b: "halt", n: "HALT Citrus", mg: 9 }
+  ,{ b: "halt", n: "HALT Mango", mg: 9 }
+  ,{ b: "halt", n: "HALT Sweet Mint", mg: 11.9 }
+  ,{ b: "ICEBERG", n: "ICEBERG Apple Pineapple", mg: 35 }
+  ,{ b: "ICEBERG", n: "ICEBERG Banoffee", mg: 35 }
+  ,{ b: "ICEBERG", n: "ICEBERG Cheesecake", mg: 35 }
+  ,{ b: "ICEBERG", n: "ICEBERG Key Lime Pie", mg: 35 }
+  ,{ b: "KILLA", n: "KILLA Dry Banana Ice", mg: 9.6 }
+  ,{ b: "LOOP", n: "Loop Smooth Mint Mini Xtended", mg: 7.5 }
+  ,{ b: "LYNX", n: "Lynx Blueberry Strong", mg: 10.5 }
+  ,{ b: "LYNX", n: "Lynx Cool Mint Extra Strong", mg: 12.3 }
+  ,{ b: "VELO", n: "VELO Shift Cool Peppermint", mg: 8 }
+  ,{ b: "VELO", n: "VELO Shift Hot Peach", mg: 8 }
 ];
 
 export const USER_BENCHMARKS = [
